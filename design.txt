@@ -1,0 +1,139 @@
+== Keywords ==
+{Hidden} - is invisible to opponent until is attacked.
+{Fast} - can move as soon as played.
+{Unrestricted} - can have any amount of this card in your deck.
+
+Defence - each point of defence eats up 1 damage per turn, restores at end of turn.
+n. - neighboring
+
+
+[Mana Drill]:3
+    (Structure)
+    {Unrestricted}
+    Geneartes 1 energy per turn.
+    T: 5
+    
+    
+[Flame Eruption]:3
+    (Spell)
+    Deal 2 damage to all n. enemy structures/units.
+    
+    
+[Hidden Spy]:4
+    (Unit)-(Rogue)
+    {Hidden}
+    P: 2
+    L: 2
+    
+    
+[Mage Initiate]:2
+    (Unit)-(Mage)
+    P: 1
+    L: 3
+    
+    
+[Warrior Initiate]:2
+    (Unit)-(Warrior)
+    P: 2
+    L: 2
+    
+    
+[Rogue Initiate]:2
+    (Unit)-(Rogue)
+    P: 1
+    L: 2
+    
+    
+[Combat Medic]:3
+    (Unit)-(Warrior)
+    At the start of your turn, [CARDNAME] restores 1 life to all your n. Units.
+    P: 2
+    L: 2
+
+    
+[Hired Assassin]:3
+    (Unit)-(Rogue)
+    Destroys Units on attack.
+    P: 2
+    L: 2
+    
+    
+[Elven General]:4
+    (Unit)-(Warrior)
+    Every 3 turns, summon an [Elf] into a n. tile.
+    P: 2
+    L: 2
+    
+    
+[!Elf]:1
+    (Unit)
+    P: 1
+    L: 1
+    
+    
+[Fort]:3
+    (Structure)
+    Your n. tiles have +1 defence.
+    T: 5
+    
+    
+[Baar Swamp Necromancer]:3
+    (Unit)-(Mage)
+    At the start of turn, revive your n. tile into a [Zombie].
+    P: 1
+    L: 2
+    
+    
+[!Zombie]:2
+    (Unit)
+    P: 2
+    L: 2
+    
+
+[Shock]:1
+    (Spell)
+    Deal 2 damage to a n. Unit.
+
+
+[Urakshi Raider]:3
+    (Unit)-(Warrior)
+    {Fast}
+    P: 3
+    L: 2
+
+
+[Urakshi Shaman]:3
+    (Unit)-(Mage)
+    Spells cast by [CARDNAME] do +1 damage.
+    P: 2
+    L: 2
+
+
+[Urakshi Thief]:3
+    (Unit)-(Rogue)
+    {Fast}
+    {Hidden}
+    L: 1
+    P: 1
+
+
+[Brute]:5
+    (Unit)
+    P: 6
+    L: 5
+
+    
+[Transmogrify]:3
+    (Spell)
+    Transform n. enemy Unit into a [Frog].
+
+
+[Frog]:1
+    (Unit)
+    L: 1
+    P: 1 
+
+
+[!Castle]:10
+    (Structure)
+    T: 10

@@ -27,7 +27,7 @@ class Placeable(Card):
 
 
 # TODO add cycling entities on space pressing
-MANA_DRILL_C = Placeable('MD', -1, 5, 'Mana Drill', 3, 'Structure', '{Unrestricted}\nGenerates 1 energy per turn.')
+MANA_DRILL_C = Placeable('MD', -1, 3, 'Mana Drill', 3, 'Structure', '{Unrestricted}\nGenerates 1 energy per turn.')
 ENTITIES = [
     Placeable('Ca', -1, 10, 'Castle', 10, 'Structure', ''),
     Placeable('Fo', -1, 5, 'Fort', 3, 'Structure', 'Your n. tiles have +1 defence.'),
@@ -42,7 +42,7 @@ ENTITIES = [
     Placeable('EG', 2, 2, 'Elven General', 4, 'Unit - Warrior', 'Every 3 turns, summon an [Elf] into a n. tile.', max_movement=1),
     Placeable('El', 1, 1, 'Elf', 1, 'Unit', '', max_movement=1),
     Placeable('BN', 1, 2, 'Baar Swamp Necromancer', 3, 'Unit - Mage', 'At the start of your turn, revive a n. grave into a [Zombie].', max_movement=1),
-    Placeable('Zo', 2, 2, 'Zombie', 2, 'Unit', '', max_movement=1),
+    Placeable('Zo', 2, 2, 'Zombie', 2, 'Unit', 'Leaves no grave.', max_movement=1),
     Placeable('UR', 3, 2, 'Urakshi Raider', 3, 'Unit - Warrior', '{Fast}', max_movement=1),
     Placeable('US', 2, 2, 'Urakshi Shaman', 3, 'Unit - Mage', 'Spell cast by [CARDNAME] do +1 damage.', max_movement=1),
     Placeable('UT', 1, 1, 'Urakshi Thief', 3, 'Unit - Rogue', '{Fast}\n{Hidden}', max_movement=2),

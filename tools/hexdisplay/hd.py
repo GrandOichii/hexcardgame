@@ -104,6 +104,7 @@ class Tile:
         self.ypos = -1
 
         self.owner_id = 0
+        self.has_grave = False
         self.entity: Placeable = None
         self.entity_i: int = -1
 
@@ -137,16 +138,18 @@ class TileDrawLayer(DrawLayer):
             win.addstr(y + 5, x + 2, str(i))
             js = str(j)
             win.addstr(y + 5, x + 9 - len(js), js)
+        if tile.has_grave:
+            win.addstr(y + 4, x + 5, 'G')
 
         if not en: return
 
         # draw entity info
         win.addstr(y + 1, x + 2, en.label + str(en.owner_i))
         if en.power > 0:
-            win.addstr(y + 2, x + 1, str(en.power))
+            win.addstr(y + 2, x + 2, str(en.power))
         if en.life > 0:
             ls = str(en.life)
-            win.addstr(y + 2, x + 10 - len(ls), ls)
+            win.addstr(y + 2, x + 9 - len(ls), ls)
         if en.max_movement > 0:
             ms = str(en.movement)
             win.addstr(y + 1, x + 9 - len(ms), ms)
@@ -300,7 +303,7 @@ class DrawPlayerLayer(DrawLayer):
                 if en is None:
                     continue
                 if en.owner_i != self.player.player_i:
-                    return
+                    continue
                 en.movement = en.max_movement
                 if en.name == 'Mana Drill':
                     self.energy += 1
@@ -629,11 +632,18 @@ class Game:
             self.last_error = err
             return
 
+        if key == ord('g'):
+            tile = self.selected_tile()
+            tile.has_grave = not tile.has_grave
+            return
+
         # card removing
         if key == 10:
             player = self.current_player_container()
             cur = player.list.selected()
             tile = self.selected_tile()
+            if tile.owner_id-1 != self.cur_player_i:
+                return
             new_en = entity_by_name(cur)
             if new_en.cost > player.energy:
                 return

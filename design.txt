@@ -86,6 +86,7 @@ n. - neighboring
     
 [!Zombie]:2
     (Unit)
+    Leaves no grave.
     P: 2
     L: 2
     

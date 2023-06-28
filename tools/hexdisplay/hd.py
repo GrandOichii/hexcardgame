@@ -5,6 +5,7 @@ from tools.hexdisplay.card import *
 
 from tools.hexdisplay.list import ListTemplate
 
+
 ISLAND_LAYERS = [
     1,
     2,
@@ -26,12 +27,23 @@ ISLAND_LAYERS = [
 ]
 
 
+# TILE_SPRITE = [
+#     '  ---  ',
+#     '/     \\',
+#     '       ',
+#     '\\     /',
+#     '  ---  ',
+# ]
+
+LINE = '─'
 TILE_SPRITE = [
-    '  ---  ',
-    '/     \\',
-    '       ',
-    '\\     /',
-    '  ---  ',
+    f'   {LINE * 5}   ',
+    ' /       \\ ',
+    '/         \\',
+    '           ',
+    '\         /',
+    ' \       / ',
+    f'   {LINE * 5}   '
 ]
 
 
@@ -110,20 +122,21 @@ class TileDrawLayer(DrawLayer):
 
     def basic_draw_sprite(self, win: curses.window, i, j, tile: Tile):
         # y = 0
-        y = (len(TILE_SPRITE) - 3)*i
-        x = 12 * j
-        if i % 2 == 0:
-            x += 6
+        y = (len(TILE_SPRITE) - 4)*i+1
+        base = 9
+        x = base * 2 * j + (1 - i % 2) * base
+        # if i % 2 == 0:
+        #     x += base
         for ii in range(len(TILE_SPRITE)):
             win.addstr(y + ii, x, TILE_SPRITE[ii])
         en = tile.entity
 
         # draw location
         if self.game.location_toggled:
-            win.addstr(y + 3, x + 2, f' . ')
-            win.addstr(y + 3, x + 1, str(i))
+            win.addstr(y + 5, x + 3, f'  .  ')
+            win.addstr(y + 5, x + 2, str(i))
             js = str(j)
-            win.addstr(y + 3, x + 6 - len(js), js)
+            win.addstr(y + 5, x + 9 - len(js), js)
 
         if not en: return
 
@@ -133,7 +146,10 @@ class TileDrawLayer(DrawLayer):
             win.addstr(y + 2, x + 1, str(en.power))
         if en.life > 0:
             ls = str(en.life)
-            win.addstr(y + 2, x + 6 - len(ls), ls)
+            win.addstr(y + 2, x + 10 - len(ls), ls)
+        if en.max_movement > 0:
+            ms = str(en.movement)
+            win.addstr(y + 1, x + 9 - len(ms), ms)
 
     def draw_sprite(self, win, y, x, tile):
         if not tile:
@@ -195,6 +211,9 @@ class DrawOwnedTiles(TileDrawLayer):
                 self.game.win.attron(curses.color_pair(p))
 
 
+MAP_WIDTH = 68
+
+
 class DrawSelectedCardLayer(DrawLayer):
     def __init__(self, game: 'Game'):
         super().__init__(game)
@@ -204,8 +223,8 @@ class DrawSelectedCardLayer(DrawLayer):
         tile = self.game.selected_tile()
         en = tile.entity
         self.card_sprite.load(en)
-        self.game.win.addstr(1, 45, 'Selected entity:')
-        self.card_sprite.draw(self.game.win, 2, 45)
+        self.game.win.addstr(1, MAP_WIDTH, 'Selected entity:')
+        self.card_sprite.draw(self.game.win, 2, MAP_WIDTH)
 
 
 class DrawSelectedTileInfoLayer(DrawLayer):
@@ -214,7 +233,7 @@ class DrawSelectedTileInfoLayer(DrawLayer):
 
     def draw(self):
         win = self.game.win
-        x = 45 + CARD_WIDTH + 1
+        x = MAP_WIDTH + CARD_WIDTH + 1
         tile = self.game.selected_tile()
         win.addstr(1, x, 'Selected tile info:')
         win.addstr(2, x, f'Pos: {tile.ypos} -- {tile.xpos}')
@@ -240,7 +259,7 @@ class DrawPlayerLayer(DrawLayer):
         win = self.game.win
         # border
         y = 3 + CARD_HEIGHT
-        x = 45 + self.player.player_i*PLAYER_AREA_WIDTH
+        x = MAP_WIDTH + self.player.player_i*PLAYER_AREA_WIDTH
         box(win, y, x, PLAYER_AREA_HEIGHT, PLAYER_AREA_WIDTH, attr=color)
         if selected:
             win.addstr(y, x + 1, '>  <')
@@ -260,7 +279,7 @@ class DrawPlayerLayer(DrawLayer):
 
         # draw other info
         # y = 3 + CARD_HEIGHT
-        # x = 45 + CARD_WIDTH
+        # x = MAP_WIDTH + CARD_WIDTH
         y += 1
         x += CARD_WIDTH + 2
         win.addstr(y, x, f'Deck size: {len(self.deck_list)}')
@@ -280,8 +299,12 @@ class DrawPlayerLayer(DrawLayer):
                 en = tile.entity
                 if en is None:
                     continue
-                if en.owner_i == self.player.player_i and en.name == 'Mana Drill':
+                if en.owner_i != self.player.player_i:
+                    return
+                en.movement = en.max_movement
+                if en.name == 'Mana Drill':
                     self.energy += 1
+                    continue
         self.draw_from_deck(1)
 
 class DrawLastErrorLayer(DrawLayer):
@@ -557,6 +580,7 @@ class Game:
             DrawSelectedTileInfoLayer(self),
             DrawSelectedCardLayer(self),
             DrawLastErrorLayer(self),
+        # ]
         ] + self.player_containers
 
         self.map = Map()
@@ -686,7 +710,11 @@ class Game:
         prev = self.selected_tile()
         def check_entity_movement():
             if self.entity_movement_mode:
-                self.selected_tile().entity = prev.entity
+                en = prev.entity
+                if en.owner_i != self.cur_player_i: return
+                # if en.movement == 0: return
+                en.movement -= 1
+                self.selected_tile().entity = en
                 prev.entity = None
 
         # directional keys
@@ -788,11 +816,3 @@ def main(stdscr: curses.window):
 
     g = Game(stdscr)
     g.run()
-
-
-'''
-  ---  
-/     \
-\     /
-  ---
-'''

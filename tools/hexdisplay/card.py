@@ -4,7 +4,7 @@ import textwrap
 
 
 class Card:
-    def __init__(self, name:str='', cost:int=0, type:str='', text:str='', power:int=-1, life:int=0):
+    def __init__(self, name:str='', cost:int=0, type:str='', text:str='', power:int=-1, life:int=0, max_movement:int=0):
         self.name = name
         self.cost = cost
         self.type = type
@@ -12,16 +12,18 @@ class Card:
 
         self.power: int = power
         self.life: int = life
+        self.max_movement = max_movement
+        self.movement = 0
 
 
 class Placeable(Card):
-    def __init__(self, label:str='', power:int=-1, life:int=0, name:str='', cost:int=0, type:str='', text:str='', owner_i: int=0):
-        super().__init__(name, cost, type, text, power, life)
+    def __init__(self, label:str='', power:int=-1, life:int=0, name:str='', cost:int=0, type:str='', text:str='', owner_i: int=0, max_movement: int=0):
+        super().__init__(name, cost, type, text, power, life, max_movement)
         self.label: str = label
         self.owner_i = owner_i
         
     def copy(self, owner_i: int) -> 'Placeable':
-        return Placeable(self.label, self.power, self.life, self.name, self.cost, self.type, self.text, owner_i)
+        return Placeable(self.label, self.power, self.life, self.name, self.cost, self.type, self.text, owner_i, self.max_movement)
 
 
 # TODO add cycling entities on space pressing
@@ -31,20 +33,20 @@ ENTITIES = [
     Placeable('Fo', -1, 5, 'Fort', 3, 'Structure', 'Your n. tiles have +1 defence.'),
     MANA_DRILL_C,
 
-    Placeable('HS', 2, 2, 'Hidden Spy', 4, 'Unit - Rogue', '{Hidden}'),
-    Placeable('MI', 1, 3, 'Mage Initiate', 2, 'Unit - Mage', ''),
-    Placeable('WI', 2, 2, 'Warrior Initiate', 2, 'Unit - Warrior', ''),
-    Placeable('RI', 1, 2, 'Rogue Initiate', 2, 'Unit - Rogue', ''),
-    Placeable('CM', 2, 2, 'Combat Medic', 3, 'Unit - Warrior', 'At the start of your turn, [CARDNAME] restores 1 life to all your n. Units.'),
-    Placeable('HA', 2, 2, 'Hired Assassin', 3, 'Unit - Rogue', 'Destroys Unit on attack.'),
-    Placeable('EG', 2, 2, 'Elven General', 4, 'Unit - Warrior', 'Every 3 turns, summon an [Elf] into a n. tile.'),
-    Placeable('El', 1, 1, 'Elf', 1, 'Unit', ''),
-    Placeable('BN', 1, 2, 'Baar Swamp Necromancer', 3, 'Unit - Mage', 'At the start of your turn, revive a n. grave into a [Zombie].'),
-    Placeable('Zo', 2, 2, 'Zombie', 2, 'Unit', ''),
-    Placeable('UR', 3, 2, 'Urakshi Raider', 3, 'Unit - Warrior', '{Fast}'),
-    Placeable('US', 2, 2, 'Urakshi Shaman', 3, 'Unit - Mage', 'Spell cast by [CARDNAME] do +1 damage.'),
-    Placeable('UT', 1, 1, 'Urakshi Thief', 3, 'Unit - Rogue', '{Fast}\n{Hidden}'),
-    Placeable('Br', 6, 5, 'Brute', 5, 'Unit', ''),
+    Placeable('HS', 2, 2, 'Hidden Spy', 4, 'Unit - Rogue', '{Hidden}', max_movement=2),
+    Placeable('MI', 1, 3, 'Mage Initiate', 2, 'Unit - Mage', '', max_movement=1),
+    Placeable('WI', 2, 2, 'Warrior Initiate', 2, 'Unit - Warrior', '', max_movement=1),
+    Placeable('RI', 1, 2, 'Rogue Initiate', 2, 'Unit - Rogue', '', max_movement=2),
+    Placeable('CM', 2, 2, 'Combat Medic', 3, 'Unit - Warrior', 'At the start of your turn, [CARDNAME] restores 1 life to all your n. Units.', max_movement=1),
+    Placeable('HA', 2, 2, 'Hired Assassin', 3, 'Unit - Rogue', 'Destroys Unit on attack.', max_movement=2),
+    Placeable('EG', 2, 2, 'Elven General', 4, 'Unit - Warrior', 'Every 3 turns, summon an [Elf] into a n. tile.', max_movement=1),
+    Placeable('El', 1, 1, 'Elf', 1, 'Unit', '', max_movement=1),
+    Placeable('BN', 1, 2, 'Baar Swamp Necromancer', 3, 'Unit - Mage', 'At the start of your turn, revive a n. grave into a [Zombie].', max_movement=1),
+    Placeable('Zo', 2, 2, 'Zombie', 2, 'Unit', '', max_movement=1),
+    Placeable('UR', 3, 2, 'Urakshi Raider', 3, 'Unit - Warrior', '{Fast}', max_movement=1),
+    Placeable('US', 2, 2, 'Urakshi Shaman', 3, 'Unit - Mage', 'Spell cast by [CARDNAME] do +1 damage.', max_movement=1),
+    Placeable('UT', 1, 1, 'Urakshi Thief', 3, 'Unit - Rogue', '{Fast}\n{Hidden}', max_movement=2),
+    Placeable('Br', 6, 5, 'Brute', 5, 'Unit', '', max_movement=1),
 ]
 
 

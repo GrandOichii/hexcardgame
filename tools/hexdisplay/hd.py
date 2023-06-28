@@ -62,6 +62,8 @@ class Map:
 # mdc = int(len(DECKLIST)*35/65)
 # DECKLIST += [MANA_DRILL_C.copy() for i in range(mdc)]
 
+# TODO change location logic of tiles (from nw to se)
+
 
 class Tile:
     def __init__(self):
@@ -244,6 +246,7 @@ class PlayerData:
     def __init__(self, player_i: int):
         self.player_i = player_i
 
+
 POINT_RANGE_REGEX = re.compile('\[([0-9]+)\:([0-9]+)\]')
 class Command:
     def __init__(self, game: 'Game'):
@@ -271,7 +274,7 @@ class Command:
 
     def parse_points(self, s: str) -> tuple[list[tuple[int, int]], str]:
         if s == '.':
-            return (self.game.mouse_pos[0], self.game.mouse_pos[1]), ''
+            return [(self.game.mouse_pos[0], self.game.mouse_pos[1])], ''
         points = s.split('.')
         err = f'Can\'t parse point {s}'
         if len(points) != 2:
@@ -308,6 +311,7 @@ class Command:
             return (int(g[0]), int(g[1])), ''
         v = int(s)
         return (v, v), ''
+
 
 class PutCommand(Command):
     def __init__(self, game: 'Game'):
@@ -395,6 +399,24 @@ class TileOwnerSetCommand(Command):
         return ''
 
 
+class RemoveEntityCommand(Command):
+    def __init__(self, game: 'Game'):
+        super().__init__(game)
+
+    def execute(self, cname: str, args: list[str]) -> str:
+        if len(args) != 1:
+            return f'Wrong number of arguments for <{cname} command>'
+        points, err = self.parse_points(args[0])
+        for point in points:
+            if point is None:
+                continue
+            tile, err = self.get_tile(point)
+            if not tile:
+                return err
+            tile.entity = None
+        return ''
+
+
 class CommandMaster:
     def __init__(self, game: 'Game'):
         self.game = game
@@ -403,7 +425,8 @@ class CommandMaster:
             'put': PutCommand(game),
             'moveen': MoveEntityCommand(game),
             'toggleloc': ToggleLocationCommand(game),
-            'tos': TileOwnerSetCommand(game)
+            'tos': TileOwnerSetCommand(game),
+            'remove': RemoveEntityCommand(game),
         }
 
     def execute(self, command: str) -> str:

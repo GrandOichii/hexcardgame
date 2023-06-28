@@ -1,4 +1,5 @@
 import curses
+import re
 from tools.hexdisplay.card import *
 
 from tools.hexdisplay.list import ListTemplate
@@ -73,14 +74,16 @@ class Tile:
 
 
 class DrawLayer:
-    def draw(self):
+    def __init__(self, game: 'Game'):
+        self.game = game
+
+    def draw(self, game: 'Game'):
         pass
 
 
 class TileDrawLayer(DrawLayer):
     def __init__(self, game: 'Game'):
-        super().__init__()
-        self.game = game
+        super().__init__(game)
 
     def basic_draw_sprite(self, win: curses.window, i, j, tile: Tile):
         # y = 0
@@ -114,10 +117,10 @@ class TileDrawLayer(DrawLayer):
             return
         
         self.basic_draw_sprite(win, y, x, tile)
-            
 
+    
 # TODO fix this mess
-class DrawInWindowLayer(TileDrawLayer):
+class DrawMapLayer(TileDrawLayer):
     def __init__(self, game: 'Game') -> None:
         super().__init__(game)
 
@@ -169,7 +172,7 @@ class DrawOwnedTiles(TileDrawLayer):
                 self.game.win.attron(curses.color_pair(p))
 
 
-class DrawSelectedCardLayer(DrawInWindowLayer):
+class DrawSelectedCardLayer(DrawLayer):
     def __init__(self, game: 'Game'):
         super().__init__(game)
         self.card_sprite = CardSprite()
@@ -182,7 +185,7 @@ class DrawSelectedCardLayer(DrawInWindowLayer):
         self.card_sprite.draw(self.game.win, 2, 45)
 
 
-class DrawSelectedTileInfoLayer(DrawInWindowLayer):
+class DrawSelectedTileInfoLayer(DrawLayer):
     def __init__(self, game: 'Game'):
         super().__init__(game)
 
@@ -196,7 +199,7 @@ class DrawSelectedTileInfoLayer(DrawInWindowLayer):
 
 PLAYER_AREA_HEIGHT = 25
 PLAYER_AREA_WIDTH = 40
-class DrawPlayersLayer(DrawInWindowLayer):
+class DrawPlayersLayer(DrawLayer):
     def __init__(self, game: 'Game', player: 'PlayerData'):
         super().__init__(game)
         self.player = player
@@ -227,7 +230,7 @@ class DrawPlayersLayer(DrawInWindowLayer):
         self.list.draw(y + 1 + CARD_HEIGHT, x + 1, selected)
 
 
-class DrawLastErrorLayer(DrawInWindowLayer):
+class DrawLastErrorLayer(DrawLayer):
     def __init__(self, game: 'Game') -> None:
         super().__init__(game)
 
@@ -241,12 +244,12 @@ class PlayerData:
     def __init__(self, player_i: int):
         self.player_i = player_i
 
-
+POINT_RANGE_REGEX = re.compile('\[([0-9]+)\:([0-9]+)\]')
 class Command:
     def __init__(self, game: 'Game'):
         self.game = game
 
-    def execute(self, args: list[str]) -> str:
+    def execute(self, cname: str, args: list[str]) -> str:
         return 'Command not implemented'
 
     def get_tile(self, point: tuple[int, int]) -> tuple[Tile, str]:
@@ -256,44 +259,76 @@ class Command:
             return None, f'X point {point[1]} is out of bounds (max: {len(self.game.map.tiles[0])})'
         tile = self.game.map.tiles[point[0]][point[1]]
         if not tile:
-            ps = '.'.join(point)
+            ps = f'{point[0]}.{point[1]}'
             return None, f'Tile at {ps} is empty'
         return tile, ''
-
+    
     def parse_point(self, s: str) -> tuple[tuple[int, int], str]:
+        points, err = self.parse_points(s)
+        if not points: return None, err
+        if len(points) > 1: return None, f'Can\'t get more than 1 point in {s}'
+        return points[0], ''
+
+    def parse_points(self, s: str) -> tuple[list[tuple[int, int]], str]:
         if s == '.':
             return (self.game.mouse_pos[0], self.game.mouse_pos[1]), ''
         points = s.split('.')
-        err = f'Can\' parse point {s}'
+        err = f'Can\'t parse point {s}'
         if len(points) != 2:
             return None, err
         try:
-            y = int(points[0])
-            x = int(points[1])
-            return (y, x), ''
+            result = []
+            ys = points[0]
+            xs = points[1]
+
+            yrange, err = self.extract_range(ys)
+            if not yrange:
+                return None, err
+            xrange, err = self.extract_range(xs)
+            if not xrange:
+                return None, err
+            
+            for i in range(yrange[0], yrange[1]+1):
+                for j in range(xrange[0], xrange[1]+1):
+                    result += [(i, j)]
+
+            # check for ranges
+            # y = int(points[0])
+            # x = int(points[1])
+            return result, ''
         except:
             return None, err
 
+    def extract_range(self, s: str) -> tuple[tuple[int, int], str]:
+        if ':' in s:
+            m = re.match(POINT_RANGE_REGEX, s)
+            g = m.groups()
+            if len(g) != 2:
+                return None, f'Can\'t parse range {s}'
+            return (int(g[0]), int(g[1])), ''
+        v = int(s)
+        return (v, v), ''
 
 class PutCommand(Command):
     def __init__(self, game: 'Game'):
         super().__init__(game)
 
-    def execute(self, args: list[str]) -> str:
+    def execute(self, cname: str, args: list[str]) -> str:
         if len(args) < 2:
-            return 'Incorrect number of arguments for <put> command'
-        points = args[0]
-        point, err = self.parse_point(points)
-        if not point:
-            return err
+            return f'Incorrect number of arguments for <{cname}> command'
+        point_raw = args[0]
+        points, err = self.parse_points(point_raw)
         ename = ' '.join(args[1:])
         entity = entity_by_name(ename)
         if not entity:
             return f'No entity with name "{ename}"'
-        tile, err = self.get_tile(point)
-        if not tile:
-            return err
-        tile.entity = entity.copy()
+        for point in points:
+            if not point:
+                return err
+            tile, err = self.get_tile(point)
+            if not tile:
+                return err
+            tile.entity = entity.copy()
         return ''
     
 
@@ -301,9 +336,9 @@ class ToggleLocationCommand(Command):
     def __init__(self, game: 'Game'):
         super().__init__(game)
 
-    def execute(self, args: list[str]):
+    def execute(self, cname: str, args: list[str]):
         if len(args) != 0:
-            return 'Too many args for <toggleloc> command'
+            return f'Too many args for <{cname}> command'
         self.game.location_toggled = not self.game.location_toggled
         return ''
 
@@ -312,9 +347,9 @@ class MoveEntityCommand(Command):
     def __init__(self, game: 'Game'):
         super().__init__(game)
 
-    def execute(self, args: list[str]) -> str:
+    def execute(self, cname: str, args: list[str]) -> str:
         if len(args) != 2:
-            return 'Incorrect number of arguments for <moveen> command'
+            return f'Incorrect number of arguments for <{cname}> command'
         p1, err = self.parse_point(args[0])
         if not p1:
             return err
@@ -335,6 +370,31 @@ class MoveEntityCommand(Command):
         return ''
 
 
+class TileOwnerSetCommand(Command):
+    def __init__(self, game: 'Game'):
+        super().__init__(game)
+
+    def execute(self, cname: str, args: list[str]) -> str:
+        if len(args) != 2:
+            return f'Wrong number of arguments for <{cname}> command'
+        points, err = self.parse_points(args[0])
+        if not points:
+            return err
+        for point in points:
+            tile, err = self.get_tile(point)
+            if not tile:
+                continue
+                # return err
+            try:
+                pi = int(args[1])
+                if pi > 3:
+                    return f'Can\'t set owner id to {pi}'
+                tile.owner_id = pi
+            except:
+                return f'Failed to parse player index {args[1]}'
+        return ''
+
+
 class CommandMaster:
     def __init__(self, game: 'Game'):
         self.game = game
@@ -343,6 +403,7 @@ class CommandMaster:
             'put': PutCommand(game),
             'moveen': MoveEntityCommand(game),
             'toggleloc': ToggleLocationCommand(game),
+            'tos': TileOwnerSetCommand(game)
         }
 
     def execute(self, command: str) -> str:
@@ -353,7 +414,7 @@ class CommandMaster:
             return f'Command <{operator}> not found'
         
         c = self.command_map[operator]
-        return c.execute(args)
+        return c.execute(operator, args)
 
 
 class Game:
@@ -389,7 +450,7 @@ class Game:
         ]
 
         self.draw_layers: list[DrawLayer] = [
-            DrawInWindowLayer(self),
+            DrawMapLayer(self),
             DrawOwnedTiles(self),
             DrawSelectedTileLayer(self),
             DrawSelectedTileInfoLayer(self),

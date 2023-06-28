@@ -34,6 +34,23 @@ TILE_SPRITE = [
 ]
 
 
+SETUP_SCRIPT = '''
+# toggleloc
+tos [0:2].[0:2] 1
+tos [3:4].1 1
+tos 3.2 1
+put 2.1 Castle
+put [0:1].1 Mana Drill
+put 1.2 Mana Drill
+
+tos [14:16].[0:2] 2
+tos [12:13].1 2
+tos 13.2 2
+put 14.1 Castle
+put [15:16].1 Mana Drill
+put 15.2 Mana Drill
+'''
+
 class Map:
     def __init__(self):
         self.generate_tiles()
@@ -423,8 +440,9 @@ class CommandMaster:
 
         self.command_map = {
             'put': PutCommand(game),
-            'moveen': MoveEntityCommand(game),
+            'move': MoveEntityCommand(game),
             'toggleloc': ToggleLocationCommand(game),
+            'tl': ToggleLocationCommand(game),
             'tos': TileOwnerSetCommand(game),
             'remove': RemoveEntityCommand(game),
         }
@@ -486,6 +504,11 @@ class Game:
 
     def run(self):
         self.running = True
+        # setup script
+        for line in SETUP_SCRIPT.split('\n'):
+            if len(line) == 0: continue
+            self.command_master.execute(line)
+
         while self.running:
             self.draw()
             self.input()

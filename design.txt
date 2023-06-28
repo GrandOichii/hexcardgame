@@ -1,5 +1,5 @@
 == Keywords ==
-{Hidden} - is invisible to opponent until is attacked.
+{Hidden} - is invisible to opponent until is attacked/attacks.
 {Fast} - can move as soon as played.
 {Unrestricted} - can have any amount of this card in your deck.
 

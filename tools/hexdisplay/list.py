@@ -26,7 +26,7 @@ class ListTemplate:
         self._reset()
 
     def selected(self):
-        if self.choice > len(self.options):
+        if self.choice >= len(self.options):
             return None
         return self.options[self.choice]
 

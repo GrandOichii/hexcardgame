@@ -1,4 +1,5 @@
 import curses
+import random
 import re
 from tools.hexdisplay.card import *
 
@@ -39,17 +40,20 @@ SETUP_SCRIPT = '''
 tos [0:2].[0:2] 1
 tos [3:4].1 1
 tos 3.2 1
-put 2.1 Castle
-put [0:1].1 Mana Drill
-put 1.2 Mana Drill
+put 0 2.1 Castle
+put 0 [0:1].1 Mana Drill
+put 0 1.2 Mana Drill
+draw 0 6
 
 tos [14:16].[0:2] 2
 tos [12:13].1 2
 tos 13.2 2
-put 14.1 Castle
-put [15:16].1 Mana Drill
-put 15.2 Mana Drill
+put 1 14.1 Castle
+put 1 [15:16].1 Mana Drill
+put 1 15.2 Mana Drill
+draw 1 6
 '''
+
 
 class Map:
     def __init__(self):
@@ -75,9 +79,9 @@ class Map:
             self.tiles += [a]
 
 
-# DECKLIST = 4 * [card.copy() for card in ENTITIES if card.name != 'Mana Drill']
-# mdc = int(len(DECKLIST)*35/65)
-# DECKLIST += [MANA_DRILL_C.copy() for i in range(mdc)]
+DECKLIST = 4 * [card for card in ENTITIES if card.name != 'Mana Drill' and card.name != 'Castle']
+mdc = int(len(DECKLIST)*35/65)
+DECKLIST += [MANA_DRILL_C for i in range(mdc)]
 
 # TODO change location logic of tiles (from nw to se)
 
@@ -124,7 +128,7 @@ class TileDrawLayer(DrawLayer):
         if not en: return
 
         # draw entity info
-        win.addstr(y + 1, x + 2, en.label)
+        win.addstr(y + 1, x + 2, en.label + str(en.owner_i))
         if en.power > 0:
             win.addstr(y + 2, x + 1, str(en.power))
         if en.life > 0:
@@ -218,13 +222,17 @@ class DrawSelectedTileInfoLayer(DrawLayer):
 
 PLAYER_AREA_HEIGHT = 25
 PLAYER_AREA_WIDTH = 40
-class DrawPlayersLayer(DrawLayer):
+class DrawPlayerLayer(DrawLayer):
     def __init__(self, game: 'Game', player: 'PlayerData'):
         super().__init__(game)
         self.player = player
-
-        self.list = ListTemplate(self.game.win, [card.name for card in ENTITIES], PLAYER_AREA_HEIGHT - CARD_HEIGHT - 2)
+        self.deck_list = [card.name for card in DECKLIST]
+        random.shuffle(self.deck_list)
+        self.hand: list[str] = []
+        self.list = ListTemplate(self.game.win, self.hand, PLAYER_AREA_HEIGHT - CARD_HEIGHT - 2)
         self.card_sprite = CardSprite()
+
+        self.energy = 0
 
     def draw(self):
         selected = self.player.player_i == self.game.cur_player_i
@@ -239,15 +247,42 @@ class DrawPlayersLayer(DrawLayer):
         win.addstr(y, x + 2, f'P{self.player.player_i+1}', color)
 
         cname = self.list.selected()
-        if not cname: return
+        # if not cname: return
 
         # draw selected card
-        card = card_by_name(cname)
+        card = None
+        if cname:
+            card = card_by_name(cname)
 
         self.card_sprite.load(card)
         self.card_sprite.draw(self.game.win, y + 1, x + 1)
         self.list.draw(y + 1 + CARD_HEIGHT, x + 1, selected)
 
+        # draw other info
+        # y = 3 + CARD_HEIGHT
+        # x = 45 + CARD_WIDTH
+        y += 1
+        x += CARD_WIDTH + 2
+        win.addstr(y, x, f'Deck size: {len(self.deck_list)}')
+        win.addstr(y+1, x, f'Energy: {self.energy}')
+
+    def draw_from_deck(self, amount: int):
+        new = self.deck_list[:amount]
+        self.hand += new
+        del self.deck_list[:amount]
+
+    def receive_turn(self):
+        self.energy = 0
+        for row in self.game.map.tiles:
+            for tile in row:
+                if not tile:
+                    continue
+                en = tile.entity
+                if en is None:
+                    continue
+                if en.owner_i == self.player.player_i and en.name == 'Mana Drill':
+                    self.energy += 1
+        self.draw_from_deck(1)
 
 class DrawLastErrorLayer(DrawLayer):
     def __init__(self, game: 'Game') -> None:
@@ -335,21 +370,25 @@ class PutCommand(Command):
         super().__init__(game)
 
     def execute(self, cname: str, args: list[str]) -> str:
-        if len(args) < 2:
+        if len(args) < 3:
             return f'Incorrect number of arguments for <{cname}> command'
-        point_raw = args[0]
-        points, err = self.parse_points(point_raw)
-        ename = ' '.join(args[1:])
-        entity = entity_by_name(ename)
-        if not entity:
-            return f'No entity with name "{ename}"'
-        for point in points:
-            if not point:
-                return err
-            tile, err = self.get_tile(point)
-            if not tile:
-                return err
-            tile.entity = entity.copy()
+        try:
+            player_i = int(args[0])
+            point_raw = args[1]
+            points, err = self.parse_points(point_raw)
+            ename = ' '.join(args[2:])
+            entity = entity_by_name(ename)
+            if not entity:
+                return f'No entity with name "{ename}"'
+            for point in points:
+                if not point:
+                    return err
+                tile, err = self.get_tile(point)
+                if not tile:
+                    return err
+                tile.entity = entity.copy(player_i)
+        except Exception as e:
+            return str(e)
         return ''
     
 
@@ -397,7 +436,7 @@ class TileOwnerSetCommand(Command):
 
     def execute(self, cname: str, args: list[str]) -> str:
         if len(args) != 2:
-            return f'Wrong number of arguments for <{cname}> command'
+            return f'Incorrect number of arguments for <{cname}> command'
         points, err = self.parse_points(args[0])
         if not points:
             return err
@@ -422,7 +461,7 @@ class RemoveEntityCommand(Command):
 
     def execute(self, cname: str, args: list[str]) -> str:
         if len(args) != 1:
-            return f'Wrong number of arguments for <{cname} command>'
+            return f'Incorrect number of arguments for <{cname} command>'
         points, err = self.parse_points(args[0])
         for point in points:
             if point is None:
@@ -431,6 +470,26 @@ class RemoveEntityCommand(Command):
             if not tile:
                 return err
             tile.entity = None
+        return ''
+
+
+class DrawCommand(Command):
+    def __init__(self, game: 'Game'):
+        super().__init__(game)
+
+    def execute(self, cname: str, args: list[str]) -> str:
+        if len(args) < 1 or len(args) > 3:
+            return f'Incorrect number of arguments for <{cname}> command'
+        try:
+            player_i = int(args[0])
+            amount = 1
+            if len(args) == 2:
+                amount = int(args[1])
+            player = self.game.player_containers[player_i]
+            player.draw_from_deck(amount)
+        except Exception as e:
+            return str(e)
+
         return ''
 
 
@@ -445,6 +504,7 @@ class CommandMaster:
             'tl': ToggleLocationCommand(game),
             'tos': TileOwnerSetCommand(game),
             'remove': RemoveEntityCommand(game),
+            'draw': DrawCommand(game)
         }
 
     def execute(self, command: str) -> str:
@@ -485,9 +545,9 @@ class Game:
         # error color
         curses.init_pair(10, curses.COLOR_RED, -1)
 
-        self.player_containers: list[DrawPlayersLayer] = [
-            DrawPlayersLayer(self, self.players[0]),
-            DrawPlayersLayer(self, self.players[1]),
+        self.player_containers: list[DrawPlayerLayer] = [
+            DrawPlayerLayer(self, self.players[0]),
+            DrawPlayerLayer(self, self.players[1]),
         ]
 
         self.draw_layers: list[DrawLayer] = [
@@ -504,11 +564,13 @@ class Game:
 
     def run(self):
         self.running = True
+
         # setup script
         for line in SETUP_SCRIPT.split('\n'):
             if len(line) == 0: continue
             self.command_master.execute(line)
 
+        self.current_player_container().receive_turn()
         while self.running:
             self.draw()
             self.input()
@@ -543,6 +605,19 @@ class Game:
             self.last_error = err
             return
 
+        # card removing
+        if key == 10:
+            player = self.current_player_container()
+            cur = player.list.selected()
+            tile = self.selected_tile()
+            new_en = entity_by_name(cur)
+            if new_en.cost > player.energy:
+                return
+            player.energy -= new_en.cost
+            tile.entity = new_en.copy(self.cur_player_i)
+            player.list.remove_current()
+            return
+
         # card in hand cycling keys
         if key == curses.KEY_DOWN:
             self.current_player_container().list.scroll_down()
@@ -554,6 +629,12 @@ class Game:
         # current player cycling keys
         if key == ord('\t'):
             self.cur_player_i = 1 - self.cur_player_i
+            self.current_player_container().receive_turn()
+            return
+        
+        # backspace
+        if key == 127:
+            self.command_master.execute('remove .')
             return
 
         # modify entity life keys
@@ -675,7 +756,7 @@ class Game:
                 tile.entity_i = -1
                 tile.entity = None
                 return
-            tile.entity = ENTITIES[tile.entity_i].copy()
+            tile.entity = ENTITIES[tile.entity_i].copy(self.cur_player_i)
             return
         if key == ord('<'):
             tile = self.selected_tile()
@@ -685,7 +766,7 @@ class Game:
                 return
             if tile.entity_i < -1:
                 tile.entity_i = len(ENTITIES) - 1
-            tile.entity = ENTITIES[tile.entity_i].copy()
+            tile.entity = ENTITIES[tile.entity_i].copy(self.cur_player_i)
             return
         
         # entity movement keys
@@ -696,7 +777,7 @@ class Game:
     def selected_tile(self) -> Tile:
         return self.map.tiles[self.mouse_pos[0]][self.mouse_pos[1]]
 
-    def current_player_container(self) -> DrawPlayersLayer:
+    def current_player_container(self) -> DrawPlayerLayer:
         return self.player_containers[self.cur_player_i]
 
 
@@ -707,6 +788,7 @@ def main(stdscr: curses.window):
 
     g = Game(stdscr)
     g.run()
+
 
 '''
   ---  

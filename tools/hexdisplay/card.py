@@ -15,13 +15,13 @@ class Card:
 
 
 class Placeable(Card):
-    def __init__(self, label:str='', power:int=-1, life:int=0, name:str='', cost:int=0, type:str='', text:str=''):
+    def __init__(self, label:str='', power:int=-1, life:int=0, name:str='', cost:int=0, type:str='', text:str='', owner_i: int=0):
         super().__init__(name, cost, type, text, power, life)
         self.label: str = label
+        self.owner_i = owner_i
         
-
-    def copy(self) -> 'Placeable':
-        return Placeable(self.label, self.power, self.life, self.name, self.cost, self.type, self.text)
+    def copy(self, owner_i: int) -> 'Placeable':
+        return Placeable(self.label, self.power, self.life, self.name, self.cost, self.type, self.text, owner_i)
 
 
 # TODO add cycling entities on space pressing
@@ -82,7 +82,12 @@ class CardSprite:
         box(win, y + 4, x, CARD_HEIGHT - 4, CARD_WIDTH, True)
         
         if not self.card: return
-        win.addstr(y + 1, x + 1, textwrap.shorten(self.card.name, CARD_WIDTH-2, placeholder='...'))
+        # name
+        win.addstr(y + 1, x + 1, textwrap.shorten(self.card.name, CARD_WIDTH-3, placeholder='...'))
+        # cost
+        cs = str(self.card.cost)
+        win.addstr(y + 1, x + CARD_WIDTH - len(cs) - 1, cs)
+        # type
         win.addstr(y + 3, x + 1, textwrap.shorten(self.card.type, CARD_WIDTH-2, placeholder='...'))
         lines = []
         for line in self.card.text.split('\n'):

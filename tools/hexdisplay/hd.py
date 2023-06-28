@@ -91,7 +91,7 @@ class Map:
             self.tiles += [a]
 
 
-DECKLIST = 4 * [card for card in ENTITIES if card.name != 'Mana Drill' and card.name != 'Castle']
+DECKLIST = 4 * [card for card in CARDS if card.name != 'Mana Drill' and card.name != 'Castle']
 mdc = int(len(DECKLIST)*35/65)
 DECKLIST += [MANA_DRILL_C for i in range(mdc)]
 
@@ -642,14 +642,16 @@ class Game:
             player = self.current_player_container()
             cur = player.list.selected()
             tile = self.selected_tile()
-            if tile.owner_id-1 != self.cur_player_i:
+            # if tile.owner_id - 1 != self.cur_player_i:
+            #     return
+            card = card_by_name(cur)
+            if card.cost > player.energy:
                 return
-            new_en = entity_by_name(cur)
-            if new_en.cost > player.energy:
-                return
-            player.energy -= new_en.cost
-            tile.entity = new_en.copy(self.cur_player_i)
+            player.energy -= card.cost
             player.list.remove_current()
+            if card.life == 0:
+                return
+            tile.entity = card.copy(self.cur_player_i)
             return
 
         # card in hand cycling keys

@@ -49,10 +49,14 @@ ENTITIES = [
     Placeable('Br', 6, 5, 'Brute', 5, 'Unit', '', max_movement=1),
 ]
 
+CARDS = [
+    Card('Flame Eruption', 3, 'Spell', 'Deal 2 damage to all n. Structures/Units.'),
+] + ENTITIES
+
 
 # TODO not only entities
 def card_by_name(name: str):
-    for card in ENTITIES:
+    for card in CARDS:
         if card.name == name:
             return card
     return None

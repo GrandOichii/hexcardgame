@@ -1,4 +1,5 @@
 using core.match;
+using core.players;
 
 namespace core.tiles;
 
@@ -8,6 +9,7 @@ namespace core.tiles;
 public class Tile {
     public int IPos { get; }
     public int JPos { get; }
+    public Player? Owner { get; set; }
 
     public Tile(int iPos, int jPos)
     {
@@ -53,13 +55,6 @@ public class Map {
                     result.Tiles[i, j] = new Tile(i, j);
         }
 
-        // for (int i = 0; i < height; i++) {
-        //     for (int j = 0; j < width; j++)
-        //         System.Console.Write((result.Tiles[i, j] is object ? "1" : "0") + " ");
-        //     System.Console.WriteLine();
-        // }
-
-        match.LState.DoString(setupScript);
         return result;
     }
 }

@@ -1,4 +1,6 @@
+using System.Text.RegularExpressions;
 using core.cards;
+using core.match;
 
 namespace core.decks;
 
@@ -51,15 +53,21 @@ public class DeckTemplate {
     /// </summary>
     /// <param name="cMaster">Card master object, is used for fetching cards</param>
     /// <returns>Deck, created from template</returns>
-    public Deck ToDeck(CardMaster cMaster) {
-        // TODO
-        return new Deck();
-    }
-}
+    public Zone<MCard> ToDeck(core.match.Match match) {
+        var list = new List<MCard>();
 
-/// <summary>
-/// Deck object, is used in the match as the player's deck of cards
-/// </summary>
-public class Deck {
-    // TODO
+        var cm = match.CardMaster;
+        foreach (var pair in Index) {
+            var cardID = pair.Key;
+            var card = cm.Get(cardID);
+            var amount = pair.Value;
+            for (int i = 0; i < amount; i++) {
+                var mCard = card.ConstructMatchCard(match);
+                list.Add(mCard);
+            }
+        }
+
+        var result = new Zone<MCard>(list);
+        return result;
+    }
 }

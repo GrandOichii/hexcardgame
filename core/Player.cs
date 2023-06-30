@@ -1,3 +1,4 @@
+using core.cards;
 using core.decks;
 using core.match;
 
@@ -32,6 +33,10 @@ public class Player {
     public PlayerController Controller { get; }
     public string ID { get; }
 
+
+    // zones
+    public Zone<MCard> Deck { get; }
+
     public Player(Match match, string name, DeckTemplate dTemplate, PlayerController controller) {
         Match = match;
         Name = name;
@@ -40,7 +45,8 @@ public class Player {
         match.Players.Add(this);
         ID = match.PlayerIDCreator.Next();
 
-        // TODO decks
+        // create deck
+        Deck = dTemplate.ToDeck(match);
 
         Match.SystemLogger.Log("PLAYER", "Added player " + name);
     }

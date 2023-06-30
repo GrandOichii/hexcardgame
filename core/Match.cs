@@ -6,6 +6,7 @@ using core.players;
 using util;
 using core.scripts;
 using core.tiles;
+using core.cards;
 
 namespace core.match;
 
@@ -53,16 +54,20 @@ public class EmptyMatchView : MatchView
 /// <summary>
 /// Configuraton object for match creation
 /// </summary>
-public struct MatchConfig
+public class MatchConfig
 {
+    static Random _rnd = new Random();
+
     [JsonPropertyName("startingHandSize")]
     public int StartingHandSize { get; set; }
     [JsonPropertyName("turnStartDraw")]
     public int TurnStartDraw { get; set; }
+    [JsonPropertyName("seed")]
+    public int Seed { get; set; } = -1;
     [JsonPropertyName("setupScript")]
-    public string SetupScript { get; set; }
+    public string SetupScript { get; set; }="error('NO SETUP SCRIPT')";
     [JsonPropertyName("map")]
-    public List<List<int>> Map { get; set; }
+    public List<List<int>> Map { get; set; }=new();
 
     /// <summary>
     /// Creates the match configuration from JSON
@@ -71,6 +76,12 @@ public struct MatchConfig
     /// <returns></returns>
     static public MatchConfig FromJson(string text) {
         var result = JsonSerializer.Deserialize<MatchConfig>(text);
+        if (result is null) {
+            throw new Exception("Failed to parse MatchConfig from " + text);
+        }
+        if (result.Seed == -1) {
+            result.Seed = _rnd.Next();
+        }
         return result;
     }
 }
@@ -81,6 +92,9 @@ public struct MatchConfig
 /// </summary>
 public class Match
 {
+    private static string CORE_FILE = "../core/core.lua";
+
+    public Random Rnd { get; }
     static private List<MatchPhase> _phases = new(){
         new TurnStart(),
         new MainPhase(),
@@ -88,6 +102,8 @@ public class Match
     };
 
     public IDCreator PlayerIDCreator { get; set; } = new BasicIDCreator();
+    public IDCreator CardIDCreator { get; set; } = new BasicIDCreator();
+    public CardMaster CardMaster { get; }
     public string ID { get; }
     public List<Player> Players { get; }
     public Lua LState { get; }
@@ -95,18 +111,24 @@ public class Match
     public Map Map { get; }
     public Player? Winner { get; set; } = null;
     public bool Active => Winner is null;
-    private bool _allowCommands;
+    public bool AllowCommands { get; set; }
     public Logger SystemLogger { get; set; } = new EmptyLogger();
     public MatchView View { get; set; } = new EmptyMatchView();
+    public MatchConfig Config { get; }
 
-    public Match(string id, MatchConfig config, bool allowCommands = false) {
+    public Match(string id, MatchConfig config, CardMaster master) {
+        CardMaster = master;
         ID = id;
         LState = new();
         ScriptMaster = new(this);
-        _allowCommands = allowCommands;
         Players = new();
+        Config = config;
+        Rnd = new Random(config.Seed);
 
         Map = Map.FromConfig(this, config);
+
+        SystemLogger.Log("MATCH", "Running core file");
+        LState.DoFile(CORE_FILE);
     }
 
     /// <summary>
@@ -136,7 +158,10 @@ public class Match
     /// Sets up the match
     /// </summary>
     public void Setup() {
-        // TODO
+        SystemLogger.Log("MATCH", "Setting up match");
+        
+        SystemLogger.Log("MATCH", "Running map setup script");
+        LState.DoString(Config.SetupScript);
 
         View.Start();
     }
@@ -148,6 +173,7 @@ public class Match
         SystemLogger.Log("MATCH", "Started main match loop");
         // TODO
         while (Winner is null) {
+            View.Update(this);
             var cPlayer = CurrentPlayer;
             foreach (var phase in _phases) {
                 phase.Exec(this, cPlayer);
@@ -162,10 +188,11 @@ public class Match
     /// Cleans up after the match is finished
     /// </summary>
     public void CleanUp() {
+        SystemLogger.Log("MATCH", "Performing cleanup");
+
         // TODO
         View.End();
     }
-
 
     /// <summary>
     /// Returns the current player
@@ -185,6 +212,18 @@ public class Match
         }
     }
     
+    /// <summary>
+    /// Returns a player with the given ID
+    /// </summary>
+    /// <param name="pID">Player ID</param>
+    /// <returns>Player</returns>
+    public Player PlayerWithID(string pID) {
+        foreach (var player in Players)
+            if (player.ID == pID)
+                return player;
+        
+        throw new Exception("Failed to find a player with ID " + pID);
+    }
 }
 
 
@@ -206,9 +245,9 @@ public class MatchMaster
     /// Creates and saves a new Match object
     /// </summary>
     /// <returns>The created match</returns>
-    public Match New(MatchConfig config) {
+    public Match New(CardMaster cMaster, MatchConfig config) {
         var id = IDCreator.Next();
-        var result = new Match(id, config);
+        var result = new Match(id, config, cMaster);
         Index.Add(id, result);
         return result;
     }

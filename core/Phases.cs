@@ -55,9 +55,7 @@ class MainPhase : MatchPhase
     private readonly string PASS_TURN_ACTION = "pass";
     private static readonly Dictionary<string, GameAction> ACTION_MAP =
     new(){
-        {"aaa", new DoNothingAction() }
-    //     { "play", new PlayCardAction() },
-    //     { "attack", new AttackAction() }
+        { "do", new ExecuteCommandAction() }
     };
 
     public override void Exec(Match match, Player player)

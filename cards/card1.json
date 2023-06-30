@@ -6,5 +6,5 @@
     "text": "At the start of your turn, [CARDNAME] restores 1 life.",
     "power": 3,
     "life": 3,
-    "script": "TODO"
+    "script": "function _create(props) return CardCreation:Card(props) end"
 }

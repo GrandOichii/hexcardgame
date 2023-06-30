@@ -1,3 +1,4 @@
+-- TODO change locations
 local pIDs = GetPlayerIDs()
 -- player 1
 -- set ownership

@@ -47,7 +47,8 @@ class Program {
         var mCreator = MatchMaster.Instance;
 
         // create match
-        var match = mCreator.New(config);
+        var match = mCreator.New(cm, config);
+        match.AllowCommands = true;
         var view = new CursesMatchView();
         match.View = view;
         match.SystemLogger = new FileLogger("../recent_logs.txt");

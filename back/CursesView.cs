@@ -1,4 +1,5 @@
 using core.match;
+using core.tiles;
 using Mindmagma.Curses;
 
 class CursesMatchView : MatchView
@@ -34,8 +35,9 @@ class CursesMatchView : MatchView
         NCurses.Clear();
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (tiles[i, j] is null) continue;
-                DrawTile(i, j);
+                var tile = tiles[i, j];
+                if (tile is null) continue;
+                DrawTile(tile, i, j);
             }
         }
         NCurses.Refresh();
@@ -56,7 +58,7 @@ class CursesMatchView : MatchView
     /// </summary>
     /// <param name="i">i coord</param>
     /// <param name="j">j coord</param>
-    public void DrawTile(int i, int j) {
+    public void DrawTile(Tile tile, int i, int j) {
         int len = TILE_SPRITE.Length;
         int y = (len / 2) * i + 1;
         int b = 9;
@@ -64,5 +66,8 @@ class CursesMatchView : MatchView
         for (int ii = 0; ii < len; ii++) {
             NCurses.MoveAddString(y + ii, x, TILE_SPRITE[ii]);
         }
+        if (tile.Owner is null) return;
+
+        NCurses.MoveAddString(y + 3, x + 3, tile.Owner.Name);
     }
 }

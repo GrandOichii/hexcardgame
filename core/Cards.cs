@@ -1,5 +1,9 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using core.match;
+using util;
+using NLua;
+
 namespace core.cards;
 
 
@@ -8,6 +12,8 @@ namespace core.cards;
 /// </summary>
 public class Card
 {
+    static private string WRAPPER_CREATION_FNAME = "_create";
+
     [JsonPropertyName("name")]
     public string Name { get; set; } = "<no-name>";
     [JsonPropertyName("cost")]
@@ -34,9 +40,40 @@ public class Card
     public string CID() {
         return Expansion + "::" + Name;
     }
+
+    public MCard ConstructMatchCard(Match match) {
+        var lState = match.LState;
+        lState.DoString(Script);
+        var mID = match.CardIDCreator.Next();
+        var creationF = LuaUtility.GetGlobalF(lState, WRAPPER_CREATION_FNAME);
+        var props = GetProps(lState);
+        var returned = creationF.Call(props);
+        var table = LuaUtility.GetReturnAs<LuaTable>(returned);
+
+        var result = new MCard(match, mID, table, this);
+        return result;
+    }
+
+    /// <summary>
+    /// Creates a table to be used in the creation function
+    /// </summary>
+    /// <param name="lState">Lua state</param>
+    /// <returns>Props table</returns>
+    public LuaTable GetProps(Lua lState) {
+        var result = LuaUtility.CreateTable(lState);
+        result["name"] = Name;
+        result["cost"] = Cost;
+        result["type"] = Type;
+        result["power"] = Power;
+        result["life"] = Life;
+        return result;
+    }
 }
 
 
+/// <summary>
+/// Card master entity, is used for card fetching
+/// </summary>
 public abstract class CardMaster
 {
     /// <summary>
@@ -48,7 +85,9 @@ public abstract class CardMaster
 }
 
 
-// TODO don't know if this is ok, for testing purposes
+/// <summary>
+/// File card master, loads cards using a manifest file
+/// </summary>
 public class FileCardMaster : CardMaster
 {
     private static string MANIFEST_FILE = "manifest.json";
@@ -95,5 +134,20 @@ public class FileCardMaster : CardMaster
                 return card;
 
         throw new Exception("Can't load card with ID " + id);
+    }
+}
+
+
+public class MCard {
+    public Match Match { get; }
+    public string MID { get; }
+    public Card Original { get; }
+    public LuaTable Data { get; }
+
+    public MCard(Match match, string id, LuaTable data, Card original) {
+        Match = match;
+        MID = id;
+        Original = original;
+        Data = data;
     }
 }

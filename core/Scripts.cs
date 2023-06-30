@@ -6,7 +6,6 @@ using NLua;
 
 namespace core.scripts;
 
-
 /// <summary>
 /// Marks the method as a Lua function
 /// </summary>
@@ -45,7 +44,7 @@ public class ScriptMaster {
         var result = new List<string>();
         foreach (var player in _match.Players)
             result.Add(player.ID);
-        return LuaUtil.CreateTable(_match.LState, result);
+        return LuaUtility.CreateTable(_match.LState, result);
     }
 
     
@@ -55,7 +54,7 @@ public class ScriptMaster {
     /// <param name="points">List of points</param>
     /// <param name="pID">Player ID of the new owner of the tiles</param>
     [LuaCommand]
-    public void TileOwnerSet(LuaTable points, string pID) {
+    public void TileOwnerSet(string pID, LuaTable points) {
         foreach (var pointRaw in points.Values) {
             var point = pointRaw as LuaTable;
             if (point is null) {
@@ -70,7 +69,17 @@ public class ScriptMaster {
                 throw new Exception("Invalid point arguments for TileOwnerSet function");
             }
 
-            // TODO
+            // TODO explicit cast - bad
+            var tile = _match.Map.Tiles[(int)iPos, (int)jPos];
+            if (tile is null) {
+                // TODO? throw exception
+                return;
+            }
+
+            // TODO for some reason pID is null, problem with setupScript
+            var player = _match.PlayerWithID(pID);
+
+            tile.Owner = player;
         }
     }
 

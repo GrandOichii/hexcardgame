@@ -87,7 +87,7 @@ public class BasicIDCreator : IDCreator {
 /// <summary>
 /// Static class of Utiity functions for Lua
 /// </summary>
-static class LuaUtil {
+static class LuaUtility {
     /// <summary>
     /// Creates a new Lua table
     /// </summary>
@@ -110,4 +110,58 @@ static class LuaUtil {
             result[i+1] = args[i];
         return result;
     }
+
+    /// <summary>
+    /// Fetches global function from Lua state
+    /// </summary>
+    /// <param name="lState">Lua state</param>
+    /// <param name="fName">Function name</param>
+    /// <returns>The function</returns>
+    static public LuaFunction GetGlobalF(Lua lState, string fName) {
+        var f = lState[fName] as LuaFunction;
+        if (f is null) throw new Exception("Failed to get function " + fName + " from glabal Lua state");
+        return f;
+    } 
+
+    /// <summary>
+    /// Checks whether can index the array, if not throws exception
+    /// </summary>
+    /// <param name="returned">The array</param>
+    /// <param name="index">The index</param>
+    static void CheckIndex(object[] returned, int index) {
+        if (index < returned.Length) return;
+
+        throw new Exception("Can't access return value with index " + index + ": total amount of returned values is " + returned.Length);
+    }
+
+
+    /// <summary>
+    /// Selects the return value at specified index and returns it as an object of the specified type
+    /// </summary>
+    /// <typeparam name="T">Type of the return value</typeparam>
+    static public T GetReturnAs<T>(object[] returned, int index=0) where T : class {
+        CheckIndex(returned, index);
+        var result = returned[index] as T;
+        if (result is null) throw new Exception("Return value in index " + index + " is not a table");
+        return result;
+    }
+}
+
+
+/// <summary>
+/// General utility class
+/// </summary>
+static class Utility {
+    /// <summary>
+    /// Returns the shuffled list
+    /// </summary>
+    /// <param name="list">List</param>
+    /// <param name="rnd">Random number generator</param>
+    /// <typeparam name="T">Type of contained value</typeparam>
+    /// <returns>The shuffled list</returns>
+    static public List<T> Shuffled<T>(List<T> list, Random rnd) {
+        return list.OrderBy(a => rnd.Next()).ToList();
+    }
+        
+
 }

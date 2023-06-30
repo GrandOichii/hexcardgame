@@ -1,0 +1,23 @@
+{
+    "startingHandSize": 6,
+    "map": [
+        [0, 1, 0, 0],
+        [0, 1, 1, 0],
+        [1, 1, 1, 0],
+        [1, 1, 1, 1],
+        [1, 1, 1, 0],
+        [1, 1, 1, 1],
+        [1, 1, 1, 0],
+        [1, 1, 1, 1],
+        [1, 1, 1, 0],
+        [1, 1, 1, 1],
+        [1, 1, 1, 0],
+        [1, 1, 1, 1],
+        [1, 1, 1, 0],
+        [1, 1, 1, 1],
+        [1, 1, 1, 0],
+        [0, 1, 1, 0],
+        [0, 1, 0, 0]
+    ],
+    "setupScript": "local pIDs = GetPlayerIDs()\n-- player 1\n-- set ownership\nTileOwnerSet({\n{2, 0},\n{0, 1},\n{1, 1},\n{2, 1},\n{3, 1},\n{4, 1},\n{1, 2},\n{2, 2},\n{3, 2},\n}, pIDs[0])\n-- place entities\nCreateAndPutEntity(pIDs[0], {2, 1}, 'dev::Castle')\nCreateAndPutEntity(pIDs[0], {0, 1}, 'dev::Mana Drill')\nCreateAndPutEntity(pIDs[0], {1, 1}, 'dev::Mana Drill')\nCreateAndPutEntity(pIDs[0], {1, 2}, 'dev::Mana Drill')\n-- player 2\n-- set ownership\nTileOwnerSet({\n{2, 0},\n{0, 1},\n{1, 1},\n{2, 1},\n{3, 1},\n{4, 1},\n{1, 2},\n{2, 2},\n{3, 2},\n}, pIDs[0])\n-- place entities\nCreateAndPutEntity(pIDs[0], {2, 1}, 'dev::Castle')\nCreateAndPutEntity(pIDs[0], {0, 1}, 'dev::Mana Drill')\nCreateAndPutEntity(pIDs[0], {1, 1}, 'dev::Mana Drill')\nCreateAndPutEntity(pIDs[0], {1, 2}, 'dev::Mana Drill')\n"
+}

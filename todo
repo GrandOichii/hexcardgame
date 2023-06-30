@@ -1,0 +1,5 @@
+- create backend for servers (use c#)
+- create frontend (use python first, then better ui with c++/c#)
+- create back + front for managing cards
+    - has to: manage cards, manage expansions, manage decks, manage matches, replaying recorded matches, manage match configs
+- create html front

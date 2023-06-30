@@ -1,0 +1,10 @@
+{
+    "name": "Test Card 1",
+    "cost": 3,
+    "type": "Type - Mage",
+    "expansion": "dev",
+    "text": "At the start of your turn, [CARDNAME] restores 1 life.",
+    "power": 3,
+    "life": 3,
+    "script": "TODO"
+}

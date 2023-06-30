@@ -123,7 +123,7 @@ class TileDrawLayer(DrawLayer):
 
     def basic_draw_sprite(self, win: curses.window, i, j, tile: Tile):
         # y = 0
-        y = (len(TILE_SPRITE) - 4)*i+1
+        y = (len(TILE_SPRITE)//2)*i+1
         base = 9
         x = base * 2 * j + (1 - i % 2) * base
         # if i % 2 == 0:
@@ -587,6 +587,17 @@ class Game:
         ] + self.player_containers
 
         self.map = Map()
+        ms = ''
+        for row in self.map.tiles:
+            a = ''
+            for tile in row:
+                s = '0'
+                if tile:
+                    s = '1'
+                a += s + ' '
+            ms += a + '\n'
+        open('map.txt', 'w').write(ms)
+                
         self.mouse_pos = [len(self.map.tiles)//2, len(self.map.tiles[0])//2]
 
     def run(self):
@@ -723,6 +734,7 @@ class Game:
         def check_entity_movement():
             if self.entity_movement_mode:
                 en = prev.entity
+                if not en: return
                 if en.owner_i != self.cur_player_i: return
                 # if en.movement == 0: return
                 en.movement -= 1

@@ -1,0 +1,93 @@
+:: Lingo ::
+card id - global id of the card
+card mid - id of the card in a match
+
+:: Classes ::
+ViewModel: view model of the match
+
+Card: a card object that is stored in the database.
+    name - str
+    cost - int
+    type - str
+    expansion - str
+    text - text
+    power - int
+    life - int
+    deckUsable - bool
+    script - str
+
+CardMaster: a singleton object, is used for fetching cards
+
+DeckTemplate: a deck template, used when generating decks for the matches.
+    index - {str -> int} // dictionary, card id -> amount in deck
+
+Deck: a deck, used in match
+    template - DeckTemplate
+    owner - Player
+
+PlayerController: a controller class, is used for handling control of player.
+
+Player: a player entity, is used in match.
+    name - str
+    mid - match id
+    controller - PlayerController
+
+Match: a match entity.
+    mid - int // match id
+    players - [Player]
+    curPlayerI - int
+    viewModel - ViewModel // view model of the match
+
+MCard: a card that is used in the match.
+    original: Card // original card
+    data: LuaTable // modified data of the card
+
+
+:: Communication data example ::
+{
+    "myHand": [
+        {
+            "mid": "12",
+            "id": "test_set::warrior_initiate",
+
+            // modifications to the card, will override the base card, that is fetched using id
+            "mod": {
+                "cost": 2
+            }
+        }
+    ],
+}
+
+
+:: Card entry example ::
+{
+    "name": "Warrior Initiate",
+    "cost": 2,
+    "type": "Unit - Warrior",
+    "expansion": "test_set",
+    "text": "",
+
+    // optional
+    "power": 2,
+
+    // optional
+    "life": 2,
+
+    // can be used in a deck
+    "deckUsable": true,
+    "script": "..."
+}
+
+:: Cards folder contents ::
+- manifest.json
+- cards
+    - card1.json
+    - card2.json
+    - card3.json
+
+manifest.json
+[
+    "card1.json",
+    "card2.json"
+    // card3.json is omitted, could be for testing
+]

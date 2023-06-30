@@ -7,7 +7,7 @@ Defence - each point of defence eats up 1 damage per turn, restores at end of tu
 n. - neighboring
 
 
-[Mana Drill]:3
+[Mana Drill]:1
     (Structure)
     {Unrestricted}
     Geneartes 1 energy per turn.
@@ -131,10 +131,41 @@ n. - neighboring
 
 [Frog]:1
     (Unit)
-    L: 1
     P: 1 
+    L: 1
 
 
 [!Castle]:10
     (Structure)
     T: 10
+
+
+[Spread Influence]:4
+    (Spell)
+    Gain control of topehe current and all n. neutral tiles.
+
+
+[Troop Warp]:5
+    (Spell)
+    Teleport any one of your Warriors into a n. tile.
+
+
+[Volcanic Dragon]:7
+    (Unit)
+    {Fast}
+    At the start of turn, deal 1 damage to all n. enemy Structures/Units.
+    P: 7
+    L: 7
+
+
+[TODO]:20
+    (Unit)
+    [CARDNAME]'s cost is reduced by the number of tiles you control.
+    P: 15
+    L: 15
+
+
+[Blood for Knowledge]:2
+    (Spell)
+    Deal 1 damage to caster. If survives, draw 2 cards.
+    

@@ -1,0 +1,8 @@
+{
+    "name": "Test Card 2",
+    "cost": 3,
+    "type": "Spell",
+    "expansion": "dev",
+    "text": "Deal 1 damage to caster. If survives, draw 2 cards.",
+    "script": "TODO"
+}

@@ -2,10 +2,17 @@ using core.players;
 
 namespace core.match;
 
+/// <summary>
+/// Match phase
+/// </summary>
 abstract class MatchPhase {
     abstract public void Exec(Match match, Player player);
 }
 
+
+/// <summary>
+/// Turn start phase
+/// </summary>
 class TurnStart : MatchPhase
 {
     public override void Exec(Match match, Player player)
@@ -39,6 +46,10 @@ class TurnStart : MatchPhase
     }
 }
 
+
+/// <summary>
+/// Main phase of the match
+/// </summary>
 class MainPhase : MatchPhase
 {
     private readonly string PASS_TURN_ACTION = "pass";
@@ -83,6 +94,10 @@ class MainPhase : MatchPhase
     } 
 }
 
+
+/// <summary>
+/// Turn end phase
+/// </summary>
 class TurnEnd : MatchPhase
 {
     public override void Exec(Match match, Player player)

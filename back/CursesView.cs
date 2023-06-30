@@ -40,8 +40,8 @@ class CursesMatchView : MatchView
         }
         NCurses.Refresh();
 
-        var key = NCurses.GetChar();
-        if (key == 'q') match.Winner = match.CurrentPlayer;
+        // var key = NCurses.GetChar();
+        // if (key == 'q') match.Winner = match.CurrentPlayer;
     }
 
     public override void End()
@@ -51,6 +51,11 @@ class CursesMatchView : MatchView
         NCurses.EndWin();
     }
 
+    /// <summary>
+    /// Draw the tile with the specified i and j coords
+    /// </summary>
+    /// <param name="i">i coord</param>
+    /// <param name="j">j coord</param>
     public void DrawTile(int i, int j) {
         int len = TILE_SPRITE.Length;
         int y = (len / 2) * i + 1;

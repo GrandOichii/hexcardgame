@@ -4,15 +4,26 @@ using core.players;
 using core.match;
 using util;
 using Mindmagma.Curses;
+using System.Text;
 // using NCurses;
 
-class TerminalPlayerController : PlayerController
+class CursesPlayerController : PlayerController
 {
+    private CursesMatchView _view;
+    public CursesPlayerController(CursesMatchView view) {
+        _view = view;
+    }
+
     public override string DoPromptAction(Player player, Match match)
     {
-        // NCurses.GetString()
-        // return "p";
-        return "aaa";
+        NCurses.Echo();
+        NCurses.SetCursor(1);
+        NCurses.Move(0, 0);
+        StringBuilder result = new();
+        NCurses.GetString(result);
+        NCurses.NoEcho();
+        NCurses.SetCursor(0);
+        return result.ToString();
     }
 }
 
@@ -37,11 +48,12 @@ class Program {
 
         // create match
         var match = mCreator.New(config);
-        match.View = new CursesMatchView();
+        var view = new CursesMatchView();
+        match.View = view;
         match.SystemLogger = new FileLogger("../recent_logs.txt");
 
         // player controllers
-        var p1Controller = new TerminalPlayerController();
+        var p1Controller = new CursesPlayerController(view);
         var p2Controller = p1Controller;
 
         // create players

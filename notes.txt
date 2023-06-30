@@ -91,3 +91,18 @@ manifest.json
     "card2.json"
     // card3.json is omitted, could be for testing
 ]
+
+:: Communication ::
+Players actions are simple strings.
+
+- Unit -
+Required: has to be on an empty tile that is owned by the player.
+Example: play 4 3.1
+
+- Structure -
+Required: has to be on an empty tile that is owned by the player.
+Example: play 3 1.0
+
+- Spell -
+Required: has to be played using a Mage Unit.
+Example: play 4 2.0

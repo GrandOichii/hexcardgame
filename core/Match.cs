@@ -163,7 +163,13 @@ public class Match
         SystemLogger.Log("MATCH", "Running map setup script");
         LState.DoString(Config.SetupScript);
 
+        // setup players
+        foreach (var player in Players) {
+            player.Draw(Config.StartingHandSize);
+        }
+
         View.Start();
+        View.Update(this);
     }
 
     /// <summary>

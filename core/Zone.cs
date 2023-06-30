@@ -14,6 +14,8 @@ public class Zone<T> where T : MCard {
         Cards = cards;
     }
 
+    public Zone() : this(new()) {}
+
     public void Shuffle(Random rnd) {
         Cards = Utility.Shuffled(Cards, rnd);
     }

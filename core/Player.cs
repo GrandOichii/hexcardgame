@@ -28,7 +28,7 @@ abstract public class PlayerController {
 /// In-match player object.
 /// </summary>
 public class Player {
-    public Match Match { get; }
+    private Match _match;
     public string Name { get; }
     public PlayerController Controller { get; }
     public string ID { get; }
@@ -36,18 +36,36 @@ public class Player {
 
     // zones
     public Zone<MCard> Deck { get; }
+    public Zone<MCard> Hand { get; }
+
 
     public Player(Match match, string name, DeckTemplate dTemplate, PlayerController controller) {
-        Match = match;
+        _match = match;
         Name = name;
         Controller = controller;
 
         match.Players.Add(this);
         ID = match.PlayerIDCreator.Next();
 
-        // create deck
+        // zones
         Deck = dTemplate.ToDeck(match);
+        Hand = new();
 
-        Match.SystemLogger.Log("PLAYER", "Added player " + name);
+        _match.SystemLogger.Log("PLAYER", "Added player " + name);
     }
+
+    /// <summary>
+    /// Forces the player to draw an amount of cards
+    /// </summary>
+    /// <param name="amount">Amount of cards</param>
+    public void Draw(int amount) {
+        var cards = Deck.PopTop(amount);
+
+        // _match.Emit("card_draw", new(){{"player", ToLuaTable(_match.LState)}, {"amount", amount}});
+
+        Hand.AddToBack(cards);
+        _match.SystemLogger.Log("PLAYER", "Player " + ShortStr + " drew " + cards.Count + " cards");
+    }
+
+    public string ShortStr => Name + " [" + ID + "]";
 }

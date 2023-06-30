@@ -150,4 +150,7 @@ public class MCard {
         Original = original;
         Data = data;
     }
+
+    public bool IsPlaceable => Original.Type.Contains("Unit") || Original.Type == "Structure";
+
 }

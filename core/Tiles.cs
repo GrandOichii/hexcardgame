@@ -57,4 +57,29 @@ public class Map {
 
         return result;
     }
+
+    /// <summary>
+    /// Returns the tile at the specified string location
+    /// </summary>
+    /// <param name="point">Tile location, should be in the format of [i]:[j]</param>
+    /// <returns></returns>
+    public Tile? TileAt(string point) {
+        var p = PointSplit(point);
+        return Tiles[p[0], p[1]];
+    }
+
+    /// <summary>
+    /// Splits the point into an array of integers
+    /// </summary>
+    /// <param name="point">Point string, should be in the format of [i]:[j]</param>
+    /// <returns>An array of i and j</returns>
+    private int[] PointSplit(string point) {
+        var split = point.Split(":");
+        if (split.Length != 2) {
+            throw new Exception("Can't split point string " + point);
+        }
+        var i = int.Parse(split[0]);
+        var j = int.Parse(split[1]);
+        return new int[] {i, j};
+    }
 }

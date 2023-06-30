@@ -39,8 +39,8 @@ class TurnStart : MatchPhase
         // //         // TODO replace if units will be able to attack multiple times
         // //         card.Table["availableAttacks"] = 1;
 
-        // // draw for the turn
-        // player.DrawCards(match.Config.TurnStartCardDraw);
+        // draw for the turn
+        player.Draw(match.Config.TurnStartDraw);
 
         // match.UpdateOpponent();
     }

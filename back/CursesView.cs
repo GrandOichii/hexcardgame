@@ -33,12 +33,32 @@ class CursesMatchView : MatchView
         var width = match.Map.Width;
 
         NCurses.Clear();
+
+        // draw map
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 var tile = tiles[i, j];
                 if (tile is null) continue;
                 DrawTile(tile, i, j);
             }
+        }
+        // draw player's hands
+        int x = 68;
+        int y = 1;
+        for (int i = 0; i < match.Players.Count; i++) {
+            var player = match.Players[i];
+            var nameS = " " + player.ShortStr;
+            if (i == match.CurPlayerI)
+                nameS = ">" + player.ShortStr + "<";
+            NCurses.MoveAddString(y, x, nameS);
+            NCurses.MoveAddString(y + 2, x, "Hand:");
+
+            for (int ii = 0; ii < player.Hand.Cards.Count; ii++) {
+                var card = player.Hand.Cards[ii];
+                NCurses.MoveAddString(y + ii + 3, x + 1, card.Original.Name + " [" + card.MID + "]");
+            }
+
+            x += 40;
         }
         NCurses.Refresh();
 

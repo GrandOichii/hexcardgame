@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="dotnet-curses" Version="1.0.2" />
     <PackageReference Include="NLua" Version="1.6.0" />
   </ItemGroup>
 

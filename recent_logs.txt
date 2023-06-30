@@ -1,0 +1,3 @@
+PLAYER: Added player P1
+PLAYER: Added player P2
+MATCH: Started main match loop

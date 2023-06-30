@@ -1,4 +1,5 @@
 using System.Text;
+using NLua;
 
 namespace util;
 
@@ -28,6 +29,17 @@ public class ConsoleLogger : Logger
 
 
 /// <summary>
+/// Empty logger class, logged information is not saved anywhere
+/// </summary>
+public class EmptyLogger : Logger
+{
+    public override void Log(string prefix, string text)
+    {
+    }
+}
+
+
+/// <summary>
 /// Basic file logger
 /// </summary>
 public class FileLogger : Logger
@@ -40,7 +52,7 @@ public class FileLogger : Logger
     // TODO not tested
     public override void Log(string prefix, string text)
     {
-        string data = prefix + ": " + text;
+        string data = prefix + ": " + text + "\n";
         byte[] info = new UTF8Encoding(true).GetBytes(data);
         Stream.Write(info, 0, info.Length);
         Stream.Flush();
@@ -68,5 +80,34 @@ public class BasicIDCreator : IDCreator {
     public override string Next()
     {
         return (++_count).ToString();
+    }
+}
+
+
+/// <summary>
+/// Static class of Utiity functions for Lua
+/// </summary>
+static class LuaUtil {
+    /// <summary>
+    /// Creates a new Lua table
+    /// </summary>
+    /// <param name="lState">Lua state</param>
+    /// <returns>New table</returns>
+    static public LuaTable CreateTable(Lua lState) {
+        lState.NewTable("_table");
+        return lState.GetTable("_table");
+    }
+
+    /// <summary>
+    /// Creates a new Lua array
+    /// </summary>
+    /// <param name="lState">Lua state</param>
+    /// <param name="args">The array</param>
+    /// <returns>Lua array</returns>
+    static public LuaTable CreateTable<T>(Lua lState, List<T> args) {
+        var result = CreateTable(lState);
+        for (int i = 0; i < args.Count; i++)
+            result[i+1] = args[i];
+        return result;
     }
 }

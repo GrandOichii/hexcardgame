@@ -23,8 +23,13 @@ public class Tile {
 public class Map {
     public Match Match { get; }
     public Tile?[,] Tiles { get; }
+    public int Width { get; }
+    public int Height { get; }
 
     public Map(Match match, int width, int height) {
+        Width = width;
+        Height = height;
+
         Match = match;
         Tiles = new Tile?[height, width];
     }
@@ -36,8 +41,25 @@ public class Map {
     /// <returns>Constructed map</returns>
     static public Map FromConfig(Match match, MatchConfig config) {
         // TODO
-        var result = new Map(match, 1, 1);
+        var map = config.Map;
+        var setupScript = config.SetupScript;
+        var height = map.Count;
+        var width = map[0].Count;
+        var result = new Map(match, width, height);
+        for (int i = 0; i < height; i++) {
+            var row = map[i];
+            for (int j = 0; j < row.Count; j++)
+                if (row[j] != 0)
+                    result.Tiles[i, j] = new Tile(i, j);
+        }
 
+        // for (int i = 0; i < height; i++) {
+        //     for (int j = 0; j < width; j++)
+        //         System.Console.Write((result.Tiles[i, j] is object ? "1" : "0") + " ");
+        //     System.Console.WriteLine();
+        // }
+
+        match.LState.DoString(setupScript);
         return result;
     }
 }

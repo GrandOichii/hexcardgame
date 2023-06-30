@@ -2,10 +2,18 @@
 using core.decks;
 using core.players;
 using core.match;
+using util;
+using Mindmagma.Curses;
+// using NCurses;
 
-
-class TerminalPlayerController : PlayerController {
-
+class TerminalPlayerController : PlayerController
+{
+    public override string DoPromptAction(Player player, Match match)
+    {
+        // NCurses.GetString()
+        // return "p";
+        return "aaa";
+    }
 }
 
 
@@ -28,7 +36,9 @@ class Program {
         var mCreator = MatchMaster.Instance;
 
         // create match
-        var match = mCreator.New();
+        var match = mCreator.New(config);
+        match.View = new CursesMatchView();
+        match.SystemLogger = new FileLogger("../recent_logs.txt");
 
         // player controllers
         var p1Controller = new TerminalPlayerController();

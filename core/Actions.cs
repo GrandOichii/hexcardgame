@@ -113,21 +113,25 @@ class MoveAction : GameAction
             // TODO? don't throw exception
             throw new Exception("Invalid point argument for move action");
         }
-        if (tile.Entity is null) {
+        var en = tile.Entity;
+        if (en is null) {
             // TODO? don't throw exception
             throw new Exception("Invalid point argument for move action");
         }
-        if (tile.Entity.Owner != player) {
+        if (en.Owner != player) {
             // TODO? don't throw exception
             throw new Exception("Invalid point argument for move action");
         }
-        if (!tile.Entity.IsUnit) {
+        if (!en.IsUnit) {
             // TODO? don't throw exception
             throw new Exception("Invalid point argument for move action");
         }
         // TODO movement
+        if (!en.CanMove) {
+            // TODO? don't throw exception
+            throw new Exception("Invalid point argument for move action");
+        }
         
-        var en = tile.Entity;
         var dir = int.Parse(args[2]);
         var newTile = match.Map.GetNeighbor(tile.IPos, tile.JPos, dir);
 

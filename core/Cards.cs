@@ -170,6 +170,8 @@ public class MCard {
 
     public bool IsUnit => Original.Type.Contains("Unit");
 
+    public bool CanMove => Movement > 0;
+
 }
 
 

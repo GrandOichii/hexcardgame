@@ -6,10 +6,9 @@ PLAYER: Player P1 [1] drew 6 cards
 PLAYER: Player P2 [2] drew 6 cards
 MATCH: Started main match loop
 PLAYER: Player P1 [1] drew 1 cards
-MATCH: Performing cleanup
- 1 cards
+PLAYER: Player P2 [2] drew 1 cards
 PLAYER: Player P1 [1] drew 0 cards
+PLAYER: Player P2 [2] drew 0 cards
 MATCH: Performing cleanup
  0 cards
-PLAYER: Player P1 [1] drew 0 cards
 MATCH: Performing cleanup

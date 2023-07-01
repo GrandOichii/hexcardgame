@@ -28,6 +28,15 @@ class CursesPlayerController : PlayerController
 }
 
 
+class BasicPlayerController : PlayerController
+{
+    public override string DoPromptAction(Player player, Match match)
+    {
+        return "play 1 1.1";
+    }
+}
+
+
 class Program {
     static void Main(string[] args)
     {
@@ -55,6 +64,7 @@ class Program {
 
         // player controllers
         var p1Controller = new CursesPlayerController(view);
+        // var p1Controller = new BasicPlayerController();
         var p2Controller = p1Controller;
 
         // create players

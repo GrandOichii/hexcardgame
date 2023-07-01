@@ -1,6 +1,8 @@
 using System.Text;
 using NLua;
 
+using core.exceptions;
+
 namespace util;
 
 /// <summary>
@@ -134,7 +136,6 @@ static class LuaUtility {
         throw new Exception("Can't access return value with index " + index + ": total amount of returned values is " + returned.Length);
     }
 
-
     /// <summary>
     /// Selects the return value at specified index and returns it as an object of the specified type
     /// </summary>
@@ -144,6 +145,19 @@ static class LuaUtility {
         var result = returned[index] as T;
         if (result is null) throw new Exception("Return value in index " + index + " is not a table");
         return result;
+    }
+
+    /// <summary>
+    /// Returns Lua table field as long
+    /// </summary>
+    /// <param name="table">Lua table</param>
+    /// <param name="name">Name of the field</param>
+    /// <returns>Long value</returns>
+    static public long GetLong(LuaTable table, string name) {
+        var f = table[name] as long?;
+        if (f is null) throw new GLuaTableException(table, "Failed to get long " + name + " from Lua table ");
+        // TODO bad cast?
+        return (long)f;
     }
 }
 
@@ -162,6 +176,4 @@ static class Utility {
     static public List<T> Shuffled<T>(List<T> list, Random rnd) {
         return list.OrderBy(a => rnd.Next()).ToList();
     }
-        
-
 }

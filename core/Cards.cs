@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using core.match;
 using util;
 using NLua;
+using core.players;
 
 namespace core.cards;
 
@@ -12,8 +13,6 @@ namespace core.cards;
 /// </summary>
 public class Card
 {
-    static private string WRAPPER_CREATION_FNAME = "_create";
-
     [JsonPropertyName("name")]
     public string Name { get; set; } = "<no-name>";
     [JsonPropertyName("cost")]
@@ -41,18 +40,6 @@ public class Card
         return Expansion + "::" + Name;
     }
 
-    public MCard ConstructMatchCard(Match match) {
-        var lState = match.LState;
-        lState.DoString(Script);
-        var mID = match.CardIDCreator.Next();
-        var creationF = LuaUtility.GetGlobalF(lState, WRAPPER_CREATION_FNAME);
-        var props = GetProps(lState);
-        var returned = creationF.Call(props);
-        var table = LuaUtility.GetReturnAs<LuaTable>(returned);
-
-        var result = new MCard(match, mID, table, this);
-        return result;
-    }
 
     /// <summary>
     /// Creates a table to be used in the creation function
@@ -139,18 +126,48 @@ public class FileCardMaster : CardMaster
 
 
 public class MCard {
+    static private string WRAPPER_CREATION_FNAME = "_create";
+
     public Match Match { get; }
+    public Player Owner { get; set; }
+    public Player OriginalOwner { get; set; }
     public string MID { get; }
     public Card Original { get; }
     public LuaTable Data { get; }
+    public bool GoesToDiscard { get; set; }
 
-    public MCard(Match match, string id, LuaTable data, Card original) {
+    public long MaxMovement => LuaUtility.GetLong(Data, "maxMovement");
+    public long Movement => LuaUtility.GetLong(Data, "movement");
+
+    public MCard(Match match, Card card, Player player) {
+        var lState = match.LState;
+        lState.DoString(card.Script);
+        var mID = match.CardIDCreator.Next();
+        var creationF = LuaUtility.GetGlobalF(lState, WRAPPER_CREATION_FNAME);
+        var props = card.GetProps(lState);
+        var returned = creationF.Call(props);
+        var data = LuaUtility.GetReturnAs<LuaTable>(returned);
+
         Match = match;
-        MID = id;
-        Original = original;
+        MID = mID;
+        Original = card;
         Data = data;
+
+        OriginalOwner = player;
+        Owner = OriginalOwner;
     }
 
     public bool IsPlaceable => Original.Type.Contains("Unit") || Original.Type == "Structure";
 
+    /// <summary>
+    /// Resets the movement of the card (if card is a Unit)
+    /// </summary>
+    public void ResetMovement() {
+        if (MaxMovement == -1) return;
+
+        Data["movement"] = MaxMovement;
+    }
+
 }
+
+

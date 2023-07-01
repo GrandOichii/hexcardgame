@@ -58,8 +58,8 @@ class PlayCardAction : GameAction
 
         var mID = args[1];
         var pointRaw = args[2];
-        var point = match.Map.TileAt(pointRaw);
-        if (point is null) {
+        var tile = match.Map.TileAt(pointRaw);
+        if (tile is null) {
             // TODO? don't throw exception
             throw new Exception("Cannot play a card on point " + pointRaw + ": it is empty");
         }
@@ -71,12 +71,16 @@ class PlayCardAction : GameAction
         }
 
         if (card.IsPlaceable) {
-            // TODO
-            // card is placeable, i.e. a Unit or a Structure
-            // check whether destination tile is owned by the player
-            // if not, cancel playing
-            // remove the card from player's hand
-            // place it onto the tile
+            if (tile.Owner != player) {
+                // TODO? don't throw exception
+                throw new Exception("Can't place entity on tile " + pointRaw + ": it's not owned by " + player.ShortStr);
+            }
+            if (tile.Entity is object) {
+                // TODO? don't throw exception 
+                throw new Exception("Can't place entity on tile " + pointRaw + ": it is already taken");
+            }
+            player.Hand.Cards.Remove(card);
+            tile.Entity = card;
             return;
         }
 

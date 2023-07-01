@@ -39,9 +39,22 @@ class TurnStart : MatchPhase
         // //         // TODO replace if units will be able to attack multiple times
         // //         card.Table["availableAttacks"] = 1;
 
+        // renew movement
+        var map = match.Map;
+        for (int i = 0; i < map.Height; i++) {
+            for (int j = 0; j < map.Width; j++) {
+                var tile = map.Tiles[i, j];
+
+                if (tile is object && tile.Entity is object && tile.Entity.Owner == player && tile.Entity.Original.Type.Contains("Unit")) {
+                    tile.Entity.Data["movement"] = tile.Entity.MaxMovement;
+                }
+            }
+        }
+
         // draw for the turn
         player.Draw(match.Config.TurnStartDraw);
-
+        
+        match.View.Update(match);
         // match.UpdateOpponent();
     }
 }
@@ -55,7 +68,8 @@ class MainPhase : MatchPhase
     private readonly string PASS_TURN_ACTION = "pass";
     private static readonly Dictionary<string, GameAction> ACTION_MAP =
     new(){
-        { "do", new ExecuteCommandAction() }
+        { "do", new ExecuteCommandAction() },
+        { "play", new PlayCardAction() },
     };
 
     public override void Exec(Match match, Player player)

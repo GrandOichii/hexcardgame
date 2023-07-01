@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using core.cards;
 using core.match;
+using core.players;
 
 namespace core.decks;
 
@@ -53,7 +54,7 @@ public class DeckTemplate {
     /// </summary>
     /// <param name="cMaster">Card master object, is used for fetching cards</param>
     /// <returns>Deck, created from template</returns>
-    public Zone<MCard> ToDeck(core.match.Match match) {
+    public Zone<MCard> ToDeck(core.match.Match match, Player owner) {
         var list = new List<MCard>();
 
         var cm = match.CardMaster;
@@ -62,7 +63,7 @@ public class DeckTemplate {
             var card = cm.Get(cardID);
             var amount = pair.Value;
             for (int i = 0; i < amount; i++) {
-                var mCard = card.ConstructMatchCard(match);
+                var mCard = new MCard(match, card, owner);
                 list.Add(mCard);
             }
         }

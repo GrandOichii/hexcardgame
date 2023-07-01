@@ -1,10 +1,10 @@
 {
-    "name": "Test Card 1",
+    "name": "Mage",
     "cost": 3,
-    "type": "Type - Mage",
+    "type": "Unit - Mage",
     "expansion": "dev",
     "text": "At the start of your turn, [CARDNAME] restores 1 life.",
     "power": 3,
     "life": 3,
-    "script": "function _create(props) return CardCreation:Card(props) end"
+    "script": "function _create(props) return CardCreation:Unit(props) end"
 }

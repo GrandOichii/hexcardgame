@@ -48,7 +48,7 @@ public class Player {
         ID = match.PlayerIDCreator.Next();
 
         // zones
-        Deck = dTemplate.ToDeck(match);
+        Deck = dTemplate.ToDeck(match, this);
         Hand = new();
 
         _match.SystemLogger.Log("PLAYER", "Added player " + name);

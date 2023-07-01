@@ -1,3 +1,4 @@
+using core.cards;
 using core.match;
 using core.players;
 
@@ -10,7 +11,7 @@ public class Tile {
     public int IPos { get; }
     public int JPos { get; }
     public Player? Owner { get; set; }
-
+    public MCard? Entity { get; set; }
     public Tile(int iPos, int jPos)
     {
         IPos = iPos;
@@ -74,7 +75,7 @@ public class Map {
     /// <param name="point">Point string, should be in the format of [i]:[j]</param>
     /// <returns>An array of i and j</returns>
     private int[] PointSplit(string point) {
-        var split = point.Split(":");
+        var split = point.Split(".");
         if (split.Length != 2) {
             throw new Exception("Can't split point string " + point);
         }

@@ -3,6 +3,8 @@ using System.Reflection;
 using System.Linq.Expressions;
 using util;
 using NLua;
+using core.cards;
+using core.tiles;
 
 namespace core.scripts;
 
@@ -34,6 +36,45 @@ public class ScriptMaster {
         }
     }
 
+    /// <summary>
+    /// Returns the tile at the specified coordinates
+    /// </summary>
+    /// <param name="coords">Coordinates in the form of a Lua table</param>
+    /// <returns>Tile</returns>
+    private Tile? TileAt(LuaTable coords) {
+        long? iPos = coords[1] as long?;
+        if (iPos is null) {
+            throw new Exception("Invalid point coordinates");
+        }
+        long? jPos = coords[2] as long?;
+        if (jPos is null) {
+            throw new Exception("Invalid point coordinates");
+        }
+
+        // TODO explicit cast - bad
+        var tile = _match.Map.Tiles[(int)iPos, (int)jPos];
+        return tile;
+    }
+
+    /// <summary>
+    /// Log wrapper for system log
+    /// </summary>
+    /// <param name="message">Log message</param>
+    [LuaCommand]
+    public void Log(string message) {
+        _match.SystemLogger.Log("SCRIPTS", message);
+    }
+
+    /// <summary>
+    /// Returns short string for player
+    /// </summary>
+    /// <param name="pID">Player ID</param>
+    /// <returns>Short string</returns>
+    [LuaCommand]
+    public string PLayerShortStr(string pID) {
+        var player = _match.PlayerWithID(pID);
+        return player.ShortStr;
+    }
 
     /// <summary>
     /// Returns a Lua array with all the player IDs
@@ -46,7 +87,6 @@ public class ScriptMaster {
             result.Add(player.ID);
         return LuaUtility.CreateTable(_match.LState, result);
     }
-
     
     /// <summary>
     /// Sets the owner of the tiles to the specified player id
@@ -60,21 +100,12 @@ public class ScriptMaster {
             if (point is null) {
                 throw new Exception("Invalid point arguments for TileOwnerSet function");
             }
-            long? iPos = point[1] as long?;
-            if (iPos is null) {
-                throw new Exception("Invalid point arguments for TileOwnerSet function");
-            }
-            long? jPos = point[2] as long?;
-            if (jPos is null) {
-                throw new Exception("Invalid point arguments for TileOwnerSet function");
-            }
-
-            // TODO explicit cast - bad
-            var tile = _match.Map.Tiles[(int)iPos, (int)jPos];
+            var tile = TileAt(point);
             if (tile is null) {
                 // TODO? throw exception
                 return;
             }
+
 
             // TODO for some reason pID is null, problem with setupScript
             var player = _match.PlayerWithID(pID);
@@ -86,6 +117,16 @@ public class ScriptMaster {
 
     [LuaCommand]
     public void CreateAndPutEntity(string pID, LuaTable point, string cID) {
-        // TODO
+        var player = _match.PlayerWithID(pID);
+        var card = _match.CardMaster.Get(cID);
+        var mCard = new MCard(_match, card, player);
+        mCard.GoesToDiscard = false;
+
+        var tile = TileAt(point);
+        if (tile is null) {
+            // TODO? throw exception
+            return;
+        }
+        tile.Entity = mCard;
     }
 }

@@ -86,8 +86,30 @@ class CursesMatchView : MatchView
         for (int ii = 0; ii < len; ii++) {
             NCurses.MoveAddString(y + ii, x, TILE_SPRITE[ii]);
         }
-        if (tile.Owner is null) return;
+        NCurses.MoveAddString(y + 5, x + 3, "  .  ");
+        NCurses.MoveAddString(y + 5, x + 2, i.ToString());
+        var js = j.ToString();
+        NCurses.MoveAddString(y + 5, x + 9 - js.Length, js);
 
-        NCurses.MoveAddString(y + 3, x + 3, tile.Owner.Name);
+        if (tile.Owner is object) {
+            NCurses.MoveAddString(y + 3, x + 3, tile.Owner.Name);
+        }
+
+        if (tile.Entity is object) {
+            var en = tile.Entity;
+            if (en.Original.Power > 0) {
+                NCurses.MoveAddString(y + 2, x + 2, en.Original.Power.ToString());
+            }
+            if (en.Original.Life > 0) {
+                var ls = en.Original.Life.ToString();
+                NCurses.MoveAddString(y + 2, x + 9 - ls.Length, ls);
+            }
+            if (en.Original.Type.Contains("Unit")) {
+                var ms = en.Movement.ToString();
+                NCurses.MoveAddString(y + 1, x + 9 - ms.Length, ms);
+            }
+
+        }
+
     }
 }

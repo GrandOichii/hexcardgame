@@ -1,6 +1,8 @@
 using core.cards;
 using core.match;
 using core.players;
+using NLua;
+using util;
 
 namespace core.tiles;
 
@@ -26,6 +28,26 @@ public class Tile {
     {
         IPos = iPos;
         JPos = jPos;
+    }
+
+    /// <summary>
+    /// Creates and returns a Lua table with the info about the tile
+    /// </summary>
+    /// <param name="lState">Lua state</param>
+    /// <returns>Lua table</returns>
+    public LuaTable ToLuaTable(Lua lState) {
+        var result = LuaUtility.CreateTable(lState);
+
+        result["iPos"] = IPos;
+        result["jPos"] = JPos;
+
+        result["ownerID"] = null;
+        if (Owner is not null) result["ownerID"] = Owner.ID;
+        
+        result["entoty"] = null;
+        if (Entity is not null) result["entity"] = Entity.Data;
+
+        return result;
     }
 }
 

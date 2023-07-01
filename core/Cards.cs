@@ -129,6 +129,7 @@ public class MCard {
     static private readonly string WRAPPER_CREATION_FNAME = "_Create";
     static public readonly string CAN_PLAY_FNAME = "CanPlay";
     static public readonly string PAY_COSTS_FNAME = "PayCosts";
+    static public readonly string EFFECT_FNAME = "Effect";
 
     public Match Match { get; }
     public Player Owner { get; set; }

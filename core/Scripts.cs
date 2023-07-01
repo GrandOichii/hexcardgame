@@ -71,7 +71,7 @@ public class ScriptMaster {
     /// <param name="pID">Player ID</param>
     /// <returns>Short string</returns>
     [LuaCommand]
-    public string PLayerShortStr(string pID) {
+    public string PlayerShortStr(string pID) {
         var player = _match.PlayerWithID(pID);
         return player.ShortStr;
     }
@@ -102,7 +102,6 @@ public class ScriptMaster {
             }
             var tile = TileAt(point);
             if (tile is null) {
-                // TODO? throw exception
                 return;
             }
 
@@ -176,7 +175,6 @@ public class ScriptMaster {
         player.Energy += amount;
     }
 
-
     /// <summary>
     /// Returns the ID of the card owner
     /// </summary>
@@ -184,11 +182,66 @@ public class ScriptMaster {
     /// <returns>ID of the owner</returns>
     [LuaCommand]
     public string GetOwnerID(string mID) {
-        foreach (var player in _match.Players)
-            foreach (var card in player.AllCards.Keys)
-                if (card.MID == mID)
-                    return player.ID;
+        return _match.GetCard(mID).Owner.ID;
+    }
 
-        throw new Exception("Failed to get owner of the card with match ID " + mID);
+    /// <summary>
+    /// Finds and returns the tile info with the specified entity
+    /// </summary>
+    /// <param name="mID">Card match ID</param>
+    /// <returns>Tile info</returns>
+    [LuaCommand]
+    public LuaTable? GetTileWith(string mID) {
+        var map = _match.Map;
+        for (int i = 0; i < map.Height; i++) {
+            for (int j = 0; j < map.Width; j++) {
+                var tile = map.Tiles[i, j];
+                if (tile is null) continue;
+                var en = tile.Entity;
+                if (en is null) continue;
+                if (en.MID == mID) return tile.ToLuaTable(_match.LState);
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Deals damage to the entity at the specified tile
+    /// </summary>
+    /// <param name="dealerMID">Card match ID of the damage dealer</param>
+    /// <param name="point">Tile coordinates</param>
+    /// <param name="damage">Damage dealt</param>
+    /// <returns>An array of amount of damage dealt and whether the target died</returns>
+    [LuaCommand]
+    public bool DealDamage(string dealerMID, LuaTable point, long damage) {
+        var dealer = _match.GetCard(dealerMID);
+        var tile = TileAt(point);
+        if (tile is null) {
+            return false;
+        }
+
+        var target = tile.Entity;
+        if (target is null) {
+            return false;
+        }
+
+        var dealt = target.ProcessDamage(damage);
+        var died = target.Life == 0;
+
+        _match.CheckZeroLife();
+
+        return died;
+    }
+
+    /// <summary>
+    /// Forces the specified player to draw cards
+    /// </summary>
+    /// <param name="pID">Player ID</param>
+    /// <param name="amount">Amount of cards to be drawn</param>
+    /// <returns>The amount of cards the player drew</returns>
+    [LuaCommand]
+    public int DrawCards(string pID, int amount) {
+        var player = _match.PlayerWithID(pID);
+        return player.Draw(amount);
     }
 }

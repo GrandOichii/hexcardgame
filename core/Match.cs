@@ -302,6 +302,15 @@ public class Match
             }
         }
     }
+
+    public MCard GetCard(string mID) {
+        foreach (var player in Players)
+            foreach (var card in player.AllCards.Keys)
+                if (card.MID == mID)
+                    return card;
+
+        throw new Exception("Failed to get owner of the card with match ID " + mID);
+    }
 }
 
 

@@ -7,7 +7,7 @@ Defence - each point of defence eats up 1 damage per turn, restores at end of tu
 n. - neighboring
 
 
-[Mana Drill]:1
+v [Mana Drill]:1
     (Structure)
     {Unrestricted}
     Geneartes 1 energy per turn.

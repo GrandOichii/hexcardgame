@@ -1,3 +1,4 @@
+using core.cards;
 using core.players;
 using core.tiles;
 
@@ -66,7 +67,7 @@ class PlayCardAction : GameAction
         var card = player.Hand[mID];
         if (card is null) {
             // TODO? don't throw exception
-            throw new Exception("Player " + player.ShortStr + " cannot play a card with mID" + mID + ": it is empty");
+            throw new Exception("Player " + player.ShortStr + " cannot play a card with mID" + mID + ": they don't have it in their hand");
         }
 
         if (card.IsPlaceable) {
@@ -89,12 +90,31 @@ class PlayCardAction : GameAction
             return;
         }
 
-        // card is not placeable, i.e. is a Spell
-        // check, whether the specified tile has a Mage Unit, owned by the player
-        // if not, cancel playing
-        // check, if all targets are chosen
-        // if not, cancel playing
-        // remove card from hand, place it into discard, resolve it's effects
+        var caster = tile.Entity;
+        if (caster is null) {
+            // TODO? don't throw exception
+            throw new Exception("Failed to cast spell " + card.ShortStr + ": tile at " + args[2] + " has no entity");
+        }
+        if (caster.Owner != player) {
+            // TODO? don't throw exception
+            throw new Exception("Failed to cast spell " + card.ShortStr + ": entity at " + args[2] + " is not owned by the player who played the spell");
+        }
+        if (!caster.Type.Contains("Mage")) {
+            // TODO? don't throw exception
+            throw new Exception("Failed to cast spell " + card.ShortStr + ": entity at " + args[2] + " is not a Mage");
+        }
+
+        if (!player.TryPlayCard(card)) {
+            // failed to play card
+            return;
+        }
+
+        player.Hand.Cards.Remove(card); 
+        player.AllCards[card] = Zones.PLAYED;
+        // execute the effect of the card
+        card.ExecFunc(MCard.EFFECT_FNAME, card.Data, player.ID, caster.Data);
+        player.AllCards[card] = Zones.DISCARD;
+        player.Discard.AddToBack(card);
     }
 }
 

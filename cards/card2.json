@@ -1,8 +1,0 @@
-{
-    "name": "Spell",
-    "cost": 3,
-    "type": "Spell",
-    "expansion": "dev",
-    "text": "Deal 1 damage to caster. If survives, draw 2 cards.",
-    "script": "function _Create(props) return CardCreation:Spell(props) end"
-}

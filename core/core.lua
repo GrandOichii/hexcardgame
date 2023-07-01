@@ -13,6 +13,7 @@ ZONES = {
     DISCARD = 'discard',
     PLACED = 'placed',
     HAND = 'hand',
+    PLAYED = 'played',
 }
 
 -- Effects and triggers
@@ -274,6 +275,9 @@ function CardCreation:Spell(props)
             return nil, true
         end
     )
+    function result:Effect(player, caster)
+        self.EffectP:Exec(player, caster)
+    end
 
     return result
 end

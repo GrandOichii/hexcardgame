@@ -71,7 +71,7 @@ public class Player {
     /// Forces the player to draw an amount of cards
     /// </summary>
     /// <param name="amount">Amount of cards</param>
-    public void Draw(int amount) {
+    public int Draw(int amount) {
         var cards = Deck.PopTop(amount);
 
         foreach (var card in cards)
@@ -81,6 +81,8 @@ public class Player {
 
         Hand.AddToBack(cards);
         _match.SystemLogger.Log("PLAYER", "Player " + ShortStr + " drew " + cards.Count + " cards");
+
+        return cards.Count;
     }
 
     public string ShortStr => Name + " [" + ID + "]";

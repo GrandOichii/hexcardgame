@@ -8,6 +8,9 @@
         "GetShortInfo",
         "PayEnergy",
         "GetOwnerID",
-        "AddEnergy"
+        "AddEnergy",
+        "GetTileWith",
+        "DealDamage",
+        "DrawCards"
     ]
 }

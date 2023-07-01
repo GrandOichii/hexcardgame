@@ -92,3 +92,52 @@ class PlayCardAction : GameAction
         // remove card from hand, place it into discard, resolve it's effects
     }
 }
+
+
+class MoveAction : GameAction
+{
+    public override void Exec(Match match, Player player, string[] args)
+    {
+        // move 2.1 0
+        if (args.Length != 3) {
+            throw new Exception("Incorrect number of arguments for move action");
+        }
+
+        // args[1] - point
+        // args[2] - direction
+
+        var tile = match.Map.TileAt(args[1]);
+
+        // TODO better errors
+        if (tile is null) {
+            // TODO? don't throw exception
+            throw new Exception("Invalid point argument for move action");
+        }
+        if (tile.Entity is null) {
+            // TODO? don't throw exception
+            throw new Exception("Invalid point argument for move action");
+        }
+        if (tile.Entity.Owner != player) {
+            // TODO? don't throw exception
+            throw new Exception("Invalid point argument for move action");
+        }
+        if (!tile.Entity.IsUnit) {
+            // TODO? don't throw exception
+            throw new Exception("Invalid point argument for move action");
+        }
+        // TODO movement
+        
+        var en = tile.Entity;
+        var dir = int.Parse(args[2]);
+        var newTile = match.Map.GetNeighbor(tile.IPos, tile.JPos, dir);
+
+        if (newTile is null) {
+            // TODO? don't throw exception
+            throw new Exception("Can't move to tile with args: " + args[1] + " " + args[2] + ": it is empty");
+        }
+
+        tile.Entity = null;
+        newTile.Entity = en;
+        en.Data["movement"] = en.Movement - 1;
+    }
+}

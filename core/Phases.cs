@@ -32,20 +32,13 @@ class TurnStart : MatchPhase
         // // emit turn start effects
         // match.Emit("turn_start", new(){ {"player", player.ToLuaTable(match.LState)} });
 
-        // // TODO
-        // // replenish all units' attacks
-        // // foreach (var card in player.InPlay.Cards)
-        // //     if (card.Table["availableAttacks"] is not null)
-        // //         // TODO replace if units will be able to attack multiple times
-        // //         card.Table["availableAttacks"] = 1;
-
         // renew movement
         var map = match.Map;
         for (int i = 0; i < map.Height; i++) {
             for (int j = 0; j < map.Width; j++) {
                 var tile = map.Tiles[i, j];
 
-                if (tile is object && tile.Entity is object && tile.Entity.Owner == player && tile.Entity.Original.Type.Contains("Unit")) {
+                if (tile is object && tile.Entity is object && tile.Entity.Owner == player && tile.Entity.IsUnit) {
                     tile.Entity.Data["movement"] = tile.Entity.MaxMovement;
                 }
             }
@@ -70,6 +63,7 @@ class MainPhase : MatchPhase
     new(){
         { "do", new ExecuteCommandAction() },
         { "play", new PlayCardAction() },
+        { "move", new MoveAction() },
     };
 
     public override void Exec(Match match, Player player)

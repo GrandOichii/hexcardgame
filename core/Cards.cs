@@ -157,7 +157,7 @@ public class MCard {
         Owner = OriginalOwner;
     }
 
-    public bool IsPlaceable => Original.Type.Contains("Unit") || Original.Type == "Structure";
+    public bool IsPlaceable => IsUnit || Original.Type == "Structure";
 
     /// <summary>
     /// Resets the movement of the card (if card is a Unit)
@@ -167,6 +167,8 @@ public class MCard {
 
         Data["movement"] = MaxMovement;
     }
+
+    public bool IsUnit => Original.Type.Contains("Unit");
 
 }
 

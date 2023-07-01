@@ -104,7 +104,7 @@ class CursesMatchView : MatchView
                 var ls = en.Original.Life.ToString();
                 NCurses.MoveAddString(y + 2, x + 9 - ls.Length, ls);
             }
-            if (en.Original.Type.Contains("Unit")) {
+            if (en.IsUnit) {
                 var ms = en.Movement.ToString();
                 NCurses.MoveAddString(y + 1, x + 9 - ms.Length, ms);
             }

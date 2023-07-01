@@ -4,6 +4,16 @@ using core.players;
 
 namespace core.tiles;
 
+// directions
+//        0
+//      -----   
+// 5  /       \  1
+//   /         \
+//   \         /
+// 4  \       /  2
+//      -----     
+//        3
+
 /// <summary>
 /// Tile object, represents a hexagonal tile
 /// </summary>
@@ -24,6 +34,26 @@ public class Tile {
 /// Map object, consists of multiple hexagonal tiles
 /// </summary>
 public class Map {
+    static private int[][][] DIR_ARR = new int[][][]{
+
+        new int[][] {
+            new int[]{-2, 0},
+            new int[]{-1, +1},
+            new int[]{+1, +1},
+            new int[]{+2, 0},
+            new int[]{+1, 0},
+            new int[]{-1, }
+        },
+        new int[][] {
+            new int[]{-2, 0},
+            new int[]{-1, 0},
+            new int[]{+1, 0},
+            new int[]{+2, 0},
+            new int[]{+1, -1},
+            new int[]{-1, -1},
+        }
+    };
+    
     public Match Match { get; }
     public Tile?[,] Tiles { get; }
     public int Width { get; }
@@ -83,4 +113,12 @@ public class Map {
         var j = int.Parse(split[1]);
         return new int[] {i, j};
     }
+
+    public Tile? GetNeighbor(int iLoc, int jLoc, int dir) {
+        var dirs = DIR_ARR[iLoc % 2];
+        var diff = dirs[dir];
+
+        return Tiles[iLoc + diff[0], jLoc + diff[1]];
+    }
+
 }

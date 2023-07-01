@@ -50,7 +50,7 @@ class CursesMatchView : MatchView
             var nameS = " " + player.ShortStr;
             if (i == match.CurPlayerI)
                 nameS = ">" + player.ShortStr + "<";
-            NCurses.MoveAddString(y, x, nameS);
+            NCurses.MoveAddString(y, x, nameS + " (" + player.Energy.ToString() + ")");
             NCurses.MoveAddString(y + 2, x, "Hand:");
 
             for (int ii = 0; ii < player.Hand.Cards.Count; ii++) {
@@ -98,10 +98,10 @@ class CursesMatchView : MatchView
         if (tile.Entity is object) {
             var en = tile.Entity;
             if (en.Original.Power > 0) {
-                NCurses.MoveAddString(y + 2, x + 2, en.Original.Power.ToString());
+                NCurses.MoveAddString(y + 2, x + 2, en.Power.ToString());
             }
             if (en.Original.Life > 0) {
-                var ls = en.Original.Life.ToString();
+                var ls = en.Life.ToString();
                 NCurses.MoveAddString(y + 2, x + 9 - ls.Length, ls);
             }
             if (en.IsUnit) {

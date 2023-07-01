@@ -1,9 +1,9 @@
 {
     "name": "Mana Drill",
-    "cost": 3,
+    "cost": 4,
     "type": "Structure",
     "expansion": "dev",
     "text": "{Unrestricted}\nGeneartes 1 energy per turn.",
     "life": 3,
-    "script": "function _create(props) return CardCreation:Card(props) end"
+    "script": "function _Create(props) return CardCreation:Structure(props) end"
 }

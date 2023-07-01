@@ -126,7 +126,9 @@ public class FileCardMaster : CardMaster
 
 
 public class MCard {
-    static private string WRAPPER_CREATION_FNAME = "_create";
+    static private readonly string WRAPPER_CREATION_FNAME = "_Create";
+    static public readonly string CAN_PLAY_FNAME = "CanPlay";
+    static public readonly string PAY_COSTS_FNAME = "PayCosts";
 
     public Match Match { get; }
     public Player Owner { get; set; }
@@ -138,6 +140,13 @@ public class MCard {
 
     public long MaxMovement => LuaUtility.GetLong(Data, "maxMovement");
     public long Movement => LuaUtility.GetLong(Data, "movement");
+
+    public string Type => LuaUtility.TableGet<string>(Data, "type");
+    public long Power { get {
+        // TODO create separate power pipeline
+        return LuaUtility.GetLong(Data, "power");
+    }}
+    public long Life => LuaUtility.GetLong(Data, "life");
 
     public MCard(Match match, Card card, Player player) {
         var lState = match.LState;
@@ -168,10 +177,46 @@ public class MCard {
         Data["movement"] = MaxMovement;
     }
 
-    public bool IsUnit => Original.Type.Contains("Unit");
+    public bool IsUnit => Type.Contains("Unit");
 
     public bool CanMove => Movement > 0;
 
+    public string ShortStr => Original.Name + " [" + MID + "]";
+
+    /// <summary>
+    /// Executes card function
+    /// </summary>
+    /// <param name="fName">Function name</param>
+    /// <param name="args">Function arguments</param>
+    /// <returns>The return values of the function</returns>
+    public object[] ExecFunc(string fName, params object[] args) {
+        var f = LuaUtility.TableGet<LuaFunction>(Data, fName);
+        return f.Call(args);
+    }
+
+    /// <summary>
+    /// Executes checker function
+    /// </summary>
+    /// <param name="fName">Checker function name</param>
+    /// <param name="args">Checker function arguments</param>
+    /// <returns>The return value of the checker function</returns>
+    public bool ExecCheckerFunc(string fName, params object[] args) {
+        var results = ExecFunc(fName, args);
+        var result = LuaUtility.GetReturnAsBool(results);
+        return result;
+    }
+
+    /// <summary>
+    /// Process damage, dealt to the card
+    /// </summary>
+    /// <param name="damage">Damage</param>
+    /// <returns>Deal damage</returns>
+    public long ProcessDamage(long damage) {
+        var l = Life;
+        if (damage > l) damage = l;
+
+        Data["life"] = LuaUtility.GetLong(Data, "life") - damage;
+
+        return damage;
+    }
 }
-
-

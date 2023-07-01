@@ -4,5 +4,5 @@
     "type": "Spell",
     "expansion": "dev",
     "text": "Deal 1 damage to caster. If survives, draw 2 cards.",
-    "script": "function _create(props) return CardCreation:Spell(props) end"
+    "script": "function _Create(props) return CardCreation:Spell(props) end"
 }

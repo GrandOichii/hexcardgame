@@ -169,3 +169,9 @@ n. - neighboring
     (Spell)
     Deal 1 damage to caster. If survives, draw 2 cards.
     
+
+[Baar Swamp Changeling]:4
+    (Unit)
+    Every 3 turns, becomes a Warrior, Rogue or Mage. (Loses all other subtypes)
+    L: 3
+    P: 3

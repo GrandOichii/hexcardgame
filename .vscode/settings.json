@@ -4,6 +4,8 @@
         "GetPlayerIDs",
         "CreateAndPutEntity",
         "Log",
-        "PlayerShortStr"
+        "PlayerShortStr",
+        "GetShortInfo",
+        "PayEnergy"
     ]
 }

@@ -1,6 +1,8 @@
 using core.cards;
 using core.decks;
 using core.match;
+using NLua;
+using util;
 
 namespace core.players;
 
@@ -33,9 +35,13 @@ public class Player {
     public PlayerController Controller { get; }
     public string ID { get; }
 
+    public int Energy { get; set; }
+
+    public Dictionary<MCard, string> AllCards { get; }
 
     // zones
     public Zone<MCard> Deck { get; }
+    public Zone<MCard> Discard { get; }
     public Zone<MCard> Hand { get; }
 
 
@@ -49,7 +55,14 @@ public class Player {
 
         // zones
         Deck = dTemplate.ToDeck(match, this);
+        Deck.Shuffle(match.Rnd);
         Hand = new();
+        Discard = new();
+
+        // all cards
+        AllCards = new();
+        foreach (var card in Deck.Cards)
+            AllCards.Add(card, Zones.DECK);
 
         _match.SystemLogger.Log("PLAYER", "Added player " + name);
     }
@@ -61,6 +74,9 @@ public class Player {
     public void Draw(int amount) {
         var cards = Deck.PopTop(amount);
 
+        foreach (var card in cards)
+            AllCards[card] = Zones.HAND;
+
         // _match.Emit("card_draw", new(){{"player", ToLuaTable(_match.LState)}, {"amount", amount}});
 
         Hand.AddToBack(cards);
@@ -68,4 +84,26 @@ public class Player {
     }
 
     public string ShortStr => Name + " [" + ID + "]";
+
+    // public LuaTable ToSmallLuaTable(Lua lState) {
+    //     var result = LuaUtility.CreateTable(lState);
+
+    //     return result;
+    // }
+
+    public bool TryPlayCard(MCard card) {
+        var canPlay = card.ExecCheckerFunc(MCard.CAN_PLAY_FNAME, card.Data, ID);
+        if (!canPlay) {
+            _match.SystemLogger.Log("WARN", "Player " + Name + " tried to play a card they can't play: " + card.ShortStr);
+            return false;
+        }
+
+        var payed = card.ExecCheckerFunc(MCard.PAY_COSTS_FNAME, card.Data, ID);
+        if (!payed) {
+            _match.SystemLogger.Log("WARN", "Player " + Name + " decided not to cast card " + card.ShortStr);
+            return false;
+        }
+
+        return true;
+    }
 }

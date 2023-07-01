@@ -17,6 +17,8 @@ class TurnStart : MatchPhase
 {
     public override void Exec(Match match, Player player)
     {
+        // empty energy reserve
+        player.Energy = 3;
         // // replenish source count
         // player.SourceCount = player.MaxSourcePerTurn;
 
@@ -29,8 +31,8 @@ class TurnStart : MatchPhase
         //     unit.ResetAvailableAttacks();
         // }
 
-        // // emit turn start effects
-        // match.Emit("turn_start", new(){ {"player", player.ToLuaTable(match.LState)} });
+        // emit turn start effects
+        match.Emit("turn_start", new(){ {"player", player.ID} });
 
         // renew movement
         var map = match.Map;

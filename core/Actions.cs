@@ -18,7 +18,6 @@ abstract class GameAction
     abstract public void Exec(Match match, Player player, string[] args);
 }
 
-
 /// <summary>
 /// Empty action, does nothing
 /// </summary>
@@ -79,8 +78,14 @@ class PlayCardAction : GameAction
                 // TODO? don't throw exception 
                 throw new Exception("Can't place entity on tile " + pointRaw + ": it is already taken");
             }
+            if (!player.TryPlayCard(card)) {
+                // failed to play card
+                return;
+            }
+
             player.Hand.Cards.Remove(card);
             tile.Entity = card;
+            player.AllCards[card] = Zones.PLACED;
             return;
         }
 
@@ -111,25 +116,25 @@ class MoveAction : GameAction
         // TODO better errors
         if (tile is null) {
             // TODO? don't throw exception
-            throw new Exception("Invalid point argument for move action");
+            throw new Exception("Invalid point argument for move action: tile is null");
         }
         var en = tile.Entity;
         if (en is null) {
             // TODO? don't throw exception
-            throw new Exception("Invalid point argument for move action");
+            throw new Exception("Invalid point argument for move action: tile has no entity to be moved");
         }
         if (en.Owner != player) {
             // TODO? don't throw exception
-            throw new Exception("Invalid point argument for move action");
+            throw new Exception("Invalid point argument for move action: entity is not owned by the player");
         }
         if (!en.IsUnit) {
             // TODO? don't throw exception
-            throw new Exception("Invalid point argument for move action");
+            throw new Exception("Invalid point argument for move action: entity is not a Unit");
         }
         // TODO movement
         if (!en.CanMove) {
             // TODO? don't throw exception
-            throw new Exception("Invalid point argument for move action");
+            throw new Exception("Invalid point argument for move action: unit has no movement points left");
         }
         
         var dir = int.Parse(args[2]);
@@ -139,6 +144,37 @@ class MoveAction : GameAction
             // TODO? don't throw exception
             throw new Exception("Can't move to tile with args: " + args[1] + " " + args[2] + ": it is empty");
         }
+
+        var targetEn = newTile.Entity;
+
+        // tried to move onto a tile that has an entity in it
+        if (targetEn is not null) {
+            var owner = targetEn.Owner;
+            if (owner == player) {
+                // TODO? don't throw exception
+                throw new Exception("Can't move to tile with args: " + args[1] + " " + args[2] + ": it already has an entity that is owned by the same player.");
+            }
+            match.SystemLogger.Log("MOVEACTION", en.ShortStr + " attacks " + targetEn.ShortStr);
+
+            en.Data["movement"] = en.Movement - 1;
+
+            // tried to attack
+            var attackerDamage = en.Power;
+            var defenderDamage = targetEn.Power;
+
+            // deal damage
+            if (attackerDamage > 0) {
+                targetEn.ProcessDamage(attackerDamage);
+            }
+
+            if (defenderDamage > 0) {
+                en.ProcessDamage(defenderDamage);
+            }
+
+            match.CheckZeroLife();
+            return;
+        }
+
 
         tile.Entity = null;
         newTile.Entity = en;

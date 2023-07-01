@@ -114,7 +114,40 @@ public class ScriptMaster {
         }
     }
 
+    /// <summary>
+    /// Returns a lua table of player, not containing any card info
+    /// </summary>
+    /// <param name="pID">Player ID</param>
+    /// <returns>Lua table</returns>
+    [LuaCommand]
+    public LuaTable GetShortInfo(string pID) {
+        var player = _match.PlayerWithID(pID);
+        var result = LuaUtility.CreateTable(_match.LState);
 
+        result["name"] = player.Name;
+        result["id"] = player.ID;
+        result["energy"] = player.Energy;
+        
+        return result;
+    }
+
+    /// <summary>
+    /// Subtracts the amount from player's energy
+    /// </summary>
+    /// <param name="pID">Player ID</param>
+    /// <param name="amount">Amount of energy</param>
+    [LuaCommand]
+    public void PayEnergy(string pID, int amount) {
+        var player = _match.PlayerWithID(pID);
+        player.Energy -= amount;
+    }
+
+    /// <summary>
+    /// Creates and puts the entity on the specified tile
+    /// </summary>
+    /// <param name="pID">Owner ID</param>
+    /// <param name="point">Tile coordinates</param>
+    /// <param name="cID">ID of the card</param>
     [LuaCommand]
     public void CreateAndPutEntity(string pID, LuaTable point, string cID) {
         var player = _match.PlayerWithID(pID);

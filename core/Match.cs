@@ -5,6 +5,7 @@ using core.decks;
 using core.players;
 using util;
 using core.scripts;
+using core.effects;
 using core.tiles;
 using core.cards;
 
@@ -229,6 +230,77 @@ public class Match
                 return player;
         
         throw new Exception("Failed to find a player with ID " + pID);
+    }
+
+    /// <summary>
+    /// Emits a singal to all cards
+    /// </summary>
+    /// <param name="signal">Signal string</param>
+    /// <param name="args">Signal arguments</param>
+    public void Emit(string signal, Dictionary<string, object> args) {
+        var logMessage = "Emitted signal " + signal + ", args: ";
+        foreach (var pair in args) logMessage += pair.Key + ":" + pair.Value.ToString() + " ";
+        SystemLogger.Log("Match", logMessage);
+
+        foreach (var player in Players) {
+            var cards = player.AllCards;
+            foreach (var pair in cards) {
+                var zone = pair.Value;
+                var card = pair.Key;
+                var triggers = LuaUtility.TableGet<LuaTable>(card.Data, "triggers");
+                foreach (var triggerO in triggers.Values) {
+                    var triggerRaw = triggerO as LuaTable;
+                    if (triggerRaw is null) throw new Exception("Trigger of card " + card.ShortStr + " is somehow value " + triggerO + " (not LuaTable)");
+                    var z = LuaUtility.TableGet<string>(triggerRaw, "zone");
+                    if (z != zone) continue;
+                    var on = LuaUtility.TableGet<string>(triggerRaw, "on");
+                    if (on != signal) continue;
+
+                    var trigger = new Trigger(triggerRaw);
+                    // TODO something else
+                    SystemLogger.Log("Match", "Card " + card.ShortStr + " in zone " + zone + " of player " + player.ShortStr + " has a potential trigger");
+
+                    var triggered = trigger.ExecCheck(LState, player, args);
+                    if (!triggered) {
+                        SystemLogger.Log("Match", "Card " + card.ShortStr + " in zone " + zone + " of player " + player.ShortStr + " failed to trigger");
+                        continue;
+                    }
+
+                    var payed = trigger.ExecCosts(LState, player, args);
+                    if (!payed) {
+                        SystemLogger.Log("Match", "Player " + player.ShortStr + " did not pay cost of triggered ability of card " + card.ShortStr + " in zone " + zone);
+                        continue;
+                    }
+
+                    SystemLogger.Log("Match", "Card " + card.ShortStr + " in zone " + zone + " of player " + player.ShortStr + " triggers");
+                    trigger.ExecEffect(LState, player, args);
+                }
+            }
+        }
+
+        SystemLogger.Log("Match", "Finished emitting " + signal);
+    }
+
+    /// <summary>
+    /// Checks all Units and Structures for having 0 life
+    /// </summary>
+    public void CheckZeroLife() {
+        for (int i = 0; i < Map.Height; i++) {
+            for (int j = 0; j < Map.Width; j++) {
+                var tile = Map.Tiles[i, j];
+                if (tile is null) continue;
+                var en = tile.Entity;
+                if (en is null) continue;
+                if (!en.IsPlaceable) continue;
+                if (en.Life != 0) continue;
+                
+                tile.Entity = null;
+                if (!en.GoesToDiscard) continue;
+                
+                en.Owner.Discard.AddToBack(en);
+                en.Owner.AllCards[en] = Zones.DISCARD;
+            }
+        }
     }
 }
 

@@ -5,10 +5,41 @@ MATCH: Running map setup script
 PLAYER: Player P1 [1] drew 6 cards
 PLAYER: Player P2 [2] drew 6 cards
 MATCH: Started main match loop
+Match: Emitted signal turn_start, args: player:1 
+Match: Finished emitting turn_start
 PLAYER: Player P1 [1] drew 1 cards
+Match: Emitted signal turn_start, args: player:2 
+Match: Finished emitting turn_start
 PLAYER: Player P2 [2] drew 1 cards
+Match: Emitted signal turn_start, args: player:1 
+Match: Finished emitting turn_start
+PLAYER: Player P1 [1] drew 1 cards
+Match: Emitted signal turn_start, args: player:2 
+Match: Finished emitting turn_start
+PLAYER: Player P2 [2] drew 1 cards
+Match: Emitted signal turn_start, args: player:1 
+Match: Finished emitting turn_start
+PLAYER: Player P1 [1] drew 1 cards
+Match: Emitted signal turn_start, args: player:2 
+Match: Finished emitting turn_start
+PLAYER: Player P2 [2] drew 1 cards
+Match: Emitted signal turn_start, args: player:1 
+Match: Finished emitting turn_start
 PLAYER: Player P1 [1] drew 0 cards
+Match: Emitted signal turn_start, args: player:2 
+Match: Finished emitting turn_start
 PLAYER: Player P2 [2] drew 0 cards
-MATCH: Performing cleanup
- 0 cards
+Match: Emitted signal turn_start, args: player:1 
+Match: Finished emitting turn_start
+PLAYER: Player P1 [1] drew 0 cards
+Match: Emitted signal turn_start, args: player:2 
+Match: Finished emitting turn_start
+PLAYER: Player P2 [2] drew 0 cards
+Match: Emitted signal turn_start, args: player:1 
+Match: Finished emitting turn_start
+PLAYER: Player P1 [1] drew 0 cards
+MOVEACTION: Mage [1] attacks Castle [23]
+Match: Emitted signal turn_start, args: player:2 
+Match: Finished emitting turn_start
+PLAYER: Player P2 [2] drew 0 cards
 MATCH: Performing cleanup

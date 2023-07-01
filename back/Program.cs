@@ -9,6 +9,24 @@ using System.Text;
 
 class CursesPlayerController : PlayerController
 {
+    public Queue<string> ActionQueue { get; } = new(new string[] {
+        "play 1 4.1",
+        "pass",
+        "pass",
+        "move 4.1 3",
+        "pass",
+        "pass",
+        "move 6.1 3",
+        "pass",
+        "pass",
+        "move 8.1 3",
+        "pass",
+        "pass",
+        "move 10.1 3",
+        "pass",
+        "pass",
+    });
+
     private CursesMatchView _view;
     public CursesPlayerController(CursesMatchView view) {
         _view = view;
@@ -16,6 +34,10 @@ class CursesPlayerController : PlayerController
 
     public override string DoPromptAction(Player player, Match match)
     {
+        if (ActionQueue.Count > 0) {
+            return ActionQueue.Dequeue();
+        }
+        
         NCurses.Echo();
         NCurses.SetCursor(1);
         NCurses.Move(0, 0);

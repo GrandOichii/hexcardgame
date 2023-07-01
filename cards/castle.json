@@ -5,5 +5,5 @@
     "expansion": "dev",
     "text": "When [CARDNAME] is destroyed, you lose the match.",
     "life": 10,
-    "script": "function _create(props) return CardCreation:Card(props) end"
+    "script": "function _create(props) return CardCreation:Structure(props) end"
 }

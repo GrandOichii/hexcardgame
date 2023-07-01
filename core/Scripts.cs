@@ -161,5 +161,34 @@ public class ScriptMaster {
             return;
         }
         tile.Entity = mCard;
+
+        player.AllCards.Add(mCard, Zones.PLACED);
+    }
+
+    /// <summary>
+    /// Adds the amount to the player's energy reserve
+    /// </summary>
+    /// <param name="pID">ID of the player</param>
+    /// <param name="amount">Amount of energy</param>
+    [LuaCommand]
+    public void AddEnergy(string pID, int amount) {
+        var player = _match.PlayerWithID(pID);
+        player.Energy += amount;
+    }
+
+
+    /// <summary>
+    /// Returns the ID of the card owner
+    /// </summary>
+    /// <param name="mID">Card match ID</param>
+    /// <returns>ID of the owner</returns>
+    [LuaCommand]
+    public string GetOwnerID(string mID) {
+        foreach (var player in _match.Players)
+            foreach (var card in player.AllCards.Keys)
+                if (card.MID == mID)
+                    return player.ID;
+
+        throw new Exception("Failed to get owner of the card with match ID " + mID);
     }
 }

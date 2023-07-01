@@ -7,26 +7,35 @@ using Mindmagma.Curses;
 using System.Text;
 // using NCurses;
 
-class CursesPlayerController : PlayerController
+
+class QueuedActionsPlayerController : PlayerController
 {
     public Queue<string> ActionQueue { get; } = new(new string[] {
         "play 1 4.1",
-        "pass",
-        "pass",
-        "move 4.1 3",
-        "pass",
-        "pass",
-        "move 6.1 3",
-        "pass",
-        "pass",
-        "move 8.1 3",
-        "pass",
-        "pass",
-        "move 10.1 3",
-        "pass",
-        "pass",
+        // "pass",
+        // "pass",
+        // "move 4.1 3",
+        // "pass",
+        // "pass",
+        // "move 6.1 3",
+        // "pass",
+        // "pass",
+        // "move 8.1 3",
+        // "pass",
+        // "pass",
+        // "move 10.1 3",
+        // "pass",
+        // "pass",
     });
 
+    public override string DoPromptAction(Player player, Match match)
+    {
+        return ActionQueue.Dequeue();
+    }
+}
+
+class CursesPlayerController : QueuedActionsPlayerController
+{
     private CursesMatchView _view;
     public CursesPlayerController(CursesMatchView view) {
         _view = view;
@@ -35,7 +44,7 @@ class CursesPlayerController : PlayerController
     public override string DoPromptAction(Player player, Match match)
     {
         if (ActionQueue.Count > 0) {
-            return ActionQueue.Dequeue();
+            return base.DoPromptAction(player, match);
         }
         
         NCurses.Echo();
@@ -46,15 +55,6 @@ class CursesPlayerController : PlayerController
         NCurses.NoEcho();
         NCurses.SetCursor(0);
         return result.ToString();
-    }
-}
-
-
-class BasicPlayerController : PlayerController
-{
-    public override string DoPromptAction(Player player, Match match)
-    {
-        return "play 1 1.1";
     }
 }
 
@@ -86,7 +86,7 @@ class Program {
 
         // player controllers
         var p1Controller = new CursesPlayerController(view);
-        // var p1Controller = new BasicPlayerController();
+        // var p1Controller = new QueuedActionsPlayerController();
         var p2Controller = p1Controller;
 
         // create players

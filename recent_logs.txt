@@ -5,41 +5,113 @@ MATCH: Running map setup script
 PLAYER: Player P1 [1] drew 6 cards
 PLAYER: Player P2 [2] drew 6 cards
 MATCH: Started main match loop
-Match: Emitted signal turn_start, args: player:1 
-Match: Finished emitting turn_start
+MATCH: Emitted signal turn_start, args: playerID:1 
+MATCH: Card Mana Drill [20] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [20] in zone placed of player P1 [1] triggers
+MATCH: Card Mana Drill [21] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [21] in zone placed of player P1 [1] triggers
+MATCH: Card Mana Drill [22] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [22] in zone placed of player P1 [1] triggers
+MATCH: Card Mana Drill [24] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [24] in zone placed of player P2 [2] failed to trigger
+MATCH: Card Mana Drill [25] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [25] in zone placed of player P2 [2] failed to trigger
+MATCH: Card Mana Drill [26] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [26] in zone placed of player P2 [2] failed to trigger
+MATCH: Finished emitting turn_start
 PLAYER: Player P1 [1] drew 1 cards
-Match: Emitted signal turn_start, args: player:2 
-Match: Finished emitting turn_start
+MATCH: Emitted signal turn_start, args: playerID:2 
+MATCH: Card Mana Drill [20] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [20] in zone placed of player P1 [1] failed to trigger
+MATCH: Card Mana Drill [21] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [21] in zone placed of player P1 [1] failed to trigger
+MATCH: Card Mana Drill [22] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [22] in zone placed of player P1 [1] failed to trigger
+MATCH: Card Mana Drill [24] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [24] in zone placed of player P2 [2] triggers
+MATCH: Card Mana Drill [25] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [25] in zone placed of player P2 [2] triggers
+MATCH: Card Mana Drill [26] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [26] in zone placed of player P2 [2] triggers
+MATCH: Finished emitting turn_start
 PLAYER: Player P2 [2] drew 1 cards
-Match: Emitted signal turn_start, args: player:1 
-Match: Finished emitting turn_start
+MATCH: Emitted signal turn_start, args: playerID:1 
+MATCH: Card Mana Drill [20] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [20] in zone placed of player P1 [1] triggers
+MATCH: Card Mana Drill [21] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [21] in zone placed of player P1 [1] triggers
+MATCH: Card Mana Drill [22] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [22] in zone placed of player P1 [1] triggers
+MATCH: Card Mana Drill [24] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [24] in zone placed of player P2 [2] failed to trigger
+MATCH: Card Mana Drill [25] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [25] in zone placed of player P2 [2] failed to trigger
+MATCH: Card Mana Drill [26] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [26] in zone placed of player P2 [2] failed to trigger
+MATCH: Finished emitting turn_start
 PLAYER: Player P1 [1] drew 1 cards
-Match: Emitted signal turn_start, args: player:2 
-Match: Finished emitting turn_start
+MATCH: Emitted signal turn_start, args: playerID:2 
+MATCH: Card Mana Drill [20] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [20] in zone placed of player P1 [1] failed to trigger
+MATCH: Card Mana Drill [21] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [21] in zone placed of player P1 [1] failed to trigger
+MATCH: Card Mana Drill [22] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [22] in zone placed of player P1 [1] failed to trigger
+MATCH: Card Mana Drill [24] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [24] in zone placed of player P2 [2] triggers
+MATCH: Card Mana Drill [25] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [25] in zone placed of player P2 [2] triggers
+MATCH: Card Mana Drill [26] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [26] in zone placed of player P2 [2] triggers
+MATCH: Finished emitting turn_start
 PLAYER: Player P2 [2] drew 1 cards
-Match: Emitted signal turn_start, args: player:1 
-Match: Finished emitting turn_start
+MATCH: Emitted signal turn_start, args: playerID:1 
+MATCH: Card Mana Drill [20] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [20] in zone placed of player P1 [1] triggers
+MATCH: Card Mana Drill [21] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [21] in zone placed of player P1 [1] triggers
+MATCH: Card Mana Drill [22] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [22] in zone placed of player P1 [1] triggers
+MATCH: Card Mana Drill [24] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [24] in zone placed of player P2 [2] failed to trigger
+MATCH: Card Mana Drill [25] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [25] in zone placed of player P2 [2] failed to trigger
+MATCH: Card Mana Drill [26] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [26] in zone placed of player P2 [2] failed to trigger
+MATCH: Finished emitting turn_start
 PLAYER: Player P1 [1] drew 1 cards
-Match: Emitted signal turn_start, args: player:2 
-Match: Finished emitting turn_start
+MATCH: Emitted signal turn_start, args: playerID:2 
+MATCH: Card Mana Drill [9] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [9] in zone placed of player P1 [1] failed to trigger
+MATCH: Card Mana Drill [20] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [20] in zone placed of player P1 [1] failed to trigger
+MATCH: Card Mana Drill [21] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [21] in zone placed of player P1 [1] failed to trigger
+MATCH: Card Mana Drill [22] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [22] in zone placed of player P1 [1] failed to trigger
+MATCH: Card Mana Drill [24] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [24] in zone placed of player P2 [2] triggers
+MATCH: Card Mana Drill [25] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [25] in zone placed of player P2 [2] triggers
+MATCH: Card Mana Drill [26] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [26] in zone placed of player P2 [2] triggers
+MATCH: Finished emitting turn_start
 PLAYER: Player P2 [2] drew 1 cards
-Match: Emitted signal turn_start, args: player:1 
-Match: Finished emitting turn_start
+MATCH: Emitted signal turn_start, args: playerID:1 
+MATCH: Card Mana Drill [9] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [9] in zone placed of player P1 [1] triggers
+MATCH: Card Mana Drill [20] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [20] in zone placed of player P1 [1] triggers
+MATCH: Card Mana Drill [21] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [21] in zone placed of player P1 [1] triggers
+MATCH: Card Mana Drill [22] in zone placed of player P1 [1] has a potential trigger
+MATCH: Card Mana Drill [22] in zone placed of player P1 [1] triggers
+MATCH: Card Mana Drill [24] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [24] in zone placed of player P2 [2] failed to trigger
+MATCH: Card Mana Drill [25] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [25] in zone placed of player P2 [2] failed to trigger
+MATCH: Card Mana Drill [26] in zone placed of player P2 [2] has a potential trigger
+MATCH: Card Mana Drill [26] in zone placed of player P2 [2] failed to trigger
+MATCH: Finished emitting turn_start
 PLAYER: Player P1 [1] drew 0 cards
-Match: Emitted signal turn_start, args: player:2 
-Match: Finished emitting turn_start
-PLAYER: Player P2 [2] drew 0 cards
-Match: Emitted signal turn_start, args: player:1 
-Match: Finished emitting turn_start
-PLAYER: Player P1 [1] drew 0 cards
-Match: Emitted signal turn_start, args: player:2 
-Match: Finished emitting turn_start
-PLAYER: Player P2 [2] drew 0 cards
-Match: Emitted signal turn_start, args: player:1 
-Match: Finished emitting turn_start
-PLAYER: Player P1 [1] drew 0 cards
-MOVEACTION: Mage [1] attacks Castle [23]
-Match: Emitted signal turn_start, args: player:2 
-Match: Finished emitting turn_start
-PLAYER: Player P2 [2] drew 0 cards
 MATCH: Performing cleanup

@@ -6,6 +6,8 @@
         "Log",
         "PlayerShortStr",
         "GetShortInfo",
-        "PayEnergy"
+        "PayEnergy",
+        "GetOwnerID",
+        "AddEnergy"
     ]
 }

@@ -11,9 +11,8 @@ TRIGGERS = {
 -- Zones
 ZONES = {
     DISCARD = 'discard',
-    UNITS = 'units',
-    TREASURES = 'treasures',
-    BOND = 'bond'
+    PLACED = 'placed',
+    HAND = 'hand',
 }
 
 -- Effects and triggers
@@ -111,6 +110,22 @@ end
 
 -- Common triggers, effects, checkers, costs, e.t.c.
 Common = {}
+
+
+-- Returns a function that always returns true
+function Common:NoCost()
+    return function (...)
+        return true
+    end
+end
+
+
+-- Returns a function that returns true if the card's owner is the current player
+function Common:IsOwnersTurn(card)
+    return function (playerID, args)
+        return args.playerID == GetOwnerID(card.id)
+    end
+end
 
 
 -- Returns a function that checks whether the player has enough energy

@@ -1,9 +1,9 @@
 {
     "name": "Mana Drill",
-    "cost": 4,
+    "cost": 3,
     "type": "Structure",
     "expansion": "dev",
     "text": "{Unrestricted}\nGeneartes 1 energy per turn.",
     "life": 3,
-    "script": "function _Create(props) return CardCreation:Structure(props) end"
+    "script": "function _Create(props)\nlocal result = CardCreation:Structure(props)\nresult.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()\n:Check(Common:IsOwnersTurn(result))\n:Cost(Common:NoCost())\n:IsSilent(false)\n:On(TRIGGERS.TURN_START)\n:Zone(ZONES.PLACED)\n:Effect(function (playerID, args)\nAddEnergy(playerID, 1)\nend)\n:Build()\nreturn result\nend"
 }

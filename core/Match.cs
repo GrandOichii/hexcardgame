@@ -240,7 +240,7 @@ public class Match
     public void Emit(string signal, Dictionary<string, object> args) {
         var logMessage = "Emitted signal " + signal + ", args: ";
         foreach (var pair in args) logMessage += pair.Key + ":" + pair.Value.ToString() + " ";
-        SystemLogger.Log("Match", logMessage);
+        SystemLogger.Log("MATCH", logMessage);
 
         foreach (var player in Players) {
             var cards = player.AllCards;
@@ -258,27 +258,27 @@ public class Match
 
                     var trigger = new Trigger(triggerRaw);
                     // TODO something else
-                    SystemLogger.Log("Match", "Card " + card.ShortStr + " in zone " + zone + " of player " + player.ShortStr + " has a potential trigger");
+                    SystemLogger.Log("MATCH", "Card " + card.ShortStr + " in zone " + zone + " of player " + player.ShortStr + " has a potential trigger");
 
                     var triggered = trigger.ExecCheck(LState, player, args);
                     if (!triggered) {
-                        SystemLogger.Log("Match", "Card " + card.ShortStr + " in zone " + zone + " of player " + player.ShortStr + " failed to trigger");
+                        SystemLogger.Log("MATCH", "Card " + card.ShortStr + " in zone " + zone + " of player " + player.ShortStr + " failed to trigger");
                         continue;
                     }
 
                     var payed = trigger.ExecCosts(LState, player, args);
                     if (!payed) {
-                        SystemLogger.Log("Match", "Player " + player.ShortStr + " did not pay cost of triggered ability of card " + card.ShortStr + " in zone " + zone);
+                        SystemLogger.Log("MATCH", "Player " + player.ShortStr + " did not pay cost of triggered ability of card " + card.ShortStr + " in zone " + zone);
                         continue;
                     }
 
-                    SystemLogger.Log("Match", "Card " + card.ShortStr + " in zone " + zone + " of player " + player.ShortStr + " triggers");
+                    SystemLogger.Log("MATCH", "Card " + card.ShortStr + " in zone " + zone + " of player " + player.ShortStr + " triggers");
                     trigger.ExecEffect(LState, player, args);
                 }
             }
         }
 
-        SystemLogger.Log("Match", "Finished emitting " + signal);
+        SystemLogger.Log("MATCH", "Finished emitting " + signal);
     }
 
     /// <summary>

@@ -156,6 +156,7 @@ public class MCard {
         var props = card.GetProps(lState);
         var returned = creationF.Call(props);
         var data = LuaUtility.GetReturnAs<LuaTable>(returned);
+        data["id"] = mID;
 
         Match = match;
         MID = mID;

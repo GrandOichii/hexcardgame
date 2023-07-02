@@ -2,6 +2,7 @@
     - add winning / losing
     - add defence
     - add card summoning
+    - add activated effects
     - figure out when need to update players
     - find out where should place emits (turn start, turn end, card draw, damage ...)
     - implement more complex cards (when dealing damage, every 3 turns ...)

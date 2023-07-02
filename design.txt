@@ -180,3 +180,17 @@ v [Blood for Knowledge]:2
 v [Give Strength]:1
     (Spell)
     Caster gains +1 power and +1 life.
+
+
+[TODO]:4
+    (Unit)-(Mage)
+    Spell's cast by [CARDNAME] cost 1 less energy to cast.
+    P: 4
+    L: 3
+
+
+[Tragotha Archmage]:5
+    (Unit)-(Mage)
+    When [CARDNAME] casts a Spell, draw a card.
+    P: 5
+    L: 6

@@ -1,0 +1,8 @@
+{
+    "name": "Spread Influence",
+    "cost": 4,
+    "type": "Spell",
+    "expansion": "dev",
+    "text": "Gain control of the current and all n. neutral tiles.",
+    "script": "spread_influence.lua"
+}

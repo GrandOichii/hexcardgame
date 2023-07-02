@@ -36,9 +36,7 @@ public class Card
     /// Returns ID of the card in the format of [expansion]::[name].
     /// </summary>
     /// <returns>ID of the card</returns>
-    public string CID() {
-        return Expansion + "::" + Name;
-    }
+    public string CID => Expansion + "::" + Name;
 
 
     /// <summary>
@@ -117,7 +115,7 @@ public class FileCardMaster : CardMaster
     public override Card Get(string id)
     {
         foreach (var card in Cards)
-            if (card.CID() == id)
+            if (card.CID == id)
                 return card;
 
         throw new Exception("Can't load card with ID " + id);
@@ -141,13 +139,17 @@ public class MCard {
 
     public long MaxMovement => LuaUtility.GetLong(Data, "maxMovement");
     public long Movement => LuaUtility.GetLong(Data, "movement");
-
     public string Type => LuaUtility.TableGet<string>(Data, "type");
     public long Power { get {
         // TODO create separate power pipeline
         return LuaUtility.GetLong(Data, "power");
     }}
+    public long Cost { get {
+        // TODO create separate power pipeline
+        return LuaUtility.GetLong(Data, "cost");
+    }}
     public long Life => LuaUtility.GetLong(Data, "life");
+    public string Name => LuaUtility.TableGet<string>(Data, "name");
 
     public MCard(Match match, Card card, Player player) {
         var lState = match.LState;

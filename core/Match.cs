@@ -299,6 +299,8 @@ public class Match
                 
                 en.Owner.Discard.AddToBack(en);
                 en.Owner.AllCards[en] = Zones.DISCARD;
+
+                if (en.IsUnit) tile.HasGrave = true;
             }
         }
     }

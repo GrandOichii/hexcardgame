@@ -48,14 +48,67 @@ MCard: a card that is used in the match.
     "myHand": [
         {
             "mid": "12",
-            "id": "test_set::warrior_initiate",
+            "id": "dev::Warrior Initiate",
+            "ownerID": "1",
 
             // modifications to the card, will override the base card, that is fetched using id
             "mod": {
                 "cost": 2
-            }
+            },
+
+            "can": [
+                "play"
+            ]
         }
     ],
+
+    "players": [
+        {
+            "name": "P1",
+            "id": "1",
+            "handCount": 2,
+            "discard": [
+                ...
+            ]
+        }
+    ],
+
+    "tiles": [
+        [
+            null,
+            null,
+            {
+                "ownerID": "1",
+                "entity": {
+                    "mid": "2",
+                    "id": "dev::Mana Drill",
+                    "ownerID": "1",
+                    "mod": {
+                        "life": 1
+                    },
+                    "can": []
+                }
+            },
+            null,
+            {
+                "ownerID": "",
+                "entity": {
+                    "mid": "4",
+                    "id": "dev::Cool Mage",
+                    "ownerID": "1",
+                    "mod": {
+                        "life": 4,
+                        "power": 3
+                    },
+                    "can": [
+                        "activate",
+                        "move"
+                    ]
+                }
+            },
+            ...
+        ]
+    ]
 }
 
 

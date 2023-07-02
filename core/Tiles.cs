@@ -24,6 +24,7 @@ public class Tile {
     public int JPos { get; }
     public Player? Owner { get; set; }
     public MCard? Entity { get; set; }
+    public bool HasGrave { get; set; } = false;
     public Tile(int iPos, int jPos)
     {
         IPos = iPos;
@@ -40,6 +41,7 @@ public class Tile {
 
         result["iPos"] = IPos;
         result["jPos"] = JPos;
+        result["hasGrave"] = HasGrave;
 
         result["ownerID"] = null;
         if (Owner is not null) result["ownerID"] = Owner.ID;

@@ -1,5 +1,7 @@
 - matches backend
     - add winning / losing
+    - add defence
+    - add card summoning
     - figure out when need to update players
     - find out where should place emits (turn start, turn end, card draw, damage ...)
     - implement more complex cards (when dealing damage, every 3 turns ...)
@@ -7,6 +9,7 @@
     - figure out what to do with cards that go to discard (life resetting)
     - implement power and cost pipelines
     - add cancelling of effects (use out variable)
+    - implement bots (will be pretty hard, even the basic ones)
 
 - create frontend (use python first, then better ui with c++/c#)
     - test front
@@ -19,6 +22,7 @@
     - has to: manage cards, 
               manage expansions, 
               manage decks, 
+              generate decks, 
               manage matches, 
               replaying recorded matches, 
               manage match configurations

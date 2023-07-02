@@ -11,6 +11,8 @@
         "AddEnergy",
         "GetTileWith",
         "DealDamage",
-        "DrawCards"
+        "DrawCards",
+        "GetNeighbors",
+        "CardShortStr"
     ]
 }

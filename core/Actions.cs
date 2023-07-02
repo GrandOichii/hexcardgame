@@ -67,7 +67,7 @@ class PlayCardAction : GameAction
         var card = player.Hand[mID];
         if (card is null) {
             // TODO? don't throw exception
-            throw new Exception("Player " + player.ShortStr + " cannot play a card with mID" + mID + ": they don't have it in their hand");
+            throw new Exception("Player " + player.ShortStr + " cannot play a card with mID " + mID + ": they don't have it in their hand");
         }
 
         if (card.IsPlaceable) {

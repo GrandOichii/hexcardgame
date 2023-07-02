@@ -16,6 +16,32 @@ ZONES = {
     PLAYED = 'played',
 }
 
+-- Utility object
+Utility = {}
+
+-- Returns a string version of the table
+function Utility:TableToStr(t)
+    if type(t) == 'table' then
+        local s = '{ '
+        for k,v in pairs(t) do
+            if type(k) ~= 'number' then k = '"'..k..'"' end
+            s = s .. '['..k..'] = ' .. Utility:TableToStr(v) .. ','
+        end
+        return s .. '} '
+    else
+        return tostring(t)
+    end
+end
+
+
+-- Returns the length of the table
+function Utility:TableLength(T)
+    local count = 0
+    for _ in pairs(T) do count = count + 1 end
+    return count
+end
+
+
 -- Effects and triggers
 
 -- Main effect creation object
@@ -264,10 +290,54 @@ function CardCreation:Unit(props)
 end
 
 
+-- Mage Unit creation
+function CardCreation:Mage(props)
+    local result = CardCreation:Unit(props)
+
+    result.ModifySpellP = Pipeline:New()
+    result.ModifySpellP:AddLayer(
+        function(spell)
+            Log('Modifying spell ' .. CardShortStr(spell.id) .. ' by caster ' .. CardShortStr(result.id))
+            return nil, true
+        end
+    )
+    function result:ModifySpell(spell)
+        self.ModifySpellP:Exec(spell)
+    end
+    
+    result.DemodifySpellP = Pipeline:New()
+    result.DemodifySpellP:AddLayer(
+        function(spell)
+            Log('Demodifying spell ' .. CardShortStr(spell.id) .. ' by caster ' .. CardShortStr(result.id))
+            return nil, true
+        end
+    )
+    function result:DemodifySpell(spell)
+        self.DemodifySpellP:Exec(spell)
+    end
+
+    return result
+end
+
+
 -- Spell creation
 function CardCreation:Spell(props)
     local result = CardCreation:Card(props)
 
+    result.DamageValues = {}
+
+    function result:IncreaseDamage(amount)
+        for key, value in pairs(result.DamageValues) do
+            result.DamageValues[key] = value + amount
+        end
+    end
+
+    function result:DecreaseDamage(amount)
+        for key, value in pairs(result.DamageValues) do
+            result.DamageValues[key] = value + amount
+        end
+    end
+    
     result.EffectP = Pipeline:New()
     result.EffectP:AddLayer(
         function(playerID, caster)
@@ -275,8 +345,15 @@ function CardCreation:Spell(props)
             return nil, true
         end
     )
-    function result:Effect(player, caster)
-        self.EffectP:Exec(player, caster)
+    result.EffectP:AddLayer(
+        function(playerID, caster)
+            caster:ModifySpell(result)
+            return nil, true
+        end
+    )
+    function result:Effect(playerID, caster)
+        self.EffectP:Exec(playerID, caster)
+        caster:DemodifySpell(result)
     end
 
     return result

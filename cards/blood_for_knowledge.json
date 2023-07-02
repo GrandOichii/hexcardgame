@@ -4,5 +4,5 @@
     "type": "Spell",
     "expansion": "dev",
     "text": "Deal 1 damage to caster. If survives, draw 2 cards.",
-    "script": "function _Create(props)\nlocal result = CardCreation:Spell(props)\nresult.EffectP:AddLayer(function(playerID, caster)\nlocal tile = GetTileWith(caster.id)\nif tile == nil then\n-- TODO warn\nreturn\nend\nlocal dead = DealDamage(result.id, {tile.iPos, tile.jPos}, 1)\nif dead then\nprint('amogus')\nreturn nil, true\nend\nDrawCards(playerID, 2)\nreturn nil, true\nend)\nreturn result\nend"
+    "script": "\nfunction _Create(props)\n    local result = CardCreation:Spell(props)\n    result.DamageValues.Damage = 1\n    result.EffectP:AddLayer(function(playerID, caster)\n        local tile = GetTileWith(caster.id)\n        if tile == nil then\n            -- TODO warn\n            return\n        end\n        local dead = DealDamage(result.id, {tile.iPos, tile.jPos}, result.DamageValues.Damage)\n        if dead then\n            print('amogus')\n            return nil, true\n        end\n        DrawCards(playerID, 2)\n        return nil, true\n    end)\n    return result\nend"
 }

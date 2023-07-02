@@ -14,7 +14,7 @@ v [Mana Drill]:1
     T: 5
     
     
-[Flame Eruption]:3
+v [Flame Eruption]:3
     (Spell)
     Deal 2 damage to all n. enemy structures/units.
     
@@ -26,7 +26,7 @@ v [Mana Drill]:1
     L: 2
     
     
-[Mage Initiate]:2
+v [Mage Initiate]:2
     (Unit)-(Mage)
     P: 1
     L: 3
@@ -165,7 +165,7 @@ v [Mana Drill]:1
     L: 15
 
 
-[Blood for Knowledge]:2
+v [Blood for Knowledge]:2
     (Spell)
     Deal 1 damage to caster. If survives, draw 2 cards.
     

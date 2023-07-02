@@ -1,0 +1,9 @@
+{
+    "name": "Castle",
+    "cost": 10,
+    "type": "Structure",
+    "expansion": "dev",
+    "text": "When [CARDNAME] is destroyed, you lose the match.",
+    "life": 10,
+    "script": "castle.lua"
+}

@@ -56,7 +56,7 @@ public class Tile {
 /// Map object, consists of multiple hexagonal tiles
 /// </summary>
 public class Map {
-    static private int[][][] DIR_ARR = new int[][][]{
+    static public readonly int[][][] DIR_ARR = new int[][][]{
 
         new int[][] {
             new int[]{-2, 0},
@@ -64,7 +64,7 @@ public class Map {
             new int[]{+1, +1},
             new int[]{+2, 0},
             new int[]{+1, 0},
-            new int[]{-1, }
+            new int[]{-1, 0}
         },
         new int[][] {
             new int[]{-2, 0},

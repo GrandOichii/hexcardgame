@@ -1,0 +1,10 @@
+{
+    "name": "Brute",
+    "cost": 5,
+    "type": "Unit",
+    "expansion": "dev",
+    "text": "",
+    "power": 6,
+    "life": 5,
+    "script": "brute.lua"
+}

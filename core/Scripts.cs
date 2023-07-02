@@ -37,11 +37,11 @@ public class ScriptMaster {
     }
 
     /// <summary>
-    /// Returns the tile at the specified coordinates
+    /// Parses a Lua array into an array of coordinates
     /// </summary>
-    /// <param name="coords">Coordinates in the form of a Lua table</param>
-    /// <returns>Tile</returns>
-    private Tile? TileAt(LuaTable coords) {
+    /// <param name="coords">Lua table of coordinates</param>
+    /// <returns>An integer array of coordinates</returns>
+    public int[] ParseCoords(LuaTable coords) {
         long? iPos = coords[1] as long?;
         if (iPos is null) {
             throw new Exception("Invalid point coordinates");
@@ -50,9 +50,18 @@ public class ScriptMaster {
         if (jPos is null) {
             throw new Exception("Invalid point coordinates");
         }
-
         // TODO explicit cast - bad
-        var tile = _match.Map.Tiles[(int)iPos, (int)jPos];
+        return new int[] {(int)iPos, (int)jPos};
+    }
+
+    /// <summary>
+    /// Returns the tile at the specified coordinates
+    /// </summary>
+    /// <param name="coords">Coordinates in the form of a Lua table</param>
+    /// <returns>Tile</returns>
+    private Tile? TileAt(LuaTable coords) {
+        var actualCoords = ParseCoords(coords);
+        var tile = _match.Map.Tiles[actualCoords[0], actualCoords[1]];
         return tile;
     }
 
@@ -74,6 +83,17 @@ public class ScriptMaster {
     public string PlayerShortStr(string pID) {
         var player = _match.PlayerWithID(pID);
         return player.ShortStr;
+    }
+
+    /// <summary>
+    /// Returns a short string for card
+    /// </summary>
+    /// <param name="mID">Card match ID</param>
+    /// <returns>Short string</returns>
+    [LuaCommand]
+    public string CardShortStr(string mID) {
+        var card = _match.GetCard(mID);
+        return card.ShortStr;
     }
 
     /// <summary>
@@ -243,5 +263,28 @@ public class ScriptMaster {
     public int DrawCards(string pID, int amount) {
         var player = _match.PlayerWithID(pID);
         return player.Draw(amount);
+    }
+
+
+    /// <summary>
+    /// Returns a Lua table of all neighboring tiles
+    /// </summary>
+    /// <param name="point">Coordinates of the center tile</param>
+    /// <returns>A lua table of tiles</returns>
+    [LuaCommand]
+    public LuaTable GetNeighbors(LuaTable point) {
+        var coords = ParseCoords(point);
+        var result = new List<object?>();
+
+        for (int i = 0; i < 6; i++) {
+            var n = _match.Map.GetNeighbor(coords[0], coords[1], i);
+            if (n is null) {
+                result.Add(null);
+                continue;
+            }
+            result.Add(n.ToLuaTable(_match.LState));
+        }
+
+        return LuaUtility.CreateTable(_match.LState, result);
     }
 }

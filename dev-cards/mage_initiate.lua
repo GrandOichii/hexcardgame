@@ -1,0 +1,1 @@
+function _Create(props) return CardCreation:Mage(props) end

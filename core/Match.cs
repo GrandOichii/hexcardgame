@@ -166,7 +166,7 @@ public class Match
 
         // setup players
         foreach (var player in Players) {
-            player.Draw(Config.StartingHandSize);
+            player.Setup();
         }
 
         View.Start();
@@ -305,6 +305,11 @@ public class Match
         }
     }
 
+    /// <summary>
+    /// Returns the card with the specified match ID
+    /// </summary>
+    /// <param name="mID">Card match ID</param>
+    /// <returns>Match card</returns>
     public MCard GetCard(string mID) {
         foreach (var player in Players)
             foreach (var card in player.AllCards.Keys)
@@ -312,6 +317,16 @@ public class Match
                     return card;
 
         throw new Exception("Failed to get owner of the card with match ID " + mID);
+    }
+
+    /// <summary>
+    /// Updates all of the current player's opponents
+    /// </summary>
+    public void UpdateOpponents() {
+        var cur = CurrentPlayer;
+        foreach (var player in Players)
+            if (player != cur)
+                player.Controller.Update(player, this);
     }
 }
 

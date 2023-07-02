@@ -1,3 +1,3 @@
-from front.dev.window import Window
+from front.dev1.window import Window
 
 Window().run()

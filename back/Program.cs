@@ -5,6 +5,8 @@ using core.match;
 using util;
 using Mindmagma.Curses;
 using System.Text;
+using System.Net;
+using System.Net.Sockets;
 // using NCurses;
 
 
@@ -18,6 +20,14 @@ class QueuedActionsPlayerController : PlayerController
     public override string DoPromptAction(Player player, Match match)
     {
         return ActionQueue.Dequeue();
+    }
+
+    public override void Setup(Player player, Match match)
+    {
+    }
+
+    public override void Update(Player player, Match match)
+    {
     }
 }
 
@@ -47,8 +57,18 @@ class CursesPlayerController : QueuedActionsPlayerController
 
 
 class Program {
+    static private IPAddress ADDRESS = IPAddress.Any;
+    static private int PORT = 8080;
+    static private TcpListener listener = new TcpListener(new IPEndPoint(ADDRESS, PORT));
+
+
+    static TCPPlayerController TCPPC(Match match) {
+        return new TCPPlayerController(listener, match);
+    }
     static void Main(string[] args)
     {
+        listener.Start();
+        
         // load cards
         var cm = new FileCardMaster();
         cm.LoadCardsFrom("../cards");
@@ -67,14 +87,18 @@ class Program {
         // create match
         var match = mCreator.New(cm, config);
         match.AllowCommands = true;
-        var view = new CursesMatchView();
-        match.View = view;
-        match.SystemLogger = new FileLogger("../recent_logs.txt");
+        // var view = new CursesMatchView();
+        // match.View = view;
+        // match.SystemLogger = new FileLogger("../recent_logs.txt");
+        match.SystemLogger = new ConsoleLogger();
 
         // player controllers
-        var p1Controller = new CursesPlayerController(view);
+        // var p1Controller = new CursesPlayerController(view);
         // var p1Controller = new QueuedActionsPlayerController();
-        var p2Controller = p1Controller;
+        var p1Controller = TCPPC(match);
+        
+        // var p2Controller = new InactivePlayerController();
+        var p2Controller = TCPPC(match);
 
         // create players
         var p1 = new Player(match, "P1", deckTemplate, p1Controller);

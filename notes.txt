@@ -73,42 +73,45 @@ MCard: a card that is used in the match.
         }
     ],
 
-    "tiles": [
-        [
-            null,
-            null,
-            {
-                "ownerID": "1",
-                "entity": {
-                    "mid": "2",
-                    "id": "dev::Mana Drill",
+    "map": {
+
+        "tiles": [
+            [
+                null,
+                null,
+                {
                     "ownerID": "1",
-                    "mod": {
-                        "life": 1
-                    },
-                    "can": []
-                }
-            },
-            null,
-            {
-                "ownerID": "",
-                "entity": {
-                    "mid": "4",
-                    "id": "dev::Cool Mage",
-                    "ownerID": "1",
-                    "mod": {
-                        "life": 4,
-                        "power": 3
-                    },
-                    "can": [
-                        "activate",
-                        "move"
-                    ]
-                }
-            },
-            ...
+                    "entity": {
+                        "mid": "2",
+                        "id": "dev::Mana Drill",
+                        "ownerID": "1",
+                        "mod": {
+                            "life": 1
+                        },
+                        "can": []
+                    }
+                },
+                null,
+                {
+                    "ownerID": "",
+                    "entity": {
+                        "mid": "4",
+                        "id": "dev::Cool Mage",
+                        "ownerID": "1",
+                        "mod": {
+                            "life": 4,
+                            "power": 3
+                        },
+                        "can": [
+                            "activate",
+                            "move"
+                        ]
+                    }
+                },
+                ...
+            ]
         ]
-    ]
+    }
 }
 
 

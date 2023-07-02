@@ -1,7 +1,11 @@
+using System.Net.Sockets;
+using System.Text;
 using core.cards;
 using core.decks;
 using core.match;
+using core.match.states;
 using NLua;
+using Shared;
 using util;
 
 namespace core.players;
@@ -22,7 +26,119 @@ abstract public class PlayerController {
         return result;
     }
 
+    /// <summary>
+    /// Prompts action and records it
+    /// </summary>
+    /// <param name="player">Controlled player</param>
+    /// <param name="match">Match</param>
+    /// <returns>The prompted action</returns>
     abstract public string DoPromptAction(Player player, Match match);
+
+    /// <summary>
+    /// Setups the player for the match
+    /// </summary>
+    /// <param name="player">Controller player</param>
+    /// <param name="match">Match</param>
+    abstract public void Setup(Player player, Match match);
+
+    /// <summary>
+    /// Updates the player abount the match
+    /// </summary>
+    /// <param name="player">Controlled player</param>
+    /// <param name="match"></param>
+    abstract public void Update(Player player, Match match);
+}
+
+
+/// <summary>
+/// Player controller that always just passes it's turn
+/// </summary>
+public class InactivePlayerController : PlayerController
+{
+    public override string DoPromptAction(Player player, Match match)
+    {
+        return "pass";
+    }
+
+    public override void Setup(Player player, Match match)
+    {
+    }
+
+    public override void Update(Player player, Match match)
+    {
+    }
+}
+
+
+/// <summary>
+/// Player controller, controlled by a TCP socket
+/// </summary>
+public class TCPPlayerController : PlayerController
+{
+    byte[] buffer = new byte[1024];
+    private TcpClient _handler;
+
+    public TCPPlayerController(TcpListener listener, Match match) {
+        match.SystemLogger.Log("TCPPlayerController", "Waiting for connection");
+
+        _handler = listener.AcceptTcpClient();
+        
+        match.SystemLogger.Log("TCPPlayerController", "Connection established, sending match info");
+    }
+
+    /// <summary>
+    /// Writes the message to the socket
+    /// </summary>
+    /// <param name="message">Message</param>
+    private void Write(string message) {
+        var data = Encoding.UTF8.GetBytes(message);
+        var handler = _handler.GetStream();
+        NetUtil.Write(handler, message);
+    }
+
+    /// <summary>
+    /// Reads a message from socket
+    /// </summary>
+    /// <returns>The read message</returns>
+    private string Read() {
+        var stream = _handler.GetStream();
+        var result = NetUtil.Read(stream);
+        return result;
+    }
+
+    // public override void InformMatchEnd(Player controlledPlayer, Match match, bool won) {
+    //     Write(MatchParsers.CreateMState(controlledPlayer, match, (won ? "won" : "lost"), new()).ToJson());
+    // }
+
+    // public override string ProcessPickAttackTarget(Player controlledPlayer, Match match, CardW card) {
+    //     // TODO replace with available attacks
+    //     var opponent = match.OpponentOf(controlledPlayer);
+    //     var targets = new List<string>();
+    //     foreach (var treasure in opponent.Treasures.Cards)
+    //         targets.Add(treasure.GetCardWrapper().ID);
+
+    //     Write(MatchParsers.CreateMState(controlledPlayer, match, "pick attack target", targets, "", card.ID).ToJson());
+    //     return Read();
+    // }
+
+    public override string DoPromptAction(Player player, Match match)
+    {
+        var state = new MatchState(match, player, "action");
+
+        Write(state.ToJson());
+        
+        return Read();
+    }
+
+    public override void Setup(Player player, Match match)
+    {
+        Write(new MatchInfoState(player, match).ToJson());
+    }
+
+    public override void Update(Player player, Match match)
+    {
+        Write(new MatchState(match, player, "update").ToJson());
+    }
 }
 
 
@@ -67,6 +183,12 @@ public class Player {
         _match.SystemLogger.Log("PLAYER", "Added player " + name);
     }
 
+    public void Setup() {
+        Draw(_match.Config.StartingHandSize);
+
+        Controller.Setup(this, _match);
+    }
+
     /// <summary>
     /// Forces the player to draw an amount of cards
     /// </summary>
@@ -94,11 +216,7 @@ public class Player {
     // }
 
     public bool TryPlayCard(MCard card) {
-        var canPlay = card.ExecCheckerFunc(MCard.CAN_PLAY_FNAME, card.Data, ID);
-        if (!canPlay) {
-            _match.SystemLogger.Log("WARN", "Player " + Name + " tried to play a card they can't play: " + card.ShortStr);
-            return false;
-        }
+        var canPlay = card.CanBePlayed(this);
 
         var payed = card.ExecCheckerFunc(MCard.PAY_COSTS_FNAME, card.Data, ID);
         if (!payed) {

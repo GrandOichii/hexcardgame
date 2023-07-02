@@ -51,7 +51,7 @@ class TurnStart : MatchPhase
         player.Draw(match.Config.TurnStartDraw);
         
         match.View.Update(match);
-        // match.UpdateOpponent();
+        match.UpdateOpponents();
     }
 }
 
@@ -91,7 +91,7 @@ class MainPhase : MatchPhase
 
             ACTION_MAP[actionWord].Exec(match, player, words);
             match.View.Update(match);
-            // match.UpdateOpponent();
+            match.UpdateOpponents();
             if (!match.Active) break;                    
         }
     }
@@ -111,8 +111,8 @@ class TurnEnd : MatchPhase
 {
     public override void Exec(Match match, Player player)
     {
-        // match.Emit("turn_end", new(){ {"player", player.ToLuaTable(match.LState)} });
-        // match.UpdateOpponent();
+        match.Emit("turn_end", new(){ {"playerID", player.ID} });
+        match.UpdateOpponents();
 
         // TODO
         // discard to hand size

@@ -11,25 +11,8 @@ using System.Text;
 class QueuedActionsPlayerController : PlayerController
 {
     public Queue<string> ActionQueue { get; } = new(new string[] {
-        // "play 8 2.0",
         // "pass",
-        // "play 13 12.1",
-        // "pass",
-        // "pass",
-        // "move 12.1 0",
-        // "pass",
-        // "pass",
-        // "move 10.1 0",
-        // "pass",
-        // "pass",
-        // "move 8.1 0",
-        // "pass",
-        // "pass",
-        // "move 6.1 0",
-        // "pass",
-        // "pass",
-        // "move 4.1 5",
-        // "play 23 3.1"
+        // "play 14 12.1"
     });
 
     public override string DoPromptAction(Player player, Match match)

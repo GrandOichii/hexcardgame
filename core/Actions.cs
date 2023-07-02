@@ -87,6 +87,10 @@ class PlayCardAction : GameAction
             player.Hand.Cards.Remove(card);
             tile.Entity = card;
             player.AllCards[card] = Zones.PLACED;
+
+            // call OnEnter function
+            card.ExecFunc("OnEnter", card.Data, player.ID, tile.ToLuaTable(match.LState));
+            
             return;
         }
 

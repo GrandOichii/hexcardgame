@@ -247,6 +247,8 @@ function CardCreation:Card(props)
     for _, value in ipairs(required) do
         result[value] = props[value]
     end
+    result.basePower = result.power
+    result.baseLife = result.life
 
     result.triggers = {}
 
@@ -327,9 +329,26 @@ UNIT_SUBTYPE_MANIPULATION = {
 }
 
 
+-- Placeable card
+function CardCreation:Placeable(props)
+    local result = CardCreation:Card(props)
+
+    result.OnEnterP = Pipeline.New()
+    result.OnEnterP:AddLayer(function (playerID, tile)
+        Log('Card ' .. CardShortStr(result.id) .. ' entered play')
+        return nil, true
+    end)
+    function result:OnEnter(playerID, tile)
+        result.OnEnterP:Exec(playerID, tile)
+    end
+
+    return result
+end
+
+
 -- Unit creation
 function CardCreation:Unit(props)
-    local result = CardCreation:Card(props)
+    local result = CardCreation:Placeable(props)
 
     result.maxMovement = 1
     result.movement = 0
@@ -384,5 +403,5 @@ end
 
 -- Structure creation
 function CardCreation:Structure(props)
-    return CardCreation:Card(props)
+    return CardCreation:Placeable(props)
 end

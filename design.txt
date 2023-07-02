@@ -175,3 +175,8 @@ v [Blood for Knowledge]:2
     Every 3 turns, becomes a Warrior, Rogue or Mage. (Loses all other subtypes)
     L: 3
     P: 3
+
+
+v [Give Strength]:1
+    (Spell)
+    Caster gains +1 power and +1 life.

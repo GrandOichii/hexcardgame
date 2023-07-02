@@ -7,8 +7,8 @@ function _Create(props)
         :On(TRIGGERS.TURN_START)
         :Zone(ZONES.PLACED)
         :Effect(function (playerID, args)
-        AddEnergy(playerID, 1)
-    end)
-        :Build()
+            AddEnergy(playerID, 1)
+        end)
+    :Build()
     return result
 end

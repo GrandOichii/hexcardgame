@@ -1,10 +1,11 @@
 -- Trigger types
 TRIGGERS = {
-    CARD_DRAW = 'card_draw',
-    LIFE_GAIN = 'life_gain',
+    -- CARD_DRAW = 'card_draw',
+    -- LIFE_GAIN = 'life_gain',
     TURN_START = 'turn_start',
-    TURN_END = 'turn_end',
-    SPELL_CAST = 'spell_cast',
+    -- TURN_END = 'turn_end',
+    -- SPELL_CAST = 'spell_cast',
+    UNIT_MOVE = 'unit_move',
 }
 
 
@@ -279,6 +280,53 @@ function CardCreation:Card(props)
 end
 
 
+-- Dictionary of unit subtypes and manipulation functions
+UNIT_SUBTYPE_MANIPULATION = {
+    Mage = function (card)
+        card.ModifySpellP = Pipeline:New()
+        card.ModifySpellP:AddLayer(
+            function(spell)
+                Log('Modifying spell ' .. CardShortStr(spell.id) .. ' by caster ' .. CardShortStr(card.id))
+                return nil, true
+            end
+        )
+        function card:ModifySpell(spell)
+            self.ModifySpellP:Exec(spell)
+        end
+        
+        card.DemodifySpellP = Pipeline:New()
+        card.DemodifySpellP:AddLayer(
+            function(spell)
+                Log('Demodifying spell ' .. CardShortStr(spell.id) .. ' by caster ' .. CardShortStr(card.id))
+                return nil, true
+            end
+        )
+        function card:DemodifySpell(spell)
+            self.DemodifySpellP:Exec(spell)
+        end
+    end,
+
+    Rogue = function (card)
+        card.maxMovement = card.maxMovement + 1
+    end,
+
+    Warrior = function (card)
+        card.triggers[#card.triggers+1] = EffectCreation:TriggerBuilder()
+            :Check(function (playerID, args) return args.mid == card.id end)
+            :Cost(Common:NoCost())
+            :IsSilent(false)
+            :On(TRIGGERS.UNIT_MOVE)
+            :Zone(ZONES.PLACED)
+            :Effect(function (playerID, args)
+                local tile = args.tile
+                TileOwnerSet(playerID, {{tile.iPos, tile.jPos}})
+                return nil, true
+            end)
+        :Build()
+    end
+}
+
+
 -- Unit creation
 function CardCreation:Unit(props)
     local result = CardCreation:Card(props)
@@ -286,34 +334,8 @@ function CardCreation:Unit(props)
     result.maxMovement = 1
     result.movement = 0
 
-    return result
-end
-
-
--- Mage Unit creation
-function CardCreation:Mage(props)
-    local result = CardCreation:Unit(props)
-
-    result.ModifySpellP = Pipeline:New()
-    result.ModifySpellP:AddLayer(
-        function(spell)
-            Log('Modifying spell ' .. CardShortStr(spell.id) .. ' by caster ' .. CardShortStr(result.id))
-            return nil, true
-        end
-    )
-    function result:ModifySpell(spell)
-        self.ModifySpellP:Exec(spell)
-    end
-    
-    result.DemodifySpellP = Pipeline:New()
-    result.DemodifySpellP:AddLayer(
-        function(spell)
-            Log('Demodifying spell ' .. CardShortStr(spell.id) .. ' by caster ' .. CardShortStr(result.id))
-            return nil, true
-        end
-    )
-    function result:DemodifySpell(spell)
-        self.DemodifySpellP:Exec(spell)
+    function result:AddSubtype(type)
+        UNIT_SUBTYPE_MANIPULATION[type](result)
     end
 
     return result

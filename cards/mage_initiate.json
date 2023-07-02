@@ -6,5 +6,5 @@
     "text": "At the start of your turn, [CARDNAME] restores 1 life.",
     "power": 1,
     "life": 2,
-    "script": "function _Create(props) return CardCreation:Mage(props) end"
+    "script": "function _Create(props)\n    local result = CardCreation:Unit(props)\n    result:AddSubtype('Mage')\n    return result\nend"
 }

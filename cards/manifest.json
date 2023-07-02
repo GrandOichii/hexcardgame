@@ -3,6 +3,8 @@
     "mana_drill.json",
     "brute.json",
     "mage_initiate.json",
+    "warrior_initiate.json",
+    "rogue_initiate.json",
     "flame_eruption.json",
     "urakshi_shaman.json",
     "blood_for_knowledge.json"

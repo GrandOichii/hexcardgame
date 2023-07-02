@@ -199,5 +199,7 @@ class MoveAction : GameAction
         tile.Entity = null;
         newTile.Entity = en;
         en.Data["movement"] = en.Movement - 1;
+
+        match.Emit("unit_move", new(){ {"mid", en.MID}, {"tile", newTile.ToLuaTable(match.LState)} });
     }
 }

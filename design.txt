@@ -32,13 +32,13 @@ v [Mage Initiate]:2
     L: 3
     
     
-[Warrior Initiate]:2
+v [Warrior Initiate]:2
     (Unit)-(Warrior)
     P: 2
     L: 2
     
     
-[Rogue Initiate]:2
+v [Rogue Initiate]:2
     (Unit)-(Rogue)
     P: 1
     L: 2
@@ -103,7 +103,7 @@ v [Mage Initiate]:2
     L: 2
 
 
-[Urakshi Shaman]:3
+v [Urakshi Shaman]:3
     (Unit)-(Mage)
     Spells cast by [CARDNAME] do +1 damage.
     P: 2
@@ -118,7 +118,7 @@ v [Mage Initiate]:2
     P: 1
 
 
-[Brute]:5
+v [Brute]:5
     (Unit)
     P: 6
     L: 5
@@ -135,14 +135,14 @@ v [Mage Initiate]:2
     L: 1
 
 
-[!Castle]:10
+v [!Castle]:10
     (Structure)
     T: 10
 
 
 [Spread Influence]:4
     (Spell)
-    Gain control of topehe current and all n. neutral tiles.
+    Gain control of the current and all n. neutral tiles.
 
 
 [Troop Warp]:5

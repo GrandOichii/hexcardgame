@@ -58,7 +58,7 @@ class CursesPlayerController : QueuedActionsPlayerController
 
 class Program {
     static private IPAddress ADDRESS = IPAddress.Any;
-    static private int PORT = 8080;
+    static private int PORT = 9090;
     static private TcpListener listener = new TcpListener(new IPEndPoint(ADDRESS, PORT));
 
 

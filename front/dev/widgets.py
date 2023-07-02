@@ -20,8 +20,11 @@ class PlayerFullWidget(VerContainer):
         self.add_widget(self.discard_button)
 
     def load(self, data):
+        self.outline_color = None
         player = data.players[self.player_i]
         name_text = player.name
+        if player.id == data.curPlayerID:
+            self.outline_color = GREEN
         if data.myData.id == player.id:
             name_text += ' <you>'
 

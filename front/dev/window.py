@@ -21,7 +21,6 @@ class ClientWindow(Window):
         self.init_ui()
         self.set_title('dev client')
 
-
         # connection
 
         self.last_state = None
@@ -36,12 +35,20 @@ class ClientWindow(Window):
     def config_connection(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((self.host, self.port))
-        # self.sconfig = parse_state(self.read_msg())
-        # self.top_player.lanes_c.set_up_lanes(self.sconfig.lane_count)
-        # self.bottom_player.lanes_c.set_up_lanes(self.sconfig.lane_count)
+
         self.sconfig = parse_state(self.read_msg())
 
         self.player_count = self.sconfig.playerCount
+        self.player_i = self.sconfig.myI
+        for player_w in self.player_widgets:
+            player_w.player_i += self.player_i + 1
+            if player_w.player_i >= self.player_count:
+                player_w.player_i -= self.player_count
+        # 0 
+        # 1 
+        # 2 
+        # 3
+        # 4
         self.sock.settimeout(.01)
 
     def init_ui(self):

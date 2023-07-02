@@ -275,11 +275,14 @@ class Container(Widget):
         self.widgets: list[Widget] = []
 
     def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs):
+
         for widget in self.widgets:
             width = widget.get_pref_width()
             height = widget.get_pref_height()
             b = Rect(bounds.x + widget.x, bounds.y + widget.y, width, height)
             widget._draw(surface, b, configs)
+        if self.outline_color:
+            pg.draw.rect(surface, self.outline_color, (bounds.x, bounds.y, bounds.width, bounds.height), 1)
         return bounds.width, bounds.height
 
     def add_widget(self, w: Widget):
@@ -453,6 +456,10 @@ class FlowContainer(Container):
             self.config.mutate_coords(b, res_w, res_h)
             sum_h += res_h
             sum_w += res_w
+
+        if self.outline_color:
+            pg.draw.rect(surface, self.outline_color, (bounds.x, bounds.y, bounds.width, bounds.height), 1)
+
         
         if configs.wireframe:
             pg.draw.rect(surface, BLACK, bounds.to_tuple(), 2)

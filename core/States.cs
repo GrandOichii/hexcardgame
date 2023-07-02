@@ -13,11 +13,14 @@ namespace core.match.states;
 public struct MatchInfoState {
     [JsonPropertyName("myID")]
     public string MyID { get; set; }
+    [JsonPropertyName("myI")]
+    public int MyI { get; set; }
     [JsonPropertyName("playerCount")]
     public int PlayerCount { get; set; }
 
     public MatchInfoState(Player player, Match match) {
         MyID = player.ID;
+        MyI = match.Players.IndexOf(player);
         PlayerCount = match.Players.Count;
     }
 
@@ -214,10 +217,13 @@ public struct MatchState {
     public MapState Map { get; set; }
     [JsonPropertyName("myData")]
     public MyDataState MyData { get; set; }
+    [JsonPropertyName("curPlayerID")]
+    public string CurPlayerID { get; set; }
 
     // TODO logs
 
     public MatchState(Match match, Player player, string request) {
+        CurPlayerID = match.CurrentPlayer.ID;
         Request = request;
 
         MyData = new MyDataState(player);

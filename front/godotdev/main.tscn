@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://ddt5lnmu5cb38"]
 
-[ext_resource type="Script" path="res://Main.cs" id="1_6um1u"]
-[ext_resource type="Script" path="res://AddressLineEdit.cs" id="2_t1xx4"]
+[ext_resource type="Script" path="res://Main.cs" id="1_41hi4"]
+[ext_resource type="Script" path="res://AddressLineEdit.cs" id="2_2fenr"]
 
 [node name="Main" type="Node2D"]
-script = ExtResource("1_6um1u")
+script = ExtResource("1_41hi4")
 
 [node name="AddressLineEdit" type="LineEdit" parent="."]
 offset_left = 12.0
@@ -13,7 +13,7 @@ offset_right = 268.0
 offset_bottom = 46.0
 text = "127.0.0.1:9090"
 placeholder_text = "Enter match address"
-script = ExtResource("2_t1xx4")
+script = ExtResource("2_2fenr")
 
 [node name="ConnectButton" type="Button" parent="."]
 offset_left = 16.0

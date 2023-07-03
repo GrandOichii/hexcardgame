@@ -1,0 +1,101 @@
+[gd_scene load_steps=3 format=3 uid="uid://curw8lq5rwd2s"]
+
+[ext_resource type="Script" path="res://Match/Cards/CardBase.cs" id="1_j2fba"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mwnh7"]
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+
+[node name="CardBase" type="Panel"]
+custom_minimum_size = Vector2(125, 175)
+offset_right = 125.0
+offset_bottom = 175.0
+pivot_offset = Vector2(62, 87)
+theme_override_styles/panel = SubResource("StyleBoxFlat_mwnh7")
+script = ExtResource("1_j2fba")
+
+[node name="CostLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -19.0
+offset_bottom = 26.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0, 0, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PowerLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_right = 20.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.811765, 0, 0.129412, 1)
+theme_override_font_sizes/font_size = 16
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LifeLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -19.0
+offset_top = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0, 0.827451, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "2"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NameLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+text = "Card Name here"
+
+[node name="HSeparator2" type="HSeparator" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="TypeLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+text = "Card Type here"
+
+[node name="HSeparator" type="HSeparator" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="TextLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+text = "Card Text here
+Card Text here
+Card Text here"
+autowrap_mode = 2

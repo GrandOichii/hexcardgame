@@ -257,4 +257,9 @@ public struct MatchState {
         if (result is null) throw new Exception("Failed to serialize match");
         return result;
     }
+    
+    static public MatchState FromJson(string json) {
+        var result = JsonSerializer.Deserialize<MatchState>(json);
+        return result;
+    }
 }

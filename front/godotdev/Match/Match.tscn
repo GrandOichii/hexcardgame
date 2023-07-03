@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=3 uid="uid://cgsfcdkmxknt3"]
+
+[ext_resource type="Script" path="res://Match/Match.cs" id="1_c6lcm"]
+
+[node name="Match" type="Node2D"]
+script = ExtResource("1_c6lcm")
+metadata/_edit_horizontal_guides_ = []
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HBox" type="HBoxContainer" parent="UI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Players" type="VBoxContainer" parent="UI/HBox"]
+layout_mode = 2
+alignment = 2
+
+[node name="CenterBox" type="VBoxContainer" parent="UI/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CardsScroll" type="ScrollContainer" parent="UI/HBox/CenterBox"]
+layout_mode = 2
+size_flags_vertical = 3
+vertical_scroll_mode = 0
+
+[node name="Cards" type="HBoxContainer" parent="UI/HBox/CenterBox/CardsScroll"]
+layout_mode = 2
+size_flags_vertical = 8

@@ -31,7 +31,7 @@ public partial class AddressLineEdit : LineEdit
 
 //			OS.Alert("Conected, message: " + message, "Connected");
 			
-			GetTree().ChangeSceneToFile("res://match.tscn");
+			GetTree().ChangeSceneToFile("res://Match/Match.tscn");
 
 		} catch (Exception e) {
 			OS.Alert("Failed to connect: " + e);

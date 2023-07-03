@@ -14,5 +14,6 @@
         "DrawCards",
         "GetNeighbors",
         "CardShortStr"
-    ]
+    ],
+    "dotnet.defaultSolution": "front\\godotdev\\godotdev.sln"
 }

@@ -33,6 +33,16 @@ public struct MatchInfoState {
         if (result is null) throw new Exception("Failed to serialize match");
         return result;
     }
+
+    /// <summary>
+    /// Parses JSON to a MatchInfoState object
+    /// </summary>
+    /// <param name="json">JSON text</param>
+    /// <returns>Parsed object</returns>
+    static public MatchInfoState FromJson(string json) {
+        var result = JsonSerializer.Deserialize<MatchInfoState>(json);
+        return result;
+    }
 }
 
 /// <summary>
@@ -209,6 +219,8 @@ public struct MyDataState {
 /// State of the match
 /// </summary>
 public struct MatchState {
+    [JsonPropertyName("newLogs")]
+    public List<List<MatchLogEntryPart>> NewLogs { get; set; }
     [JsonPropertyName("request")]
     public string Request { get; set; }
     [JsonPropertyName("players")]
@@ -220,9 +232,10 @@ public struct MatchState {
     [JsonPropertyName("curPlayerID")]
     public string CurPlayerID { get; set; }
 
-    // TODO logs
-
     public MatchState(Match match, Player player, string request) {
+        NewLogs = player.NewLogs;
+        player.NewLogs = new();
+
         CurPlayerID = match.CurrentPlayer.ID;
         Request = request;
 

@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3 uid="uid://cgsfcdkmxknt3"]
+
+[ext_resource type="Script" path="res://match.cs" id="1_mfjhs"]
+
+[node name="Match" type="Node2D"]
+script = ExtResource("1_mfjhs")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 148.0
+offset_bottom = 205.0
+
+[node name="HBoxContainer" type="VBoxContainer" parent="ColorRect"]
+layout_mode = 0
+offset_right = 132.0
+offset_bottom = 40.0
+
+[node name="NameLabel" type="Label" parent="ColorRect/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Card Name here"
+
+[node name="HSeparator2" type="HSeparator" parent="ColorRect/HBoxContainer"]
+layout_mode = 2
+
+[node name="TypeLabel" type="Label" parent="ColorRect/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Card Type here"
+
+[node name="HSeparator" type="HSeparator" parent="ColorRect/HBoxContainer"]
+layout_mode = 2
+
+[node name="Card text here" type="Label" parent="ColorRect/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Card Text here
+Card Text here
+Card Text here"

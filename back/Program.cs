@@ -65,10 +65,7 @@ class Program {
     static TCPPlayerController TCPPC(Match match) {
         return new TCPPlayerController(listener, match);
     }
-    static void Main(string[] args)
-    {
-        listener.Start();
-        
+    static void RunMatch() {
         // load cards
         var cm = new FileCardMaster();
         cm.LoadCardsFrom("../cards");
@@ -97,8 +94,8 @@ class Program {
         // var p1Controller = new QueuedActionsPlayerController();
         var p1Controller = TCPPC(match);
         
-        // var p2Controller = new InactivePlayerController();
-        var p2Controller = TCPPC(match);
+        var p2Controller = new InactivePlayerController();
+        // var p2Controller = TCPPC(match);
 
         // create players
         var p1 = new Player(match, "P1", deckTemplate, p1Controller);
@@ -106,5 +103,18 @@ class Program {
 
         // start match
         match.Start();
+    }
+
+    static void Main(string[] args)
+    {
+        listener.Start();
+        
+        while (true) {
+            try {
+                RunMatch();
+            } catch (Exception e){
+                System.Console.WriteLine(e);
+            }
+        }
     }
 }

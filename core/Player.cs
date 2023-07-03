@@ -160,8 +160,12 @@ public class Player {
     public Zone<MCard> Discard { get; }
     public Zone<MCard> Hand { get; }
 
+    // new log messages
+    public List<List<MatchLogEntryPart>> NewLogs { get; set; }
+
 
     public Player(Match match, string name, DeckTemplate dTemplate, PlayerController controller) {
+        NewLogs = new();
         _match = match;
         Name = name;
         Controller = controller;
@@ -204,6 +208,7 @@ public class Player {
         Hand.AddToBack(cards);
         _match.SystemLogger.Log("PLAYER", "Player " + ShortStr + " drew " + cards.Count + " cards");
 
+        _match.Logger.ParseAndLog(Name + " drew " + cards.Count + " cards.");
         return cards.Count;
     }
 

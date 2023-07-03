@@ -2,12 +2,159 @@ import socket
 import json
 from types import SimpleNamespace
 
+import pygame as pg
+
 from front.dev.frame import *
+from front.dev.frame import BLACK, WHITE, ClickConfig, Rect, WindowConfigs
 from front.dev.widgets import *
 
 
 def parse_state(textj):
     return json.loads(textj, object_hook=lambda d: SimpleNamespace(**d))
+
+
+def warp_text(text: str, max_width: int, font: pg.font.Font) -> list[str]:
+    words = [word.split(' ') for word in text.splitlines()]  # 2D array where each row is a list of words.
+    space = font.size(' ')[0]  # The width of a space.
+    pos = (0, 0)
+    x, y = pos
+    result = []
+    rl = ''
+    for line in words:
+        for word in line:
+            word_width, word_height = font.size(word)
+            if x + word_width >= max_width:
+                x = pos[0]  # Reset the x.
+                y += word_height  # Start on new row.
+                result += [rl]
+                rl = ''
+            rl += word + ' '
+            x += word_width + space
+        x = pos[0]  # Reset the x.
+        y += word_height  # Start on new row.
+    result += [rl]
+    return result
+
+
+class LogPart:
+    def __init__(self, text='', cardRef='') -> None:
+        self.text = text
+        self.cardRef = cardRef
+
+
+class LogWord(LabelWidget):
+    def __init__(self, window: 'ClientWindow', log_part: LogPart, max_width: int):
+        self.log_part = log_part
+
+        text = log_part.text
+        super().__init__(window.font, text, BLACK if log_part.cardRef == '' else RED, max_width=max_width)
+    
+
+def wrap_log(text: list[LogPart], max_width: int, font: pg.font.Font) -> list[list[LogPart]]:
+    # words = [word.split(' ') for word in text.splitlines()]  # 2D array where each row is a list of words.
+    words: list[list[LogPart]] = []
+    for part in text:
+        split = part.text.split(' ')
+        for s in split:
+            lp = LogPart(s, part.cardRef)
+            words += [lp]
+    words.insert(0, LogPart('- ', ''))
+
+    space = font.size(' ')[0]  # The width of a space.
+    pos = (0, 0)
+    x, y = pos
+    result = []
+    rl = []
+    # for line in words:
+    for part in words:
+        word_width, word_height = font.size(part.text)
+        if x + word_width >= max_width:
+            x = pos[0]  # Reset the x.
+            y += word_height  # Start on new row.
+            result += [rl]
+            rl = []
+        rl += [part, LogPart(' ', '')]
+        x += word_width + space
+    # x = pos[0]  # Reset the x.
+    # y += word_height  # Start on new row.
+    result += [rl]
+    return result
+
+
+class LogChunk(HorContainer):
+    def __init__(self, window: 'ClientWindow', log_words: list[LogPart]):
+        super().__init__()
+        self.window = window
+        mh = 0
+        w = []
+        for log in log_words:
+            mw, h = window.font.size(log.text)
+            if h > mh:
+                mh = h
+
+            l = LogWord(window, log, mw)
+            w += [l]
+        for ww in w:
+            ww.max_height = mh
+            self.add_widget(ww)
+        self.add_widget(RectWidget(max_height=mh))
+        # self.add_widget(SPACE_FILLER)
+            # return
+
+    def wrap(window: 'ClientWindow', log: list, max_width: int) -> list['LogChunk']:
+        result = []
+
+        m = '- '
+        for p in log:
+            m += p.text
+
+        font = window.font
+        lines = wrap_log(log, max_width, font)
+        for line in lines:
+            label = LogChunk(window, line)
+            result += [label]
+
+        return result
+    
+    def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs):
+        return super().draw(surface, bounds, configs)
+    
+
+class LogWidget(ScrollWidget):
+    def __init__(self, window: 'ClientWindow', max_message_width: int):
+        super().__init__(max_width=max_message_width)
+        self.mmw = max_message_width
+
+        self.widget = VerContainer()
+        self.window = window
+
+        self.acc_height = 0
+        self.last_height = 0
+
+    def _add_widget(self, widget):
+        pass
+
+    def add_logs(self, logs: list):
+        for log in logs:
+            
+            # for lp in log:
+            #     message += lp.text + ' '
+            log_chunks = LogChunk.wrap(self.window, log, self.mmw)
+            for chunk in log_chunks:
+                self.widget.add_widget(chunk)
+                self.acc_height += chunk.get_pref_height()
+
+        if self.last_height == 0:
+            return
+        if self.last_height < self.acc_height:
+            # print(self.last_height, self.acc_height)
+            # print('amogus')
+            self.scroll =  self.last_height - self.acc_height
+
+    def draw(self, surface: pg.Surface, bounds: Rect, configs: WindowConfigs) -> tuple[int, int]:
+        w, h = super().draw(surface, bounds, configs)
+        self.last_height = h
+        return w, h
 
 
 class ClientWindow(Window):
@@ -24,7 +171,6 @@ class ClientWindow(Window):
         # connection
 
         self.last_state = None
-        # self.cursor_card_widget = CardWidget(self, [])
         self.sock = None
 
     def on_close(self):
@@ -44,11 +190,6 @@ class ClientWindow(Window):
             player_w.player_i += self.player_i + 1
             if player_w.player_i >= self.player_count:
                 player_w.player_i -= self.player_count
-        # 0 
-        # 1 
-        # 2 
-        # 3
-        # 4
         self.sock.settimeout(.01)
 
     def init_ui(self):
@@ -56,14 +197,17 @@ class ClientWindow(Window):
         self.font = None
         try:
             ContentPool.Instance.load_font('basic', 'fonts/Montserrat-Thin.ttf')
-            self.font = ContentPool.Instance.get_font('basic', 14)
+            self.font = ContentPool.Instance.get_font('basic', 18)
         except:
             ContentPool.Instance.load_font('basic', 'front/test_py/fonts/Montserrat-Thin.ttf')
-            self.font = ContentPool.Instance.get_font('basic', 14)
+            self.font = ContentPool.Instance.get_font('basic', 18)
 
         all_container = HorContainer()
         self.container = all_container
+
+        # player info
         left = VerContainer()
+        # TODO ocnfigure player count using received match info
         self.player_widgets = [
             PlayerFullWidget(self, 0),
             PlayerFullWidget(self, 1),
@@ -72,56 +216,18 @@ class ClientWindow(Window):
         for player in self.player_widgets:
             left.add_widget(player)
 
+        # logs
+        right = VerContainer()
+
+        self.log_widget = LogWidget(self, 200)
+
+        right.add_widget(self.log_widget)
+        # right.add_widget(RectWidget(max_height=0, max_width=50))
+        # right.add_widget(SPACE_FILLER)
 
         all_container.add_widget(left)
         all_container.add_widget(SPACE_FILLER)
-
-        # set up player data
-        # self.init_player_data_ui()
-
-        # set up all other data data
-        # self.init_other_data_ui()
-
-    # def init_player_data_ui(self):
-    #     container = VerContainer()
-    #     self.top_player = PlayerContainer(self)
-    #     self.bottom_player = PlayerContainer(self)
-    #     self.hand = HandContainer(self)
-
-    #     self.container.add_widget(container)
-
-    #     mid_container = HorContainer()
-    #     self.mid_label = LabelWidget(self.font, ' ')
-    #     mid_container.add_widget(self.mid_label)
-    #     mid_container.add_widget(SPACE_FILLER)
-
-    #     sep = RectWidget(WHITE, max_height=10)
-    #     container.add_widget(self.top_player)
-    #     container.add_widget(sep)
-    #     container.add_widget(self.bottom_player)
-    #     container.add_widget(mid_container)
-    #     container.add_widget(self.hand)
-    #     container.add_widget(sep)
-
-    # def init_other_data_ui(self):
-    #     container = VerContainer()
-    #     container.add_widget(SPACE_FILLER)
-        
-    #     self.last_played_card_container = HorContainer()
-    #     self.last_played_card = CardWidget(self, [])
-    #     self.last_played_card_container.add_widget(SPACE_FILLER)
-    #     self.last_played_card_container.add_widget(self.last_played_card)
-    #     self.last_played_card_container.add_widget(SPACE_FILLER)
-    #     container.add_widget(LabelWidget(self.font, 'Last played:'))
-    #     self.last_played_label = LabelWidget(self.font, '')
-    #     container.add_widget(self.last_played_card_container)
-    #     container.add_widget(self.last_played_label)
-    #     container.add_widget(SPACE_FILLER)
-    #     self.logs_container = LogsContainer(self)
-    #     container.add_widget(self.logs_container)
-    #     container.add_widget(SPACE_FILLER)
-
-    #     self.container.add_widget(container)
+        all_container.add_widget(right)
 
     def draw(self):
         if self.last_state is None:
@@ -142,48 +248,26 @@ class ClientWindow(Window):
         super().update()
         statej = self.read_msg()
         if statej != '':
-            print(statej)
             parsed = parse_state(statej)
             self.load(parsed)
-        # if self.fuze == 1:
-        #     return
-        # state = test_state()
-        # self.load(state)
-        # self.fuze = 1
-    # fuze = 0
 
     def load(self, state):
         self.last_state = state
         for i in range(len(state.players)):
             self.player_widgets[i].load(state)
-        # self.top_player.load(state.players[1-state.myData.playerI])
-        # self.bottom_player.load(state.players[state.myData.playerI])
-        # self.top_player.load(state.players[1])
-        # self.bottom_player.load(state.players[0])
-        # self.hand.load(state.myData.hand)
-
-        # # print(state.newLogs)
-
-        # self.mid_label.set_text(f'({state.request}) {state.prompt}')
-
-        # if state.lastPlayed is not None:
-        #     self.last_played_card.load(state.lastPlayed.card)
-        #     self.last_played_label.set_text(f'(player: {state.lastPlayed.playerName})')
-
-        # self.logs_container.load(state.newLogs)
-
-        # self.cursor_card_widget.load(state.cursorCard)
+        self.log_widget.add_logs(state.newLogs)
   
     def send_response(self, response: str):
         self.send_msg(response)
 
-    fuze = 1
+    fuze = 0
     def read_msg(self):
-        # if ClientWindow.fuze:
-        #     result = open('state.json', 'r').read()
-        #     ClientWindow.fuze = 0
-        #     return result
-        # return ''
+        if ClientWindow.fuze == 0:
+            result = open('state.json', 'r').read()
+            ClientWindow.fuze = 5000
+            return result
+        # ClientWindow.fuze -= 1
+        return ''
     
         message = ''
         try :

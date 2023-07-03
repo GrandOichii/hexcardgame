@@ -151,6 +151,8 @@ public class MCard {
     public long Life => LuaUtility.GetLong(Data, "life");
     public string Name => LuaUtility.TableGet<string>(Data, "name");
 
+    public string ToLogForm => "[[" + Name + "#" + Original.CID + "]]";
+
     public MCard(Match match, Card card, Player player) {
         var lState = match.LState;
         lState.DoString(card.Script);

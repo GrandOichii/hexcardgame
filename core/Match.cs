@@ -8,6 +8,7 @@ using core.scripts;
 using core.effects;
 using core.tiles;
 using core.cards;
+using System.Text.RegularExpressions;
 
 namespace core.match;
 
@@ -116,9 +117,11 @@ public class Match
     public Logger SystemLogger { get; set; } = new EmptyLogger();
     public MatchView View { get; set; } = new EmptyMatchView();
     public MatchConfig Config { get; }
+    public MatchLogger Logger { get; }
 
     public Match(string id, MatchConfig config, CardMaster master) {
         CardMaster = master;
+        Logger = new(this);
         ID = id;
         LState = new();
         ScriptMaster = new(this);
@@ -178,15 +181,21 @@ public class Match
     /// </summary>
     public void Turns() {
         SystemLogger.Log("MATCH", "Started main match loop");
+
+        Logger.ParseAndLog("Match started");
         // TODO
         while (Winner is null) {
             View.Update(this);
             var cPlayer = CurrentPlayer;
+            Logger.ParseAndLog(cPlayer.Name + " started their turn.");
+
             foreach (var phase in _phases) {
                 phase.Exec(this, cPlayer);
 
                 if (!Active) break;
             }
+            Logger.ParseAndLog("Player " + cPlayer.Name + " passed their turn.");
+            
             ++CurPlayerI;
         }
     }
@@ -354,5 +363,72 @@ public class MatchMaster
         var result = new Match(id, config, cMaster);
         Index.Add(id, result);
         return result;
+    }
+}
+
+
+/// <summary>
+/// Part of the message in the public log
+/// </summary>
+public struct MatchLogEntryPart {
+    [JsonPropertyName("text")]
+    public string Text { get; set; }
+    [JsonPropertyName("cardRef")]
+    public string CardRef { get; set; }
+
+    public MatchLogEntryPart(string message, string cardRef) {
+        Text = message;
+        CardRef = cardRef;
+    }
+}
+
+
+/// <summary>
+/// Class for logging public messages in match
+/// </summary>
+public class MatchLogger {
+    static public Regex CARD_NAME_MATCHER = new Regex("\\[\\[(.+)#(.+)\\]\\]");
+
+    public List<List<MatchLogEntryPart>> Messages { get; }
+    private Match _match;
+
+    public MatchLogger(Match match) {
+        _match = match;
+        Messages = new();
+    }
+
+    public void Log(List<MatchLogEntryPart> message) {
+        Messages.Add(message);
+
+        foreach (var player in _match.Players)
+            player.NewLogs.Add(message);
+    }
+
+    public void ParseAndLog(string message) {
+        var groups = CARD_NAME_MATCHER.Split(message);
+        var result = new List<MatchLogEntryPart>();
+        // every odd is a match
+        // TODO fix with new regex pattern:
+        // 0 - normal message
+        // 1 - card label
+        // 2 - actual card name
+        var lastMessage = "";
+        for (int i = 0; i < groups.Length; i++) {
+            var g = groups[i];
+            if (g == "") continue;
+
+            var a = i % 3;
+            if (a == 0) {
+                result.Add(new MatchLogEntryPart(g, ""));
+                continue;
+            }
+            if (a == 1) {
+                lastMessage = g;
+                continue;
+            }
+
+            result.Add(new MatchLogEntryPart(lastMessage, g));
+        }
+        Log(result);
     }
 }

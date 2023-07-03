@@ -28,6 +28,8 @@ def size_config(data: list, target: int, min_delegate, max_delegate) -> list[int
             break
 
         # calculate distributions
+        # if len(good) == 0:
+        #     break
         dis_total = min_sum / len(good)
         dis_closest = (closest[0] - closest[1]) / len(good)
 
@@ -43,6 +45,12 @@ def size_config(data: list, target: int, min_delegate, max_delegate) -> list[int
 
         if dis_total < 0.0001:
             break
+        inz = 0
+        axz = 0
+        for aa in a:
+            inz += aa[0]
+            axz += aa[2]
+        print(inz, axz, target, dis_total, dis_closest)
 
     while True:
         # find the closest
@@ -68,6 +76,8 @@ def size_config(data: list, target: int, min_delegate, max_delegate) -> list[int
         if closest is None:
             break
             
+        if len(good) == 0:
+            return [math.floor(i[1]) for i in a]
         # calculate distributions
         dis_total = max_sum / len(good)
         dis_closest = (closest[1] - closest[2]) / len(good)

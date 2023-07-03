@@ -640,7 +640,7 @@ class VerFlowConfig(FlowConfig):
             if mi <= pref <= ma or (mi <= pref and ma == -1):
                 result += [pref]
         if len(result) == 0:
-            raise Exception('FAILED TO GET PREF HEIGHT')
+            raise Exception('FAILED TO GET PREF WIDTH')
         return max(result)
     
     def pref_height(self, arr: list[Widget]):

@@ -127,19 +127,49 @@ public struct MCardState {
         return result;
     }
 
-    public Card WithModifications(Card original) {
-        var result = new Card();
+    public ModifiedCard WithModifications(Card original) {
+        var result = new ModifiedCard();
+        var card = new Card();
         // name
-        result.Name = original.Name;
-        if (Modifications.Contains("name"))
-            result.Name = Modifications["name"];
-        // type
+        card.Name = original.Name;
+        if (Modifications.ContainsKey("name"))
+            card.Name = Modifications["name"].ToString();
+        
         // cost
+        card.Cost = original.Cost;
+        if (Modifications.ContainsKey("cost"))
+            // TODO casting is bad
+            card.Cost = (int)Modifications["cost"];
+
+        // type
+        card.Type = original.Type;
+        if (Modifications.ContainsKey("type"))
+            card.Type = Modifications["type"].ToString();
+
         // life
+        card.Life = original.Life;
+        if (Modifications.ContainsKey("life"))
+            card.Life = (int)Modifications["life"];
+
         // power
+        card.Power = original.Power;
+        if (Modifications.ContainsKey("power"))
+            card.Power = (int)Modifications["power"];
+
         // movement
+        result.Movement = 1;
+        if (Modifications.ContainsKey("movement"))
+            result.Movement = (int)Modifications["movement"];
+        
+        result.Card = card;    
         return result;
     }
+}
+
+
+public struct ModifiedCard {
+    public Card Card { get; set; }
+    public int Movement { get; set; }
 }
 
 

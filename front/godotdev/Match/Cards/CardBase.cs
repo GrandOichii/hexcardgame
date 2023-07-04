@@ -32,20 +32,20 @@ public partial class CardBase : Panel
 		var c = CardFetcher.Instance.Get(card.ID);
 		var mCard = card.WithModifications(c);
 		
-		NameLabel.Text = mCard.Name;
+		NameLabel.Text = mCard.Card.Name;
 		if (card.MID.Length > 0)
 			NameLabel.Text += " [" + card.MID + "]";
-		TypeLabel.Text = mCard.Type;
-		TextLabel.Text = mCard.Text;
-		CostLabel.Text = mCard.Cost.ToString();
+		TypeLabel.Text = mCard.Card.Type;
+		TextLabel.Text = mCard.Card.Text;
+		CostLabel.Text = mCard.Card.Cost.ToString();
 		var powerS = "";
-		if (mCard.Power > 0)
-			powerS = mCard.Power.ToString();
+		if (mCard.Card.Power > 0)
+			powerS = mCard.Card.Power.ToString();
 		PowerLabel.Text = powerS;
 		
 		var lifeS = "";
-		if (mCard.Power > 0)
-			lifeS = mCard.Life .ToString();
+		if (mCard.Card.Power > 0)
+			lifeS = mCard.Card.Life .ToString();
 		LifeLabel.Text = lifeS;
 		
 //		TODO doesn't work for some ungodly reason

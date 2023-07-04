@@ -64,10 +64,10 @@ public partial class TileBase : Control
 		var lifeS = "";
 		var en = state?.Entity;
 		if (en is not null) {
-			var card = CardFetcher.Instance.Get(en?.ID);
-			lifeS = card.Life.ToString();
-			if (card.Power > 0)
-				powerS = card.Power.ToString();
+			var card = en;
+			lifeS = card?.Life.ToString();
+			if (card?.Power > 0)
+				powerS = card?.Power.ToString();
 		}
 		PowerLabel.Text = powerS;
 		LifeLabel.Text = lifeS;

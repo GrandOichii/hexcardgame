@@ -45,10 +45,8 @@ public struct MatchInfoState {
     }
 }
 
-/// <summary>
-/// State of the match card
-/// </summary>
-public struct MCardState {
+public struct MCardState
+{
     [JsonPropertyName("mid")]
     public string MID { get; set; }
     [JsonPropertyName("id")]
@@ -57,47 +55,40 @@ public struct MCardState {
     public string OwnerID { get; set; }
     [JsonPropertyName("can")]
     public List<string> AvaliableActions { get; set; }
-    [JsonPropertyName("mod")]
-    public Dictionary<string, object> Modifications { get; set; }
 
-    public MCardState(MCard card) {
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
+    [JsonPropertyName("type")]
+    public string Type { get; set; }
+    [JsonPropertyName("cost")]
+    public long Cost { get; set; }
+    [JsonPropertyName("text")]
+    public string Text { get; set; }
+    [JsonPropertyName("life")]
+    public long Life { get; set; }
+    [JsonPropertyName("power")]
+    public long Power { get; set; }
+    [JsonPropertyName("movement")]
+    public long Movement { get; set; }
+
+    public MCardState(MCard card)
+    {
         MID = card.MID;
         ID = card.Original.CID;
-        OwnerID = card.Owner.ID;
-        
-        // modifications
-        Modifications = new();
+        OwnerID = "";
+        if (card.Owner is not null)
+            OwnerID = card.Owner.ID;
 
-        // name
-        var cName = card.Name;
-        if (cName != card.Original.Name)
-            Modifications.Add("name", cName);
-        var cType = card.Type;
-        if (cType != card.Original.Type)
-            Modifications.Add("type", cType);
-        var cCost = card.Cost;
-        if (cCost != card.Original.Cost)
-            Modifications.Add("cost", cCost);
-        // TODO life > power = movement
+        Name = card.Name;
+        Type = card.Type;
+        Text = card.Original.Text;
+        Cost = card.Cost;
+        Life = card.Life;
+        Power = card.Power;
+        Movement = -1;
+        if (card.IsUnit)
+            Movement = card.Movement;
 
-        var cLife = card.Life;
-        if (cLife != card.Original.Life)
-            Modifications.Add("life", cLife);
-
-        // if no life, can't be a Unit
-        if (cLife != -1) {
-            var cPower = card.Power;
-            if (cPower != card.Original.Power)
-                Modifications.Add("power", cPower);
-            // if not unit, can't move
-            if (cPower != -1) {
-                var cMovement = card.Movement;
-                if (cMovement != card.MaxMovement)
-                    Modifications.Add("movement", cMovement);
-            }
-        }
-
-        // TODO available actions
         AvaliableActions = new();
         if (card.Owner != card.Match.CurrentPlayer) return;
 
@@ -108,12 +99,14 @@ public struct MCardState {
         if (zone == Zones.DISCARD) return;
         if (zone == Zones.PLAYED) return;
 
-        if (zone == Zones.HAND) {
+        if (zone == Zones.HAND)
+        {
             // TODO check for playability
             if (card.CanBePlayed(card.Owner))
                 AvaliableActions.Add("play");
         }
-        if (zone == Zones.PLACED) {
+        if (zone == Zones.PLACED)
+        {
             if (card.IsUnit && card.CanMove)
                 // TODO? specify directions
                 AvaliableActions.Add("move");
@@ -126,51 +119,134 @@ public struct MCardState {
             result.Add(new MCardState(card));
         return result;
     }
-
-    public ModifiedCard WithModifications(Card original) {
-        var result = new ModifiedCard();
-        var card = new Card();
-        // name
-        card.Name = original.Name;
-        if (Modifications.ContainsKey("name"))
-            card.Name = Modifications["name"].ToString();
-        
-        // cost
-        card.Cost = original.Cost;
-        if (Modifications.ContainsKey("cost"))
-            // TODO casting is bad
-            card.Cost = (int)Modifications["cost"];
-
-        // type
-        card.Type = original.Type;
-        if (Modifications.ContainsKey("type"))
-            card.Type = Modifications["type"].ToString();
-
-        // life
-        card.Life = original.Life;
-        if (Modifications.ContainsKey("life"))
-            card.Life = (int)Modifications["life"];
-
-        // power
-        card.Power = original.Power;
-        if (Modifications.ContainsKey("power"))
-            card.Power = (int)Modifications["power"];
-
-        // movement
-        result.Movement = 1;
-        if (Modifications.ContainsKey("movement"))
-            result.Movement = (int)Modifications["movement"];
-        
-        result.Card = card;    
-        return result;
-    }
 }
 
+/// <summary>
+/// State of the match card
+/// </summary>
+// public struct MCardState_Old {
+//     [JsonPropertyName("mid")]
+//     public string MID { get; set; }
+//     [JsonPropertyName("id")]
+//     public string ID { get; set; }
+//     [JsonPropertyName("ownerID")]
+//     public string OwnerID { get; set; }
+//     [JsonPropertyName("can")]
+//     public List<string> AvaliableActions { get; set; }
+//     [JsonPropertyName("mod")]
+//     public Dictionary<string, object> Modifications { get; set; }
 
-public struct ModifiedCard {
-    public Card Card { get; set; }
-    public int Movement { get; set; }
-}
+//     public MCardState_Old(MCard card) {
+//         MID = card.MID;
+//         ID = card.Original.CID;
+//         OwnerID = card.Owner.ID;
+        
+//         // modifications
+//         Modifications = new();
+
+//         // name
+//         var cName = card.Name;
+//         if (cName != card.Original.Name)
+//             Modifications.Add("name", cName);
+//         var cType = card.Type;
+//         if (cType != card.Original.Type)
+//             Modifications.Add("type", cType);
+//         var cCost = card.Cost;
+//         if (cCost != card.Original.Cost)
+//             Modifications.Add("cost", cCost);
+//         // TODO life > power = movement
+
+//         var cLife = card.Life;
+//         if (cLife != card.Original.Life)
+//             Modifications.Add("life", cLife);
+
+//         // if no life, can't be a Unit
+//         if (cLife != -1) {
+//             var cPower = card.Power;
+//             if (cPower != card.Original.Power)
+//                 Modifications.Add("power", cPower);
+//             // if not unit, can't move
+//             if (cPower != -1) {
+//                 var cMovement = card.Movement;
+//                 if (cMovement != card.MaxMovement)
+//                     Modifications.Add("movement", cMovement);
+//             }
+//         }
+
+//         AvaliableActions = new();
+//         if (card.Owner != card.Match.CurrentPlayer) return;
+
+//         var zone = card.Owner.AllCards[card];
+
+//         if (zone == Zones.DECK) return;
+//         // TODO? could change if allow to play cards from discard
+//         if (zone == Zones.DISCARD) return;
+//         if (zone == Zones.PLAYED) return;
+
+//         if (zone == Zones.HAND) {
+//             // TODO check for playability
+//             if (card.CanBePlayed(card.Owner))
+//                 AvaliableActions.Add("play");
+//         }
+//         if (zone == Zones.PLACED) {
+//             if (card.IsUnit && card.CanMove)
+//                 // TODO? specify directions
+//                 AvaliableActions.Add("move");
+//         }
+//     }
+
+//     static public List<MCardState> FromCardList(List<MCard> cards) {
+//         var result = new List<MCardState>();
+//         foreach (var card in cards)
+//             result.Add(new MCardState(card));
+//         return result;
+//     }
+
+//     public ModifiedCard WithModifications(Card original) {
+//         var result = new ModifiedCard();
+//         var card = new Card();
+//         card.Text = original.Text;
+//         // name
+//         card.Name = original.Name;
+//         if (Modifications.ContainsKey("name"))
+//             card.Name = Modifications["name"].ToString();
+        
+//         // cost
+//         card.Cost = original.Cost;
+//         //if (Modifications.ContainsKey("cost"))
+//         //    // TODO casting is bad
+//         //    card.Cost = (Modifications["cost"] as JsonElement).GetInt32();
+
+//         // type
+//         card.Type = original.Type;
+//         if (Modifications.ContainsKey("type"))
+//             card.Type = Modifications["type"].ToString();
+
+//         // life
+//         card.Life = original.Life;
+//         if (Modifications.ContainsKey("life"))
+//             card.Life = ((JsonElement)Modifications["life"]).GetInt32();
+
+//         // power
+//         card.Power = original.Power;
+//         if (Modifications.ContainsKey("power"))
+//             card.Power = (int)Modifications["power"];
+
+//         // movement
+//         result.Movement = 1;
+//         if (Modifications.ContainsKey("movement"))
+//             result.Movement = ((JsonElement)Modifications["movement"]).GetInt32();
+        
+//         result.Card = card;    
+//         return result;
+//     }
+// }
+
+
+// public struct ModifiedCard {
+//     public Card Card { get; set; }
+//     public int Movement { get; set; }
+// }
 
 
 /// <summary>

@@ -1,6 +1,8 @@
-using core.match.states;
 using Godot;
 using System;
+
+using core.match.states;
+using core.cards;
 
 public partial class CardBase : Panel
 {
@@ -25,27 +27,40 @@ public partial class CardBase : Panel
 		PowerLabel = GetNode<Label>("%PowerLabel");
 		LifeLabel = GetNode<Label>("%LifeLabel");
 	}
-	
-	public void Load(MCardState card) {
-		_card = card;
 
-		var c = CardFetcher.Instance.Get(card.ID);
-		var mCard = card.WithModifications(c);
-		
-		NameLabel.Text = mCard.Card.Name;
-		if (card.MID.Length > 0)
-			NameLabel.Text += " [" + card.MID + "]";
-		TypeLabel.Text = mCard.Card.Type;
-		TextLabel.Text = mCard.Card.Text;
-		CostLabel.Text = mCard.Card.Cost.ToString();
+	public void Load(Card card) {
+		NameLabel.Text = card.Name;
+		TypeLabel.Text = card.Type;
+		TextLabel.Text = card.Text;
+		CostLabel.Text = card.Cost.ToString();
 		var powerS = "";
-		if (mCard.Card.Power > 0)
-			powerS = mCard.Card.Power.ToString();
+		if (card.Power > 0)
+			powerS = card.Power.ToString();
 		PowerLabel.Text = powerS;
 		
 		var lifeS = "";
-		if (mCard.Card.Power > 0)
-			lifeS = mCard.Card.Life .ToString();
+		if (card.Power > 0)
+			lifeS = card.Life .ToString();
+		LifeLabel.Text = lifeS;
+	}
+	
+	public void Load(MCardState card) {
+		_card = card;
+		
+		NameLabel.Text = card.Name;
+		if (card.MID.Length > 0)
+			NameLabel.Text += " [" + card.MID + "]";
+		TypeLabel.Text = card.Type;
+		TextLabel.Text = card.Text;
+		CostLabel.Text = card.Cost.ToString();
+		var powerS = "";
+		if (card.Power > 0)
+			powerS = card.Power.ToString();
+		PowerLabel.Text = powerS;
+		
+		var lifeS = "";
+		if (card.Power > 0)
+			lifeS = card.Life .ToString();
 		LifeLabel.Text = lifeS;
 		
 //		TODO doesn't work for some ungodly reason

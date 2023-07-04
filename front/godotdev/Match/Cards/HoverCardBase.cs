@@ -19,9 +19,7 @@ public partial class HoverCardBase : Node2D
 	}
 	
 	public void Load(string cID) {
-		MCardState card;
-		card.ID = cID;
-		card.MID = "";
+		var card = CardFetcher.Instance.Get(cID);
 		
 		CardNode.Load(card);
 	}

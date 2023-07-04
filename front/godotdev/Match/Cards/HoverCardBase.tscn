@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://5gn0jkvmvrp"]
+
+[ext_resource type="Script" path="res://Match/Cards/HoverCardBase.cs" id="1_hpx0b"]
+[ext_resource type="PackedScene" uid="uid://curw8lq5rwd2s" path="res://Match/Cards/CardBase.tscn" id="1_pd3k7"]
+
+[node name="HoverCardbase" type="Node2D"]
+script = ExtResource("1_hpx0b")
+
+[node name="Card" parent="." instance=ExtResource("1_pd3k7")]
+unique_name_in_owner = true

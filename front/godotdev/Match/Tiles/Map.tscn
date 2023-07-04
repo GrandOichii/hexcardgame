@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bqocqsi7qba31"]
+
+[ext_resource type="Script" path="res://Match/Tiles/Map.cs" id="1_8pbfb"]
+
+[node name="Map" type="Panel"]
+script = ExtResource("1_8pbfb")

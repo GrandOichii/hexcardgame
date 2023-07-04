@@ -48,6 +48,10 @@ class ExecuteCommandAction : GameAction
 
 class PlayCardAction : GameAction
 {
+    private void LogPlayed(Match match, Player player, MCard card) {
+        match.Logger.ParseAndLog(player.Name + " played " + card.ToLogForm + ".");
+    }
+
     public override void Exec(Match match, Player player, string[] args)
     {
         // args[1] - the MID of the card
@@ -61,22 +65,26 @@ class PlayCardAction : GameAction
         var tile = match.Map.TileAt(pointRaw);
         if (tile is null) {
             // TODO? don't throw exception
+            if (!match.StrictMode) return;
             throw new Exception("Cannot play a card on point " + pointRaw + ": it is empty");
         }
 
         var card = player.Hand[mID];
         if (card is null) {
             // TODO? don't throw exception
+            if (!match.StrictMode) return;
             throw new Exception("Player " + player.ShortStr + " cannot play a card with mID " + mID + ": they don't have it in their hand");
         }
 
         if (card.IsPlaceable) {
             if (tile.Owner != player) {
                 // TODO? don't throw exception
+                if (!match.StrictMode) return;
                 throw new Exception("Can't place entity on tile " + pointRaw + ": it's not owned by " + player.ShortStr);
             }
             if (tile.Entity is object) {
-                // TODO? don't throw exception 
+                // TODO? don't throw exception
+                if (!match.StrictMode) return; 
                 throw new Exception("Can't place entity on tile " + pointRaw + ": it is already taken");
             }
             if (!player.TryPlayCard(card)) {
@@ -85,6 +93,7 @@ class PlayCardAction : GameAction
             }
 
             player.Hand.Cards.Remove(card);
+            LogPlayed(match, player, card);
             tile.Entity = card;
             player.AllCards[card] = Zones.PLACED;
 
@@ -97,14 +106,17 @@ class PlayCardAction : GameAction
         var caster = tile.Entity;
         if (caster is null) {
             // TODO? don't throw exception
+            if (!match.StrictMode) return;
             throw new Exception("Failed to cast spell " + card.ShortStr + ": tile at " + args[2] + " has no entity");
         }
         if (caster.Owner != player) {
             // TODO? don't throw exception
+            if (!match.StrictMode) return;
             throw new Exception("Failed to cast spell " + card.ShortStr + ": entity at " + args[2] + " is not owned by the player who played the spell");
         }
         if (!caster.Type.Contains("Mage")) {
             // TODO? don't throw exception
+            if (!match.StrictMode) return;
             throw new Exception("Failed to cast spell " + card.ShortStr + ": entity at " + args[2] + " is not a Mage");
         }
 
@@ -115,6 +127,8 @@ class PlayCardAction : GameAction
 
         player.Hand.Cards.Remove(card); 
         player.AllCards[card] = Zones.PLAYED;
+        LogPlayed(match, player, card);
+
         // execute the effect of the card
         card.ExecFunc(MCard.EFFECT_FNAME, card.Data, player.ID, caster.Data);
         player.AllCards[card] = Zones.DISCARD;
@@ -140,24 +154,29 @@ class MoveAction : GameAction
         // TODO better errors
         if (tile is null) {
             // TODO? don't throw exception
+            if (!match.StrictMode) return;
             throw new Exception("Invalid point argument for move action: tile is null");
         }
         var en = tile.Entity;
         if (en is null) {
             // TODO? don't throw exception
+            if (!match.StrictMode) return;
             throw new Exception("Invalid point argument for move action: tile has no entity to be moved");
         }
         if (en.Owner != player) {
             // TODO? don't throw exception
+            if (!match.StrictMode) return;
             throw new Exception("Invalid point argument for move action: entity is not owned by the player");
         }
         if (!en.IsUnit) {
             // TODO? don't throw exception
+            if (!match.StrictMode) return;
             throw new Exception("Invalid point argument for move action: entity is not a Unit");
         }
         // TODO movement
         if (!en.CanMove) {
             // TODO? don't throw exception
+            if (!match.StrictMode) return;
             throw new Exception("Invalid point argument for move action: unit has no movement points left");
         }
         
@@ -166,6 +185,7 @@ class MoveAction : GameAction
 
         if (newTile is null) {
             // TODO? don't throw exception
+            if (!match.StrictMode) return;
             throw new Exception("Can't move to tile with args: " + args[1] + " " + args[2] + ": it is empty");
         }
 
@@ -176,6 +196,7 @@ class MoveAction : GameAction
             var owner = targetEn.Owner;
             if (owner == player) {
                 // TODO? don't throw exception
+                if (!match.StrictMode) return;
                 throw new Exception("Can't move to tile with args: " + args[1] + " " + args[2] + ": it already has an entity that is owned by the same player.");
             }
             match.SystemLogger.Log("MOVEACTION", en.ShortStr + " attacks " + targetEn.ShortStr);
@@ -195,6 +216,8 @@ class MoveAction : GameAction
                 en.ProcessDamage(defenderDamage);
             }
 
+            match.Logger.ParseAndLog(player.Name + "'s " + en.ToLogForm + " attacks " + targetEn.ToLogForm + ".");
+
             match.CheckZeroLife();
             return;
         }
@@ -203,6 +226,7 @@ class MoveAction : GameAction
         tile.Entity = null;
         newTile.Entity = en;
         en.Data["movement"] = en.Movement - 1;
+        match.Logger.ParseAndLog(player.Name + " moved " + en.ToLogForm + ".");
 
         match.Emit("unit_move", new(){ {"mid", en.MID}, {"tile", newTile.ToLuaTable(match.LState)} });
     }

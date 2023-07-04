@@ -101,6 +101,8 @@ public class TCPPlayerController : PlayerController
     /// </summary>
     /// <returns>The read message</returns>
     private string Read() {
+        // return Console.ReadLine();
+        
         var stream = _handler.GetStream();
         var result = NetUtil.Read(stream);
         return result;
@@ -206,9 +208,15 @@ public class Player {
         // _match.Emit("card_draw", new(){{"player", ToLuaTable(_match.LState)}, {"amount", amount}});
 
         Hand.AddToBack(cards);
-        _match.SystemLogger.Log("PLAYER", "Player " + ShortStr + " drew " + cards.Count + " cards");
+        var message =  "Player " + ShortStr + " drew " + cards.Count + " card";
+        if (cards.Count > 1)
+            message += "s";
+        _match.SystemLogger.Log("PLAYER", message + ".");
 
-        _match.Logger.ParseAndLog(Name + " drew " + cards.Count + " cards.");
+        message = Name + " drew " + cards.Count + " card";
+        if (cards.Count > 1)
+            message += "s";
+        _match.Logger.ParseAndLog(message + ".");
         return cards.Count;
     }
 

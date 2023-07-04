@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://cgsfcdkmxknt3"]
+[gd_scene load_steps=5 format=3 uid="uid://cgsfcdkmxknt3"]
 
 [ext_resource type="Script" path="res://Match/Match.cs" id="1_c6lcm"]
+[ext_resource type="PackedScene" uid="uid://bqocqsi7qba31" path="res://Match/Tiles/Map.tscn" id="2_ebqun"]
+[ext_resource type="Script" path="res://Match/Logs.cs" id="2_oun48"]
+[ext_resource type="Script" path="res://Match/ActionSender.cs" id="2_x0om4"]
 
 [node name="Match" type="Node2D"]
 script = ExtResource("1_c6lcm")
@@ -16,18 +19,58 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Players" type="VBoxContainer" parent="UI/HBox"]
+unique_name_in_owner = true
 layout_mode = 2
 alignment = 2
 
 [node name="CenterBox" type="VBoxContainer" parent="UI/HBox"]
 layout_mode = 2
 size_flags_horizontal = 3
+alignment = 2
 
-[node name="CardsScroll" type="ScrollContainer" parent="UI/HBox/CenterBox"]
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/HBox/CenterBox"]
 layout_mode = 2
 size_flags_vertical = 3
-vertical_scroll_mode = 0
 
-[node name="Cards" type="HBoxContainer" parent="UI/HBox/CenterBox/CardsScroll"]
+[node name="Map" parent="UI/HBox/CenterBox/ScrollContainer" instance=ExtResource("2_ebqun")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HandAndActions" type="VBoxContainer" parent="UI/HBox/CenterBox"]
 layout_mode = 2
 size_flags_vertical = 8
+
+[node name="ActionSender" type="LineEdit" parent="UI/HBox/CenterBox/HandAndActions"]
+layout_mode = 2
+size_flags_vertical = 10
+placeholder_text = "Enter action"
+script = ExtResource("2_x0om4")
+
+[node name="CardsScroll" type="ScrollContainer" parent="UI/HBox/CenterBox/HandAndActions"]
+layout_mode = 2
+size_flags_vertical = 10
+vertical_scroll_mode = 0
+
+[node name="Cards" type="HBoxContainer" parent="UI/HBox/CenterBox/HandAndActions/CardsScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="Logs" type="RichTextLabel" parent="UI/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.4
+scroll_following = true
+meta_underlined = false
+script = ExtResource("2_oun48")
+
+[node name="PollLogsTimer" type="Timer" parent="."]
+wait_time = 0.05
+autostart = true
+
+[connection signal="text_submitted" from="UI/HBox/CenterBox/HandAndActions/ActionSender" to="UI/HBox/CenterBox/HandAndActions/ActionSender" method="OnActionSenderTextSubmitted"]
+[connection signal="meta_hover_ended" from="UI/HBox/Logs" to="." method="OnLogsMetaHoverEnded"]
+[connection signal="meta_hover_started" from="UI/HBox/Logs" to="." method="OnLogsMetaHoverStarted"]
+[connection signal="timeout" from="PollLogsTimer" to="." method="_OnPollLogsTimerTimeout"]

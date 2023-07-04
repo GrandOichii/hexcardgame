@@ -83,6 +83,7 @@ class Program {
 
         // create match
         var match = mCreator.New(cm, config);
+        match.StrictMode = false;
         match.AllowCommands = true;
         // var view = new CursesMatchView();
         // match.View = view;

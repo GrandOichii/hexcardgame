@@ -247,7 +247,7 @@ public class ScriptMaster {
 
         var dealt = target.ProcessDamage(damage);
         // TODO add more logging
-        _match.Logger.ParseAndLog("Card " + dealer.ToLogForm + " dealt " + dealt + " damage to " + target.ToLogForm);
+        _match.Logger.ParseAndLog("Card " + dealer.ToLogForm + " dealt " + dealt + " damage to " + target.ToLogForm + ".");
         var died = target.Life == 0;
 
         _match.CheckZeroLife();

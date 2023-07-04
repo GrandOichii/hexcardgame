@@ -107,6 +107,7 @@ public class Match
     public IDCreator CardIDCreator { get; set; } = new BasicIDCreator();
     public CardMaster CardMaster { get; }
     public string ID { get; }
+    public bool StrictMode { get; set; } = true;
     public List<Player> Players { get; }
     public Lua LState { get; }
     public ScriptMaster ScriptMaster { get; }
@@ -387,7 +388,7 @@ public struct MatchLogEntryPart {
 /// Class for logging public messages in match
 /// </summary>
 public class MatchLogger {
-    static public Regex CARD_NAME_MATCHER = new Regex("\\[\\[(.+)#(.+)\\]\\]");
+    static public Regex CARD_NAME_MATCHER = new Regex("\\[\\[([^\\[]+)#([^\\[]+)\\]\\]");
 
     public List<List<MatchLogEntryPart>> Messages { get; }
     private Match _match;

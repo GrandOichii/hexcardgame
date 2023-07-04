@@ -87,8 +87,10 @@ class MainPhase : MatchPhase
                 return;
             }
             
-            if (!ACTION_MAP.ContainsKey(actionWord)) throw new Exception("Unknown action from player " + player.Name + ": " + actionWord);
-
+            if (!ACTION_MAP.ContainsKey(actionWord)) {
+                if (!match.StrictMode) continue;
+                throw new Exception("Unknown action from player " + player.Name + ": " + actionWord);
+            }
             ACTION_MAP[actionWord].Exec(match, player, words);
             match.View.Update(match);
             match.UpdateOpponents();

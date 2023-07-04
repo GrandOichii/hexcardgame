@@ -8,6 +8,7 @@ function _Create(props)
         local neighbors = GetNeighbors({ tile.iPos, tile.jPos })
         for _, neighbor in ipairs(neighbors) do
             if neighbor ~= nil and neighbor.entity ~= nil and neighbor.entity.ownerID ~= playerID then
+                print(neighbor.entity.ownerID..' '..playerID)
                 DealDamage(result.id, {neighbor.iPos, neighbor.jPos}, result.DamageValues.damage)
             end
         end

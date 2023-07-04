@@ -162,6 +162,7 @@ public class MCard {
         var returned = creationF.Call(props);
         var data = LuaUtility.GetReturnAs<LuaTable>(returned);
         data["id"] = mID;
+        data["ownerID"] = player.ID;
 
         Match = match;
         MID = mID;

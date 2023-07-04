@@ -126,6 +126,20 @@ public struct MCardState {
             result.Add(new MCardState(card));
         return result;
     }
+
+    public Card WithModifications(Card original) {
+        var result = new Card();
+        // name
+        result.Name = original.Name;
+        if (Modifications.Contains("name"))
+            result.Name = Modifications["name"];
+        // type
+        // cost
+        // life
+        // power
+        // movement
+        return result;
+    }
 }
 
 
@@ -143,12 +157,15 @@ public struct PlayerState {
     public int DeckCount { get; set; }
     [JsonPropertyName("discard")]
     public List<MCardState> Discard { get; set; }
+    [JsonPropertyName("energy")]
+    public int Energy { get; set; }
 
     public PlayerState(Player player) {
         Name = player.Name;
         ID = player.ID;
         HandCount = player.Hand.Cards.Count;
         DeckCount = player.Deck.Cards.Count;
+        Energy = player.Energy;
         Discard = MCardState.FromCardList(player.Discard.Cards);
     }
 

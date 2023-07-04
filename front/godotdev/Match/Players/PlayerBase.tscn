@@ -5,7 +5,7 @@
 [node name="PlayerBase" type="MarginContainer"]
 custom_minimum_size = Vector2(194, 111)
 offset_right = 194.0
-offset_bottom = 126.0
+offset_bottom = 135.0
 script = ExtResource("1_jxfie")
 
 [node name="ColorRect" type="ColorRect" parent="."]

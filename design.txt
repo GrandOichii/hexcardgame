@@ -44,7 +44,7 @@ v [Rogue Initiate]:2
     L: 2
     
     
-[Combat Medic]:3
+v [Combat Medic]:3
     (Unit)-(Warrior)
     At the start of your turn, [CARDNAME] restores 1 life to all your n. Units.
     P: 2
@@ -65,7 +65,7 @@ v [Rogue Initiate]:2
     L: 2
     
     
-[!Elf]:1
+v [!Elf]:1
     (Unit)
     P: 1
     L: 1
@@ -84,7 +84,7 @@ v [Rogue Initiate]:2
     L: 2
     
     
-[!Zombie]:2
+v [!Zombie]:2
     (Unit)
     Leaves no grave.
     P: 2
@@ -96,7 +96,7 @@ v [Rogue Initiate]:2
     Deal 2 damage to a n. Unit.
 
 
-[Urakshi Raider]:3
+v [Urakshi Raider]:3
     (Unit)-(Warrior)
     {Fast}
     P: 3
@@ -129,7 +129,7 @@ v [Brute]:5
     Transform n. enemy Unit into a [Frog].
 
 
-[Frog]:1
+v [Frog]:1
     (Unit)
     P: 1 
     L: 1

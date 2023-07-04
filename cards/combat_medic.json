@@ -1,0 +1,10 @@
+{
+    "name": "Combat Medic",
+    "cost": 3,
+    "type": "Unit",
+    "expansion": "dev",
+    "text": "At the start of your turn, [CARDNAME] restores 1 life to all your n. Units.",
+    "power": 2,
+    "life": 2,
+    "script": "-- TODO not tested\nfunction _Create(props)\n    local result = CardCreation:Unit(props)\n    result:AddSubtype('Warrior')\n\n    result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()\n        :Check(Common:IsOwnersTurn(result))\n        :Cost(Common:NoCost())\n        :IsSilent(false)\n        :On(TRIGGERS.TURN_START)\n        :Zone(ZONES.PLACED)\n        :Effect(function (playerID, args)\n            local tile = GetTileWith(result.id)\n        \n            local neighbors = GetNeighbors({ tile.iPos, tile.jPos })\n            for _, neighbor in ipairs(neighbors) do\n                if neighbor ~= nil and neighbor.entity ~= nil and neighbor.entity:IsUnit() and neighbor.entity.ownerID == playerID then\n                    neighbor.entity.life = neighbor.entity.life + 1\n                    if neighbor.entity.life > neighbor.entity.baseLife then\n                        neighbor.entity.life = neighbor.entity.baseLife                 \n                    end\n                end\n            end\n            AddEnergy(playerID, 1)\n        end)\n        :Build()\n    return result\nend"
+}

@@ -278,6 +278,10 @@ function CardCreation:Card(props)
         return res
     end
 
+    function result:IsUnit()
+        return string.find(result.type, 'Unit')
+    end
+
     return result
 end
 

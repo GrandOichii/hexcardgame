@@ -1,0 +1,8 @@
+{
+    "name": "Scorch the Earth",
+    "cost": 5,
+    "type": "Spell",
+    "expansion": "starters",
+    "text": "Deal 3 damage to each Unit.",
+    "script": "\n-- TODO not tested\nfunction _Create(props)\n    local result = CardCreation:Spell(props)\n    result.DamageValues.Damage = 1\n    result.EffectP:AddLayer(function(playerID, caster)\n        -- TODO\n        -- get all units (faster)\n        -- iterate through all of them\n        -- deal 3 damage to each one\n    end)\n    return result\nend"
+}

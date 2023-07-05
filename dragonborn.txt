@@ -29,6 +29,7 @@ Expansion: starters
 
 [Dragon Egg]:3 ++++
     Unit
+    At the start of your turn, [CARDNAME] deals 1 damage to itself.
     When [CARDNAME] dies, it turns into a [Dragon Hatchling].
     P: 0
     L: 10

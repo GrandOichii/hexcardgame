@@ -3,6 +3,6 @@
     "cost": 1,
     "type": "Spell",
     "expansion": "dev",
-    "text": "Caster gains +1 power and +1 life.",
+    "text": "Caster gains +2 power and +2 life.",
     "script": "function _Create(props)\n    local result = CardCreation:Spell(props)\n    result.EffectP:AddLayer(function(playerID, caster)\n        caster.power = caster.power + 2\n        caster.life = caster.life + 2\n        return nil, true\n    end)\n    return result\nend "
 }

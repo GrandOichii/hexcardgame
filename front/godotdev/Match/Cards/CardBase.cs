@@ -52,7 +52,7 @@ public partial class CardBase : Panel
 			NameLabel.Text += " [" + card.MID + "]";
 		TypeLabel.Text = card.Type;
 		TextLabel.Text = card.Text;
-		CostLabel.Text = card.Cost.ToString();
+		CostLabel.Text = "(" + card.Cost.ToString() + ")";
 		var powerS = "";
 		if (card.Power > 0)
 			powerS = card.Power.ToString();

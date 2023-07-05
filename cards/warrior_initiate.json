@@ -5,6 +5,6 @@
     "expansion": "dev",
     "text": "",
     "power": 2,
-    "life": 2,
+    "life": 3,
     "script": "function _Create(props)\n    local result = CardCreation:Unit(props)\n    result:AddSubtype('Warrior')\n    return result\nend"
 }

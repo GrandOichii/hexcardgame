@@ -1,6 +1,6 @@
 {
     "name": "Spread Influence",
-    "cost": 4,
+    "cost": 5,
     "type": "Spell",
     "expansion": "dev",
     "text": "Gain control of the current and all n. neutral tiles.",

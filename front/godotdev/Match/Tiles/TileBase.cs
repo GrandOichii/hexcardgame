@@ -12,6 +12,7 @@ public partial class TileBase : Node2D
 	private Label CoordsLabel;
 	private Label PowerLabel;
 	private Label LifeLabel;
+	private CardBase HoverCard;
 	private MarginContainer SizeContainer;
 
 	private TileState? _lastState;
@@ -34,6 +35,7 @@ public partial class TileBase : Node2D
 		PowerLabel = GetNode<Label>("%PowerLabel");
 		LifeLabel = GetNode<Label>("%LifeLabel");
 		CoordsLabel = GetNode<Label>("%CoordsLabel");
+		HoverCard = GetNode<CardBase>("%HoverCard");
 
 	}
 
@@ -42,7 +44,11 @@ public partial class TileBase : Node2D
 		get => _coords;
 		set {
 			_coords = value;
+			
 			CoordsLabel.Text = _coords.Y + "." + _coords.X;
+			if (_coords.Y < Game.Instance.LastState.Map.Tiles.Count / 2) {
+				HoverCard.Position = new Vector2(HoverCard.Position.X, 66);
+			}
 		}
 	} 
 
@@ -65,13 +71,15 @@ public partial class TileBase : Node2D
 		var lifeS = "";
 		var en = state?.Entity;
 		if (en is not null) {
-			var card = en;
-			lifeS = card?.Life.ToString();
-			if (card?.Power > 0)
-				powerS = card?.Power.ToString();
+			MCardState card = (MCardState)en;
+			lifeS = card.Life.ToString();
+			if (card.Power > 0)
+				powerS = card.Power.ToString();
+			HoverCard.Load(card);
 		}
 		PowerLabel.Text = powerS;
 		LifeLabel.Text = lifeS;
+
 	}
 
 	private string _playerID;
@@ -105,6 +113,14 @@ public partial class TileBase : Node2D
 		OnCollisionMouseEntered();
 		if (@event is InputEventMouseButton) {
 			var e = @event as InputEventMouseButton;
+// 			if (e.ShiftPressed && _lastState?.Entity is not null) {				
+// //				HoverCardBase hc = Game.Instance.HoverCard;
+// //				hc.Visible = true;
+// //				MCardState en = (MCardState)(_lastState?.Entity);
+// //				hc.Load(en);
+// //				GD.Print(hc.ZIndex, " ", ZIndex);
+// 				return;
+// //			}
 			if (e.IsPressed() && e.ButtonIndex == MouseButton.Left) {
 				var game = Game.Instance;
 				var action = game.Action;
@@ -157,11 +173,16 @@ public partial class TileBase : Node2D
 	private void OnCollisionMouseEntered()
 	{
 		Bg.Color = HoverColor;
-		// Replace with function body.
+
+		if (_lastState is not null && _lastState?.Entity is not null) {
+			HoverCard.Visible = true;
+		}
 	}
 	private void OnCollisionMouseExited()
 	{
 		Bg.Color = BaseColor;	
+		if (HoverCard.Visible)
+			HoverCard.Visible = false;
 	}
 	
 }

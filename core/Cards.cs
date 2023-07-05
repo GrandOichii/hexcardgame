@@ -229,6 +229,7 @@ public class MCard {
 
 
     public bool CanBePlayed(Player player) {
-        return ExecCheckerFunc(CAN_PLAY_FNAME, Data, player.ID);
+        var result = ExecCheckerFunc(CAN_PLAY_FNAME, Data, player.ID);
+        return result;
     }
 }

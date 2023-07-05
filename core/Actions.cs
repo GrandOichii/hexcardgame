@@ -77,6 +77,10 @@ class PlayCardAction : GameAction
             throw new Exception("Player " + player.ShortStr + " cannot play a card with mID " + mID + ": they don't have it in their hand");
         }
 
+        if (!card.CanBePlayed(player)) {
+            
+        }
+
         if (card.IsPlaceable) {
             if (tile.Owner != player) {
                 // TODO? don't throw exception

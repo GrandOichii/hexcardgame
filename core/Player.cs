@@ -230,6 +230,7 @@ public class Player {
 
     public bool TryPlayCard(MCard card) {
         var canPlay = card.CanBePlayed(this);
+        if (!canPlay) return false;
 
         var payed = card.ExecCheckerFunc(MCard.PAY_COSTS_FNAME, card.Data, ID);
         if (!payed) {

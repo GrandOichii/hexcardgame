@@ -4,6 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://curw8lq5rwd2s" path="res://Match/Cards/CardBase.tscn" id="1_pd3k7"]
 
 [node name="HoverCardbase" type="Node2D"]
+visibility_layer = 3
+z_index = 1
+y_sort_enabled = true
 script = ExtResource("1_hpx0b")
 
 [node name="Card" parent="." instance=ExtResource("1_pd3k7")]

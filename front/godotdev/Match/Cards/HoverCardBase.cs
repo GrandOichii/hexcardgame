@@ -23,4 +23,8 @@ public partial class HoverCardBase : Node2D
 		
 		CardNode.Load(card);
 	}
+
+	public void Load(MCardState state) {
+		CardNode.Load(state);
+	}
 }

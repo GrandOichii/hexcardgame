@@ -47,6 +47,10 @@ size_flags_vertical = 10
 placeholder_text = "Enter action"
 script = ExtResource("2_x0om4")
 
+[node name="PassButton" type="Button" parent="UI/HBox/CenterBox/HandAndActions"]
+layout_mode = 2
+text = "Pass"
+
 [node name="CardsScroll" type="ScrollContainer" parent="UI/HBox/CenterBox/HandAndActions"]
 layout_mode = 2
 size_flags_vertical = 10
@@ -71,6 +75,7 @@ wait_time = 0.05
 autostart = true
 
 [connection signal="text_submitted" from="UI/HBox/CenterBox/HandAndActions/ActionSender" to="UI/HBox/CenterBox/HandAndActions/ActionSender" method="OnActionSenderTextSubmitted"]
+[connection signal="pressed" from="UI/HBox/CenterBox/HandAndActions/PassButton" to="." method="OnPassButtonPressed"]
 [connection signal="meta_hover_ended" from="UI/HBox/Logs" to="." method="OnLogsMetaHoverEnded"]
 [connection signal="meta_hover_started" from="UI/HBox/Logs" to="." method="OnLogsMetaHoverStarted"]
 [connection signal="timeout" from="PollLogsTimer" to="." method="_OnPollLogsTimerTimeout"]

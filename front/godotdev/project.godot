@@ -19,11 +19,6 @@ config/icon="res://icon.svg"
 
 project/assembly_name="godotdev"
 
-[layer_names]
-
-2d_render/layer_1="Tiles"
-2d_physics/layer_1="Tiles"
-
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

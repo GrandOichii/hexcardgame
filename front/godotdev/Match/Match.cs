@@ -27,6 +27,7 @@ public partial class Match : Node2D
 	public override void _Ready()
 	{
 		HoverCard = HoverCardBaseScene.Instantiate() as HoverCardBase;
+		Game.Instance.HoverCard = HoverCard;
 		HoverCard.Visible = false;
 		HoverCard._Ready();
 		AddChild(HoverCard);
@@ -141,5 +142,13 @@ public partial class Match : Node2D
 		HoverCard.Visible = false;
 		
 	}
+	private void OnPassButtonPressed()
+	{
+		var stream = Game.Instance.Client.GetStream();
+		NetUtil.Write(stream, "pass");
+		// Replace with function body.
+	}
 }
+
+
 

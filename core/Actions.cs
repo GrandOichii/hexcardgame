@@ -57,6 +57,7 @@ class PlayCardAction : GameAction
         // args[1] - the MID of the card
         // args[2] - the tile the card is played on
         if (args.Length != 3) {
+            if (!match.StrictMode) return;
             throw new Exception("Incorrect number of arguments for play action");
         }
 
@@ -143,6 +144,7 @@ class MoveAction : GameAction
     {
         // move 2.1 0
         if (args.Length != 3) {
+            if (!match.StrictMode) return;
             throw new Exception("Incorrect number of arguments for move action");
         }
 

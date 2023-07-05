@@ -88,7 +88,13 @@ public partial class CardBase : Panel
 		if (@event is InputEventMouseButton) {
 			var e = @event as InputEventMouseButton;
 			if (e.IsPressed() && e.ButtonIndex == MouseButton.Left) {
-				GD.Print(_card.MID);
+				var game = Game.Instance;
+				var action = game.Action;
+				if (action.Count == 0)  {
+					game.AddToAction("play");
+					game.AddToAction(_card.MID);
+					return;
+				}
 			}
 		}
 	}

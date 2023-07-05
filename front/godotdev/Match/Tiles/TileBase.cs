@@ -3,6 +3,7 @@ using System;
 
 using core.match.states;
 using System.Collections.Generic;
+using core.tiles;
 
 public partial class TileBase : Node2D
 {
@@ -101,18 +102,57 @@ public partial class TileBase : Node2D
 
 	private void OnCollisionInputEvent(Node viewport, InputEvent @event, long shape_idx)
 	{
+		OnCollisionMouseEntered();
 		if (@event is InputEventMouseButton) {
 			var e = @event as InputEventMouseButton;
 			if (e.IsPressed() && e.ButtonIndex == MouseButton.Left) {
-				GD.Print(_coords);
+				var game = Game.Instance;
+				var action = game.Action;
+
+				if (action.Count == 0) {
+					game.AddToAction("move");
+					game.AddToAction("" + _coords.Y + "." + _coords.X);
+					return;
+				}
+				if (action.Count == 2)  {
+					if (action[0] == "play") {
+						game.AddToAction("" + _coords.Y + "." + _coords.X);
+						game.SendAction();
+						return;
+					}
+					if (action[0] == "move") {
+						GD.Print("MOVE");
+						var all_dir_arr = core.tiles.Map.DIR_ARR;
+						var ii = (int)_coords.Y % 2;
+						var dir_arr = all_dir_arr[ii];
+						for (int i = 0; i < dir_arr.Length; i++) {
+//							GD.Print(_coords.Y, " ", _coords.X);
+							var newC = new Vector2((int)_coords.X + (int)dir_arr[i][1], (int)_coords.Y + dir_arr[i][0]);
+//							GD.Print(newC, "  ", dir_arr[i][0], "  ", dir_arr[i][1]);
+							var tS = "" + newC.Y + "." + newC.X;
+							GD.Print(i, " ", tS, " ", action[1]);
+							if (action[1] == tS) {
+								game.AddToAction(((i + 3)%6).ToString());
+								game.SendAction();
+								return;
+							}
+						}
+						game.SendAction();
+						return;
+					}
+				}
 			}
 		}
-		if (@event is InputEventMouseMotion) {
-			var e = @event as InputEventMouseMotion;
-			if (e.ShiftPressed) {
-				GD.Print("MO");
-			}
-		}
+//		if (@event is InputEventMouseMotion) {
+//			var e = @event as InputEventMouseMotion;
+//			if (e.ShiftPressed && _lastState?.Entity is not null) {
+//				HoverCardBase hc = Game.Instance.HoverCard;
+//				hc.Visible = true;
+//				MCardState en = (MCardState)(_lastState?.Entity);
+//				hc.Load(en);
+//				GD.Print(hc.ZIndex, " ", ZIndex);
+//			}
+//		}
 	}
 	private void OnCollisionMouseEntered()
 	{

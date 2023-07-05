@@ -105,3 +105,5 @@ text = "Card Text here
 Card Text here
 Card Text here"
 autowrap_mode = 2
+
+[connection signal="gui_input" from="." to="." method="OnGuiInput"]

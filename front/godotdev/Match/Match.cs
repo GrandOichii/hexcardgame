@@ -124,7 +124,6 @@ public partial class Match : Node2D
 	{
 		try {
 			var message = NetUtil.Read(Game.Instance.Client.GetStream());
-			GD.Print(message);
 			var state = MatchState.FromJson(message);
 			LoadState(state);
 		} catch (IOException) { return; }

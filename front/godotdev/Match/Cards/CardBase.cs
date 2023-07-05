@@ -83,4 +83,17 @@ public partial class CardBase : Panel
 	public override void _Process(double delta)
 	{
 	}
+	private void OnGuiInput(InputEvent @event)
+	{
+		if (@event is InputEventMouseButton) {
+			var e = @event as InputEventMouseButton;
+			if (e.IsPressed() && e.ButtonIndex == MouseButton.Left) {
+				GD.Print(_card.MID);
+			}
+		}
+	}
 }
+
+
+
+

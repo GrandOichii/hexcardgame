@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://bs324wim6pf8q"]
+
+[node name="CardBaseV2" type="Node2D"]
+
+[node name="Bg" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(250, 350)
+offset_right = 40.0
+offset_bottom = 40.0
+pivot_offset = Vector2(125, 175)
+
+[node name="Fg" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(250, 350)
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(0.95, 0.95)
+pivot_offset = Vector2(125, 175)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Fg"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NameLabel" type="Label" parent="Fg/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Card name here"
+
+[node name="HSeparator" type="HSeparator" parent="Fg/VBoxContainer"]
+layout_mode = 2
+
+[node name="Image" type="TextureRect" parent="Fg/VBoxContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Fg/VBoxContainer"]
+layout_mode = 2
+
+[node name="TypeLabel" type="Label" parent="Fg/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Card type here"
+
+[node name="HSeparator3" type="HSeparator" parent="Fg/VBoxContainer"]
+layout_mode = 2
+
+[node name="Text" type="RichTextLabel" parent="Fg/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+text = "Card text here
+Card text here
+Card text here"

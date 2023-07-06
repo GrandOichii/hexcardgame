@@ -53,6 +53,8 @@ public partial class HandCardBase : MarginContainer
 		if (@event is InputEventMouseButton) {
 			var e = @event as InputEventMouseButton;
 			if (e.IsPressed() && e.ButtonIndex == MouseButton.Left) {
+				if (CardNode.LastState.AvailableActions.Count == 0) return;
+				
 				var game = Game.Instance;
 				var action = game.Action;
 				if (action.Count == 0)  {

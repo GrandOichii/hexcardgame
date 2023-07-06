@@ -289,4 +289,18 @@ public class ScriptMaster {
 
         return LuaUtility.CreateTable(_match.LState, result);
     }
+
+
+    /// <summary>
+    /// Returns a Lua array wuth all of the Units that take a tile
+    /// </summary>
+    /// <returns></returns>
+    [LuaCommand]
+    public LuaTable GetUnitsOnBoard() {
+        var result = new List<object?>();
+
+        var map = _match.Map;
+
+        return LuaUtility.CreateTable(result);
+    }
 }

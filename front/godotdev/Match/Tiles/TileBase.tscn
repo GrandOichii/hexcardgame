@@ -4,75 +4,81 @@
 [ext_resource type="PackedScene" uid="uid://bs324wim6pf8q" path="res://Match/Cards/CardBase.tscn" id="2_6ptu3"]
 
 [node name="TileBase" type="Node2D"]
-scale = Vector2(1.2, 1.2)
 script = ExtResource("1_oyiqj")
-
-[node name="Bg" type="Polygon2D" parent="."]
-unique_name_in_owner = true
-polygon = PackedVector2Array(16, 64, 56, 64, 72, 32, 56, 0, 16, 0, 0, 32)
-
-[node name="Fg" type="Polygon2D" parent="."]
-unique_name_in_owner = true
-position = Vector2(36, 32)
-scale = Vector2(0.9, 0.9)
-offset = Vector2(-101.333, -37.5556)
-polygon = PackedVector2Array(81.333, 69.5556, 121.333, 69.5556, 137.333, 37.5556, 121.333, 5.5556, 81.333, 5.5556, 65.333, 37.5556)
-vertex_colors = PackedColorArray(1, 0, 0, 1)
-
-[node name="CoordsLabel" type="Label" parent="."]
-unique_name_in_owner = true
-offset_left = 16.0
-offset_top = 48.0
-offset_right = 81.0
-offset_bottom = 67.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 11
-text = "12:12"
-metadata/_edit_use_anchors_ = true
-
-[node name="PowerLabel" type="Label" parent="."]
-unique_name_in_owner = true
-offset_left = 16.0
-offset_top = 16.0
-offset_right = 30.0
-offset_bottom = 47.0
-theme_override_colors/font_color = Color(0.835294, 0, 0, 1)
-theme_override_font_sizes/font_size = 20
-text = "3"
-metadata/_edit_use_anchors_ = true
-
-[node name="LifeLabel" type="Label" parent="."]
-unique_name_in_owner = true
-offset_left = 40.0
-offset_top = 16.0
-offset_right = 54.0
-offset_bottom = 47.0
-theme_override_colors/font_color = Color(0.180392, 0.521569, 0.25098, 1)
-theme_override_font_sizes/font_size = 20
-text = "3"
-metadata/_edit_use_anchors_ = true
-
-[node name="SizeContainer" type="MarginContainer" parent="."]
-unique_name_in_owner = true
-visible = false
-offset_right = 72.0
-offset_bottom = 64.0
-
-[node name="Collision" type="Area2D" parent="."]
-position = Vector2(36, 32)
-scale = Vector2(0.95, 0.95)
-priority = 1.0
-
-[node name="CollisionPoly" type="CollisionPolygon2D" parent="Collision"]
-polygon = PackedVector2Array(-20, -32, 20, -32, 36, 0, 20, 32, -20, 32, -36, 0)
 
 [node name="HoverCard" parent="." instance=ExtResource("2_6ptu3")]
 unique_name_in_owner = true
 visible = false
 z_index = 1
 position = Vector2(-56.9166, -266.667)
-scale = Vector2(0.75, 0.75)
 
-[connection signal="input_event" from="Collision" to="." method="OnCollisionInputEvent"]
-[connection signal="mouse_entered" from="Collision" to="." method="OnCollisionMouseEntered"]
-[connection signal="mouse_exited" from="Collision" to="." method="OnCollisionMouseExited"]
+[node name="SizeContainer" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+process_mode = 4
+offset_right = 71.0
+offset_bottom = 64.0
+
+[node name="Node2D" type="Node2D" parent="."]
+scale = Vector2(0.25, 0.25)
+
+[node name="Collision" type="Area2D" parent="Node2D"]
+position = Vector2(36, 32)
+priority = 1.0
+
+[node name="CollisionPoly" type="CollisionPolygon2D" parent="Node2D/Collision"]
+position = Vector2(116, 96)
+scale = Vector2(0.95, 0.95)
+polygon = PackedVector2Array(-88, -128, 72, -128, 136, 0, 72, 128, -88, 128, -152, 0)
+
+[node name="Bg" type="Polygon2D" parent="Node2D"]
+unique_name_in_owner = true
+polygon = PackedVector2Array(64, 256, 224, 256, 288, 128, 224, 0, 64, 0, 0, 128)
+
+[node name="Fg" type="Polygon2D" parent="Node2D"]
+unique_name_in_owner = true
+position = Vector2(152, 128)
+scale = Vector2(0.9, 0.9)
+offset = Vector2(-317.333, -197.556)
+polygon = PackedVector2Array(229.333, 325.556, 389.333, 325.556, 453.333, 197.556, 389.333, 69.5556, 229.333, 69.5556, 165.333, 197.556)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+
+[node name="CoordsLabel" type="Label" parent="Node2D"]
+unique_name_in_owner = true
+offset_left = 48.0
+offset_top = 156.0
+offset_right = 232.0
+offset_bottom = 258.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 72
+text = "12:12"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Node2D"]
+process_mode = 4
+offset_left = 36.0
+offset_top = 68.0
+offset_right = 252.0
+offset_bottom = 189.0
+
+[node name="PowerLabel" type="Label" parent="Node2D/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.835294, 0, 0, 1)
+theme_override_font_sizes/font_size = 86
+text = "3"
+
+[node name="MarginContainer" type="MarginContainer" parent="Node2D/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LifeLabel" type="Label" parent="Node2D/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.180392, 0.521569, 0.25098, 1)
+theme_override_font_sizes/font_size = 86
+text = "3"
+horizontal_alignment = 2
+
+[connection signal="input_event" from="Node2D/Collision" to="." method="OnCollisionInputEvent"]
+[connection signal="mouse_entered" from="Node2D/Collision" to="." method="OnCollisionMouseEntered"]
+[connection signal="mouse_exited" from="Node2D/Collision" to="." method="OnCollisionMouseExited"]

@@ -369,6 +369,8 @@ end
 function CardCreation:Spell(props)
     local result = CardCreation:Card(props)
 
+    -- TODO add to canplay pipeline fetching all Mages and checking if any of them are under the player's control
+
     result.DamageValues = {}
 
     function result:IncreaseDamage(amount)

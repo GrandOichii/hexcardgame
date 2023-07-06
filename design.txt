@@ -79,7 +79,7 @@ v [!Elf]:1
     
 [Baar Swamp Necromancer]:3
     (Unit)-(Mage)
-    At the start of turn, revive your n. tile into a [Zombie].
+    At the start of turn, revive a n. grave into a [Zombie].
     P: 1
     L: 2
     
@@ -140,20 +140,20 @@ v [!Castle]:10
     T: 10
 
 
-[Spread Influence]:4
+v [Spread Influence]:4
     (Spell)
     Gain control of the current and all n. neutral tiles.
 
 
 [Troop Warp]:5
     (Spell)
-    Teleport any one of your Warriors into a n. tile.
+    Teleport target Warrior you control into a n. tile.
 
 
 [Volcanic Dragon]:7
     (Unit)
     {Fast}
-    At the start of turn, deal 1 damage to all n. enemy Structures/Units.
+    At the start of turn, deal 1 damage to all n. Structures/Units.
     P: 7
     L: 7
 
@@ -179,7 +179,7 @@ v [Blood for Knowledge]:2
 
 v [Give Strength]:1
     (Spell)
-    Caster gains +1 power and +1 life.
+    Caster gains +2 power and +2 life.
 
 
 [TODO]:4
@@ -194,3 +194,8 @@ v [Give Strength]:1
     When [CARDNAME] casts a Spell, draw a card.
     P: 5
     L: 6
+
+
+[Dub]:2
+    Spell
+    Caster becomes a Warrior. (Is still a Mage)

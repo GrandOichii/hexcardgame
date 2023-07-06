@@ -3,8 +3,8 @@
     "cost": 2,
     "type": "Unit - Mage",
     "expansion": "dev",
-    "text": "At the start of your turn, [CARDNAME] restores 1 life.",
-    "power": 1,
-    "life": 2,
+    "text": "",
+    "power": 2,
+    "life": 3,
     "script": "mage_initiate.lua"
 }

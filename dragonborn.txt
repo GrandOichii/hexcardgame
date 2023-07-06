@@ -4,79 +4,87 @@ Expansion: starters
 
 0 
 1 
-2 
-3 ++++
-4 
-5 
-6 
+2 ++++++++
+3 +++++++++++
+4 +++++++
+5 ++++++
+6 ++++
 7 
 
-
-[Dragon Egg]:3
-    Unit
-    After 6 turns, turns into a [Dragon Hatchling].
-    P: 0
-    L: 3
-
-
-[!Dragon Hatchling]:5
+[!Dragon Hatchling]:5 
     Unit
     {Fast}
-    At the start of your turn, [CARDNAME] deals 1 damage to each n. enemy Unit/Structure.
+    At the start of your turn, [CARDNAME] deals 1 damage to each n. Unit/Structure.
     P: 5
     L: 4
 
 
-[Kobold Warrior]:3
+[!Full Grown Dragon]:10
+    Unit
+    {Fast}
+    At the start of your turn, [CARDNAME] deals 3 damage to each n. Unit/Structure.
+    P: 9
+    L: 8
+
+
+[Dragon Egg]:3 ++++
+    Unit
+    At the start of your turn, [CARDNAME] deals 1 damage to itself.
+    When [CARDNAME] dies, it turns into a [Dragon Hatchling].
+    P: 0
+    L: 10
+
+
+[Kobold Warrior]:3 ++++
     Unit - Warrior
     When [CARDNAME] is dealt damage, it gains +1 defence.
     P: 3
     L: 4    
 
 
-[Kobold Rogue]:5
+[Kobold Rogue]:5 ++++
     Unit - Rogue
     When [CARDNAME] moves, it gains +1 power.
     P: 1
     L: 3
 
 
-[Kobold Mage]:4
+[Kobold Mage]:4 ++++
     Unit - Mage
-    When [CARDNAME] casts a spell, it deals 1 damage to all n. enemy Units/Structures.
+    When [CARDNAME] casts a spell, it deals 1 damage to all n. Units/Structures.
     P: 3
     L: 3
 
 
-[Kobold Nurturer]:5
+[Kobold Nurturer]:6 ++++
     Unit - Mage
     At the start of your turn, a n. [Dragon Egg] you control turns into a [Dragon Hatchling].
     P: 3
     L: 3
 
 
-[Chosen by the Dragon Lord]:2
+[Chosen by the Dragon Lord]:2 ++++
     Unit
     At the start of your turn, if a n. tile has a [Dragon Hatchling] you control, you may destroy [CARDNAME]. If you do, that Unit becomes a [Full Grown Dragon].
     P: 1
     L: 2
 
 
-[!Full Grown Dragon]:10
-    Unit
-    At the start of your turn, [CARDNAME] deals 3 damage to each n. enemy Unit/Structure.
-    P: 9
-    L: 8
-
-
-[Egg Discovery]:2
+[Egg Discovery]:2 ++++
     Spell
     Summon a [Dragon Egg] into a n. tile.
 
 
-[Revert to Egg TODO]:3
+[Revert to Egg TODO]:3 +++
     Spell
     Turn caster or a n. Unit into a [Dragon Egg]. (It is still owned by it's original owner)
 
 
-[Dragon Breath]:5
+[Scorch the Earth]:5 ++
+    Spell
+    Deal 3 damage to each Unit.
+
+
+[Firestone Tower]:4 +++
+    Structure
+    At the start of your turn, [CARDNAME] deals 1 damage to each n. Unit/Structure.

@@ -1,0 +1,68 @@
+[gd_scene load_steps=3 format=3 uid="uid://blt6e3uan3k6a"]
+
+[ext_resource type="Script" path="res://test/Base.cs" id="1_jegio"]
+[ext_resource type="PackedScene" uid="uid://b5b455505igso" path="res://Match/Tiles/TileBase.tscn" id="2_wtpdh"]
+
+[node name="Panel" type="Panel"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Base" type="Node2D" parent="."]
+scale = Vector2(1.96, 1.96)
+script = ExtResource("1_jegio")
+
+[node name="Bg" type="Polygon2D" parent="Base"]
+unique_name_in_owner = true
+polygon = PackedVector2Array(16, 64, 56, 64, 72, 32, 56, 0, 16, 0, 0, 32)
+
+[node name="Fg" type="Polygon2D" parent="Base"]
+unique_name_in_owner = true
+position = Vector2(36, 32)
+scale = Vector2(0.9, 0.9)
+offset = Vector2(-101.333, -37.5556)
+polygon = PackedVector2Array(81.333, 69.5556, 121.333, 69.5556, 137.333, 37.5556, 121.333, 5.5556, 81.333, 5.5556, 65.333, 37.5556)
+vertex_colors = PackedColorArray(1, 0, 0, 1)
+
+[node name="CoordsLabel" type="Label" parent="Base"]
+unique_name_in_owner = true
+offset_left = 16.0
+offset_top = 48.0
+offset_right = 81.0
+offset_bottom = 67.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 11
+text = "12:12"
+metadata/_edit_use_anchors_ = true
+
+[node name="PowerLabel" type="Label" parent="Base"]
+unique_name_in_owner = true
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 30.0
+offset_bottom = 47.0
+theme_override_colors/font_color = Color(0.835294, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "3"
+metadata/_edit_use_anchors_ = true
+
+[node name="LifeLabel" type="Label" parent="Base"]
+unique_name_in_owner = true
+offset_left = 40.0
+offset_top = 16.0
+offset_right = 54.0
+offset_bottom = 47.0
+theme_override_colors/font_color = Color(0.180392, 0.521569, 0.25098, 1)
+theme_override_font_sizes/font_size = 20
+text = "3"
+metadata/_edit_use_anchors_ = true
+
+[node name="Area2D" type="Area2D" parent="Base"]
+position = Vector2(36, 32)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Base/Area2D"]
+polygon = PackedVector2Array(-20, -32, 20, -32, 36, 0, 20, 32, -20, 32, -36, 0)
+
+[node name="TileBase" parent="." instance=ExtResource("2_wtpdh")]
+position = Vector2(168, 160)
+
+[connection signal="mouse_entered" from="Base/Area2D" to="Base" method="_on_area_2d_mouse_entered"]

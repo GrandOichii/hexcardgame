@@ -71,7 +71,7 @@ class Program {
         cm.LoadCardsFrom("../cards");
 
         // load decks
-        var deckText = File.ReadAllText("../decks/deck1.deck");
+        var deckText = File.ReadAllText("../decks/generated.deck");
         var deckTemplate = DeckTemplate.FromText(deckText);
 
         // load match config
@@ -93,10 +93,11 @@ class Program {
         // player controllers
         // var p1Controller = new CursesPlayerController(view);
         // var p1Controller = new QueuedActionsPlayerController();
+        // var p1Controller = new InactivePlayerController();
         var p1Controller = TCPPC(match);
         
-        var p2Controller = new InactivePlayerController();
-        // var p2Controller = TCPPC(match);
+        // var p2Controller = new InactivePlayerController();
+        var p2Controller = TCPPC(match);
 
         // create players
         var p1 = new Player(match, "P1", deckTemplate, p1Controller);

@@ -57,6 +57,7 @@ class PlayCardAction : GameAction
         // args[1] - the MID of the card
         // args[2] - the tile the card is played on
         if (args.Length != 3) {
+            if (!match.StrictMode) return;
             throw new Exception("Incorrect number of arguments for play action");
         }
 
@@ -74,6 +75,10 @@ class PlayCardAction : GameAction
             // TODO? don't throw exception
             if (!match.StrictMode) return;
             throw new Exception("Player " + player.ShortStr + " cannot play a card with mID " + mID + ": they don't have it in their hand");
+        }
+
+        if (!card.CanBePlayed(player)) {
+            
         }
 
         if (card.IsPlaceable) {
@@ -143,6 +148,7 @@ class MoveAction : GameAction
     {
         // move 2.1 0
         if (args.Length != 3) {
+            if (!match.StrictMode) return;
             throw new Exception("Incorrect number of arguments for move action");
         }
 

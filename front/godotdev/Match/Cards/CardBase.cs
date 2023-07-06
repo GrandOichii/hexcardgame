@@ -52,7 +52,7 @@ public partial class CardBase : Panel
 			NameLabel.Text += " [" + card.MID + "]";
 		TypeLabel.Text = card.Type;
 		TextLabel.Text = card.Text;
-		CostLabel.Text = card.Cost.ToString();
+		CostLabel.Text = "(" + card.Cost.ToString() + ")";
 		var powerS = "";
 		if (card.Power > 0)
 			powerS = card.Power.ToString();
@@ -83,4 +83,23 @@ public partial class CardBase : Panel
 	public override void _Process(double delta)
 	{
 	}
+	private void OnGuiInput(InputEvent @event)
+	{
+		if (@event is InputEventMouseButton) {
+			var e = @event as InputEventMouseButton;
+			if (e.IsPressed() && e.ButtonIndex == MouseButton.Left) {
+				var game = Game.Instance;
+				var action = game.Action;
+				if (action.Count == 0)  {
+					game.AddToAction("play");
+					game.AddToAction(_card.MID);
+					return;
+				}
+			}
+		}
+	}
 }
+
+
+
+

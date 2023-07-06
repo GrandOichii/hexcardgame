@@ -32,8 +32,8 @@ public partial class Map : Panel
 						tileWidth = size.X;
 					}
 
-					var y = tileHeight * .5f * i;
-					var b = tileWidth * 3 / 4;
+					var y = (tileHeight) * .5f * i;
+					var b = (tileWidth+3) * 3 / 4;
 					var x = b * 2 * j + (1 - i % 2) * b;
 					tile.Position = new(x, y);
 					tile.Coords = new(j, i);
@@ -43,7 +43,7 @@ public partial class Map : Panel
 				Tiles.Add(a);
 			}
 		}
-		
+
 
 		// load the info
 		for (int i = 0; i < state.Tiles.Count; i++) {

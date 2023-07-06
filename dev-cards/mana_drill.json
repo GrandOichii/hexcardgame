@@ -3,7 +3,7 @@
     "cost": 3,
     "type": "Structure",
     "expansion": "dev",
-    "text": "{Unrestricted}\nGeneartes 1 energy per turn.",
+    "text": "{Unrestricted}\nGenerates 1 energy per turn.",
     "life": 3,
     "script": "mana_drill.lua"
 }

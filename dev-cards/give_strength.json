@@ -3,6 +3,6 @@
     "cost": 1,
     "type": "Spell",
     "expansion": "dev",
-    "text": "Caster gains +1 power and +1 life.",
+    "text": "Caster gains +2 power and +2 life.",
     "script": "give_strength.lua"
 }

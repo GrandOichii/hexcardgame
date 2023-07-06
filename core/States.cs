@@ -71,6 +71,20 @@ public struct MCardState
     [JsonPropertyName("movement")]
     public long Movement { get; set; }
 
+    public MCardState(Card card) {
+        MID = "";
+        ID = card.CID;
+        OwnerID = "";
+        AvaliableActions = new();
+        Name = card.Name;
+        Type = card.Type;
+        Cost = card.Cost;
+        Text = card.Text;
+        Life = card.Life;
+        Power = card.Power;
+        Movement = 0;
+    }
+
     public MCardState(MCard card)
     {
         MID = card.MID;

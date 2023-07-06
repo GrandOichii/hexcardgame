@@ -8,7 +8,7 @@ using System.IO;
 
 public partial class Match : Node2D
 {
-	static readonly PackedScene CardBaseScene = ResourceLoader.Load("res://Match/Cards/CardBase.tscn") as PackedScene;
+	static readonly PackedScene CardBaseScene = ResourceLoader.Load("res://Match/Cards/HandCardBase.tscn") as PackedScene;
 	static readonly PackedScene HoverCardBaseScene = ResourceLoader.Load("res://Match/Cards/HoverCardBase.tscn") as PackedScene;	
 	static readonly PackedScene PlayerBaseScene = ResourceLoader.Load("res://Match/Players/PlayerBase.tscn") as PackedScene;
 	
@@ -96,21 +96,23 @@ public partial class Match : Node2D
 		}
 		if (cards.Count > HandCount) {
 			for (int i = 0; i < cards.Count - HandCount; i++) {
-				var cNode = CardBaseScene.Instantiate() as CardBase;
+				var cNode = CardBaseScene.Instantiate() as HandCardBase;
 				//TODO is this ok?
-				cNode._Ready();
+				
+				// cNode._Ready();
+				// cNode.Notification(NotificationEnterTree);
+				// cNode.Notification(NotificationReady);
 	//			cNode.Notification(NotificationReady);
 				// cNode.Scale = new(.1f, .1f);
 	//			cNode.SetSize(new(cNode.Size.X*.1f, cNode.Size.Y*.1f));
 
 //				cNode.Load(card);
-
 				HandContainer.AddChild(cNode);
 			}
 		}
 		HandCount = cards.Count;
 		for (int i = 0; i < HandCount; i++) {
-			var cNode = HandContainer.GetChild(i) as CardBase;
+			var cNode = HandContainer.GetChild(i) as HandCardBase;
 			cNode.Load(cards[i]);
 		}
 	}

@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://cpt6t11m0amfh"]
+
+[ext_resource type="PackedScene" uid="uid://bs324wim6pf8q" path="res://Match/Cards/CardBase.tscn" id="1_exof4"]
+[ext_resource type="Script" path="res://Match/Cards/HandCardBase.cs" id="1_ysqys"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_crakc"]
+size = Vector2(248, 344)
+
+[node name="HandCardBase" type="MarginContainer"]
+custom_minimum_size = Vector2(188, 263)
+offset_right = 188.0
+offset_bottom = 263.0
+script = ExtResource("1_ysqys")
+
+[node name="Card" parent="." instance=ExtResource("1_exof4")]
+unique_name_in_owner = true
+process_mode = 4
+scale = Vector2(0.75, 0.75)
+
+[node name="Collision" type="Area2D" parent="Card"]
+process_mode = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Card/Collision"]
+position = Vector2(124, 172)
+shape = SubResource("RectangleShape2D_crakc")
+
+[connection signal="input_event" from="Card/Collision" to="." method="OnGuiInput"]
+[connection signal="mouse_entered" from="Card/Collision" to="." method="OnCollisionMouseEntered"]
+[connection signal="mouse_exited" from="Card/Collision" to="." method="OnCollisionMouseExited"]

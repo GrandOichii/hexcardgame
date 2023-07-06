@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b5b455505igso"]
 
 [ext_resource type="Script" path="res://Match/Tiles/TileBase.cs" id="1_oyiqj"]
-[ext_resource type="PackedScene" uid="uid://curw8lq5rwd2s" path="res://Match/Cards/CardBase.tscn" id="2_6ptu3"]
+[ext_resource type="PackedScene" uid="uid://bs324wim6pf8q" path="res://Match/Cards/CardBase.tscn" id="2_6ptu3"]
 
 [node name="TileBase" type="Node2D"]
 scale = Vector2(1.2, 1.2)
@@ -70,10 +70,8 @@ polygon = PackedVector2Array(-20, -32, 20, -32, 36, 0, 20, 32, -20, 32, -36, 0)
 unique_name_in_owner = true
 visible = false
 z_index = 1
-offset_left = -26.6667
-offset_top = -180.0
-offset_right = 98.3333
-offset_bottom = -5.0
+position = Vector2(-56.9166, -266.667)
+scale = Vector2(0.75, 0.75)
 
 [connection signal="input_event" from="Collision" to="." method="OnCollisionInputEvent"]
 [connection signal="mouse_entered" from="Collision" to="." method="OnCollisionMouseEntered"]

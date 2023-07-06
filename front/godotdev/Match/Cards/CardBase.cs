@@ -1,57 +1,64 @@
 using Godot;
 using System;
+using System.Text.RegularExpressions;
 
-using core.match.states;
+
 using core.cards;
+using core.match.states;
+using System.Collections.Generic;
+using System.Text;
 
-public partial class CardBase : Panel
+public partial class CardBase : Node2D
 {
-	private MCardState _card;
+	static private readonly Dictionary<Regex, Func<string, string, string>> REGEX_MAP = new() {
+		{new Regex("\\{([^\\{]+)\\}"), (cardName, text) => {
+			return string.Concat("[color=red]", text.AsSpan(1, text.Length-2), "[/color]");
+		}},
+		{new Regex("\\[([^\\[]+)\\]"), (cardName, text) => {
+			var result = "[color=orange]{0}[/color]";
+			string replacement = cardName;
+			if (text != "[CARDNAME]")
+				replacement = text[1..^1];
+			return string.Format(result, replacement);
+		}},
+	};
+
+	// nodes
+	public ColorRect Bg { get; private set; }
+	public ColorRect Fg { get; private set; }
 	private Label NameLabel;
 	private Label TypeLabel;
-	private Label TextLabel;
 	private Label CostLabel;
 	private Label PowerLabel;
 	private Label LifeLabel;
+	private TextureRect ImageNode;
+	private RichTextLabel TextNode;
 	
+	public MCardState LastState { get; private set; }
 	
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		// OS.("Hello, world");
-		NameLabel = GetNode<Label>("%NameLabel");
-
-		TypeLabel = GetNode<Label>("%TypeLabel");
-		TextLabel = GetNode<Label>("%TextLabel");
-		CostLabel = GetNode<Label>("%CostLabel");
-		PowerLabel = GetNode<Label>("%PowerLabel");
-		LifeLabel = GetNode<Label>("%LifeLabel");
-	}
-
-	public void Load(Card card) {
-		NameLabel.Text = card.Name;
-		TypeLabel.Text = card.Type;
-		TextLabel.Text = card.Text;
-		CostLabel.Text = card.Cost.ToString();
-		var powerS = "";
-		if (card.Power > 0)
-			powerS = card.Power.ToString();
-		PowerLabel.Text = powerS;
+		// node fetching
+		Bg = GetNode<ColorRect>("%Bg");
+		Fg = GetNode<ColorRect>("%Fg");
+		NameLabel = GetNode<Label>("%Name");
+		TypeLabel = GetNode<Label>("%Type");
+		CostLabel = GetNode<Label>("%Cost");
+		PowerLabel = GetNode<Label>("%Power");
+		LifeLabel = GetNode<Label>("%Life");
+		ImageNode = GetNode<TextureRect>("%Image");
+		TextNode = GetNode<RichTextLabel>("%Text");
 		
-		var lifeS = "";
-		if (card.Power > 0)
-			lifeS = card.Life .ToString();
-		LifeLabel.Text = lifeS;
 	}
 	
 	public void Load(MCardState card) {
-		_card = card;
+		// _card = card;
+		LastState = card;
 		
 		NameLabel.Text = card.Name;
 		if (card.MID.Length > 0)
 			NameLabel.Text += " [" + card.MID + "]";
 		TypeLabel.Text = card.Type;
-		TextLabel.Text = card.Text;
 		CostLabel.Text = "(" + card.Cost.ToString() + ")";
 		var powerS = "";
 		if (card.Power > 0)
@@ -62,44 +69,45 @@ public partial class CardBase : Panel
 		if (card.Power > 0)
 			lifeS = card.Life .ToString();
 		LifeLabel.Text = lifeS;
-		
-//		TODO doesn't work for some ungodly reason
-//		if (card.AvaliableActions.Count > 0)  {
-//			 var style = new StyleBoxFlat();
-//			// style.BorderColor = new Color(255, 0, 0);
-//			// style.SetBorderWidthAll(20);
-////			var style = GetThemeStylebox("normal").Duplicate() as StyleBoxFlat;
-////			GD.Print(style.BorderWidthBottom.ToString());
-//
-//			style.BorderColor = new Color(1, 0, 0);
-////			AddThemeStyleboxOverride("normal", style);
-//			Set("custom_styles/panel", style);
-//
-////			GD.Print((GetThemeStylebox("normal").Duplicate() as StyleBoxFlat).BorderColor.ToString());
-//		}
-	}
 
-//	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
-	private void OnGuiInput(InputEvent @event)
-	{
-		if (@event is InputEventMouseButton) {
-			var e = @event as InputEventMouseButton;
-			if (e.IsPressed() && e.ButtonIndex == MouseButton.Left) {
-				var game = Game.Instance;
-				var action = game.Action;
-				if (action.Count == 0)  {
-					game.AddToAction("play");
-					game.AddToAction(_card.MID);
-					return;
-				}
+		// text loading
+		List<TextReplacer> replacers = new();
+		foreach (var pair in REGEX_MAP ) {
+			var re = pair.Key;
+			var operand = pair.Value;
+			var match = re.Matches(card.Text);
+			for (int i = match.Count - 1; i >= 0; i--) {
+				System.Text.RegularExpressions.Match m = match[i];
+				TextReplacer replacer;
+				replacer.StartIndex = m.Index;
+				replacer.Original = m.Value;
+				replacer.New = operand(card.Name, m.Value);
+				replacers.Add(replacer);
+
 			}
 		}
+		replacers.Sort((TextReplacer r1, TextReplacer r2) => {
+			return r2.StartIndex.CompareTo(r1.StartIndex);
+		});
+		StringBuilder sb = new(card.Text);
+		foreach (var replacer in replacers)
+			replacer.Modifiy(ref sb);
+		TextNode.Text = sb.ToString();
+	}
+	
+	public void Load(Card card) {
+		Load(new MCardState(card));
 	}
 }
 
 
+struct TextReplacer {
+	public int StartIndex;
+	public string Original;
+	public string New;
 
-
+	public void Modifiy(ref StringBuilder s) {
+		// s = s.Replace(Original, New, StartIndex, 1);
+		s = s.Replace(Original, New, StartIndex, Original.Length);
+	}
+}

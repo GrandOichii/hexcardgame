@@ -29,7 +29,7 @@ public class Game
 		var message = Action.ToArray().Join(" ");
 		var stream = Client.GetStream();
 		NetUtil.Write(stream, message);
-
+		GD.Print("WROTE ", message);
 		Action = new();
 	}
 }

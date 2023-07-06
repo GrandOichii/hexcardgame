@@ -406,10 +406,12 @@ public class MatchLogger {
     }
 
     public void ParseAndLog(string message) {
+        // TODO leave the task to parse the message to the client
+        // TODO add tile location to cards, when moused over will highlight the tile with the card
+        
         var groups = CARD_NAME_MATCHER.Split(message);
         var result = new List<MatchLogEntryPart>();
         // every odd is a match
-        // TODO fix with new regex pattern:
         // 0 - normal message
         // 1 - card label
         // 2 - actual card name

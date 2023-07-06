@@ -96,8 +96,8 @@ class Program {
         // var p1Controller = new InactivePlayerController();
         var p1Controller = TCPPC(match);
         
-        // var p2Controller = new InactivePlayerController();
-        var p2Controller = TCPPC(match);
+        var p2Controller = new InactivePlayerController();
+        // var p2Controller = TCPPC(match);
 
         // create players
         var p1 = new Player(match, "P1", deckTemplate, p1Controller);

@@ -13,7 +13,8 @@
         "DealDamage",
         "DrawCards",
         "GetNeighbors",
-        "CardShortStr"
+        "CardShortStr",
+        "GetUnitsOnBoard"
     ],
     "dotnet.defaultSolution": "front\\godotdev\\godotdev.sln"
 }

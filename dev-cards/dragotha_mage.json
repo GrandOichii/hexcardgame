@@ -1,0 +1,10 @@
+{
+    "name": "Dragotha Mage",
+    "cost": 1,
+    "type": "Unit - Mage",
+    "expansion": "dev",
+    "text": "When [CARDNAME] casts a Spell, draw a card.",
+    "power": 5,
+    "life": 6,
+    "script": "dragotha_mage.lua"
+}

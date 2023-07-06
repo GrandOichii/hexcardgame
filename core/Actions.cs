@@ -77,10 +77,6 @@ class PlayCardAction : GameAction
             throw new Exception("Player " + player.ShortStr + " cannot play a card with mID " + mID + ": they don't have it in their hand");
         }
 
-        if (!card.CanBePlayed(player)) {
-            
-        }
-
         if (card.IsPlaceable) {
             if (tile.Owner != player) {
                 // TODO? don't throw exception
@@ -124,6 +120,7 @@ class PlayCardAction : GameAction
             if (!match.StrictMode) return;
             throw new Exception("Failed to cast spell " + card.ShortStr + ": entity at " + args[2] + " is not a Mage");
         }
+        // TODO modify spell here
 
         if (!player.TryPlayCard(card)) {
             // failed to play card
@@ -132,12 +129,16 @@ class PlayCardAction : GameAction
 
         player.Hand.Cards.Remove(card); 
         player.AllCards[card] = Zones.PLAYED;
+        // emit the played signal
+        match.Emit("spell_cast", new(){ {"casterID", caster.MID}, { "spellID", card.MID } });
         LogPlayed(match, player, card);
 
         // execute the effect of the card
         card.ExecFunc(MCard.EFFECT_FNAME, card.Data, player.ID, caster.Data);
         player.AllCards[card] = Zones.DISCARD;
         player.Discard.AddToBack(card);
+
+        // TODO demodify spell here
     }
 }
 

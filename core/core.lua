@@ -6,6 +6,7 @@ TRIGGERS = {
     -- TURN_END = 'turn_end',
     -- SPELL_CAST = 'spell_cast',
     UNIT_MOVE = 'unit_move',
+    SPELL_CAST = 'spell_cast'
 }
 
 
@@ -152,6 +153,13 @@ end
 function Common:IsOwnersTurn(card)
     return function (playerID, args)
         return args.playerID == GetOwnerID(card.id)
+    end
+end
+
+
+function Common:IsCaster(card)
+    return function (playerID, args)
+        return args.casterID == card.id
     end
 end
 

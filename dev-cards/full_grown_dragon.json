@@ -1,0 +1,12 @@
+{
+    "name": "Full Grown Dragon",
+    "cost": 10,
+    "type": "Unit",
+    "expansion": "dev",
+    "text": "{Fast}\nAt the start of your turn, [CARDNAME] deals 3 damage to all n. Structures/Units.",
+    "power": 9,
+    "life": 8,
+    "script": "full_grown_dragon.lua",
+
+    "deckUsable": false
+}

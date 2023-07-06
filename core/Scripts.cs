@@ -294,13 +294,22 @@ public class ScriptMaster {
     /// <summary>
     /// Returns a Lua array wuth all of the Units that take a tile
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A Lua array</returns>
     [LuaCommand]
     public LuaTable GetUnitsOnBoard() {
         var result = new List<object?>();
 
         var map = _match.Map;
+        for (int i = 0; i < map.Height; i++) {
+            for (int j = 0; j < map.Width; j++) {
+                var tile = map.Tiles[i, j];
+                if (tile is null) continue;
+                var en = tile.Entity;
+                if (en is null) continue;
+                result.Add(en.Data);
+            }
+        }
 
-        return LuaUtility.CreateTable(result);
+        return LuaUtility.CreateTable(_match.LState, result);
     }
 }

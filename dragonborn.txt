@@ -11,7 +11,7 @@ Expansion: starters
 6 ++++
 7 
 
-[!Dragon Hatchling]:5 
+v [!Dragon Hatchling]:5 
     Unit
     {Fast}
     At the start of your turn, [CARDNAME] deals 1 damage to each n. Unit/Structure.
@@ -19,7 +19,7 @@ Expansion: starters
     L: 4
 
 
-[!Full Grown Dragon]:10
+v [!Full Grown Dragon]:10
     Unit
     {Fast}
     At the start of your turn, [CARDNAME] deals 3 damage to each n. Unit/Structure.
@@ -80,11 +80,11 @@ Expansion: starters
     Turn caster or a n. Unit into a [Dragon Egg]. (It is still owned by it's original owner)
 
 
-[Scorch the Earth]:5 ++
+v [Scorch the Earth]:5 ++
     Spell
     Deal 3 damage to each Unit.
 
 
-[Firestone Tower]:4 +++
+v [Firestone Tower]:4 +++
     Structure
     At the start of your turn, [CARDNAME] deals 1 damage to each n. Unit/Structure.

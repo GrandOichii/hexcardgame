@@ -1,0 +1,12 @@
+{
+    "name": "Dragon Hatchling",
+    "cost": 5,
+    "type": "Unit",
+    "expansion": "dev",
+    "text": "{Fast}\nAt the start of your turn, [CARDNAME] deals 1 damage to all n. Structures/Units.",
+    "power": 5,
+    "life": 5,
+    "script": "dragon_hatchling.lua",
+
+    "deckUsable": false
+}

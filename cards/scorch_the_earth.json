@@ -4,5 +4,5 @@
     "type": "Spell",
     "expansion": "starters",
     "text": "Deal 3 damage to each Unit.",
-    "script": "\n-- TODO not tested\nfunction _Create(props)\n    local result = CardCreation:Spell(props)\n    result.DamageValues.Damage = 3\n    result.EffectP:AddLayer(function(playerID, caster)\n        local units = GetUnitsOnBoard()\n        for _, unit in ipairs(units) do\n            DealDamage(result.id, unit.id, result.DamageValues.Damage)\n        end\n    end)\n    return result\nend"
+    "script": "\n-- TODO not tested\nfunction _Create(props)\n    local result = CardCreation:Spell(props)\n    result.DamageValues.Damage = 3\n    result.EffectP:AddLayer(function(playerID, caster)\n        local units = GetUnitsOnBoard()\n        for _, unit in ipairs(units) do\n            DealDamage(result.id, unit.id, result.DamageValues.Damage)\n        end\n        return nil, true\n    end)\n    return result\nend"
 }

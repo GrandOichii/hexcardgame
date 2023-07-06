@@ -157,6 +157,7 @@ function Common:IsOwnersTurn(card)
 end
 
 
+-- Returns a function that returns true if the caster id is the same as the card's id
 function Common:IsCaster(card)
     return function (playerID, args)
         return args.casterID == card.id

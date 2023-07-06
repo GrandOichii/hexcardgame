@@ -1,6 +1,6 @@
 {
     "name": "Dragotha Mage",
-    "cost": 1,
+    "cost": 5,
     "type": "Unit - Mage",
     "expansion": "dev",
     "text": "When [CARDNAME] casts a Spell, draw a card.",

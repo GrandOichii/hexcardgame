@@ -8,6 +8,7 @@ function _Create(props)
         for _, unit in ipairs(units) do
             DealDamage(result.id, unit.id, result.DamageValues.Damage)
         end
+        return nil, true
     end)
     return result
 end

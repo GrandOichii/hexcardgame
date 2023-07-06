@@ -1,3 +1,4 @@
+-- TODO not tested
 function _Create(props)
     local result = CardCreation:Unit(props)
     result:AddSubtype('Mage')
@@ -8,7 +9,8 @@ function _Create(props)
         :On(TRIGGERS.SPELL_CAST)
         :Zone(ZONES.PLACED)
         :Effect(function (playerID, args)
-            DrawCards(playerID, 1)
+            result.power = result.power + 1
+            result.life = result.life + 1
         end)
         :Build()
     return result

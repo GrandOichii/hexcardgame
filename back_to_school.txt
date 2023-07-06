@@ -1,0 +1,72 @@
+A deck centered around making a single mage the most powerful Unit on the field.
+Lore: a school of magic is located on the distant islands of Dragotha, where young mages all around the world study.
+
+
+v [!Frog]:1
+    (Unit)
+    P: 1 
+    L: 1
+
+
+[Lore Lesson]:3
+    Spell
+    Return up to 2 spells from your discard to your hand.
+
+
+v [Dragotha Student]:3
+    Unit - Mage
+    When [CARDNAME] casts a Spell, it gains +1 life and +1 power.
+    P: 1
+    L: 1
+
+
+[Meteor Strike]:3
+    Spell
+    Deal 4 damage to a n. enemy Unit/Structure.
+
+
+[Tutoring Sphinx]:5
+    Unit - Mage
+    When [CARDNAME] enters play, draw 2 cards.
+    P: 3
+    L: 2
+
+
+v [Inspiration]:3
+    Spell
+    Draw 2 cards.
+
+
+[Briar, Archmage Supreme]:6
+    Unique Unit - Mage
+    When [CARDNAME] casts a spell, summon a copy of that spell into your hand. It costs 1 more.
+    P: 5
+    L: 5
+
+
+[Transmogrify]:3
+    (Spell)
+    Transform n. enemy Unit into a [Frog].
+
+
+[Dragotha Battlemage]:5
+    Unit - Warrior Mage
+    P: 3
+    L: 4
+
+
+[Head Start]:1
+    Spell
+    Caster gains {Fast}.
+    Draw a card.
+
+
+[Lecture Chamber(TODO)]:3
+    Structure
+    At the start of your turn, all n. Mage Units you control gain +1 power and +1 life.
+
+
+v [Blood for Knowledge]:2
+    (Spell)
+    Deal 1 damage to caster. If survives, draw 2 cards.
+    

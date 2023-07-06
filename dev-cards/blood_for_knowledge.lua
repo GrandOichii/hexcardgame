@@ -5,8 +5,7 @@ function _Create(props)
     result.EffectP:AddLayer(function(playerID, caster)
         local tile = GetTileWith(caster.id)
         if tile == nil then
-            -- TODO warn
-            return
+            return nil, true
         end
         local dead = DealDamage(result.id, {tile.iPos, tile.jPos}, result.DamageValues.Damage)
         if dead then

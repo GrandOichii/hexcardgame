@@ -123,17 +123,6 @@ v [Brute]:5
     P: 6
     L: 5
 
-    
-[Transmogrify]:3
-    (Spell)
-    Transform n. enemy Unit into a [Frog].
-
-
-v [Frog]:1
-    (Unit)
-    P: 1 
-    L: 1
-
 
 v [!Castle]:10
     (Structure)
@@ -199,3 +188,5 @@ v [Give Strength]:1
 [Dub]:2
     Spell
     Caster becomes a Warrior. (Is still a Mage)
+
+

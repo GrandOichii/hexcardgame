@@ -27,6 +27,7 @@ public partial class HandCardBase : MarginContainer
 	
 	private void OnCollisionMouseEntered()
 	{
+		if (CardNode.LastState.AvailableActions.Count == 0) return;
 //		UpperCardNode.Visible = true;
 		CardNode.Bg.Color = HighlightColor;
 	}

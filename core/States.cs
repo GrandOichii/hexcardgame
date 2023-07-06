@@ -54,7 +54,7 @@ public struct MCardState
     [JsonPropertyName("ownerID")]
     public string OwnerID { get; set; }
     [JsonPropertyName("can")]
-    public List<string> AvaliableActions { get; set; }
+    public List<string> AvailableActions { get; set; }
 
     [JsonPropertyName("name")]
     public string Name { get; set; }
@@ -75,7 +75,7 @@ public struct MCardState
         MID = "";
         ID = card.CID;
         OwnerID = "";
-        AvaliableActions = new();
+        AvailableActions = new();
         Name = card.Name;
         Type = card.Type;
         Cost = card.Cost;
@@ -103,7 +103,7 @@ public struct MCardState
         if (card.IsUnit)
             Movement = card.Movement;
 
-        AvaliableActions = new();
+        AvailableActions = new();
         if (card.Owner != card.Match.CurrentPlayer) return;
 
         var zone = card.Owner.AllCards[card];
@@ -117,13 +117,13 @@ public struct MCardState
         {
             // TODO check for playability
             if (card.CanBePlayed(card.Owner))
-                AvaliableActions.Add("play");
+                AvailableActions.Add("play");
         }
         if (zone == Zones.PLACED)
         {
             if (card.IsUnit && card.CanMove)
                 // TODO? specify directions
-                AvaliableActions.Add("move");
+                AvailableActions.Add("move");
         }
     }
 
@@ -146,7 +146,7 @@ public struct MCardState
 //     [JsonPropertyName("ownerID")]
 //     public string OwnerID { get; set; }
 //     [JsonPropertyName("can")]
-//     public List<string> AvaliableActions { get; set; }
+//     public List<string> AvailableActions { get; set; }
 //     [JsonPropertyName("mod")]
 //     public Dictionary<string, object> Modifications { get; set; }
 
@@ -187,7 +187,7 @@ public struct MCardState
 //             }
 //         }
 
-//         AvaliableActions = new();
+//         AvailableActions = new();
 //         if (card.Owner != card.Match.CurrentPlayer) return;
 
 //         var zone = card.Owner.AllCards[card];
@@ -200,12 +200,12 @@ public struct MCardState
 //         if (zone == Zones.HAND) {
 //             // TODO check for playability
 //             if (card.CanBePlayed(card.Owner))
-//                 AvaliableActions.Add("play");
+//                 AvailableActions.Add("play");
 //         }
 //         if (zone == Zones.PLACED) {
 //             if (card.IsUnit && card.CanMove)
 //                 // TODO? specify directions
-//                 AvaliableActions.Add("move");
+//                 AvailableActions.Add("move");
 //         }
 //     }
 

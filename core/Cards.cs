@@ -222,7 +222,7 @@ public class MCard {
     /// </summary>
     /// <param name="damage">Damage</param>
     /// <returns>Deal damage</returns>
-    public long ProcessDamage(long damage) {
+    public long ProcessDamage(string sourceID, long damage) {
         var def = Defence;
         if (def > 0) {
             var damageDealtToDefence = damage;
@@ -236,6 +236,8 @@ public class MCard {
         if (damage > l) damage = l;
 
         Data["life"] = LuaUtility.GetLong(Data, "life") - damage;
+        if (damage > 0)
+            Match.Emit("damage_dealt", new(){{"fromID", sourceID}, {"toID", MID}, {"amount", damage}});
 
         return damage;
     }

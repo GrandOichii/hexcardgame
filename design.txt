@@ -180,3 +180,8 @@ v  [Prophecy Scholar]:4
     When [CARDNAME] enters play, summon a [Inspiration] card into your hand.
     L: 3
     P: 3
+
+
+[Cast Armor]:1
+    Spell
+    Caster gains +1 defence.

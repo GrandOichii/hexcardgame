@@ -233,8 +233,8 @@ public class ScriptMaster {
     /// <param name="damage">Damage dealt</param>
     /// <returns>An array of amount of damage dealt and whether the target died</returns>
     [LuaCommand]
-    public bool DealDamage(string dealerMID, LuaTable point, long damage) {
-        var dealer = _match.GetCard(dealerMID);
+    public bool DealDamage(string dealerID, LuaTable point, long damage) {
+        var dealer = _match.GetCard(dealerID);
         var tile = TileAt(point);
         if (tile is null) {
             return false;
@@ -245,7 +245,7 @@ public class ScriptMaster {
             return false;
         }
 
-        var dealt = target.ProcessDamage(damage);
+        var dealt = target.ProcessDamage(dealerID, damage);
         // TODO add more logging
         _match.Logger.ParseAndLog("Card " + dealer.ToLogForm + " dealt " + dealt + " damage to " + target.ToLogForm + ".");
         var died = target.Life == 0;
@@ -266,7 +266,6 @@ public class ScriptMaster {
         var player = _match.PlayerWithID(pID);
         return player.Draw(amount);
     }
-
 
     /// <summary>
     /// Returns a Lua table of all neighboring tiles
@@ -289,7 +288,6 @@ public class ScriptMaster {
 
         return LuaUtility.CreateTable(_match.LState, result);
     }
-
 
     /// <summary>
     /// Returns a Lua array wuth all of the Units that take a tile
@@ -333,7 +331,6 @@ public class ScriptMaster {
         return newCard.Data;
     }
 
-
     /// <summary>
     /// Adds the specified card to the player's hand. !Does not remove from previous zone.
     /// </summary>
@@ -345,5 +342,15 @@ public class ScriptMaster {
         var card = _match.GetCard(mID);
         player.AllCards[card] = Zones.HAND;
         player.Hand.AddToBack(card);
+    }
+
+    /// <summary>
+    /// Returns card data by card match ID
+    /// </summary>
+    /// <param name="mID">Card match ID</param>
+    /// <returns>Card data</returns>
+    [LuaCommand]
+    public LuaTable GetCard(string mID) {
+        return _match.GetCard(mID);
     }
 }

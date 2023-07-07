@@ -39,7 +39,7 @@ v [!Full Grown Dragon]:10
     Unit - Warrior
     When [CARDNAME] is dealt damage, it gains +1 defence.
     P: 3
-    L: 4    
+    L: 2
 
 
 [Kobold Rogue]:5 ++++

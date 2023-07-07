@@ -216,11 +216,11 @@ class MoveAction : GameAction
 
             // deal damage
             if (attackerDamage > 0) {
-                targetEn.ProcessDamage(attackerDamage);
+                targetEn.ProcessDamage(en.MID, attackerDamage);
             }
 
             if (defenderDamage > 0) {
-                en.ProcessDamage(defenderDamage);
+                en.ProcessDamage(targetEn.MID, defenderDamage);
             }
 
             match.Logger.ParseAndLog(player.Name + "'s " + en.ToLogForm + " attacks " + targetEn.ToLogForm + ".");

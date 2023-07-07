@@ -6,7 +6,8 @@ TRIGGERS = {
     -- TURN_END = 'turn_end',
     -- SPELL_CAST = 'spell_cast',
     UNIT_MOVE = 'unit_move',
-    SPELL_CAST = 'spell_cast'
+    SPELL_CAST = 'spell_cast',
+    DAMAGE_DEALT = 'damage_dealt'
 }
 
 
@@ -161,6 +162,14 @@ end
 function Common:IsCaster(card)
     return function (playerID, args)
         return args.casterID == card.id
+    end
+end
+
+
+-- Returns a function that returns true if the card was dealt damage
+function Common:WasDealtDamage(card)
+    return function (playerID, args)
+        return args.toID == card.id
     end
 end
 

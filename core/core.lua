@@ -355,6 +355,23 @@ function CardCreation:Placeable(props)
         result.OnEnterP:Exec(playerID, tile)
     end
 
+    result.baseDefence = 0
+    result.maxDefence = result.baseDefence
+    result.defence = result.maxDefence
+
+    -- Adds defence to entity. !Does not modify the base defence.
+    function result:AddDefence(amount)
+        result.maxDefence = result.maxDefence + amount
+        result.defence = result.defence + amount
+    end
+
+    -- Removes defence from entity. !Does not modify the base defence.
+    function result:RemoveDefence(amount)
+        -- TODO? zero checking?
+        result.maxDefence = result.maxDefence - amount
+        result.defence = result.defence - amount
+    end
+
     return result
 end
 

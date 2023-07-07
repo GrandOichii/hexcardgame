@@ -79,6 +79,14 @@ theme_override_font_sizes/font_size = 86
 text = "3"
 horizontal_alignment = 2
 
+[node name="DefenceLabel" type="Label" parent="Node2D/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(98, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.180392, 0.521569, 0.25098, 1)
+theme_override_font_sizes/font_size = 86
+
 [connection signal="input_event" from="Node2D/Collision" to="." method="OnCollisionInputEvent"]
 [connection signal="mouse_entered" from="Node2D/Collision" to="." method="OnCollisionMouseEntered"]
 [connection signal="mouse_exited" from="Node2D/Collision" to="." method="OnCollisionMouseExited"]

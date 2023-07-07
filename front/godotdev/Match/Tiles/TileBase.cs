@@ -12,6 +12,7 @@ public partial class TileBase : Node2D
 	private Label CoordsLabel;
 	private Label PowerLabel;
 	private Label LifeLabel;
+	private Label DefenceLabel;	
 	private CardBase HoverCard;
 	private MarginContainer SizeContainer;
 
@@ -34,6 +35,8 @@ public partial class TileBase : Node2D
 		SizeContainer = GetNode<MarginContainer>("%SizeContainer");		
 		PowerLabel = GetNode<Label>("%PowerLabel");
 		LifeLabel = GetNode<Label>("%LifeLabel");
+		DefenceLabel = GetNode<Label>("%DefenceLabel");
+		
 		CoordsLabel = GetNode<Label>("%CoordsLabel");
 		HoverCard = GetNode<CardBase>("%HoverCard");
 
@@ -69,17 +72,20 @@ public partial class TileBase : Node2D
 		PlayerID = state?.OwnerID;
 		var powerS = "";
 		var lifeS = "";
+		var defenceS = "";
 		var en = state?.Entity;
 		if (en is not null) {
 			MCardState card = (MCardState)en;
 			lifeS = card.Life.ToString();
 			if (card.Power > 0)
 				powerS = card.Power.ToString();
+			if (card.HasDefence)
+				defenceS = "+" + card.Defence.ToString();
 			HoverCard.Load(card);
 		}
 		PowerLabel.Text = powerS;
 		LifeLabel.Text = lifeS;
-
+		DefenceLabel.Text = defenceS;	
 	}
 
 	private string _playerID;

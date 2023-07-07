@@ -69,4 +69,3 @@ v [Dragotha Battlemage]:5
 v [Blood for Knowledge]:2
     (Spell)
     Deal 1 damage to caster. If survives, draw 2 cards.
-    

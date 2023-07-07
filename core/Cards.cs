@@ -139,6 +139,10 @@ public class MCard {
 
     public long MaxMovement => LuaUtility.GetLong(Data, "maxMovement");
     public long Movement => LuaUtility.GetLong(Data, "movement");
+    // TODO? move defence to a class field
+    public long BaseDefence => LuaUtility.GetLong(Data, "baseDefence");
+    public long Defence => LuaUtility.GetLong(Data, "defence");
+    public long MaxDefence => LuaUtility.GetLong(Data, "maxDefence");
     public string Type => LuaUtility.TableGet<string>(Data, "type");
     public long Power { get {
         // TODO create separate power pipeline
@@ -219,6 +223,15 @@ public class MCard {
     /// <param name="damage">Damage</param>
     /// <returns>Deal damage</returns>
     public long ProcessDamage(long damage) {
+        var def = Defence;
+        if (def > 0) {
+            var damageDealtToDefence = damage;
+            if (def < damage) {
+                damageDealtToDefence = def;
+            }
+            Data["defence"] = def - damageDealtToDefence;
+            damage -= damageDealtToDefence;
+        }
         var l = Life;
         if (damage > l) damage = l;
 

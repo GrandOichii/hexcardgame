@@ -20,6 +20,8 @@ class TurnStart : MatchPhase
         // empty energy reserve
         player.Energy = 0;
 
+        
+
         // // replenish source count
         // player.SourceCount = player.MaxSourcePerTurn;
 
@@ -35,14 +37,19 @@ class TurnStart : MatchPhase
         // emit turn start effects
         match.Emit("turn_start", new(){ {"playerID", player.ID} });
 
-        // renew movement
+        // renew movement and replenish defence
+
         var map = match.Map;
         for (int i = 0; i < map.Height; i++) {
             for (int j = 0; j < map.Width; j++) {
                 var tile = map.Tiles[i, j];
 
-                if (tile is object && tile.Entity is object && tile.Entity.Owner == player && tile.Entity.IsUnit) {
-                    tile.Entity.Data["movement"] = tile.Entity.MaxMovement;
+                if (tile is object && tile.Entity is object) {
+                    var en = tile.Entity;
+                    en.Data["defence"] = en.MaxDefence;
+                    if (en.Owner == player && en.IsUnit) {
+                        en.Data["movement"] = en.MaxMovement;
+                    }
                 }
             }
         }

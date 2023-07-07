@@ -70,6 +70,10 @@ public struct MCardState
     public long Power { get; set; }
     [JsonPropertyName("movement")]
     public long Movement { get; set; }
+    [JsonPropertyName("hasDefence")]
+    public bool HasDefence { get; set; }
+    [JsonPropertyName("defence")]
+    public long Defence { get; set; }
 
     public MCardState(Card card) {
         MID = "";
@@ -83,6 +87,9 @@ public struct MCardState
         Life = card.Life;
         Power = card.Power;
         Movement = 0;
+
+        HasDefence = false;
+        Defence = 0;
     }
 
     public MCardState(MCard card)
@@ -100,6 +107,12 @@ public struct MCardState
         Life = card.Life;
         Power = card.Power;
         Movement = -1;
+        HasDefence = false;
+        Defence = 0;
+        if (card.IsPlaceable) {
+            HasDefence = card.MaxDefence > 0;
+            Defence = card.Defence;
+        }
         if (card.IsUnit)
             Movement = card.Movement;
 

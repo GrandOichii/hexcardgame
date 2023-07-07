@@ -139,14 +139,6 @@ v [Spread Influence]:4
     Teleport target Warrior you control into a n. tile.
 
 
-[Volcanic Dragon]:7
-    (Unit)
-    {Fast}
-    At the start of turn, deal 1 damage to all n. Structures/Units.
-    P: 7
-    L: 7
-
-
 [TODO]:20
     (Unit)
     [CARDNAME]'s cost is reduced by the number of tiles you control.
@@ -178,19 +170,12 @@ v [Give Strength]:1
     L: 3
 
 
-[Tragotha Archmage]:5
-    (Unit)-(Mage)
-    When [CARDNAME] casts a Spell, draw a card.
-    P: 5
-    L: 6
-
-
 [Dub]:2
     Spell
     Caster becomes a Warrior. (Is still a Mage)
 
 
-[Prophecy Scholar]:4
+v  [Prophecy Scholar]:4
     Unit - Mage
     When [CARDNAME] enters play, summon a [Inspiration] card into your hand.
     L: 3

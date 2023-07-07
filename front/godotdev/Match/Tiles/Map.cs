@@ -10,9 +10,12 @@ public partial class Map : Panel
 	static readonly PackedScene TileBaseScene = ResourceLoader.Load("res://Match/Tiles/TileBase.tscn") as PackedScene;
 	private List<List<TileBase>> Tiles = null;
 	
+	public Polygon2D MovementArrow { get; private set; }
+	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		MovementArrow = GetNode<Polygon2D>("MovementArrow");
 	}
 	
 	public void Load(MapState state) {
@@ -24,8 +27,9 @@ public partial class Map : Panel
 				var a = new List<TileBase>();
 				for (int j = 0; j < state.Tiles[i].Count; j++) {
 					var tile = TileBaseScene.Instantiate() as TileBase;
-
-					tile._Ready();
+					AddChild(tile);
+					tile.Map = this;
+//					tile._Ready();
 					if (tileHeight == 0) {
 						var size = tile.Size;
 						tileHeight = size.Y;
@@ -37,7 +41,6 @@ public partial class Map : Panel
 					var x = b * 2 * j + (1 - i % 2) * b;
 					tile.Position = new(x, y);
 					tile.Coords = new(j, i);
-					AddChild(tile);
 					a.Add(tile);
 				}
 				Tiles.Add(a);

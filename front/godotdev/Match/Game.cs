@@ -232,12 +232,12 @@ public class SelectDirection : CommandPart
 		throw new Exception("Does no accept IGamePart of type " + nameof(o));
 	}
 
-	private int GetDirection(Command c, TileBase to) {
+	static public int GetDirection(TileBase from, TileBase to) {
 		var coords = to.Coords;
 		var all_dir_arr = core.tiles.Map.DIR_ARR;
 		var ii = (int)coords.Y % 2;
 		var dir_arr = all_dir_arr[ii];
-		var compare = (c.Results[_comparedToI] as TileBase).Coords;
+		var compare = from.Coords;
 		for (int i = 0; i < dir_arr.Length; i++) {
 			var newC = new Vector2((int)coords.X + dir_arr[i][1], (int)coords.Y + dir_arr[i][0]);
 
@@ -250,13 +250,15 @@ public class SelectDirection : CommandPart
 	}
 
 	private bool CanAccept(Command c, TileBase tile) {
-		return GetDirection(c, tile) != -1;
+		if (tile.LastState is null) return false;
+		if (tile.LastState?.Entity is not null) return false;
+		return GetDirection(c.Results[_comparedToI] as TileBase, tile) != -1;
 	}
 
 	public override string ToActionPart(Command c, IGamePart o)
 	{
 		var t = o as TileBase;
-		var d = GetDirection(c, t);
+		var d = GetDirection(c.Results[_comparedToI] as TileBase, t);
 		if (d == -1) throw new Exception("Can't construct direction to " + t.Coords.ToString() + " from " + (c.Results[_comparedToI] as TileBase).Coords);
 		return d.ToString();
 	}

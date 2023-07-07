@@ -2,7 +2,7 @@
     "name": "Inspiration",
     "cost": 3,
     "type": "Spell",
-    "expansion": "dev",
+    "expansion": "starters",
     "text": "Draw 2 cards.",
     "script": "inspiration.lua"
 }

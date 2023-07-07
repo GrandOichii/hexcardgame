@@ -25,7 +25,7 @@ v [Dragotha Student]:3
     Deal 4 damage to a n. enemy Unit/Structure.
 
 
-[Tutoring Sphinx]:5
+v [Tutoring Sphinx]:5
     Unit - Mage
     When [CARDNAME] enters play, draw 2 cards.
     P: 3
@@ -49,7 +49,7 @@ v [Inspiration]:3
     Transform n. enemy Unit into a [Frog].
 
 
-[Dragotha Battlemage]:5
+v [Dragotha Battlemage]:5
     Unit - Warrior Mage
     P: 3
     L: 4

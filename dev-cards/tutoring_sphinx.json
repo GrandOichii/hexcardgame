@@ -1,0 +1,10 @@
+{
+    "name": "Tutoring Sphinx",
+    "cost": 5,
+    "type": "Unit - Mage",
+    "expansion": "starters",
+    "text": "When [CARDNAME] enters play, draw 2 cards.",
+    "power": 3,
+    "life": 2,
+    "script": "tutoring_sphinx.lua"
+}

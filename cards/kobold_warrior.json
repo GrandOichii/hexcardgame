@@ -1,7 +1,7 @@
 {
     "name": "Kobold Warrior",
     "cost": 3,
-    "type": "Unit",
+    "type": "Unit - Warrior",
     "expansion": "dev",
     "text": "When [CARDNAME] is dealt damage, if gains +1 defence.",
     "power": 3,

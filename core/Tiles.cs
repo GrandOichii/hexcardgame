@@ -46,7 +46,7 @@ public class Tile {
         result["ownerID"] = null;
         if (Owner is not null) result["ownerID"] = Owner.ID;
         
-        result["entoty"] = null;
+        result["intity"] = null;
         if (Entity is not null) result["entity"] = Entity.Data;
 
         return result;

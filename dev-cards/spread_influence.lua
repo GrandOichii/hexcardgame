@@ -1,5 +1,4 @@
 
--- TODO not tested
 function _Create(props)
     local result = CardCreation:Spell(props)
     result.EffectP:AddLayer(function(playerID, caster)

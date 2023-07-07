@@ -1,9 +1,9 @@
 {
     "name": "Firestone Tower",
-    "cost": 4,
+    "cost": 1,
     "type": "Structure",
     "expansion": "starters",
     "text": "At the start of your turn, [CARDNAME] deals 1 damage to each n. Unit/Structure.",
     "life": 3,
-    "script": "-- TODO not tested\nfunction _Create(props)\n    local result = CardCreation:Structure(props)\n    result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()\n        :Check(Common:IsOwnersTurn(result))\n        :Cost(Common:NoCost())\n        :IsSilent(false)\n        :On(TRIGGERS.TURN_START)\n        :Zone(ZONES.PLACED)\n        :Effect(function (playerID, args)\n            local tile = GetTileWith(result.id)\n            local neighbors = GetNeighbors({ tile.iPos, tile.jPos })\n            for _, neighbor in ipairs(neighbors) do\n                if neighbor ~= nil and neighbor.entity ~= nil then\n                    DealDamage(result.id, neighbor.id, 3)\n                end\n            end\n        end)\n        :Build()\n    return result\nend"
+    "script": "-- TODO not tested\nfunction _Create(props)\n    local result = CardCreation:Structure(props)\n    result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()\n        :Check(Common:IsOwnersTurn(result))\n        :Cost(Common:NoCost())\n        :IsSilent(false)\n        :On(TRIGGERS.TURN_START)\n        :Zone(ZONES.PLACED)\n        :Effect(function (playerID, args)\n            -- TODO threw an exception\n            local tile = GetTileWith(result.id)\n            local neighbors = GetNeighbors({ tile.iPos, tile.jPos })\n            for _, neighbor in ipairs(neighbors) do\n                if neighbor ~= nil and neighbor.entity ~= nil then\n                    DealDamage(result.id, {neighbor.iPos, neighbor.jPos}, 1)\n                end\n            end\n        end)\n        :Build()\n    return result\nend"
 }

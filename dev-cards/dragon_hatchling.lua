@@ -13,7 +13,7 @@ function _Create(props)
             local neighbors = GetNeighbors({ tile.iPos, tile.jPos })
             for _, neighbor in ipairs(neighbors) do
                 if neighbor ~= nil and neighbor.entity ~= nil then
-                    DealDamage(result.id, neighbor.id, 1)
+                    DealDamage(result.id, {neighbor.iPos, neighbor.jPos}, 1)
                 end
             end
         end)

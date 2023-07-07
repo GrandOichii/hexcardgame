@@ -8,110 +8,110 @@ n. - neighboring
 
 
 v [Mana Drill]:1
-    (Structure)
+    Structure
     {Unrestricted}
     Geneartes 1 energy per turn.
     T: 5
     
     
 v [Flame Eruption]:3
-    (Spell)
+    Spell
     Deal 2 damage to all n. enemy structures/units.
     
     
 [Hidden Spy]:4
-    (Unit)-(Rogue)
+    Unit - Rogue
     {Hidden}
     P: 2
     L: 2
     
     
 v [Mage Initiate]:2
-    (Unit)-(Mage)
+    Unit - Mage
     P: 1
     L: 3
     
     
 v [Warrior Initiate]:2
-    (Unit)-(Warrior)
+    Unit - Warrior
     P: 2
     L: 2
     
     
 v [Rogue Initiate]:2
-    (Unit)-(Rogue)
+    Unit - Rogue
     P: 1
     L: 2
     
     
 v [Combat Medic]:3
-    (Unit)-(Warrior)
+    Unit - Warrior
     At the start of your turn, [CARDNAME] restores 1 life to all your n. Units.
     P: 2
     L: 2
 
     
 [Hired Assassin]:3
-    (Unit)-(Rogue)
+    Unit - Rogue
     Destroys Units on attack.
     P: 2
     L: 2
     
     
 [Elven General]:4
-    (Unit)-(Warrior)
+    Unit - Warrior
     Every 3 turns, summon an [Elf] into a n. tile.
     P: 2
     L: 2
     
     
 v [!Elf]:1
-    (Unit)
+    Unit 
     P: 1
     L: 1
     
     
 [Fort]:3
-    (Structure)
+    Structure
     Your n. tiles have +1 defence.
     T: 5
     
     
 [Baar Swamp Necromancer]:3
-    (Unit)-(Mage)
+    Unit - Mage
     At the start of turn, revive a n. grave into a [Zombie].
     P: 1
     L: 2
     
     
 v [!Zombie]:2
-    (Unit)
+    Unit 
     Leaves no grave.
     P: 2
     L: 2
     
 
 [Shock]:1
-    (Spell)
+    Spell
     Deal 2 damage to a n. Unit.
 
 
 v [Urakshi Raider]:3
-    (Unit)-(Warrior)
+    Unit - Warrior
     {Fast}
     P: 3
     L: 2
 
 
 v [Urakshi Shaman]:3
-    (Unit)-(Mage)
+    Unit - Mage
     Spells cast by [CARDNAME] do +1 damage.
     P: 2
     L: 2
 
 
 [Urakshi Thief]:3
-    (Unit)-(Rogue)
+    Unit - Rogue
     {Fast}
     {Hidden}
     L: 1
@@ -119,52 +119,52 @@ v [Urakshi Shaman]:3
 
 
 v [Brute]:5
-    (Unit)
+    Unit 
     P: 6
     L: 5
 
 
 v [!Castle]:10
-    (Structure)
+    Structure
     T: 10
 
 
 v [Spread Influence]:4
-    (Spell)
+    Spell
     Gain control of the current and all n. neutral tiles.
 
 
 [Troop Warp]:5
-    (Spell)
+    Spell
     Teleport target Warrior you control into a n. tile.
 
 
 [TODO]:20
-    (Unit)
+    Unit 
     [CARDNAME]'s cost is reduced by the number of tiles you control.
     P: 15
     L: 15
 
 
 v [Blood for Knowledge]:2
-    (Spell)
+    Spell
     Deal 1 damage to caster. If survives, draw 2 cards.
     
 
 [Baar Swamp Changeling]:4
-    (Unit)
+    Unit 
     Every 3 turns, becomes a Warrior, Rogue or Mage. (Loses all other subtypes)
     L: 3
     P: 3
 
 
 v [Give Strength]:1
-    (Spell)
+    Spell
     Caster gains +2 power and +2 life.
 
 
 [TODO]:4
-    (Unit)-(Mage)
+    Unit - Mage
     Spell's cast by [CARDNAME] cost 1 less energy to cast.
     P: 4
     L: 3
@@ -182,6 +182,6 @@ v  [Prophecy Scholar]:4
     P: 3
 
 
-[Cast Armor]:1
+v [Cast Armor]:1
     Spell
     Caster gains +1 defence.

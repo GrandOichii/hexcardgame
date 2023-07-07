@@ -2,7 +2,7 @@ import json
 from os.path import join
 
 EACH_CARD_COUNT = 3
-MANA_DRILL_RATIO = 5.0 / 6
+MANA_DRILL_RATIO = 6.0 / 7
 
 DIR = 'cards'
 DATA = json.loads(open(join(DIR, 'manifest.json'), 'r').read())

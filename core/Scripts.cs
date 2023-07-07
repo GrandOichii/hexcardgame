@@ -351,6 +351,6 @@ public class ScriptMaster {
     /// <returns>Card data</returns>
     [LuaCommand]
     public LuaTable GetCard(string mID) {
-        return _match.GetCard(mID);
+        return _match.GetCard(mID).Data;
     }
 }

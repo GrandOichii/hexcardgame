@@ -1,0 +1,10 @@
+{
+    "name": "Kobold Mage",
+    "cost": 4,
+    "type": "Unit - Mage",
+    "expansion": "dev",
+    "text": "When [CARDNAME] casts a Spell, it deals 1 damage to all n. Units/Structures.",
+    "power": 3,
+    "life": 3,
+    "script": "kobold_mage.lua"
+}

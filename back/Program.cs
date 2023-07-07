@@ -71,7 +71,7 @@ class Program {
         cm.LoadCardsFrom("../cards");
 
         // load decks
-        var deckText = File.ReadAllText("../decks/deck1.deck");
+        var deckText = File.ReadAllText("../decks/generated.deck");
         var deckTemplate = DeckTemplate.FromText(deckText);
 
         // load match config

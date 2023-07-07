@@ -1,7 +1,7 @@
 {
     "name": "Warrior Initiate",
     "cost": 2,
-    "type": "Unit",
+    "type": "Unit - Warrior",
     "expansion": "dev",
     "text": "",
     "power": 2,

@@ -4,7 +4,7 @@ using System;
 using core.cards;
 using core.match.states;
 
-public partial class HandCardBase : MarginContainer, GamePart
+public partial class HandCardBase : MarginContainer, IGamePart
 {
 	// TODO with cardbase input processing disabled, can't scroll card text
 	
@@ -13,7 +13,7 @@ public partial class HandCardBase : MarginContainer, GamePart
 //	private CardBase UpperCardNode;
 
 	private Color BaseColor;
-	private Color HighlightColor = new Color("blue");
+	private Color HighlightColor = new("blue");
 	
 	public override void _Ready()
 	{

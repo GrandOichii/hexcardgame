@@ -1,6 +1,6 @@
 {
     "name": "Firestone Tower",
-    "cost": 1,
+    "cost": 2,
     "type": "Structure",
     "expansion": "starters",
     "text": "At the start of your turn, [CARDNAME] deals 1 damage to each n. Unit/Structure.",

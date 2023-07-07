@@ -5,7 +5,7 @@ using core.match.states;
 using System.Collections.Generic;
 using core.tiles;
 
-public partial class TileBase : Node2D, GamePart
+public partial class TileBase : Node2D, IGamePart
 {
 	private Polygon2D Bg;
 	private Polygon2D Fg;

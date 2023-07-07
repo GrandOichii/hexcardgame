@@ -193,8 +193,7 @@ public class SelectPlayTile : SelectTile {
 			}
 			return true;
 		}
-		
-		// card is not spell: tile has to be empty and owned by the player
+		// card is not spell: tile has to be empty and owned by the player or has to have an enemy entity
 		if (tile.LastState?.OwnerID != myID) {
 			return false;
 		}
@@ -251,7 +250,10 @@ public class SelectDirection : CommandPart
 
 	private bool CanAccept(Command c, TileBase tile) {
 		if (tile.LastState is null) return false;
-		if (tile.LastState?.Entity is not null) return false;
+		if (tile.LastState?.Entity is not null) {
+			if (tile.LastState?.Entity?.OwnerID == Game.Instance.MatchInfo.MyID)
+			return false;
+		}
 		return GetDirection(c.Results[_comparedToI] as TileBase, tile) != -1;
 	}
 

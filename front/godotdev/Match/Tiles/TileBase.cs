@@ -139,6 +139,7 @@ public partial class TileBase : Node2D, IGamePart
 	}
 	private readonly float ANGLE = (float)Math.PI / 3;
 	private readonly float ANGLE_OFFSET = (float)Math.PI / 6 + (float)Math.PI / 3;
+	
 	private void OnCollisionMouseEntered()
 	{
 		if (LastState is not null && LastState?.Entity is not null) {

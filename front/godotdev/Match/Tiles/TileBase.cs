@@ -5,7 +5,7 @@ using core.match.states;
 using System.Collections.Generic;
 using core.tiles;
 
-public partial class TileBase : Node2D
+public partial class TileBase : Node2D, GamePart
 {
 	private Polygon2D Bg;
 	private Polygon2D Fg;
@@ -16,7 +16,7 @@ public partial class TileBase : Node2D
 	private CardBase HoverCard;
 	private MarginContainer SizeContainer;
 
-	private TileState? _lastState;
+	public TileState? LastState { get; private set; }
 	
 	private Color BaseColor = new Color(0, 0, 0);
 	private Color HoverColor = new Color(0, 0, 1);
@@ -62,7 +62,7 @@ public partial class TileBase : Node2D
 	}
 
 	public void Load(TileState? state) {
-		_lastState = state;
+		LastState = state;
 		if (state is null) {
 			// PlayerID = "";
 			Visible = false;
@@ -116,61 +116,64 @@ public partial class TileBase : Node2D
 
 	private void OnCollisionInputEvent(Node viewport, InputEvent @event, long shape_idx)
 	{
-		OnCollisionMouseEntered();
+		// OnCollisionMouseEntered();
 		if (@event is InputEventMouseButton) {
 			var e = @event as InputEventMouseButton;
-// 			if (e.ShiftPressed && _lastState?.Entity is not null) {				
+// 			if (e.ShiftPressed && LastState?.Entity is not null) {				
 // //				HoverCardBase hc = Game.Instance.HoverCard;
 // //				hc.Visible = true;
-// //				MCardState en = (MCardState)(_lastState?.Entity);
+// //				MCardState en = (MCardState)(LastState?.Entity);
 // //				hc.Load(en);
 // //				GD.Print(hc.ZIndex, " ", ZIndex);
 // 				return;
 // //			}
 			if (e.IsPressed() && e.ButtonIndex == MouseButton.Left) {
 				var game = Game.Instance;
-				var action = game.Action;
+				if (!game.Accepts(this)) return;
 
-				if (action.Count == 0) {
-					game.AddToAction("move");
-					game.AddToAction("" + _coords.Y + "." + _coords.X);
-					return;
-				}
-				if (action.Count == 2)  {
-					if (action[0] == "play") {
-						game.AddToAction("" + _coords.Y + "." + _coords.X);
-						game.SendAction();
-						return;
-					}
-					if (action[0] == "move") {
-						GD.Print("MOVE");
-						var all_dir_arr = core.tiles.Map.DIR_ARR;
-						var ii = (int)_coords.Y % 2;
-						var dir_arr = all_dir_arr[ii];
-						for (int i = 0; i < dir_arr.Length; i++) {
-//							GD.Print(_coords.Y, " ", _coords.X);
-							var newC = new Vector2((int)_coords.X + (int)dir_arr[i][1], (int)_coords.Y + dir_arr[i][0]);
-//							GD.Print(newC, "  ", dir_arr[i][0], "  ", dir_arr[i][1]);
-							var tS = "" + newC.Y + "." + newC.X;
-							GD.Print(i, " ", tS, " ", action[1]);
-							if (action[1] == tS) {
-								game.AddToAction(((i + 3)%6).ToString());
-								game.SendAction();
-								return;
-							}
-						}
-						game.SendAction();
-						return;
-					}
-				}
+				game.Process(this);
+				// OnCollisionMouseExited();
+
+// 				if (action.Count == 0) {
+// 					game.AddToAction("move");
+// 					game.AddToAction("" + _coords.Y + "." + _coords.X);
+// 					return;
+// 				}
+// 				if (action.Count == 2)  {
+// 					if (action[0] == "play") {
+// 						game.AddToAction("" + _coords.Y + "." + _coords.X);
+// 						game.SendAction();
+// 						return;
+// 					}
+// 					if (action[0] == "move") {
+// 						GD.Print("MOVE");
+// 						var all_dir_arr = core.tiles.Map.DIR_ARR;
+// 						var ii = (int)_coords.Y % 2;
+// 						var dir_arr = all_dir_arr[ii];
+// 						for (int i = 0; i < dir_arr.Length; i++) {
+// //							GD.Print(_coords.Y, " ", _coords.X);
+// 							var newC = new Vector2((int)_coords.X + (int)dir_arr[i][1], (int)_coords.Y + dir_arr[i][0]);
+// //							GD.Print(newC, "  ", dir_arr[i][0], "  ", dir_arr[i][1]);
+// 							var tS = "" + newC.Y + "." + newC.X;
+// 							GD.Print(i, " ", tS, " ", action[1]);
+// 							if (action[1] == tS) {
+// 								game.AddToAction(((i + 3)%6).ToString());
+// 								game.SendAction();
+// 								return;
+// 							}
+// 						}
+// 						game.SendAction();
+// 						return;
+// 					}
+// 				}
 			}
 		}
 //		if (@event is InputEventMouseMotion) {
 //			var e = @event as InputEventMouseMotion;
-//			if (e.ShiftPressed && _lastState?.Entity is not null) {
+//			if (e.ShiftPressed && LastState?.Entity is not null) {
 //				HoverCardBase hc = Game.Instance.HoverCard;
 //				hc.Visible = true;
-//				MCardState en = (MCardState)(_lastState?.Entity);
+//				MCardState en = (MCardState)(LastState?.Entity);
 //				hc.Load(en);
 //				GD.Print(hc.ZIndex, " ", ZIndex);
 //			}
@@ -178,11 +181,14 @@ public partial class TileBase : Node2D
 	}
 	private void OnCollisionMouseEntered()
 	{
-		Bg.Color = HoverColor;
-
-		if (_lastState is not null && _lastState?.Entity is not null) {
+		if (LastState is not null && LastState?.Entity is not null) {
 			HoverCard.Visible = true;
 		}
+		
+		if (!Game.Instance.Accepts(this)) return;
+
+		Bg.Color = HoverColor;
+
 	}
 	private void OnCollisionMouseExited()
 	{
@@ -190,7 +196,13 @@ public partial class TileBase : Node2D
 		if (HoverCard.Visible)
 			HoverCard.Visible = false;
 	}
-	
+
+	// public string ToActionPart(Command command)
+	// {
+	// 	// TODO? more complex behavior (if need entity and not card)
+	// 	return "" + _coords.Y + "." + _coords.X;
+	// }
+
 }
 
 

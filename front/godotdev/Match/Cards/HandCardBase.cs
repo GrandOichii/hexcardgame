@@ -4,12 +4,12 @@ using System;
 using core.cards;
 using core.match.states;
 
-public partial class HandCardBase : MarginContainer
+public partial class HandCardBase : MarginContainer, GamePart
 {
 	// TODO with cardbase input processing disabled, can't scroll card text
 	
 	// nodes
-	private CardBase CardNode;
+	public CardBase CardNode { get; private set; }
 //	private CardBase UpperCardNode;
 
 	private Color BaseColor;
@@ -27,7 +27,7 @@ public partial class HandCardBase : MarginContainer
 	
 	private void OnCollisionMouseEntered()
 	{
-		if (CardNode.LastState.AvailableActions.Count == 0) return;
+		if (!Game.Instance.Accepts(this)) return;
 //		UpperCardNode.Visible = true;
 		CardNode.Bg.Color = HighlightColor;
 	}
@@ -53,20 +53,31 @@ public partial class HandCardBase : MarginContainer
 		if (@event is InputEventMouseButton) {
 			var e = @event as InputEventMouseButton;
 			if (e.IsPressed() && e.ButtonIndex == MouseButton.Left) {
-				if (CardNode.LastState.AvailableActions.Count == 0) return;
+				if (!Game.Instance.Accepts(this)) return;
+				Game.Instance.Process(this);
+				OnCollisionMouseExited();
+
+				// if (CardNode.LastState.AvailableActions.Count == 0) return;
 				
-				var game = Game.Instance;
-				var action = game.Action;
-				if (action.Count == 0)  {
-					GD.Print(CardNode.LastState.MID);
-					game.AddToAction("play");
-					game.AddToAction(CardNode.LastState.MID);
-					return;
-				}
+				// var game = Game.Instance;
+				// var action = game.Action;
+				// if (action.Count == 0)  {
+				// 	GD.Print(CardNode.LastState.MID);
+				// 	game.AddToAction("play");
+				// 	game.AddToAction(CardNode.LastState.MID);
+				// 	return;
+				// }
 			}
 		}
 		// Replace with function body.
 	}
+
+	// public string ToActionPart(Command command)
+	// {
+	// 	// TODO? more complex behavior
+	// 	return CardNode.LastState.MID;
+	// }
+
 }
 
 

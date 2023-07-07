@@ -190,3 +190,8 @@ v [Give Strength]:1
     Caster becomes a Warrior. (Is still a Mage)
 
 
+[Prophecy Scholar]:4
+    Unit - Mage
+    When [CARDNAME] enters play, summon a [Inspiration] card into your hand.
+    L: 3
+    P: 3

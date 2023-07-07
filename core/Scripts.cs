@@ -312,4 +312,38 @@ public class ScriptMaster {
 
         return LuaUtility.CreateTable(_match.LState, result);
     }
+
+    /// <summary>
+    /// Summons a new card
+    /// </summary>
+    /// <param name="fromMID">Card source of the summoning</param>
+    /// <param name="ownerID">The owner of the new card</param>
+    /// <param name="cID">The card id</param>
+    /// <returns>The summoned card's data</returns>
+    [LuaCommand]
+    public LuaTable SummonCard(string fromMID, string ownerID, string cID) {
+        // TODO fromMID not utilized yet
+        var player = _match.PlayerWithID(ownerID);
+        var fromC = _match.GetCard(fromMID);
+        var card = _match.CardMaster.Get(cID);
+
+        var newCard = new MCard(_match, card, player);
+        newCard.GoesToDiscard = false;
+        player.AllCards.Add(newCard, "");
+        return newCard.Data;
+    }
+
+
+    /// <summary>
+    /// Adds the specified card to the player's hand. !Does not remove from previous zone.
+    /// </summary>
+    /// <param name="pID">Player ID</param>
+    /// <param name="mID">Card match ID</param>
+    [LuaCommand]
+    public void PlaceCardInHand(string pID, string mID) {
+        var player = _match.PlayerWithID(pID);
+        var card = _match.GetCard(mID);
+        player.AllCards[card] = Zones.HAND;
+        player.Hand.AddToBack(card);
+    }
 }

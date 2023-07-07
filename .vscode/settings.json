@@ -14,7 +14,9 @@
         "DrawCards",
         "GetNeighbors",
         "CardShortStr",
-        "GetUnitsOnBoard"
+        "GetUnitsOnBoard",
+        "SummonCard",
+        "PlaceCardInHand"
     ],
     "dotnet.defaultSolution": "front\\godotdev\\godotdev.sln"
 }

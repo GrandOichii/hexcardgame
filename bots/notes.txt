@@ -1,0 +1,5 @@
+Important fields:
+taken_tiles
+my_castle_life
+opponent_castle_life
+

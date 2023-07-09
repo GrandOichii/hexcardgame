@@ -135,7 +135,7 @@ public class MCard {
     public string MID { get; }
     public Card Original { get; }
     public LuaTable Data { get; }
-    public bool GoesToDiscard { get; set; }
+    public bool GoesToDiscard { get; set; }=true;
 
     public long MaxMovement => LuaUtility.GetLong(Data, "maxMovement");
     public long Movement => LuaUtility.GetLong(Data, "movement");

@@ -49,7 +49,7 @@ v [Kobold Warrior]:3 ++++
     L: 3
 
 
-[Kobold Mage]:4 ++++
+v [Kobold Mage]:4 ++++
     Unit - Mage
     When [CARDNAME] casts a spell, it deals 1 damage to all n. Units/Structures.
     P: 3

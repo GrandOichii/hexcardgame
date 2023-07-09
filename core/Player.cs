@@ -7,7 +7,6 @@ using core.match.states;
 using NLua;
 using Shared;
 using util;
-
 namespace core.players;
 
 /// <summary>
@@ -143,6 +142,49 @@ public class TCPPlayerController : PlayerController
     }
 }
 
+
+/// <summary>
+/// A player controller, whose actions are controlled by a lua script
+/// </summary>
+public class LuaPlayerController : PlayerController {
+    static private readonly string SETUP_FNAME = "_Setup";
+    static private readonly string PROMPT_ACTION_FNAME = "_PromptAction";
+    static private readonly string UPDATE_FNAME = "_Update";
+
+    private string _sPath;
+    private Lua LState;
+
+    private LuaFunction _setupF;
+    private LuaFunction _promptActionF;
+    private LuaFunction _updateF;
+    public LuaPlayerController(string sPath) {
+        _sPath = sPath;
+
+        LState = new();
+        LState.DoFile(_sPath);
+        _setupF = LuaUtility.GetGlobalF(LState, SETUP_FNAME);
+        _promptActionF = LuaUtility.GetGlobalF(LState, PROMPT_ACTION_FNAME);
+        _updateF = LuaUtility.GetGlobalF(LState, UPDATE_FNAME);
+    }   
+
+    public override string DoPromptAction(Player player, Match match)
+    {        
+        var result = _promptActionF.Call(new MatchState(match, player, "action").ToJson());
+        return LuaUtility.GetReturnAs<string>(result);
+    }
+
+    public override void Setup(Player player, Match match)
+    {
+
+        _setupF.Call(new MatchState(match, player, "setup").ToJson());
+    }
+
+    public override void Update(Player player, Match match)
+    {
+        _updateF.Call(new MatchState(match, player, "update").ToJson());
+    }
+
+}
 
 /// <summary>
 /// In-match player object.

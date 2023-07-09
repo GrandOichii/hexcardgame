@@ -222,7 +222,7 @@ public class ScriptMaster {
                 if (en.MID == mID) return tile.ToLuaTable(_match.LState);
             }
         }
-        return null;
+        throw new Exception("Failed to locate entity on board with ID " + mID);
     }
 
     /// <summary>
@@ -280,7 +280,7 @@ public class ScriptMaster {
         for (int i = 0; i < 6; i++) {
             var n = _match.Map.GetNeighbor(coords[0], coords[1], i);
             if (n is null) {
-                result.Add(null);
+                // result.Add(null);
                 continue;
             }
             result.Add(n.ToLuaTable(_match.LState));
@@ -304,7 +304,7 @@ public class ScriptMaster {
                 if (tile is null) continue;
                 var en = tile.Entity;
                 if (en is null) continue;
-                result.Add(en.Data);
+                result.Add(tile.ToLuaTable(_match.LState));
             }
         }
 

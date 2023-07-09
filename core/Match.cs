@@ -302,12 +302,14 @@ public class Match
                 var en = tile.Entity;
                 if (en is null) continue;
                 if (!en.IsPlaceable) continue;
-                if (en.Life != 0) continue;
+                if (en.Life > 0) continue;
+                en.Owner.AllCards[en] = "";
                 
                 tile.Entity = null;
                 if (!en.GoesToDiscard) continue;
                 
                 en.Owner.Discard.AddToBack(en);
+                SystemLogger.Log("MATCH", "Placing card " + en.ShortStr + " into discard");
                 en.Owner.AllCards[en] = Zones.DISCARD;
 
                 if (en.IsUnit) tile.HasGrave = true;

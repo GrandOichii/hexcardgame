@@ -141,8 +141,12 @@ public class Map {
     public Tile? GetNeighbor(int iLoc, int jLoc, int dir) {
         var dirs = DIR_ARR[iLoc % 2];
         var diff = dirs[dir];
-
-        return Tiles[iLoc + diff[0], jLoc + diff[1]];
+        var newI = iLoc + diff[0];
+        var newJ = jLoc + diff[1];
+        if (newI < 0 || newJ < 0) return null;
+        if (newI >= Tiles.GetLength(0)) return null;
+        if (newJ >= Tiles.GetLength(1)) return null;
+        return Tiles[newI, newJ];
     }
 
 }

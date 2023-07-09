@@ -83,12 +83,12 @@ class Program {
 
         // create match
         var match = mCreator.New(cm, config);
-        match.StrictMode = false;
+        // match.StrictMode = false;
         match.AllowCommands = true;
         // var view = new CursesMatchView();
         // match.View = view;
-        // match.SystemLogger = new FileLogger("../recent_logs.txt");
-        match.SystemLogger = new ConsoleLogger();
+        match.SystemLogger = new FileLogger("../recent_logs.txt");
+        // match.SystemLogger = new ConsoleLogger();
 
         // player controllers
         // var p1Controller = new CursesPlayerController(view);
@@ -96,7 +96,8 @@ class Program {
         // var p1Controller = new InactivePlayerController();
         var p1Controller = TCPPC(match);
         
-        var p2Controller = new InactivePlayerController();
+        // var p2Controller = new InactivePlayerController();
+        var p2Controller = new LuaPlayerController("../bots/basic.lua");
         // var p2Controller = TCPPC(match);
 
         // create players
@@ -111,12 +112,12 @@ class Program {
     {
         listener.Start();
         
-        while (true) {
-            try {
+        // while (true) {
+        //     try {
                 RunMatch();
-            } catch (Exception e){
-                System.Console.WriteLine(e);
-            }
-        }
+        //     } catch (Exception e){
+        //         System.Console.WriteLine(e);
+        //     }
+        // }
     }
 }

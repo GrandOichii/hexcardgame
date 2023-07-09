@@ -1,4 +1,16 @@
 - matches backend
+    - add {Hidden} keyword
+    - add destroying units on attack
+    - add every n turns effects
+    - figure out fow to implement fort effects
+    - add grave functionality
+    - add targeting
+    - add cost manipulation
+    - add subtype manipulation
+    - add returning cards from discard to hand
+    - add Unit transformation
+    - add pre_death and post_death triggers
+    - add on_move trigger
     - add winning / losing
     - add activated effects
     - figure out when need to update players

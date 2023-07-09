@@ -29,6 +29,10 @@ class QueuedActionsPlayerController : PlayerController
     public override void Update(Player player, Match match)
     {
     }
+
+    public override void CleanUp()
+    {
+    }
 }
 
 class CursesPlayerController : QueuedActionsPlayerController
@@ -93,8 +97,8 @@ class Program {
         // player controllers
         // var p1Controller = new CursesPlayerController(view);
         // var p1Controller = new QueuedActionsPlayerController();
-        // var p1Controller = new InactivePlayerController();
-        var p1Controller = TCPPC(match);
+        var p1Controller = new InactivePlayerController();
+        // var p1Controller = TCPPC(match);
         
         // var p2Controller = new InactivePlayerController();
         var p2Controller = new LuaPlayerController("../bots/basic.lua");

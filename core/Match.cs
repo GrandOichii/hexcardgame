@@ -207,7 +207,9 @@ public class Match
     public void CleanUp() {
         SystemLogger.Log("MATCH", "Performing cleanup");
 
-        // TODO
+        foreach (var player in Players) {
+            player.Controller.CleanUp();
+        }
         View.End();
     }
 
@@ -303,6 +305,16 @@ public class Match
                 if (en is null) continue;
                 if (!en.IsPlaceable) continue;
                 if (en.Life > 0) continue;
+                if (en.Name == "Castle") {
+                    var loserID = en.Owner.ID;
+                    foreach (var player in Players) {
+                        if (player.ID != loserID) {
+                            Winner = player;
+                            return;
+                        }
+                    }
+                }
+                
                 en.Owner.AllCards[en] = "";
                 
                 tile.Entity = null;

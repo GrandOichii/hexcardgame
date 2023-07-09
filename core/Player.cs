@@ -46,6 +46,11 @@ abstract public class PlayerController {
     /// <param name="player">Controlled player</param>
     /// <param name="match"></param>
     abstract public void Update(Player player, Match match);
+
+    /// <summary>
+    /// Cleans up the player data
+    /// </summary>
+    abstract public void CleanUp();
 }
 
 
@@ -54,6 +59,10 @@ abstract public class PlayerController {
 /// </summary>
 public class InactivePlayerController : PlayerController
 {
+    public override void CleanUp()
+    {
+    }
+
     public override string DoPromptAction(Player player, Match match)
     {
         return "pass";
@@ -140,6 +149,11 @@ public class TCPPlayerController : PlayerController
     {
         Write(new MatchState(match, player, "update").ToJson());
     }
+
+    public override void CleanUp()
+    {
+        // TODO
+    }
 }
 
 
@@ -150,6 +164,7 @@ public class LuaPlayerController : PlayerController {
     static private readonly string SETUP_FNAME = "_Setup";
     static private readonly string PROMPT_ACTION_FNAME = "_PromptAction";
     static private readonly string UPDATE_FNAME = "_Update";
+    static private readonly string CLEANUP_FNAME = "_Cleanup";
 
     private string _sPath;
     private Lua LState;
@@ -157,6 +172,7 @@ public class LuaPlayerController : PlayerController {
     private LuaFunction _setupF;
     private LuaFunction _promptActionF;
     private LuaFunction _updateF;
+    private LuaFunction _cleaupF;
     public LuaPlayerController(string sPath) {
         _sPath = sPath;
 
@@ -165,6 +181,7 @@ public class LuaPlayerController : PlayerController {
         _setupF = LuaUtility.GetGlobalF(LState, SETUP_FNAME);
         _promptActionF = LuaUtility.GetGlobalF(LState, PROMPT_ACTION_FNAME);
         _updateF = LuaUtility.GetGlobalF(LState, UPDATE_FNAME);
+        _cleaupF = LuaUtility.GetGlobalF(LState, CLEANUP_FNAME);
     }   
 
     public override string DoPromptAction(Player player, Match match)
@@ -182,6 +199,10 @@ public class LuaPlayerController : PlayerController {
     public override void Update(Player player, Match match)
     {
         _updateF.Call(new MatchState(match, player, "update").ToJson());
+    }
+
+    public override void CleanUp() {
+        _cleaupF.Call();
     }
 
 }

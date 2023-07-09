@@ -1,7 +1,7 @@
 {
     "startingHandSize": 3,
     "turnStartDraw": 1,
-    "seed": 0,
+    "_seed": 0,
     
     "map": [
         [0, 1, 0, 0],

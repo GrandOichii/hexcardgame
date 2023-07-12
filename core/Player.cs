@@ -212,7 +212,8 @@ public class LuaPlayerController : PlayerController {
 /// </summary>
 public class Player {
     private Match _match;
-    public string Name { get; }
+    // remove
+    public string Name { get; set; }
     public PlayerController Controller { get; }
     public string ID { get; }
 

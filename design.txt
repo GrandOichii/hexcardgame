@@ -2,51 +2,17 @@
 {Hidden} - is invisible to opponent until is attacked/attacks.
 {Fast} - can move as soon as played.
 {Unrestricted} - can have any amount of this card in your deck.
+{Virtuous} = When [CARDNAME] enters play, summon a [Healing Light] card into your hand.
+{Vile} = When [CARDNAME] enters play, summon a [Corrupting Darkness] card into your hand.
 
 Defence - each point of defence eats up 1 damage per turn, restores at end of turn.
 n. - neighboring
 
 
-v [Mana Drill]:1
-    Structure
-    {Unrestricted}
-    Geneartes 1 energy per turn.
-    T: 5
-    
-    
-v [Flame Eruption]:3
-    Spell
-    Deal 2 damage to all n. enemy structures/units.
-    
     
 [Hidden Spy]:4
     Unit - Rogue
     {Hidden}
-    P: 2
-    L: 2
-    
-    
-v [Mage Initiate]:2
-    Unit - Mage
-    P: 1
-    L: 3
-    
-    
-v [Warrior Initiate]:2
-    Unit - Warrior
-    P: 2
-    L: 2
-    
-    
-v [Rogue Initiate]:2
-    Unit - Rogue
-    P: 1
-    L: 2
-    
-    
-v [Combat Medic]:3
-    Unit - Warrior
-    At the start of your turn, [CARDNAME] restores 1 life to all your n. Units.
     P: 2
     L: 2
 
@@ -65,12 +31,6 @@ v [Combat Medic]:3
     L: 2
     
     
-v [!Elf]:1
-    Unit 
-    P: 1
-    L: 1
-    
-    
 [Fort]:3
     Structure
     Your n. tiles have +1 defence.
@@ -84,30 +44,9 @@ v [!Elf]:1
     L: 2
     
     
-v [!Zombie]:2
-    Unit 
-    Leaves no grave.
-    P: 2
-    L: 2
-    
-
 [Shock]:1
     Spell
     Deal 2 damage to a n. Unit.
-
-
-v [Urakshi Raider]:3
-    Unit - Warrior
-    {Fast}
-    P: 3
-    L: 2
-
-
-v [Urakshi Shaman]:3
-    Unit - Mage
-    Spells cast by [CARDNAME] do +1 damage.
-    P: 2
-    L: 2
 
 
 [Urakshi Thief]:3
@@ -116,22 +55,6 @@ v [Urakshi Shaman]:3
     {Hidden}
     L: 1
     P: 1
-
-
-v [Brute]:5
-    Unit 
-    P: 6
-    L: 5
-
-
-v [!Castle]:10
-    Structure
-    T: 10
-
-
-v [Spread Influence]:4
-    Spell
-    Gain control of the current and all n. neutral tiles.
 
 
 [Troop Warp]:5
@@ -146,21 +69,11 @@ v [Spread Influence]:4
     L: 15
 
 
-v [Blood for Knowledge]:2
-    Spell
-    Deal 1 damage to caster. If survives, draw 2 cards.
-    
-
 [Baar Swamp Changeling]:4
     Unit 
     Every 3 turns, becomes a Warrior, Rogue or Mage. (Loses all other subtypes)
     L: 3
     P: 3
-
-
-v [Give Strength]:1
-    Spell
-    Caster gains +2 power and +2 life.
 
 
 [TODO]:4
@@ -175,13 +88,159 @@ v [Give Strength]:1
     Caster becomes a Warrior. (Is still a Mage)
 
 
-v  [Prophecy Scholar]:4
-    Unit - Mage
-    When [CARDNAME] enters play, summon a [Inspiration] card into your hand.
-    L: 3
-    P: 3
+[TODO]:TODO
+    Unique Unit - Mage
+    When [CARDNAME] enters play, destroy all Units whose power and life aren't equal.
+    P: TODO
+    L: TOOD
 
 
-v [Cast Armor]:1
+[Turn to Stone]:2
     Spell
-    Caster gains +1 defence.
+    Caster or target n. Unit gains +10 defence and can't move until your next turn.
+
+
+[Earth Elemental]:3
+    Unit
+    When [CARDNAME] enters play, summon 3 [Throw Rock] cards into your deck.
+    P: 5
+    L: 5
+
+
+[!Throw Rock]:3
+    Spell
+    Deal 1 damage to a n. Structure.
+
+
+[Earthling]:1
+    Unit
+    When [CARDNAME] enters play, summon a [Throw Rock] card into your deck.
+    P: 2
+    L: 2
+
+
+[Fire Elemental]: 6
+    Units
+    {Fast}
+    At the start of your turn, halve [CARDNAME]'s power and toughness. Round down each time.
+    P: 8
+    L: 8
+
+
+[!Healing Light]:2
+    Spell
+    Target n. Unit gains +2 life.
+
+
+[Healer Initiate]:3
+    Unit
+    {Virtuous}
+    P: 2
+    L: 3
+
+
+[Statue to the Archangel]
+    Structure
+    Discard 5 [Healing Light] cards: turn [CARDNAME] into an [Archangel].
+    L: 4
+
+
+[!Archangel]:8
+    Unit
+    At the start of your turn, a [Healing Light] card in your hand turns into an [Lesser Angel] card.
+    P: 4
+    L: 8
+
+
+[!Lesser Angel]:4
+    Unit
+    All n. Units you control have +1 defence.
+    P: 2
+    L: 4
+
+
+[Looming Shadow]:4
+    Unit
+    Discard a [Corrupting Darkness] card: [CARDNAME] gains +2 power.
+    P: 2
+    L: 5
+
+
+[Rock Launcher]:4
+    Structure
+    Discard a [Throw Rock] card: [CARDAME] deals 2 damage to any Unit.
+
+
+[Innocent Scrub]: 1
+    Unique Unit
+    When [CARDNAME] dies, summon a [TODO1] card into your hand.
+    P: 0
+    L: 1
+
+
+[TODO1]: 2
+    Unit
+    When [CARDNAME] dies, summon a [TODO2] card into your hand.
+    P: 3
+    L: 3
+
+
+[TODO3]: 5
+    Unit
+    P: 7
+    L: 7
+
+
+[Mass Inspection TODO]:7
+    Spell
+    Deal 1 damage to each Structure. For each damage dealt, draw a card.
+
+
+[Priest of the Archdemon]:2
+    Unit
+    {Vile}
+    P: 2
+    L: 2
+
+
+[!Corrupting Darkness]: 2
+    Spell
+    Deal 1 damage to target n. Unit.
+
+
+[Corpse-Stealer Imp]:5
+    Unit - Rogue
+    When [CARDNAME] enters play, place target Unit in your opponent's discard into one of the n. tiles.
+    P: 2
+    L: 2
+
+
+[Baar Swamp Traveller]:2
+    Unit - Rogue
+    When [CARDNAME] dies, replace it with a [Zombie].
+    P: 2
+    L: 2
+
+
+[Shadowcrafter Elf]:3
+    Unit - Rogue
+    When [CARDNAME] enters play, discard a [Corrupting Darkness] card. If you don't, destroy [CARDNAME].
+    P: 5
+    L: 5
+
+
+[Cleanse the Unholy]:5
+    Spell
+    Destroy all {Vile} Units.
+
+
+[Second Circle Paladin]:3
+    Unit - Warrior
+    When [CARDNAME] enters play, discard a [Healing Light] card. If you don't, [CARDNAME] gains +3 power and +3 life.
+    P: 3
+    L: 3
+
+
+[Blessing Fountain]:1
+    Structure
+    Discard a [Healing Light] card: target n. Unit you control gains +2 power and +2 life.

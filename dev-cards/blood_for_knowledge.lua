@@ -9,7 +9,6 @@ function _Create(props)
         end
         local dead = DealDamage(result.id, {tile.iPos, tile.jPos}, result.DamageValues.Damage)
         if dead then
-            print('amogus')
             return nil, true
         end
         DrawCards(playerID, 2)

@@ -4,7 +4,7 @@ local bcore = require 'bcore'
 
 
 function _PromptAction(statej)
-    return bcore:_PromptActionComplex(statej)
+    return bcore:_PromptActionRandom(statej)
 end
 
 
@@ -19,5 +19,5 @@ end
 
 
 function _Cleanup()
-    bcore:_Cleanup()
+    -- bcore:_Cleanup()
 end

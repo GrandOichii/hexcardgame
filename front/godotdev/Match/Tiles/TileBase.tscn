@@ -10,7 +10,7 @@ script = ExtResource("1_oyiqj")
 unique_name_in_owner = true
 visible = false
 z_index = 1
-position = Vector2(-56.9166, -266.667)
+position = Vector2(-88, -360)
 
 [node name="SizeContainer" type="MarginContainer" parent="."]
 unique_name_in_owner = true

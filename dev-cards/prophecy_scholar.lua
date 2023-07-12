@@ -6,6 +6,7 @@ function _Create(props)
     result.OnEnterP:AddLayer(function (playerID, tile)
         local card = SummonCard(result.id, playerID, 'starters::Inspiration')
         PlaceCardInHand(playerID, card.id)
+        return nil, true
     end)
     return result
 end

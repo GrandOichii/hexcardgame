@@ -1,12 +1,14 @@
+
 -- TODO not tested
 function _Create(props)
     local result = CardCreation:Unit(props)
-    result:AddSubtype('Mage')
-
-    -- TODO? move to a signal?
+    result:AddSubtype('Rogue')
+    
+    -- TODO replace with trigger
     result.OnEnterP:AddLayer(function (playerID, tile)
-        DrawCards(playerID, 2)
+        DealDamage(result.id, {tile.iPos, tile.jPos}, 1)
         return nil, true
     end)
+
     return result
 end

@@ -120,6 +120,10 @@ public class Match
     public MatchConfig Config { get; }
     public MatchLogger Logger { get; }
 
+
+    // TODO remove
+    public readonly int MaxPass = 50;
+    public int PassCount { get; set; } = 0;
     public Match(string id, MatchConfig config, CardMaster master) {
         CardMaster = master;
         Logger = new(this);

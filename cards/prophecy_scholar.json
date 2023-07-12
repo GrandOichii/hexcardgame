@@ -6,5 +6,5 @@
     "text": "When [CARDNAME] enters play, summon an [Inspiration] card into your hand.",
     "power": 3,
     "life": 3,
-    "script": "function _Create(props)\n    local result = CardCreation:Unit(props)\n    result:AddSubtype('Mage')\n\n    -- TODO move to a enter play signal\n    result.OnEnterP:AddLayer(function (playerID, tile)\n        local card = SummonCard(result.id, playerID, 'starters::Inspiration')\n        PlaceCardInHand(playerID, card.id)\n    end)\n    return result\nend"
+    "script": "function _Create(props)\n    local result = CardCreation:Unit(props)\n    result:AddSubtype('Mage')\n\n    -- TODO move to a enter play signal\n    result.OnEnterP:AddLayer(function (playerID, tile)\n        local card = SummonCard(result.id, playerID, 'starters::Inspiration')\n        PlaceCardInHand(playerID, card.id)\n        return nil, true\n    end)\n    return result\nend"
 }

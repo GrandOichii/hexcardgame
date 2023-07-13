@@ -42,7 +42,7 @@ v [Kobold Warrior]:3 ++++
     L: 2
 
 
-[Kobold Rogue]:5 ++++
+v [Kobold Rogue]:5 ++++
     Unit - Rogue
     When [CARDNAME] moves, it gains +1 power.
     P: 1
@@ -75,7 +75,7 @@ v [Kobold Mage]:4 ++++
     Summon a [Dragon Egg] into a n. tile.
 
 
-[Revert to Egg TODO]:3 +++
+[Metamorphosis]:3 +++
     Spell
     Turn caster or a n. Unit into a [Dragon Egg]. (It is still owned by it's original owner)
 

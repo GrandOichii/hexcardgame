@@ -218,6 +218,13 @@ public class Player {
     public string ID { get; }
 
     public int Energy { get; set; }
+    private int _maxEnergy;
+    public int MaxEnergy { get => _maxEnergy; set {
+        _maxEnergy = value;
+        var me =_match.Config.MaxEnergy;
+        if (_maxEnergy > me && me != -1)
+            _maxEnergy = me;
+    } }
 
     public Dictionary<MCard, string> AllCards { get; }
 

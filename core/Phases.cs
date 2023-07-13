@@ -17,9 +17,11 @@ class TurnStart : MatchPhase
 {
     public override void Exec(Match match, Player player)
     {
-        // empty energy reserve
-        player.Energy = 0;
+        // increase max energy
+        player.MaxEnergy += match.Config.EnergyPerTurn;
 
+        // replenish energy
+        player.Energy = player.MaxEnergy;
         
 
         // // replenish source count

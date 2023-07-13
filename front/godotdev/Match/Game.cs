@@ -129,6 +129,7 @@ public class SelectCard : CommandPart
 	{
 		switch (o) {
 			case HandCardBase hand:
+				// TODO make more complex
 				return hand.CardNode.LastState.AvailableActions.Contains("play");
 			case TileBase:
 				return false;

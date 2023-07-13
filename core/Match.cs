@@ -60,6 +60,13 @@ public class MatchConfig
 {
     static Random _rnd = new Random();
 
+
+    [JsonPropertyName("startingEnergy")]
+    public int StartingEnergy { get; set; } = 0;
+    [JsonPropertyName("energyPerTurn")]
+    public int EnergyPerTurn { get; set; } = 1;
+    [JsonPropertyName("maxEnergy")]
+    public int MaxEnergy { get; set; } = -1;
     [JsonPropertyName("startingHandSize")]
     public int StartingHandSize { get; set; }
     [JsonPropertyName("turnStartDraw")]

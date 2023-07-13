@@ -166,6 +166,13 @@ function Common:IsCaster(card)
 end
 
 
+function Common:Moved(card)
+    return function (playerID, args)
+        return card.id == args.mid
+    end
+end
+
+
 -- Returns a function that returns true if the card was dealt damage
 function Common:WasDealtDamage(card)
     return function (playerID, args)

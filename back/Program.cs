@@ -72,14 +72,14 @@ class Program {
     static string RunMatch() {
         // load cards
         var cm = new FileCardMaster();
-        cm.LoadCardsFrom("../cards");
+        cm.LoadCardsFrom("../cards-normal");
 
         // load decks
         var deckText = File.ReadAllText("../decks/generated.deck");
         var deckTemplate = DeckTemplate.FromText(deckText);
 
         // load match config
-        var configText = File.ReadAllText("../configs/normal.json");
+        var configText = File.ReadAllText("../configs/small.json");
         var config = MatchConfig.FromJson(configText);
 
         // match master
@@ -102,7 +102,8 @@ class Program {
         var p1Controller = TCPPC(match);
         
         // var p2Controller = new InactivePlayerController();
-        var p2Controller = new LuaPlayerController("../bots/basic.lua");
+        var p2Controller = new LuaPlayerController("../bots/random.lua");
+        // var p2Controller = new LuaPlayerController("../bots/basic.lua");
         // var p2Controller = TCPPC(match);
 
         // create players

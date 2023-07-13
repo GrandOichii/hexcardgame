@@ -69,6 +69,7 @@ ACC_MAP = {
                     end
                 end
             end
+            return 0
         end,
         me = 10,
         enemy = -10

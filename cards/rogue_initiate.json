@@ -1,0 +1,10 @@
+{
+    "name": "Rogue Initiate",
+    "cost": 2,
+    "type": "Unit - Rogue",
+    "expansion": "dev",
+    "text": "",
+    "power": 2,
+    "life": 3,
+    "script": "\n\nfunction _Create(props)\n    local result = CardCreation:Unit(props)\n    result:AddSubtype('Rogue')\n    return result\nend"
+}

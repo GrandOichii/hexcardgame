@@ -1,0 +1,8 @@
+{
+    "name": "Cast Armor",
+    "cost": 1,
+    "type": "Spell",
+    "expansion": "dev",
+    "text": "Caster gains +1 defence.",
+    "script": "-- TODO not tested\nfunction _Create(props)\n    local result = CardCreation:Spell(props)\n    result.DamageValues.damage = 2\n    result.EffectP:AddLayer(function(playerID, caster)\n        caster.baseDefence = caster.baseDefence + 1\n        caster:AddDefence(1)\n        return nil, true\n    end)\n    return result\nend"
+}

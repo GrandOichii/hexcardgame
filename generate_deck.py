@@ -9,10 +9,11 @@ DATA = json.loads(open(join(DIR, 'manifest.json'), 'r').read())
 
 result = []
 for line in DATA:
+    if line[0] == '!': continue
     card_data = json.loads(open(join(DIR, line), 'r').read())
-    if ('deckUsable' in card_data and card_data['deckUsable'] == False) or card_data['name'] == 'Mana Drill':
+    if ('deckUsable' in card_data and card_data['deckUsable'] == False):
         continue
     result += [card_data['expansion'] + '::' + card_data['name'] + f'#{EACH_CARD_COUNT}']
-result += [f'dev::Mana Drill#{int(len(result) * EACH_CARD_COUNT * MANA_DRILL_RATIO)}']
+# result += [f'dev::Mana Drill#{int(len(result) * EACH_CARD_COUNT * MANA_DRILL_RATIO)}']
 
 open('decks/generated.deck', 'w').write('|'.join(result))

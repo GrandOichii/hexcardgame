@@ -1,0 +1,10 @@
+{
+    "name": "Elven Idealist",
+    "cost": 5,
+    "type": "Unit - Warrior",
+    "expansion": "dev",
+    "text": "At the start of your turn, if [CARDNAME]'s power and life are equal, it gains +1 power and +1 life.",
+    "power": 3,
+    "life": 3,
+    "script": "-- TODO not tested\nfunction _Create(props)\n    local result = CardCreation:Unit(props)\n\n    result:AddSubtype('Warrior')\n\n    result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()\n        :Check(Common:IsOwnersTurn(result))\n        :Cost(Common:NoCost())\n        :IsSilent(false)\n        :On(TRIGGERS.TURN_START)\n        :Zone(ZONES.PLACED)\n        :Effect(function (playerID, args)\n            if result.power == result.life then\n                result.power = result.power + 1\n                result.life = result.life + 1\n            end\n        end)\n        :Build()\n\n\n    return result\nend"
+}

@@ -1,0 +1,8 @@
+{
+    "name": "Inspiration",
+    "cost": 3,
+    "type": "Spell",
+    "expansion": "starters",
+    "text": "Draw 2 cards.",
+    "script": "inspiration.lua"
+}

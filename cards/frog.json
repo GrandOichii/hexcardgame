@@ -1,0 +1,11 @@
+{
+    "name": "Frog",
+    "cost": 1,
+    "type": "Unit",
+    "expansion": "dev",
+    "text": "",
+    "power": 1,
+    "life": 1,
+    "script": "function _Create(props) return CardCreation:Unit(props) end",
+    "deckUsable": false
+}

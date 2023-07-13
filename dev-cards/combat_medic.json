@@ -1,0 +1,10 @@
+{
+    "name": "Combat Medic",
+    "cost": 3,
+    "type": "Unit",
+    "expansion": "dev",
+    "text": "At the start of your turn, [CARDNAME] restores 1 life to all your n. Units.",
+    "power": 2,
+    "life": 2,
+    "script": "combat_medic.lua"
+}

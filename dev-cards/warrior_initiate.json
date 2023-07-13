@@ -1,0 +1,10 @@
+{
+    "name": "Warrior Initiate",
+    "cost": 2,
+    "type": "Unit - Warrior",
+    "expansion": "dev",
+    "text": "",
+    "power": 2,
+    "life": 3,
+    "script": "warrior_initiate.lua"
+}

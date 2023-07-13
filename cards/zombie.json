@@ -1,0 +1,11 @@
+{
+    "name": "Zombie",
+    "cost": 2,
+    "type": "Unit",
+    "expansion": "dev",
+    "text": "",
+    "power": 2,
+    "life": 2,
+    "script": "function _Create(props) return CardCreation:Unit(props) end",
+    "deckUsable": false
+}

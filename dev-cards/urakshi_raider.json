@@ -1,0 +1,10 @@
+{
+    "name": "Urakshi Raider",
+    "cost": 3,
+    "type": "Unit - Warrior",
+    "expansion": "dev",
+    "text": "{Fast}",
+    "power": 3,
+    "life": 2,
+    "script": "urakshi_raider.lua"
+}

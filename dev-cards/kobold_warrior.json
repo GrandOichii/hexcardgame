@@ -1,0 +1,10 @@
+{
+    "name": "Kobold Warrior",
+    "cost": 3,
+    "type": "Unit - Warrior",
+    "expansion": "dev",
+    "text": "When [CARDNAME] is dealt damage, if gains +1 defence.",
+    "power": 3,
+    "life": 3,
+    "script": "kobold_warrior.lua"
+}

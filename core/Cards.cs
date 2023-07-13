@@ -99,6 +99,8 @@ public class FileCardMaster : CardMaster
 
         int result = 0;
         foreach (var cardDir in cardDirs) {
+            if (cardDir[0] == '!') continue;
+            
             var cardPath = Path.Join(dir, cardDir);
             var text = File.ReadAllText(cardPath);
             var card = JsonSerializer.Deserialize<Card>(text);

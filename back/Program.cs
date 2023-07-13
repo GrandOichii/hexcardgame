@@ -72,7 +72,7 @@ class Program {
     static string RunMatch() {
         // load cards
         var cm = new FileCardMaster();
-        cm.LoadCardsFrom("../cards-normal");
+        cm.LoadCardsFrom("../cards");
 
         // load decks
         var deckText = File.ReadAllText("../decks/generated.deck");
@@ -98,12 +98,12 @@ class Program {
         // var p1Controller = new CursesPlayerController(view);
         // var p1Controller = new QueuedActionsPlayerController();
         // var p1Controller = new InactivePlayerController();
-        // var p1Controller = new LuaPlayerController("../bots/random.lua");
-        var p1Controller = TCPPC(match);
+        var p1Controller = new LuaPlayerController("../bots/random.lua");
+        // var p1Controller = TCPPC(match);
         
         // var p2Controller = new InactivePlayerController();
-        var p2Controller = new LuaPlayerController("../bots/random.lua");
-        // var p2Controller = new LuaPlayerController("../bots/basic.lua");
+        // var p2Controller = new LuaPlayerController("../bots/random.lua");
+        var p2Controller = new LuaPlayerController("../bots/basic.lua");
         // var p2Controller = TCPPC(match);
 
         // create players
@@ -114,48 +114,6 @@ class Program {
         match.Start();
 
         return match.Winner.Name;
-    }
-
-    static async Task<string> WaitTask() {
-        await Task.Delay(30000);
-        return "";
-    }
-    
-    static async Task MainAsync() {
-
-        Dictionary<string, int> result = new(){
-            {"", 0},
-            {"P1", 0},
-            {"P2", 0},
-        };
-        
-        // while (true) {
-        //     try {
-
-        // Task.WhenAny
-        
-        for (int i = 0; i < 100; i++) {
-            Console.WriteLine("MATCH " + (i+1));
-            // var tasks = new List<Task<string>>();
-            var task1 = Task.Run(() => RunMatch());
-            var task2 = Task.Run(() => WaitTask());
-            var completed = await Task.WhenAny(task1, task2);
-
-            var winnerID = await completed;
-            result[winnerID]++;
-
-            // copy data file as backup
-            var file = "../bots/data.json";
-            var tFile = "../bots/backups/" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".json";
-            File.WriteAllBytes(tFile, File.ReadAllBytes(file)); 
-        }
-        foreach (var pair in result) {
-            Console.WriteLine(pair.Key + " -> " + pair.Value);
-        }
-        //     } catch (Exception e){
-        //         System.Console.WriteLine(e);
-        //     }
-        // }
     }
 
     static void TrainBots() {
@@ -172,7 +130,7 @@ class Program {
 
         // Task.WhenAny
         
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 10; i++) {
             Console.WriteLine("MATCH " + (i+1));
             // var tasks = new List<Task<string>>();
             // var task1 = Task.Run(() => RunMatch());
@@ -201,6 +159,7 @@ class Program {
     static void Main(string[] args)
     {
         listener.Start();
-        RunMatch();
+        // RunMatch();
+        TrainBots();
     }
 }

@@ -1,0 +1,10 @@
+{
+    "name": "Dragotha Student",
+    "cost": 3,
+    "type": "Unit - Mage",
+    "expansion": "starters",
+    "text": "When [CARDNAME] casts a Spell, it gains +1 life and +1 power.",
+    "power": 1,
+    "life": 1,
+    "script": "-- TODO not tested\nfunction _Create(props)\n    local result = CardCreation:Unit(props)\n    result:AddSubtype('Mage')\n    result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()\n        :Check(Common:IsCaster(result))\n        :Cost(Common:NoCost())\n        :IsSilent(false)\n        :On(TRIGGERS.SPELL_CAST)\n        :Zone(ZONES.PLACED)\n        :Effect(function (playerID, args)\n            result.power = result.power + 1\n            result.life = result.life + 1\n        end)\n        :Build()\n    return result\nend"
+}

@@ -1,0 +1,12 @@
+{
+    "name": "Frog",
+    "cost": 1,
+    "type": "Unit",
+    "expansion": "dev",
+    "text": "",
+    "power": 1,
+    "life": 1,
+    "script": "frog.lua",
+
+    "deckUsable": false
+}

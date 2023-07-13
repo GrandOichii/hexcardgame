@@ -1,0 +1,9 @@
+{
+    "name": "Knowledge Tower",
+    "cost": 5,
+    "type": "Structure",
+    "expansion": "starters",
+    "text": "At the start of yout turn, draw a card.",
+    "life": 5,
+    "script": "knowledge_tower.lua"
+}

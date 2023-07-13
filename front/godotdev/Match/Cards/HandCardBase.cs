@@ -22,7 +22,7 @@ public partial class HandCardBase : MarginContainer, IGamePart
 		
 		BaseColor = CardNode.Bg.Color;
 		
-		Load(CardFetcher.Instance.Get("dev::Urakshi Raider"));
+		// Load(CardFetcher.Instance.Get("dev::Urakshi Raider"));
 	}
 	
 	private void OnCollisionMouseEntered()

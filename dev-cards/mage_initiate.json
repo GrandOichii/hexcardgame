@@ -1,0 +1,10 @@
+{
+    "name": "Mage Initiate",
+    "cost": 2,
+    "type": "Unit - Mage",
+    "expansion": "dev",
+    "text": "",
+    "power": 2,
+    "life": 3,
+    "script": "mage_initiate.lua"
+}

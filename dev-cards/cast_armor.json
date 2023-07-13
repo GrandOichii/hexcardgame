@@ -1,0 +1,8 @@
+{
+    "name": "Cast Armor",
+    "cost": 1,
+    "type": "Spell",
+    "expansion": "dev",
+    "text": "Caster gains +1 defence.",
+    "script": "cast_armor.lua"
+}

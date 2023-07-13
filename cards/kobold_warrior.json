@@ -1,0 +1,10 @@
+{
+    "name": "Kobold Warrior",
+    "cost": 3,
+    "type": "Unit - Warrior",
+    "expansion": "dev",
+    "text": "When [CARDNAME] is dealt damage, if gains +1 defence.",
+    "power": 3,
+    "life": 3,
+    "script": "\n-- TODO not tested\nfunction _Create(props)\n    local result = CardCreation:Unit(props)\n    result:AddSubtype('Warrior')\n    result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()\n        :Check(Common:WasDealtDamage(result))\n        :Cost(Common:NoCost())\n        :IsSilent(false)\n        :On(TRIGGERS.DAMAGE_DEALT)\n        :Zone(ZONES.PLACED)\n        :Effect(function (playerID, args)\n            result.baseDefence = result.baseDefence + 1\n            result:AddDefence(1)\n        end)\n        :Build()\n    return result\nend"
+}

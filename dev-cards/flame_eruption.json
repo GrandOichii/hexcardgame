@@ -1,0 +1,8 @@
+{
+    "name": "Flame Eruption",
+    "cost": 3,
+    "type": "Spell",
+    "expansion": "dev",
+    "text": "Deal 2 damage to all n. enemy Structures/Units.",
+    "script": "flame_eruption.lua"
+}

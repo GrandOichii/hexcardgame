@@ -1,0 +1,10 @@
+{
+    "name": "Dragotha Student",
+    "cost": 3,
+    "type": "Unit - Mage",
+    "expansion": "starters",
+    "text": "When [CARDNAME] casts a Spell, it gains +1 life and +1 power.",
+    "power": 1,
+    "life": 1,
+    "script": "dragotha_student.lua"
+}

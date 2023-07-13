@@ -1,0 +1,10 @@
+{
+    "name": "Prophecy Scholar",
+    "cost": 4,
+    "type": "Unit - Mage",
+    "expansion": "dev",
+    "text": "When [CARDNAME] enters play, summon an [Inspiration] card into your hand.",
+    "power": 3,
+    "life": 3,
+    "script": "prophecy_scholar.lua"
+}

@@ -1,0 +1,10 @@
+{
+    "name": "Urakshi Raider",
+    "cost": 3,
+    "type": "Unit - Warrior",
+    "expansion": "dev",
+    "text": "{Fast}",
+    "power": 3,
+    "life": 2,
+    "script": "\nfunction _Create(props)\n    local result = CardCreation:Unit(props)\n\n    result:AddSubtype('Warrior')\n\n    -- TODO replace with special keyword\n    result.OnEnterP:AddLayer(function (playerID, tile)\n        result.movement = result.maxMovement\n        return nil, true\n    end)\n\n    return result\nend"
+}

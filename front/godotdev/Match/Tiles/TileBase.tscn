@@ -10,16 +10,16 @@ script = ExtResource("1_oyiqj")
 unique_name_in_owner = true
 visible = false
 z_index = 1
-position = Vector2(-88, -360)
+position = Vector2(-52, -360)
 
 [node name="SizeContainer" type="MarginContainer" parent="."]
 unique_name_in_owner = true
 process_mode = 4
-offset_right = 71.0
-offset_bottom = 64.0
+offset_right = 144.0
+offset_bottom = 128.0
 
 [node name="Node2D" type="Node2D" parent="."]
-scale = Vector2(0.25, 0.25)
+scale = Vector2(0.5, 0.5)
 
 [node name="Collision" type="Area2D" parent="Node2D"]
 position = Vector2(36, 32)

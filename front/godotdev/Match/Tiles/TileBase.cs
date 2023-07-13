@@ -51,7 +51,7 @@ public partial class TileBase : Node2D, IGamePart
 			
 			CoordsLabel.Text = _coords.Y + "." + _coords.X;
 			if (_coords.Y < Game.Instance.LastState.Map.Tiles.Count / 2) {
-				HoverCard.Position = new Vector2(HoverCard.Position.X, 66);
+				HoverCard.Position = new Vector2(HoverCard.Position.X, 138);
 			}
 		}
 	} 

@@ -59,6 +59,44 @@ end
 
 
 ACC_MAP = {
+    castle_distance_y = {
+        fun = function (state, pID)
+            local tiles = state.map.tiles
+            local castleY = nil
+            local unit_ys = {}
+            for i, row in ipairs(tiles) do
+                for j, tile in ipairs(row) do
+                    -- check if is castle
+                    if TableLength(tile) ~= 0 and TableLength(tile.entity) ~= 0 then
+                        local en = tile.entity
+                        if en.ownerID == pID then
+                            if string.find(en.type, 'Unit') then
+                                unit_ys[#unit_ys+1] = i
+                            end
+                        else
+                            if en.name == 'Castle' then
+                                castleY = i
+                            end
+                        end
+                    end
+
+                end
+            end
+            local closestD = nil
+            for _, y in ipairs(unit_ys) do
+                local v = math.abs(castleY - y)
+                if closestD == nil or v < closestD then
+                    closestD = v
+                end
+            end
+            if closestD == nil then
+                closestD = #tiles
+            end
+            return #tiles - closestD
+        end,
+        me = 10,
+        enemy = -5
+    },
     castle_life = {
         fun = function (state, pID)
             local tiles = state.map.tiles

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://b4tl5feshjdhk"]
+
+[ext_resource type="PackedScene" uid="uid://b5b455505igso" path="res://Match/Tiles/TileBase.tscn" id="1_qlwtc"]
+
+[node name="EntityBase" type="Node2D"]
+
+[node name="TileBase" parent="." instance=ExtResource("1_qlwtc")]

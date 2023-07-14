@@ -7,14 +7,11 @@ using Mindmagma.Curses;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
-// using NCurses;
 
 
 class QueuedActionsPlayerController : PlayerController
 {
     public Queue<string> ActionQueue { get; } = new(new string[] {
-        // "pass",
-        // "play 14 12.1"
     });
 
     public override string DoPromptAction(Player player, Match match)
@@ -98,8 +95,8 @@ class Program {
         // var p1Controller = new CursesPlayerController(view);
         // var p1Controller = new QueuedActionsPlayerController();
         // var p1Controller = new InactivePlayerController();
-        var p1Controller = new LuaPlayerController("../bots/random.lua");
-        // var p1Controller = TCPPC(match);
+        // var p1Controller = new LuaPlayerController("../bots/random.lua");
+        var p1Controller = TCPPC(match);
         
         // var p2Controller = new InactivePlayerController();
         // var p2Controller = new LuaPlayerController("../bots/random.lua");
@@ -159,7 +156,13 @@ class Program {
     static void Main(string[] args)
     {
         listener.Start();
-        // RunMatch();
-        TrainBots();
+        while (true) {
+            try {
+                RunMatch(); 
+            } catch (Exception ex) {
+                System.Console.WriteLine(ex);
+            }
+        }
+        // TrainBots();
     }
 }

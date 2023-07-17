@@ -6,12 +6,16 @@ using core.tiles;
 
 public partial class TileBase : Node2D, IGamePart
 {
+#nullable enable
+	public EntityBase? Entity { get; set; } = null;
+#nullable disable
+
 	private Polygon2D Bg;
 	private Polygon2D Fg;
 	private Label CoordsLabel;
-	private Label PowerLabel;
-	private Label LifeLabel;
-	private Label DefenceLabel;	
+	// private Label PowerLabel;
+	// private Label LifeLabel;
+	// private Label DefenceLabel;	
 	private CardBase HoverCard;
 	private MarginContainer SizeContainer;
 	
@@ -22,11 +26,6 @@ public partial class TileBase : Node2D, IGamePart
 	private Color BaseColor = new Color(0, 0, 0);
 	private Color HoverColor = new Color(0, 0, 1);
 
-	static private readonly Dictionary<string, Color> PlayerColors = new() {
-		{"", new Color(1, 1, 1)},		
-		{"1", new Color(1, 0, 0)},
-		{"2", new Color(0, 1, 0)},
-	};
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -34,9 +33,9 @@ public partial class TileBase : Node2D, IGamePart
 		Bg = GetNode<Polygon2D>("%Bg");
 		Fg = GetNode<Polygon2D>("%Fg");
 		SizeContainer = GetNode<MarginContainer>("%SizeContainer");		
-		PowerLabel = GetNode<Label>("%PowerLabel");
-		LifeLabel = GetNode<Label>("%LifeLabel");
-		DefenceLabel = GetNode<Label>("%DefenceLabel");
+		// PowerLabel = GetNode<Label>("%PowerLabel");
+		// LifeLabel = GetNode<Label>("%LifeLabel");
+		// DefenceLabel = GetNode<Label>("%DefenceLabel");
 		
 		CoordsLabel = GetNode<Label>("%CoordsLabel");
 		HoverCard = GetNode<CardBase>("%HoverCard");
@@ -71,22 +70,22 @@ public partial class TileBase : Node2D, IGamePart
 			return;
 		}
 		PlayerID = state?.OwnerID;
-		var powerS = "";
-		var lifeS = "";
-		var defenceS = "";
+		// var powerS = "";
+		// var lifeS = "";
+		// var defenceS = "";
 		var en = state?.Entity;
 		if (en is not null) {
 			MCardState card = (MCardState)en;
-			lifeS = card.Life.ToString();
-			if (card.Power > 0)
-				powerS = card.Power.ToString();
-			if (card.HasDefence)
-				defenceS = "+" + card.Defence.ToString();
+			// lifeS = card.Life.ToString();
+			// if (card.Power > 0)
+			// 	powerS = card.Power.ToString();
+			// if (card.HasDefence)
+			// 	defenceS = "+" + card.Defence.ToString();
 			HoverCard.Load(card);
 		}
-		PowerLabel.Text = powerS;
-		LifeLabel.Text = lifeS;
-		DefenceLabel.Text = defenceS;	
+		// PowerLabel.Text = powerS;
+		// LifeLabel.Text = lifeS;
+		// DefenceLabel.Text = defenceS;	
 	}
 
 	private string _playerID;
@@ -94,7 +93,8 @@ public partial class TileBase : Node2D, IGamePart
 		get => _playerID;
 		set {
 			_playerID = value;
-			var color = PlayerColors[value];
+			GD.Print(value);
+			var color = Game.Instance.PlayerColors[value];
 			Bg.Color = new Color(0, 0, 0);
 			Fg.Color = color;
 		}

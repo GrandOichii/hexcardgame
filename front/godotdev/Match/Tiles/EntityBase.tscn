@@ -1,7 +1,117 @@
-[gd_scene load_steps=2 format=3 uid="uid://b4tl5feshjdhk"]
+[gd_scene load_steps=4 format=3 uid="uid://b4tl5feshjdhk"]
 
-[ext_resource type="PackedScene" uid="uid://b5b455505igso" path="res://Match/Tiles/TileBase.tscn" id="1_qlwtc"]
+[ext_resource type="Script" path="res://Match/Tiles/EntityBase.cs" id="1_in0gv"]
+[ext_resource type="PackedScene" uid="uid://b5b455505igso" path="res://Match/Tiles/TileBase.tscn" id="2_sg5x8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vc54f"]
+bg_color = Color(0, 0, 0.627451, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="EntityBase" type="Node2D"]
+script = ExtResource("1_in0gv")
 
-[node name="TileBase" parent="." instance=ExtResource("1_qlwtc")]
+[node name="TileBase" parent="." instance=ExtResource("2_sg5x8")]
+visible = false
+
+[node name="Bg" type="Polygon2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(19, 16)
+scale = Vector2(0.375, 0.375)
+polygon = PackedVector2Array(64, 256, 224, 256, 288, 128, 224, 0, 64, 0, 0, 128)
+
+[node name="TimerPolys" type="Node2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(72, 64)
+
+[node name="TimerPoly0" type="Polygon2D" parent="TimerPolys"]
+color = Color(1, 0, 1, 1)
+offset = Vector2(3, -1)
+polygon = PackedVector2Array(-32, -47, 28, -47, 25.3, -42.2, -28.7, -42.2)
+
+[node name="TimerPoly1" type="Polygon2D" parent="TimerPolys"]
+color = Color(1, 0, 1, 1)
+offset = Vector2(3, -1)
+polygon = PackedVector2Array(52, 1, 28, -47, 25.3, -42.2, 46.9, 1)
+
+[node name="TimerPoly2" type="Polygon2D" parent="TimerPolys"]
+color = Color(1, 0, 1, 1)
+offset = Vector2(3, -1)
+polygon = PackedVector2Array(52, 1, 28, 49, 24.7, 44.2, 46.9, 1)
+
+[node name="TimerPoly3" type="Polygon2D" parent="TimerPolys"]
+position = Vector2(2, 0)
+rotation = 3.14159
+color = Color(1, 0, 1, 1)
+offset = Vector2(3, -1)
+polygon = PackedVector2Array(-32, -47, 28, -47, 25.3, -42.2, -28.7, -42.2)
+
+[node name="TimerPoly4" type="Polygon2D" parent="TimerPolys"]
+position = Vector2(2, 0)
+rotation = 3.14159
+color = Color(1, 0, 1, 1)
+offset = Vector2(3, -1)
+polygon = PackedVector2Array(52, 0.999992, 28, -47, 25.3, -42.2, 46.3, 1)
+
+[node name="TimerPoly5" type="Polygon2D" parent="TimerPolys"]
+position = Vector2(2, 0)
+rotation = 3.14159
+color = Color(1, 0, 1, 1)
+offset = Vector2(3, -1)
+polygon = PackedVector2Array(52, 0.999992, 28, 49, 24.7, 44.2, 46.3, 1)
+
+[node name="Info" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 36.0
+offset_top = 44.0
+offset_right = 113.0
+offset_bottom = 84.0
+
+[node name="CanMoveRect" type="Panel" parent="Info"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 28.0
+offset_top = 45.0
+offset_right = 44.0
+offset_bottom = 61.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_vc54f")
+
+[node name="Info" type="HBoxContainer" parent="Info"]
+process_mode = 4
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PowerLabel" type="Label" parent="Info/Info"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.403922, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "2"
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Info/Info"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="LifeLabel" type="Label" parent="Info/Info/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_colors/font_color = Color(0, 0.290196, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "3"
+vertical_alignment = 1
+
+[node name="DefenceLabel" type="Label" parent="Info/Info/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.270588, 0.270588, 0.270588, 1)
+theme_override_font_sizes/font_size = 24
+vertical_alignment = 1

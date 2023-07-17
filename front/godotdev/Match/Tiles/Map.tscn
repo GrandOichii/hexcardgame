@@ -12,3 +12,8 @@ z_index = 10
 position = Vector2(64, -8)
 color = Color(0.541176, 0.513726, 0.654902, 1)
 polygon = PackedVector2Array(48, -8, 48, -16, 64, -4, 48, 8, 48, 0, 0, 0, 0, -8)
+
+[node name="Tiles" type="Node2D" parent="."]
+
+[node name="Entities" type="Node2D" parent="."]
+unique_name_in_owner = true

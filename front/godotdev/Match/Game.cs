@@ -1,13 +1,15 @@
-using core.cards;
-using core.match.states;
 using Godot;
 using Shared;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 
+using core.match.states;
+
 public class Game
 {
+	public Dictionary<string, MCardState> CurrentEntities { get; set; }=new();
+	public Dictionary<string, int[]> CurrentPositions { get; set; }=new();
 	public TcpClient Client { get; }
 	static public Game Instance { get; } = new Game();
 
@@ -17,9 +19,17 @@ public class Game
 
 
 	public List<string> Action { get; set; }=new();
-	
+
+	public readonly Color P1Color = new Color(.8f, 0, 0);
+	public readonly Color P2Color = new Color(0, .8f, 0);
+	public readonly Dictionary<string, Color> PlayerColors = new();
+
 	private Game() {
 		Client = new();
+
+		PlayerColors.Add("", Colors.White);
+		PlayerColors.Add("1", P1Color);
+		PlayerColors.Add("2", P2Color);
 	}
 
 	public void AddToAction(string message) {

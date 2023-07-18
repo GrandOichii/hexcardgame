@@ -31,7 +31,7 @@ n. - neighboring
     L: 2
     
     
-[Fort]:3
+[Fort]:4
     Structure
     Your n. tiles have +1 defence.
     T: 5
@@ -81,11 +81,6 @@ n. - neighboring
     Spell's cast by [CARDNAME] cost 1 less energy to cast.
     P: 4
     L: 3
-
-
-[Dub]:2
-    Spell
-    Caster becomes a Warrior. (Is still a Mage)
 
 
 [TODO]:TODO
@@ -217,7 +212,7 @@ n. - neighboring
 
 [Baar Swamp Traveller]:2
     Unit - Rogue
-    When [CARDNAME] dies, replace it with a [Zombie].
+    When [CARDNAME] dies, it's grave into a [Zombie].
     P: 2
     L: 2
 
@@ -236,7 +231,7 @@ n. - neighboring
 
 [Second Circle Paladin]:3
     Unit - Warrior
-    When [CARDNAME] enters play, discard a [Healing Light] card. If you don't, [CARDNAME] gains +3 power and +3 life.
+    When [CARDNAME] enters play, discard a [Healing Light] card. If you do, [CARDNAME] gains +3 power and +3 life.
     P: 3
     L: 3
 

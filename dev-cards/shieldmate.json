@@ -1,0 +1,10 @@
+{
+    "name": "Shieldmate",
+    "cost": 3,
+    "type": "Unit - Warrior",
+    "expansion": "dev",
+    "text": "",
+    "power": 1,
+    "life": 5,
+    "script": "shieldmate.lua"
+}

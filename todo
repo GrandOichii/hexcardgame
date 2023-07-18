@@ -21,7 +21,6 @@
     - add cancelling of effects (use out variable)
 
 - godot front
-    - separate tiles from entities
     - add card pictures
     - add animations
 

@@ -11,21 +11,6 @@ Expansion: starters
 6 ++++
 7 
 
-v [!Dragon Hatchling]:5 
-    Unit
-    {Fast}
-    At the start of your turn, [CARDNAME] deals 1 damage to each n. Unit/Structure.
-    P: 5
-    L: 4
-
-
-v [!Full Grown Dragon]:10
-    Unit
-    {Fast}
-    At the start of your turn, [CARDNAME] deals 3 damage to each n. Unit/Structure.
-    P: 9
-    L: 8
-
 
 [Dragon Egg]:3 ++++
     Unit
@@ -33,27 +18,6 @@ v [!Full Grown Dragon]:10
     When [CARDNAME] dies, it turns into a [Dragon Hatchling].
     P: 0
     L: 10
-
-
-v [Kobold Warrior]:3 ++++
-    Unit - Warrior
-    When [CARDNAME] is dealt damage, it gains +1 defence.
-    P: 3
-    L: 2
-
-
-v [Kobold Rogue]:5 ++++
-    Unit - Rogue
-    When [CARDNAME] moves, it gains +1 power.
-    P: 1
-    L: 3
-
-
-v [Kobold Mage]:4 ++++
-    Unit - Mage
-    When [CARDNAME] casts a spell, it deals 1 damage to all n. Units/Structures.
-    P: 3
-    L: 3
 
 
 [Kobold Nurturer]:6 ++++
@@ -88,3 +52,40 @@ v [Scorch the Earth]:5 ++
 v [Firestone Tower]:4 +++
     Structure
     At the start of your turn, [CARDNAME] deals 1 damage to each n. Unit/Structure.
+
+
+v [Kobold Warrior]:3 ++++
+    Unit - Warrior
+    When [CARDNAME] is dealt damage, it gains +1 defence.
+    P: 3
+    L: 2
+
+
+v [Kobold Rogue]:5 ++++
+    Unit - Rogue
+    When [CARDNAME] moves, it gains +1 power.
+    P: 1
+    L: 3
+
+
+v [Kobold Mage]:4 ++++
+    Unit - Mage
+    When [CARDNAME] casts a spell, it deals 1 damage to all n. Units/Structures.
+    P: 3
+    L: 3
+
+
+v [!Dragon Hatchling]:5 
+    Unit
+    {Fast}
+    At the start of your turn, [CARDNAME] deals 1 damage to each n. Unit/Structure.
+    P: 5
+    L: 4
+
+
+v [!Full Grown Dragon]:10
+    Unit
+    {Fast}
+    At the start of your turn, [CARDNAME] deals 3 damage to each n. Unit/Structure.
+    P: 9
+    L: 8

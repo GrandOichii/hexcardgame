@@ -93,7 +93,6 @@ public partial class TileBase : Node2D, IGamePart
 		get => _playerID;
 		set {
 			_playerID = value;
-			GD.Print(value);
 			var color = Game.Instance.PlayerColors[value];
 			Bg.Color = new Color(0, 0, 0);
 			Fg.Color = color;

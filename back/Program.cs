@@ -156,13 +156,13 @@ class Program {
     static void Main(string[] args)
     {
         listener.Start();
-        while (true) {
-            try {
-                RunMatch(); 
-            } catch (Exception ex) {
-                System.Console.WriteLine(ex);
-            }
-        }
+        // while (true) {
+        //     try {
+                RunMatch();
+        //     } catch (Exception ex) {
+        //         System.Console.WriteLine(ex);
+        //     }
+        // }
         // TrainBots();
     }
 }

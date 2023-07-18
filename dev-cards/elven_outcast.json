@@ -4,7 +4,7 @@
     "type": "Unit - Rogue",
     "expansion": "dev",
     "text": "When [CARDNAME] enters play, it deals 1 damage to itself.",
-    "power": 4,
-    "life": 4,
+    "power": 3,
+    "life": 3,
     "script": "elven_outcast.lua"
 }

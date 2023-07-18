@@ -107,17 +107,21 @@ public partial class Match : Node2D
 		var sameKeys = SameKeys(newEn, Game.Instance.CurrentEntities);
 		
 		// remove old entities
-		for (int i = 0; i < EntitiesNode.GetChildCount(); i++) {
+		for (int i = EntitiesNode.GetChildCount() - 1; i >= 0; i--) {
 			var child = EntitiesNode.GetChild<EntityBase>(i);
 			var mid = child.LastState.MID;
 			if (!removedEntities.ContainsKey(mid)) continue;
 
-			EntitiesNode.RemoveChild(child);
-			child.Free();
-
 			var pos = Game.Instance.CurrentPositions[mid];
 			var t = MapContainer.Tiles[pos[0]][pos[1]];
 			t.Entity = null;
+
+			GD.Print("Removing " + child.LastState.ID + " " + child.LastState.MID + " at " + pos[0] + "." + pos[1]);
+			// TODO doesn't remove
+			EntitiesNode.RemoveChild(child);
+			// child.Free();
+			child.QueueFree();
+
 		}
 		// add new entities
 		foreach (var pair in addedEntities) {

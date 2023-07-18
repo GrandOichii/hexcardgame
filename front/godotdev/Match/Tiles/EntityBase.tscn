@@ -63,6 +63,7 @@ offset = Vector2(3, -1)
 polygon = PackedVector2Array(52, 0.999992, 28, 49, 24.7, 44.2, 46.3, 1)
 
 [node name="Info" type="Control" parent="."]
+process_mode = 4
 layout_mode = 3
 anchors_preset = 0
 offset_left = 36.0
@@ -80,7 +81,6 @@ offset_bottom = 61.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_vc54f")
 
 [node name="Info" type="HBoxContainer" parent="Info"]
-process_mode = 4
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

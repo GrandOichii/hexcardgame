@@ -62,7 +62,6 @@ public partial class EntityBase : Node2D, IGamePart
 		LifeLabel.Text = lifeS;
 		DefenceLabel.Text = defenceS;	
 
-		// TODO sometimes is still present for some reason
 		CanMoveNode.Visible = state.Movement > 0;
 	}
 }

@@ -1,0 +1,11 @@
+{
+    "name": "Mountain Monk",
+    "cost": 2,
+    "type": "Unit",
+    "expansion": "dev",
+    "text": "Every 2 turns, [CARDNAME] gains +1 power and +1 life.",
+    "power": 1,
+    "life": 1,
+    "script": "function _Create(props) \n    local result = CardCreation:Unit(props) \n    result:AddTimer(2, function ()\n        result.power = result.power + 1\n        result.life = result.life + 1\n    end)\n    return result\nend",
+    "deckUsable": false
+}

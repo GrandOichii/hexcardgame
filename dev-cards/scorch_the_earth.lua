@@ -1,5 +1,3 @@
-
--- TODO caused exception
 function _Create(props)
     local result = CardCreation:Spell(props)
     result.DamageValues.Damage = 3

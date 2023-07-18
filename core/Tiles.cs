@@ -97,7 +97,6 @@ public class Map {
     /// <param name="config">Match configuration</param>
     /// <returns>Constructed map</returns>
     static public Map FromConfig(Match match, MatchConfig config) {
-        // TODO
         var map = config.Map;
         var setupScript = config.SetupScript;
         var height = map.Count;

@@ -101,13 +101,6 @@ class MainPhase : MatchPhase
             } else {
                 match.PassCount = 0;
             }
-
-            // TODO remove
-            if (actionWord == "quit")
-            {
-                match.Winner = player;
-                return;
-            }
             
             if (!ACTION_MAP.ContainsKey(actionWord)) {
                 if (!match.StrictMode) continue;

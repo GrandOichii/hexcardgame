@@ -1,4 +1,3 @@
--- TODO not tested
 function _Create(props)
     local result = CardCreation:Structure(props)
     result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()

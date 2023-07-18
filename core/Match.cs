@@ -195,7 +195,6 @@ public class Match
         SystemLogger.Log("MATCH", "Started main match loop");
 
         Logger.ParseAndLog("Match started");
-        // TODO
         while (Winner is null) {
             View.Update(this);
             var cPlayer = CurrentPlayer;
@@ -280,7 +279,6 @@ public class Match
                     if (on != signal) continue;
 
                     var trigger = new Trigger(triggerRaw);
-                    // TODO something else
                     SystemLogger.Log("MATCH", "Card " + card.ShortStr + " in zone " + zone + " of player " + player.ShortStr + " has a potential trigger");
 
                     var triggered = trigger.ExecCheck(LState, player, args);

@@ -6,5 +6,5 @@
     "text": "When [CARDNAME] enters play, draw 2 cards.",
     "power": 3,
     "life": 2,
-    "script": "-- TODO not tested\nfunction _Create(props)\n    local result = CardCreation:Unit(props)\n    result:AddSubtype('Mage')\n\n    -- TODO? move to a signal?\n    result.OnEnterP:AddLayer(function (playerID, tile)\n        DrawCards(playerID, 2)\n        return nil, true\n    end)\n    return result\nend"
+    "script": "function _Create(props)\n    local result = CardCreation:Unit(props)\n    result:AddSubtype('Mage')\n\n    -- TODO? move to a signal?\n    result.OnEnterP:AddLayer(function (playerID, tile)\n        DrawCards(playerID, 2)\n        return nil, true\n    end)\n    return result\nend"
 }

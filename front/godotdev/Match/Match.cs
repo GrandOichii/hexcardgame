@@ -117,10 +117,8 @@ public partial class Match : Node2D
 			t.Entity = null;
 
 			GD.Print("Removing " + child.LastState.ID + " " + child.LastState.MID + " at " + pos[0] + "." + pos[1]);
-			// TODO doesn't remove
 			EntitiesNode.RemoveChild(child);
-			// child.Free();
-			child.QueueFree();
+			child.Free();
 
 		}
 		// add new entities

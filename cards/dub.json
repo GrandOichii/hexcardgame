@@ -4,5 +4,5 @@
     "type": "Spell",
     "expansion": "dev",
     "text": "Caster becomes a Warrior. (Keeps all other types)",
-    "script": "-- TODO not tested\nfunction _Create(props)\n    local result = CardCreation:Spell(props)\n    result.DamageValues.damage = 2\n    result.EffectP:AddLayer(function(playerID, caster)\n        caster.type = caster.type..' Warrior'\n        caster:AddSubtype('Warrior')\n        return nil, true\n    end)\n    return result\nend"
+    "script": "function _Create(props)\n    local result = CardCreation:Spell(props)\n    result.DamageValues.damage = 2\n    result.EffectP:AddLayer(function(playerID, caster)\n        caster.type = caster.type..' Warrior'\n        caster:AddSubtype('Warrior')\n        return nil, true\n    end)\n    return result\nend"
 }

@@ -1,4 +1,3 @@
--- TODO not tested
 function _Create(props)
     local result = CardCreation:Spell(props)
     result.DamageValues.damage = 2

@@ -1,0 +1,12 @@
+{
+    "name": "Mountain Monk",
+    "cost": 2,
+    "type": "Unit",
+    "expansion": "dev",
+    "text": "Every 2 turns, [CARDNAME] gains +1 power and +1 life.",
+    "power": 1,
+    "life": 1,
+    "script": "mountain_monk.lua",
+
+    "deckUsable": false
+}

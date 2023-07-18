@@ -50,7 +50,6 @@ public class ScriptMaster {
         if (jPos is null) {
             throw new Exception("Invalid point coordinates");
         }
-        // TODO explicit cast - bad
         return new int[] {(int)iPos, (int)jPos};
     }
 
@@ -125,8 +124,6 @@ public class ScriptMaster {
                 return;
             }
 
-
-            // TODO for some reason pID is null, problem with setupScript
             var player = _match.PlayerWithID(pID);
 
             tile.Owner = player;
@@ -320,7 +317,7 @@ public class ScriptMaster {
     /// <returns>The summoned card's data</returns>
     [LuaCommand]
     public LuaTable SummonCard(string fromMID, string ownerID, string cID) {
-        // TODO fromMID not utilized yet
+        // TODO? fromMID not utilized yet
         var player = _match.PlayerWithID(ownerID);
         var fromC = _match.GetCard(fromMID);
         var card = _match.CardMaster.Get(cID);

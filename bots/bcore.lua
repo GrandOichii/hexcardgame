@@ -558,7 +558,6 @@ function PickAction(actions)
     -- print('MIN: '..min)
     -- subtract the minimum
     for i, _ in ipairs(valueA) do
-        -- TODO? -1 is for a little chance, need to remove?
         valueA[i] = valueA[i] - min
         if i > 1 then
             valueA[i] = valueA[i] + valueA[i-1]

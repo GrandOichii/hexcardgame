@@ -65,26 +65,22 @@ class PlayCardAction : GameAction
         var pointRaw = args[2];
         var tile = match.Map.TileAt(pointRaw);
         if (tile is null) {
-            // TODO? don't throw exception
             if (!match.StrictMode) return;
             throw new Exception("Cannot play a card on point " + pointRaw + ": it is empty");
         }
 
         var card = player.Hand[mID];
         if (card is null) {
-            // TODO? don't throw exception
             if (!match.StrictMode) return;
             throw new Exception("Player " + player.ShortStr + " cannot play a card with mID " + mID + ": they don't have it in their hand");
         }
 
         if (card.IsPlaceable) {
             if (tile.Owner != player) {
-                // TODO? don't throw exception
                 if (!match.StrictMode) return;
                 throw new Exception("Can't place entity on tile " + pointRaw + ": it's not owned by " + player.ShortStr);
             }
             if (tile.Entity is object) {
-                // TODO? don't throw exception
                 if (!match.StrictMode) return; 
                 throw new Exception("Can't place entity on tile " + pointRaw + ": it is already taken");
             }
@@ -106,17 +102,14 @@ class PlayCardAction : GameAction
 
         var caster = tile.Entity;
         if (caster is null) {
-            // TODO? don't throw exception
             if (!match.StrictMode) return;
             throw new Exception("Failed to cast spell " + card.ShortStr + ": tile at " + args[2] + " has no entity");
         }
         if (caster.Owner != player) {
-            // TODO? don't throw exception
             if (!match.StrictMode) return;
             throw new Exception("Failed to cast spell " + card.ShortStr + ": entity at " + args[2] + " is not owned by the player who played the spell");
         }
         if (!caster.Type.Contains("Mage")) {
-            // TODO? don't throw exception
             if (!match.StrictMode) return;
             throw new Exception("Failed to cast spell " + card.ShortStr + ": entity at " + args[2] + " is not a Mage");
         }
@@ -158,31 +151,24 @@ class MoveAction : GameAction
 
         var tile = match.Map.TileAt(args[1]);
 
-        // TODO better errors
         if (tile is null) {
-            // TODO? don't throw exception
             if (!match.StrictMode) return;
             throw new Exception("Invalid point argument for move action: tile is null");
         }
         var en = tile.Entity;
         if (en is null) {
-            // TODO? don't throw exception
             if (!match.StrictMode) return;
             throw new Exception("Invalid point argument for move action: tile has no entity to be moved");
         }
         if (en.Owner != player) {
-            // TODO? don't throw exception
             if (!match.StrictMode) return;
             throw new Exception("Invalid point argument for move action: entity is not owned by the player");
         }
         if (!en.IsUnit) {
-            // TODO? don't throw exception
             if (!match.StrictMode) return;
             throw new Exception("Invalid point argument for move action: entity is not a Unit");
         }
-        // TODO movement
         if (!en.CanMove) {
-            // TODO? don't throw exception
             if (!match.StrictMode) return;
             throw new Exception("Invalid point argument for move action: unit has no movement points left");
         }
@@ -191,7 +177,6 @@ class MoveAction : GameAction
         var newTile = match.Map.GetNeighbor(tile.IPos, tile.JPos, dir);
 
         if (newTile is null) {
-            // TODO? don't throw exception
             if (!match.StrictMode) return;
             throw new Exception("Can't move to tile with args: " + args[1] + " " + args[2] + ": it is empty");
         }
@@ -202,7 +187,6 @@ class MoveAction : GameAction
         if (targetEn is not null) {
             var owner = targetEn.Owner;
             if (owner == player) {
-                // TODO? don't throw exception
                 if (!match.StrictMode) return;
                 throw new Exception("Can't move to tile with args: " + args[1] + " " + args[2] + ": it already has an entity that is owned by the same player.");
             }

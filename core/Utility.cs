@@ -51,7 +51,6 @@ public class FileLogger : Logger
         Stream = File.OpenWrite(path);
     }
 
-    // TODO not tested
     public override void Log(string prefix, string text)
     {
         string data = prefix + ": " + text + "\n";
@@ -172,7 +171,6 @@ static class LuaUtility {
         CheckIndex(returned, index);
         var result = returned[index] as bool?;
         if (result is null) throw new Exception("Return value in index " + index + " is not a table");
-        // TODO casting is bad
         return (bool)result;
     }
 
@@ -185,7 +183,6 @@ static class LuaUtility {
     static public long GetLong(LuaTable table, string name) {
         var f = table[name] as long?;
         if (f is null) throw new GLuaTableException(table, "Failed to get long " + name + " from Lua table ");
-        // TODO bad cast?
         return (long)f;
     }
 
@@ -198,7 +195,6 @@ static class LuaUtility {
     static public bool GetBool(LuaTable table, string name) {
         var f = table[name] as bool?;
         if (f is null) throw new GLuaTableException(table, "Failed to get bool " + name + " from Lua table ");
-        // TODO bad cast?
         return (bool)f;
     }
 
@@ -212,7 +208,6 @@ static class LuaUtility {
     static public T TableGet<T>(LuaTable table, string name) where T : class {
         var f = table[name] as T;
         if (f is null) throw new GLuaTableException(table, "Failed to get T " + name + " from Lua table ");
-        // TODO bad cast?
         return (T)f;
     }
 }

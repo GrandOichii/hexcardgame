@@ -141,7 +141,6 @@ public class MCard {
 
     public long MaxMovement => LuaUtility.GetLong(Data, "maxMovement");
     public long Movement => LuaUtility.GetLong(Data, "movement");
-    // TODO? move defence to a class field
     public long BaseDefence => LuaUtility.GetLong(Data, "baseDefence");
     public long Defence => LuaUtility.GetLong(Data, "defence");
     public long MaxDefence => LuaUtility.GetLong(Data, "maxDefence");
@@ -151,7 +150,7 @@ public class MCard {
         return LuaUtility.GetLong(Data, "power");
     }}
     public long Cost { get {
-        // TODO create separate power pipeline
+        // TODO create separate cost pipeline
         return LuaUtility.GetLong(Data, "cost");
     }}
     public long Life => LuaUtility.GetLong(Data, "life");

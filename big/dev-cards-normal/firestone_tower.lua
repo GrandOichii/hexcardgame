@@ -1,4 +1,3 @@
--- TODO not tested
 function _Create(props)
     local result = CardCreation:Structure(props)
     result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()
@@ -8,7 +7,6 @@ function _Create(props)
         :On(TRIGGERS.TURN_START)
         :Zone(ZONES.PLACED)
         :Effect(function (playerID, args)
-            -- TODO threw an exception
             local tile = GetTileWith(result.id)
             local neighbors = GetNeighbors({ tile.iPos, tile.jPos })
             for _, neighbor in ipairs(neighbors) do

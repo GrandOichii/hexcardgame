@@ -383,10 +383,36 @@ function CardCreation:Placeable(props)
 
     -- Removes defence from entity. !Does not modify the base defence.
     function result:RemoveDefence(amount)
-        -- TODO? zero checking?
+        -- TODO? zero checking
         result.maxDefence = result.maxDefence - amount
         result.defence = result.defence - amount
     end
+
+    result.timers = {}
+    -- Adds a timer to the placeable card (Every n turns ...)
+    function result:AddTimer(turns, action)
+        result.timers[#result.timers+1] = {
+            maxTurns = turns,
+            curTurn = 0,
+            action = action
+        }
+    end
+    result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()
+        :Check(Common:IsOwnersTurn(result))
+        :Cost(Common:NoCost())
+        :IsSilent(true)
+        :On(TRIGGERS.TURN_START)
+        :Zone(ZONES.PLACED)
+        :Effect(function (playerID, args)
+            for _, timer in ipairs(result.timers) do
+                timer.curTurn = timer.curTurn + 1
+                if timer.curTurn >= timer.maxTurns then
+                    timer.curTurn = 0
+                    timer.action()
+                end
+            end
+        end)
+        :Build()
 
     return result
 end

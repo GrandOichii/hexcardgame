@@ -1,0 +1,8 @@
+{
+    "name": "Shock",
+    "cost": 3,
+    "type": "Spell",
+    "expansion": "dev",
+    "text": "Deal 3 damage to any Unit.",
+    "script": "shock.lua"
+}

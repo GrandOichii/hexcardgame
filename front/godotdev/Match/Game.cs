@@ -32,6 +32,11 @@ public class Game
 		PlayerColors.Add("2", P2Color);
 	}
 
+	public void LoadState(MatchState state) {
+		LastState = state;
+		Commands = RequestCommandMap[state.Request];
+	}
+
 	public void AddToAction(string message) {
 		Action.Add(message);
 	}
@@ -44,17 +49,31 @@ public class Game
 		Action = new();
 	}
 
-	static private readonly List<Command> Commands = new() {
-		new Command("play", new() {
-			new SelectCard(),
-			new SelectPlayTile(0)
-		}),
-		
-		new Command("move", new() {
-			new SelectMovable(),
-			new SelectDirection(0)
-		})
+	static private readonly Dictionary<string, List<Command>> RequestCommandMap = new() {
+		{"action", new() {
+			new Command("play", new() {
+				new SelectCard(),
+				new SelectPlayTile(0)
+			}),
+			
+			new Command("move", new() {
+				new SelectMovable(),
+				new SelectDirection(0)
+			})
+		}},
+		{
+			"pt", new() {
+				new Command("", new() {
+					new SelectTileForPickTile()
+				})
+			}
+		},
+		{
+			"update", new(){}
+		}
 	};
+
+	private List<Command> Commands = new();
 
 #nullable enable
 	public Command? CurrentCommand { get; set; }
@@ -106,7 +125,7 @@ public class Command {
 	public string Name { get; protected set; }
 	public List<CommandPart> Parts { get; protected set; }
 	public int PartI => Results.Count;
-	public List<IGamePart> Results { get; }=new();
+	public List<IGamePart> Results { get; } = new();
 	public Command(string name, List<CommandPart> parts) {
 		Name = name;
 		Parts = parts;
@@ -277,4 +296,10 @@ public class SelectDirection : CommandPart
 	}
 }
 
-
+public class SelectTileForPickTile : SelectTile {
+	protected override bool CanSelect(Command c, TileBase tile)
+	{
+		var args = Game.Instance.LastState.Args;
+		return args.Count == 0 || args.Contains(tile.CoordsStr);
+	}
+}

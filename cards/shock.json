@@ -1,0 +1,8 @@
+{
+    "name": "Shock",
+    "cost": 3,
+    "type": "Spell",
+    "expansion": "dev",
+    "text": "Deal 3 damage to any Unit.",
+    "script": "function _Create(props)\n    local result = CardCreation:Spell(props)\n    result.DamageValues.Damage = 3\n\n    result.EffectP:AddLayer(function(playerID, caster)\n        local tiles = GetUnitsOnBoard()\n        local choices = {}\n        for _, tile in ipairs(tiles) do\n            choices[#choices+1] = { tile.iPos, tile.jPos }\n        end\n        local tile = PickTile(playerID, result.id, choices)\n        DealDamage(result.id, { tile.iPos, tile.jPos }, result.DamageValues.Damage)\n        return nil, true\n    end)\n    return result\nend"
+}

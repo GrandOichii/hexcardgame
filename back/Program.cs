@@ -11,10 +11,14 @@ using System.Net.Sockets;
 
 class QueuedActionsPlayerController : PlayerController
 {
-    public Queue<string> ActionQueue { get; } = new(new string[] {
-    });
+    public Queue<string> ActionQueue { get; } = new( new string[] {} );
 
     public override string DoPromptAction(Player player, Match match)
+    {
+        return ActionQueue.Dequeue();
+    }
+
+    public override string DoPickTile(List<int[]> choices, Player player, Match match)
     {
         return ActionQueue.Dequeue();
     }

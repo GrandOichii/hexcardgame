@@ -16,7 +16,8 @@
         "CardShortStr",
         "GetUnitsOnBoard",
         "SummonCard",
-        "PlaceCardInHand"
+        "PlaceCardInHand",
+        "PickTile"
     ],
     "dotnet.defaultSolution": "front\\godotdev\\godotdev.sln"
 }

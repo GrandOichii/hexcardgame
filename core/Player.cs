@@ -44,13 +44,36 @@ abstract public class PlayerController {
     /// Updates the player abount the match
     /// </summary>
     /// <param name="player">Controlled player</param>
-    /// <param name="match"></param>
+    /// <param name="match">Match</param>
     abstract public void Update(Player player, Match match);
 
     /// <summary>
     /// Cleans up the player data
     /// </summary>
     abstract public void CleanUp();
+
+    /// <summary>
+    /// Forces the controlled player to pick a tile and records it
+    /// </summary>
+    /// <param name="choices">List of tile coordinates. If empty, considers all tiles as valid choices</param>
+    /// <param name="player">Controlled player</param>
+    /// <param name="match">Match</param>
+    /// <returns></returns>
+    public string PickTile(List<int[]> choices, Player player, Match match) {
+        var result = DoPickTile(choices, player, match);
+        // TODO record
+        // TODO? check for correctness
+        return result;
+    }
+
+    /// <summary>
+    /// Prompts the controlled player to pick a tile
+    /// </summary>
+    /// <param name="choices">List of tile coordinates. If empty, considers all tile as valid choices</param>
+    /// <param name="player">Controlled player</param>
+    /// <param name="match">Match</param>
+    /// <returns></returns>
+    abstract public string DoPickTile(List<int[]> choices, Player player, Match match);
 }
 
 
@@ -61,6 +84,14 @@ public class InactivePlayerController : PlayerController
 {
     public override void CleanUp()
     {
+    }
+
+    public override string DoPickTile(List<int[]> choices, Player player, Match match)
+    {
+        if (choices.Count == 0) {
+            // TODO
+        }
+        return "" + choices[0][0] + "." + choices[1][0];
     }
 
     public override string DoPromptAction(Player player, Match match)
@@ -154,6 +185,18 @@ public class TCPPlayerController : PlayerController
     {
         // TODO
     }
+
+    public override string DoPickTile(List<int[]> choices, Player player, Match match)
+    {
+        var request = "pt";
+        var args = new List<string>();
+        for (int i = 0; i < choices.Count; i++) {
+            args.Add("" + choices[i][0] + "." + choices[i][1]);
+        }
+        Write(new MatchState(match, player, request, args).ToJson());
+        
+        return Read();
+    }
 }
 
 
@@ -205,6 +248,12 @@ public class LuaPlayerController : PlayerController {
         _cleaupF.Call();
     }
 
+    public override string DoPickTile(List<int[]> choices, Player player, Match match)
+    {
+        // TODO
+        return "" + choices[0][0] + "." + choices[1][0];
+        // throw new NotImplementedException();
+    }
 }
 
 /// <summary>

@@ -253,9 +253,14 @@ public struct MatchState {
     public MyDataState MyData { get; set; }
     [JsonPropertyName("curPlayerID")]
     public string CurPlayerID { get; set; }
+    [JsonPropertyName("args")]
+    public List<string> Args { get; set; }
 
-    public MatchState(Match match, Player player, string request) {
+    public MatchState(Match match, Player player, string request, List<string>? args=null) {
+        if (args == null) args = new();
+
         NewLogs = player.NewLogs;
+        Args = args;
         player.NewLogs = new();
 
         CurPlayerID = match.CurrentPlayer.ID;

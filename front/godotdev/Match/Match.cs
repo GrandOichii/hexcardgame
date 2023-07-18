@@ -60,7 +60,7 @@ public partial class Match : Node2D
 
 	
 	public void LoadState(MatchState state) {
-		Game.Instance.LastState = state;
+		Game.Instance.LoadState(state);
 		foreach (var player in Players) {
 			player.Load(ref state);
 		}

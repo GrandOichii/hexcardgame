@@ -350,4 +350,20 @@ public class ScriptMaster {
     public LuaTable GetCard(string mID) {
         return _match.GetCard(mID).Data;
     }
+
+
+    [LuaCommand]
+    public LuaTable? PickTile(string pID, string mID, LuaTable choices) {
+        var player = _match.PlayerWithID(pID);
+        var card = _match.GetCard(mID);
+        var c = new List<int[]>();
+        foreach (LuaTable rawP in choices.Values) {
+            var point = ParseCoords(rawP);
+            c.Add(point);
+        }
+        var result = player.Controller.PickTile(c, player, _match);
+        var tile = _match.Map.TileAt(result);
+        if (tile is null) return null;
+        return tile.ToLuaTable(_match.LState);
+    }
 }

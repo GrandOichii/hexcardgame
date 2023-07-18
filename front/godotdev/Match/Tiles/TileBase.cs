@@ -42,13 +42,15 @@ public partial class TileBase : Node2D, IGamePart
 
 	}
 
+	public string CoordsStr => _coords.Y + "." + _coords.X;
+
 	private Vector2 _coords;
 	public Vector2 Coords {
 		get => _coords;
 		set {
 			_coords = value;
 			
-			CoordsLabel.Text = _coords.Y + "." + _coords.X;
+			CoordsLabel.Text = CoordsStr;
 			if (_coords.Y < Game.Instance.LastState.Map.Tiles.Count / 2) {
 				HoverCard.Position = new Vector2(HoverCard.Position.X, 138);
 			}

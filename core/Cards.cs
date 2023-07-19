@@ -145,6 +145,14 @@ public class MCard {
     public long Defence => LuaUtility.GetLong(Data, "defence");
     public long MaxDefence => LuaUtility.GetLong(Data, "maxDefence");
     public string Type => LuaUtility.TableGet<string>(Data, "type");
+    public string BaseType { get {
+        var t = Type;
+        if (!t.Contains(" - ")) return t;
+
+        var s = t.Split(" - ");
+        return s[0];
+    }}
+
     public long Power { get {
         // TODO create separate power pipeline
         return LuaUtility.GetLong(Data, "power");
@@ -176,6 +184,7 @@ public class MCard {
 
         OriginalOwner = player;
         Owner = OriginalOwner;
+        data["baseType"] = BaseType;
     }
 
     public bool IsPlaceable => IsUnit || Original.Type == "Structure";

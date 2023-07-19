@@ -4,6 +4,8 @@ function _Create(props)
 
     result.EffectP:AddLayer(function(playerID, caster)
         local tiles = GetUnitsOnBoard()
+        -- local tiles = GetStructuresOnBoard()
+        -- local tiles = GetUnitsAndStructuresOnBoard()
         local choices = {}
         for _, tile in ipairs(tiles) do
             choices[#choices+1] = { tile.iPos, tile.jPos }

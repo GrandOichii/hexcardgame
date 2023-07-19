@@ -7,7 +7,7 @@ Lore: a school of magic is located on the distant islands of Dragotha, where you
     Return up to 2 spells from your discard to your hand.
 
 
-[Meteor Strike]:3
+* [Meteor Strike]:3
     Spell
     Deal 4 damage to a n. enemy Unit/Structure.
 

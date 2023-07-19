@@ -1,8 +1,8 @@
 {
-    "name": "Shock",
+    "name": "Hellfire Burst",
     "cost": 3,
     "type": "Spell",
     "expansion": "dev",
     "text": "Deal 3 damage to any Unit.",
-    "script": "shock.lua"
+    "script": "hellfire_burst.lua"
 }

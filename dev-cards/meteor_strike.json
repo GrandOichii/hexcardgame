@@ -1,0 +1,8 @@
+{
+    "name": "Meteor Strike",
+    "cost": 3,
+    "type": "Spell",
+    "expansion": "dev",
+    "text": "Deal 4 damage to a n. Unit or Structure.",
+    "script": "meteor_strike.lua"
+}

@@ -22,6 +22,7 @@ ZONES = {
 -- Utility object
 Utility = {}
 
+
 -- Returns a string version of the table
 function Utility:TableToStr(t)
     if type(t) == 'table' then
@@ -195,6 +196,65 @@ function Common:PayEnergy( amount )
         PayEnergy(playerID, amount)
         return true
     end
+end
+
+
+-- Returns a function that returns true if the card has a neighboring Unit
+function Common:HasNeighborUnit(card)
+    return function (playerID, ...)
+        return #Common:GetNeighboringUnits(card) > 0
+    end
+end
+
+
+-- Returns all neighboring tiles with Units to the specified card
+function Common:GetNeighboringUnits(card)
+    local result = {}
+    local tile = GetTileWith(card.id)
+    local tiles = GetNeighbors( { tile.iPos, tile.jPos } )
+    for _, t in ipairs(tiles) do
+        if t ~= nil and t.entity ~= nil then
+            local e = t.entity
+            if e.baseType == 'Unit' then
+                result[#result+1] = t
+            end
+        end
+    end
+    return result
+end
+
+
+-- Returns all neighboring tiles with Units to the specified card
+function Common:GetNeighboringStructures(card)
+    local result = {}
+    local tile = GetTileWith(card.id)
+    local tiles = GetNeighbors( { tile.iPos, tile.jPos } )
+    for _, t in ipairs(tiles) do
+        if t ~= nil and t.entity ~= nil then
+            local e = t.entity
+            if e.baseType == 'Structure' then
+                result[#result+1] = t
+            end
+        end
+    end
+    return result
+end
+
+
+-- Returns all neighboring tiles with Units to the specified card
+function Common:GetNeighboringUnitsAndStructures(card)
+    local result = {}
+    local tile = GetTileWith(card.id)
+    local tiles = GetNeighbors( { tile.iPos, tile.jPos } )
+    for _, t in ipairs(tiles) do
+        if t ~= nil and t.entity ~= nil then
+            local e = t.entity
+            if e.baseType == 'Unit' or e.baseType == 'Structure' then
+                result[#result+1] = t
+            end
+        end
+    end
+    return result
 end
 
 

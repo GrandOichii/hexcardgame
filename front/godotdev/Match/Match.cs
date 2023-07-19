@@ -116,11 +116,10 @@ public partial class Match : Node2D
 			var t = MapContainer.Tiles[pos[0]][pos[1]];
 			t.Entity = null;
 
-			GD.Print("Removing " + child.LastState.ID + " " + child.LastState.MID + " at " + pos[0] + "." + pos[1]);
 			EntitiesNode.RemoveChild(child);
 			child.Free();
-
 		}
+
 		// add new entities
 		foreach (var pair in addedEntities) {
 			var mid = pair.Key;
@@ -135,6 +134,8 @@ public partial class Match : Node2D
 			eNode.Position = new(t.Position.X, t.Position.Y);
 			t.Entity = eNode;
 		}
+
+		// move existing entities
 		foreach (var mid in sameKeys) {
 			var newP = newPos[mid];
 			var oldP = Game.Instance.CurrentPositions[mid];
@@ -148,21 +149,20 @@ public partial class Match : Node2D
 			}
 			e.Load(newEn[mid]);
 		}
-		// move existing entities
 
-		foreach (var key in addedEntities.Keys) {
-			GD.Print("NEW " + key);
-		}
-		foreach (var key in removedEntities.Keys) {
-			GD.Print("REMOVED " + key);
-		}
-		foreach (var mid in sameKeys) {
-			var newP = newPos[mid];
-			var oldP = Game.Instance.CurrentPositions[mid];
-			if (newP[0] == oldP[0] && newP[1] == oldP[1]) continue;
+		// foreach (var key in addedEntities.Keys) {
+		// 	GD.Print("NEW " + key);
+		// }
+		// foreach (var key in removedEntities.Keys) {
+		// 	GD.Print("REMOVED " + key);
+		// }
+		// foreach (var mid in sameKeys) {
+		// 	var newP = newPos[mid];
+		// 	var oldP = Game.Instance.CurrentPositions[mid];
+		// 	if (newP[0] == oldP[0] && newP[1] == oldP[1]) continue;
 
-			GD.Print("MOVED " + mid + " " + oldP[0] + "." + oldP[1] + " -> " + newP[0] + "." + newP[1]);
-		}
+		// 	GD.Print("MOVED " + mid + " " + oldP[0] + "." + oldP[1] + " -> " + newP[0] + "." + newP[1]);
+		// }
 
 		Game.Instance.CurrentEntities = newEn;
 		Game.Instance.CurrentPositions = newPos;		

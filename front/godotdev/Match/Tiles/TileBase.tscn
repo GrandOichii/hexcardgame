@@ -45,7 +45,6 @@ vertex_colors = PackedColorArray(1, 0, 0, 1)
 
 [node name="CoordsLabel" type="Label" parent="Node2D"]
 unique_name_in_owner = true
-visible = false
 offset_left = 48.0
 offset_top = 188.0
 offset_right = 232.0

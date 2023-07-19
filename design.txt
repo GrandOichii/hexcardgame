@@ -24,7 +24,7 @@ n. - neighboring
     L: 2
     
     
-[Elven General]:4
+* [Elven General]:4
     Unit - Warrior
     Every 3 turns, summon an [Elf] into a n. tile.
     P: 2
@@ -44,7 +44,7 @@ n. - neighboring
     L: 2
     
     
-[Shock]:1
+* [Shock]:1
     Spell
     Deal 2 damage to a n. Unit.
 
@@ -57,7 +57,7 @@ n. - neighboring
     P: 1
 
 
-[Troop Warp]:5
+* [Troop Warp]:5
     Spell
     Teleport target Warrior you control into a n. tile.
 
@@ -102,7 +102,7 @@ n. - neighboring
     L: 5
 
 
-[!Throw Rock]:3
+* [!Throw Rock]:3
     Spell
     Deal 1 damage to a n. Structure.
 
@@ -122,7 +122,7 @@ n. - neighboring
     L: 8
 
 
-[!Healing Light]:2
+* [!Healing Light]:2
     Spell
     Target n. Unit gains +2 life.
 
@@ -198,7 +198,7 @@ n. - neighboring
     L: 2
 
 
-[!Corrupting Darkness]: 2
+* [!Corrupting Darkness]: 2
     Spell
     Deal 1 damage to target n. Unit.
 

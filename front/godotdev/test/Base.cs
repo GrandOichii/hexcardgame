@@ -16,7 +16,7 @@ public partial class Base : Node2D
 	private void _on_area_2d_mouse_entered()
 	{
 		// Replace with function body.
-		GD.Print("Amogu");		
+		GD.Print("Amogu");
 	}
 	
 }

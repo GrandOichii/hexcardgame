@@ -65,6 +65,29 @@ public class ScriptMaster {
     }
 
     /// <summary>
+    /// Returns a list of all entities on board that are either of the specified types
+    /// </summary>
+    /// <param name="types">Types of entities</param>
+    /// <returns>List of entities</returns>
+    private LuaTable GetOnBoard(params string[] types) {
+        var result = new List<object?>();
+
+        var map = _match.Map;
+        for (int i = 0; i < map.Height; i++) {
+            for (int j = 0; j < map.Width; j++) {
+                var tile = map.Tiles[i, j];
+                if (tile is null) continue;
+                var en = tile.Entity;
+                if (en is null) continue;
+                if (!types.Contains(en.BaseType)) continue;
+                result.Add(tile.ToLuaTable(_match.LState));
+            }
+        }
+
+        return LuaUtility.CreateTable(_match.LState, result);
+    }
+
+    /// <summary>
     /// Log wrapper for system log
     /// </summary>
     /// <param name="message">Log message</param>
@@ -292,20 +315,25 @@ public class ScriptMaster {
     /// <returns>A Lua array</returns>
     [LuaCommand]
     public LuaTable GetUnitsOnBoard() {
-        var result = new List<object?>();
+        return GetOnBoard("Unit");
+    }
 
-        var map = _match.Map;
-        for (int i = 0; i < map.Height; i++) {
-            for (int j = 0; j < map.Width; j++) {
-                var tile = map.Tiles[i, j];
-                if (tile is null) continue;
-                var en = tile.Entity;
-                if (en is null) continue;
-                result.Add(tile.ToLuaTable(_match.LState));
-            }
-        }
+    /// <summary>
+    /// Returns a Lua array wuth all of the Structures that take a tile
+    /// </summary>
+    /// <returns>A Lua array</returns>
+    [LuaCommand]
+    public LuaTable GetStructuresOnBoard() {
+        return GetOnBoard("Structure");
+    }
 
-        return LuaUtility.CreateTable(_match.LState, result);
+    /// <summary>
+    /// Returns a Lua array wuth all of the Units and Structures that take a tile
+    /// </summary>
+    /// <returns>A Lua array</returns>
+    [LuaCommand]
+    public LuaTable GetUnitsAndStructuresOnBoard() {
+        return GetOnBoard("Structure", "Unit");
     }
 
     /// <summary>

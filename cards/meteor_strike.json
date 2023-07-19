@@ -1,0 +1,8 @@
+{
+    "name": "Meteor Strike",
+    "cost": 3,
+    "type": "Spell",
+    "expansion": "dev",
+    "text": "Deal 4 damage to a n. Unit or Structure.",
+    "script": "function _Create(props)\n    local result = CardCreation:Spell(props)\n    result.DamageValues.Damage = 4\n\n    -- TODO this is messed up, have to check each Mage that can cast?\n    -- TODO make so that can be cast only by mages with neighboring units\n    -- TODO the easiest way for now is to just cancel the effect of the card if no Units are nearby\n    -- result.CanPlayP:AddLayer(function (playerID)\n    --     return nil, Common:HasNeighborUnit(result)\n    -- end)\n\n    result.EffectP:AddLayer(function(playerID, caster)\n        local tiles = Common:GetNeighboringUnitsAndStructures(caster)\n        -- TODO this is a band aid for the CanPlay function\n        if #tiles == 0 then\n            return nil, true\n        end\n        local choices = {}\n        for _, tile in ipairs(tiles) do\n            choices[#choices+1] = { tile.iPos, tile.jPos }\n        end\n        local tile = PickTile(playerID, result.id, choices)\n        DealDamage(result.id, { tile.iPos, tile.jPos }, result.DamageValues.Damage)\n        return nil, true\n    end)\n    return result\nend"
+}

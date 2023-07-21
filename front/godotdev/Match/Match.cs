@@ -196,7 +196,7 @@ public partial class Match : Node2D
 		if (cards.Count > HandCount) {
 			for (int i = 0; i < cards.Count - HandCount; i++) {
 				var cNode = CardBaseScene.Instantiate() as HandCardBase;
-				HandContainer.AddChild(cNode);
+				cNode.AddTo(HandContainer);
 			}
 		}
 		HandCount = cards.Count;

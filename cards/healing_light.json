@@ -1,0 +1,9 @@
+{
+    "name": "Healing Light",
+    "cost": 2,
+    "type": "Spell",
+    "expansion": "dev",
+    "text": "Target n. Unit gains +2 life.",
+    "script": "function _Create(props)\n    local result = CardCreation:Spell(props)\n\n    result.EffectP:AddLayer(function(playerID, caster)\n        local tiles = Common:GetNeighboringUnits(caster)\n        -- TODO this is a band aid for the CanPlay function\n        if #tiles == 0 then\n            return nil, true\n        end\n        local choices = {}\n        for _, tile in ipairs(tiles) do\n            choices[#choices+1] = { tile.iPos, tile.jPos }\n        end\n        local tile = PickTile(playerID, result.id, choices)\n        tile.entity.life = tile.entity.life + 2\n        return nil, true\n    end)\n    return result\nend",
+    "deckUsable": false
+}

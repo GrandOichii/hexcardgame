@@ -1,0 +1,10 @@
+{
+    "name": "Archdemon Priest",
+    "cost": 2,
+    "type": "Unit",
+    "expansion": "dev",
+    "text": "{Vile}",
+    "power": 2,
+    "life": 2,
+    "script": "archdemon_priest.lua"
+}

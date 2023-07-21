@@ -149,7 +149,7 @@ public partial class TileBase : Node2D, IGamePart
 		
 		if (!Game.Instance.Accepts(this)) return;
 
-		Bg.Color = HoverColor;
+		SetColor(HoverColor);
 
 		var command = Game.Instance.CurrentCommand;
 		if (command is null || command.Name != "move") {
@@ -165,10 +165,15 @@ public partial class TileBase : Node2D, IGamePart
 	}
 	private void OnCollisionMouseExited()
 	{
-		Bg.Color = BaseColor;
+		SetColor(BaseColor);
 		if (HoverCard.Visible)
 			HoverCard.Visible = false;
 		if (Map.MovementArrow.Visible) Map.MovementArrow.Visible = false;
+	}
+
+	private void SetColor(Color c) {
+		CreateTween().TweenProperty(Bg, "color", c, .1f);
+		// Bg.Color = c;
 	}
 
 	// public string ToActionPart(Command command)

@@ -1,0 +1,10 @@
+{
+    "name": "Corrupting Darkness",
+    "cost": 2,
+    "type": "Spell",
+    "expansion": "dev",
+    "text": "Deal 1 damage to target n. Unit.",
+    "script": "corrupting_darkness.lua",
+
+    "deckUsable": false
+}

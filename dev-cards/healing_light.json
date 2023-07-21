@@ -1,0 +1,10 @@
+{
+    "name": "Healing Light",
+    "cost": 2,
+    "type": "Spell",
+    "expansion": "dev",
+    "text": "Target n. Unit gains +2 life.",
+    "script": "healing_light.lua",
+
+    "deckUsable": false
+}

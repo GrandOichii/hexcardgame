@@ -1,0 +1,9 @@
+{
+    "name": "Throw Rock",
+    "cost": 3,
+    "type": "Spell",
+    "expansion": "dev",
+    "text": "Deal 1 damage to a n. Structure.",
+    "script": "function _Create(props)\n    local result = CardCreation:Spell(props)\n    result.DamageValues.Damage = 1\n\n    result.EffectP:AddLayer(function(playerID, caster)\n        local tiles = Common:GetNeighboringStructures(caster)\n        -- TODO this is a band aid for the CanPlay function\n        if #tiles == 0 then\n            return nil, true\n        end\n        local choices = {}\n        for _, tile in ipairs(tiles) do\n            choices[#choices+1] = { tile.iPos, tile.jPos }\n        end\n        local tile = PickTile(playerID, result.id, choices)\n        DealDamage(result.id, { tile.iPos, tile.jPos }, result.DamageValues.Damage)\n        return nil, true\n    end)\n    return result\nend",
+    "deckUsable": false
+}

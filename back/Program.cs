@@ -160,13 +160,13 @@ class Program {
     static void Main(string[] args)
     {
         listener.Start();
-        // while (true) {
-        //     try {
+        while (true) {
+            try {
                 RunMatch();
-        //     } catch (Exception ex) {
-        //         System.Console.WriteLine(ex);
-        //     }
-        // }
+            } catch (Exception ex) {
+                System.Console.WriteLine(ex);
+            }
+        }
         // TrainBots();
     }
 }

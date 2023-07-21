@@ -1,0 +1,10 @@
+{
+    "name": "Healer Initiate",
+    "cost": 3,
+    "type": "Unit",
+    "expansion": "dev",
+    "text": "{Virtuous}",
+    "power": 2,
+    "life": 3,
+    "script": "healer_initiate.lua"
+}

@@ -24,18 +24,23 @@ public partial class HandCardBase : MarginContainer, IGamePart
 		
 		// Load(CardFetcher.Instance.Get("dev::Urakshi Raider"));
 	}
+
+	private void SetColor(Color c) {
+		// CardNode.Bg.Color = HighlightColor;
+		CreateTween().TweenProperty(CardNode.Bg, "color", c, .1f);
+	}
 	
 	private void OnCollisionMouseEntered()
 	{
 		if (!Game.Instance.Accepts(this)) return;
 //		UpperCardNode.Visible = true;
-		CardNode.Bg.Color = HighlightColor;
+		SetColor(HighlightColor);
 	}
 	
 	private void OnCollisionMouseExited()
 	{
 //		UpperCardNode.Visible = false;
-		CardNode.Bg.Color = BaseColor;
+		SetColor(BaseColor);
 	}
 	
 	public void Load(Card card) {
@@ -70,6 +75,13 @@ public partial class HandCardBase : MarginContainer, IGamePart
 			}
 		}
 		// Replace with function body.
+	}
+
+	public void AddTo(HBoxContainer c) {
+		c.AddChild(this);
+		CardNode.GlobalPosition = new(CardNode.GlobalPosition.X, CardNode.GlobalPosition.Y - 200);
+//		CardNode.Position = new(GetWindow().Size.X / 2, GetWindow().Size.Y / 2);
+		CreateTween().TweenProperty(CardNode, "position", Position, .2f);
 	}
 
 	// public string ToActionPart(Command command)

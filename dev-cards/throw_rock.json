@@ -1,0 +1,10 @@
+{
+    "name": "Throw Rock",
+    "cost": 3,
+    "type": "Spell",
+    "expansion": "dev",
+    "text": "Deal 1 damage to a n. Structure.",
+    "script": "throw_rock.lua",
+
+    "deckUsable": false
+}

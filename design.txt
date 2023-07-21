@@ -43,11 +43,6 @@ n. - neighboring
     P: 1
     L: 2
     
-    
-* [Shock]:1
-    Spell
-    Deal 2 damage to a n. Unit.
-
 
 [Urakshi Thief]:3
     Unit - Rogue
@@ -102,36 +97,19 @@ n. - neighboring
     L: 5
 
 
-* [!Throw Rock]:3
-    Spell
-    Deal 1 damage to a n. Structure.
-
-
-[Earthling]:1
+* [Earthling]:1
     Unit
     When [CARDNAME] enters play, summon a [Throw Rock] card into your deck.
     P: 2
     L: 2
 
 
-[Fire Elemental]: 6
+* [Fire Elemental]: 6
     Units
     {Fast}
     At the start of your turn, halve [CARDNAME]'s power and toughness. Round down each time.
     P: 8
     L: 8
-
-
-* [!Healing Light]:2
-    Spell
-    Target n. Unit gains +2 life.
-
-
-[Healer Initiate]:3
-    Unit
-    {Virtuous}
-    P: 2
-    L: 3
 
 
 [Statue to the Archangel]
@@ -186,21 +164,9 @@ n. - neighboring
     L: 7
 
 
-[Mass Inspection TODO]:7
+* [Mass Inspection TODO]:7
     Spell
     Deal 1 damage to each Structure. For each damage dealt, draw a card.
-
-
-[Priest of the Archdemon]:2
-    Unit
-    {Vile}
-    P: 2
-    L: 2
-
-
-* [!Corrupting Darkness]: 2
-    Spell
-    Deal 1 damage to target n. Unit.
 
 
 [Corpse-Stealer Imp]:5

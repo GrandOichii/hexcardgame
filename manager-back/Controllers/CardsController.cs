@@ -1,11 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
 using core.cards;
+using System.Xml.Linq;
 
 namespace manager_back.Controllers;
 
 public class CardQuery {
     public string Name { get; set; }="";
     public string Expansion { get; set; }="";
+
+    public bool Matches(Card card)
+    {
+        if (Expansion.Length > 0 && card.Expansion.ToLower() != Expansion.ToLower()) return false;
+        if (Name.Length > 0 && card.Name.ToLower() != Name.ToLower()) return false;
+        return true;
+    }
 }
 
 [ApiController]
@@ -25,18 +33,11 @@ public class CardsController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<Card> GetAll(string name="", string expansion="")
+    public IEnumerable<Card> Get([FromQuery] CardQuery query)
     {
-        System.Console.WriteLine(name, " ", expansion);
-        foreach (var card in Global.CMaster.GetAll()) 
-            if (CardMatches(card, name, expansion))
+        foreach (var card in Global.CMaster.GetAll())
+            if (query.Matches(card))
                 yield return card;
 
-    }
-
-    public bool CardMatches(Card card, string name, string expansion) {
-        if (expansion.Length > 0 && card.Expansion.ToLower() != expansion.ToLower()) return false;
-        if (name.Length > 0 && card.Name.ToLower() != name.ToLower()) return false;
-        return true;
     }
 }

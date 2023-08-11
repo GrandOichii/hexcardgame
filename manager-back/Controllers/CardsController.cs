@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using core.cards;
-using System.Xml.Linq;
+using System.Xml.Linq; 
 
 namespace manager_back.Controllers;
 
@@ -20,18 +20,6 @@ public class CardQuery {
 [Route("api/[controller]")]
 public class CardsController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
-    private readonly ILogger<CardsController> _logger;
-
-    public CardsController(ILogger<CardsController> logger)
-    {
-        _logger = logger;
-    }
-
     [HttpGet]
     public IEnumerable<Card> Get([FromQuery] CardQuery query)
     {

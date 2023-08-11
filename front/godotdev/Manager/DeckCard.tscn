@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://tg3pmttdtky7"]
+
+[node name="DeckCard" type="HBoxContainer"]
+offset_right = 783.0
+offset_bottom = 60.0
+
+[node name="NameLabel" type="Label" parent="."]
+layout_mode = 2
+text = "CARD NAME HERE"
+
+[node name="SpinBox" type="SpinBox" parent="."]
+layout_mode = 2
+size_flags_horizontal = 10

@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=3 uid="uid://cummrh2sybd5e"]
+
+[ext_resource type="PackedScene" uid="uid://da8ytgvpx2btm" path="res://Manager/DeckSelect.tscn" id="1_spgnm"]
+[ext_resource type="Script" path="res://Manager/PlayerConfigLine.gd" id="1_t0dls"]
+
+[node name="PlayerConfigLine" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -970.0
+offset_bottom = -932.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_t0dls")
+
+[node name="CheckBox" type="CheckBox" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "bot"
+
+[node name="Control" type="Control" parent="."]
+custom_minimum_size = Vector2(5, 2.08165e-12)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 2
+text = "P0 deck"
+
+[node name="Control2" type="Control" parent="."]
+custom_minimum_size = Vector2(5, 2.08165e-12)
+layout_mode = 2
+
+[node name="DeckSelect" parent="." instance=ExtResource("1_spgnm")]
+layout_mode = 2
+size_flags_horizontal = 3

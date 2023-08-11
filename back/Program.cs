@@ -63,7 +63,7 @@ class CursesPlayerController : QueuedActionsPlayerController
 
 class Program {
     static private IPAddress ADDRESS = IPAddress.Any;
-    static private int PORT = 9090;
+    static private int PORT = 9080;
     static private TcpListener listener = new TcpListener(new IPEndPoint(ADDRESS, PORT));
 
 
@@ -99,8 +99,8 @@ class Program {
         // var p1Controller = new CursesPlayerController(view);
         // var p1Controller = new QueuedActionsPlayerController();
         // var p1Controller = new InactivePlayerController();
-        // var p1Controller = new LuaPlayerController("../bots/random.lua");
-        var p1Controller = TCPPC(match);
+        var p1Controller = new LuaPlayerController("../bots/random.lua");
+        // var p1Controller = TCPPC(match);
         
         // var p2Controller = new InactivePlayerController();
         // var p2Controller = new LuaPlayerController("../bots/random.lua");
@@ -132,20 +132,24 @@ class Program {
         // Task.WhenAny
         
         for (int i = 0; i < 300; i++) {
-            Console.WriteLine("MATCH " + (i+1));
-            // var tasks = new List<Task<string>>();
-            // var task1 = Task.Run(() => RunMatch());
-            // var task2 = Task.Run(() => WaitTask());
-            // var completed = await Task.WhenAny(task1, task2);
-            
-            var winnerName = RunMatch();
-            if (winnerName == "") Console.WriteLine("Ending due to timeout");
-            result[winnerName]++;
+            try {
+                Console.WriteLine("MATCH " + (i+1));
+                // var tasks = new List<Task<string>>();
+                // var task1 = Task.Run(() => RunMatch());
+                // var task2 = Task.Run(() => WaitTask());
+                // var completed = await Task.WhenAny(task1, task2);
+                
+                var winnerName = RunMatch();
+                if (winnerName == "") Console.WriteLine("Ending due to timeout");
+                result[winnerName]++;
 
-            // copy data file as backup
-            var file = "../bots/data.json";
-            var tFile = "../bots/backups/" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".json";
-            File.WriteAllBytes(tFile, File.ReadAllBytes(file)); 
+                // copy data file as backup
+                var file = "../bots/data.json";
+                var tFile = "../bots/backups/" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".json";
+                File.WriteAllBytes(tFile, File.ReadAllBytes(file)); 
+            } catch (Exception e) {
+                Console.WriteLine("Threw exception: " + e);
+            }
         }
         foreach (var pair in result) {
             Console.WriteLine(pair.Key + " -> " + pair.Value);
@@ -160,13 +164,13 @@ class Program {
     static void Main(string[] args)
     {
         listener.Start();
-        while (true) {
-            try {
-                RunMatch();
-            } catch (Exception ex) {
-                System.Console.WriteLine(ex);
-            }
-        }
-        // TrainBots();
+        // while (true) {
+        //     try {
+        //         RunMatch();
+        //     } catch (Exception ex) {
+        //         System.Console.WriteLine(ex);
+        //     }
+        // }
+        TrainBots();
     }
 }

@@ -184,6 +184,7 @@ public class TCPPlayerController : PlayerController
     public override void CleanUp()
     {
         // TODO
+        _handler.Close();
     }
 
     public override string DoPickTile(List<int[]> choices, Player player, Match match)
@@ -342,12 +343,11 @@ public class Player {
 
     public string ShortStr => Name + " [" + ID + "]";
 
-    // public LuaTable ToSmallLuaTable(Lua lState) {
-    //     var result = LuaUtility.CreateTable(lState);
-
-    //     return result;
-    // }
-
+    /// <summary>
+    /// Tries to check the requirements for playing the cards and tries to pay the costs of the card
+    /// </summary>
+    /// <param name="card"></param>
+    /// <returns></returns>
     public bool TryPlayCard(MCard card) {
         var canPlay = card.CanBePlayed(this);
         if (!canPlay) return false;

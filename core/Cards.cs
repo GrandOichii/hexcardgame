@@ -66,7 +66,14 @@ public abstract class CardMaster
     /// </summary>
     /// <param name="id">Card ID</param>
     /// <returns>Card with the specified ID</returns>
+    /// 
     abstract public Card Get(string id);
+    
+    /// <summary>
+    /// Fetches all cards
+    /// </summary>
+    /// <returns><Container of all cards/returns>
+    abstract public IEnumerable<Card> GetAll();
 }
 
 
@@ -122,6 +129,8 @@ public class FileCardMaster : CardMaster
 
         throw new Exception("Can't load card with ID " + id);
     }
+
+    public override IEnumerable<Card> GetAll() => Cards;
 }
 
 

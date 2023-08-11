@@ -4,7 +4,7 @@ function _Create(props)
 
     -- TODO move to a keyword
     result.OnEnterP:AddLayer(function (playerID, tile)
-        local card = SummonCard(result.id, playerID, 'dev::Heaing Light')
+        local card = SummonCard(result.id, playerID, 'dev::Healing Light')
         PlaceCardInHand(playerID, card.id)
         return nil, true
     end)

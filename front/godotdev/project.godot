@@ -12,8 +12,14 @@ config_version=5
 
 config/name="godotdev"
 run/main_scene="res://Main.tscn"
-config/features=PackedStringArray("4.0", "C#", "GL Compatibility")
+config/features=PackedStringArray("4.1", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=2000
+window/size/viewport_height=1000
+window/stretch/mode="viewport"
 
 [dotnet]
 

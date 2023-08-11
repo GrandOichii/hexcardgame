@@ -6,5 +6,5 @@
     "text": "{Virtuous}",
     "power": 2,
     "life": 3,
-    "script": "-- TODO not tested\nfunction _Create(props)\n    local result = CardCreation:Unit(props)\n\n    -- TODO move to a keyword\n    result.OnEnterP:AddLayer(function (playerID, tile)\n        local card = SummonCard(result.id, playerID, 'dev::Heaing Light')\n        PlaceCardInHand(playerID, card.id)\n        return nil, true\n    end)\n    return result\nend"
+    "script": "-- TODO not tested\nfunction _Create(props)\n    local result = CardCreation:Unit(props)\n\n    -- TODO move to a keyword\n    result.OnEnterP:AddLayer(function (playerID, tile)\n        local card = SummonCard(result.id, playerID, 'dev::Healing Light')\n        PlaceCardInHand(playerID, card.id)\n        return nil, true\n    end)\n    return result\nend"
 }

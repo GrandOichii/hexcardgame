@@ -36,7 +36,10 @@ public class Program
     private static void ConfigureSources() {
         var cm = new FileCardMaster();
         cm.LoadCardsFrom("../cards");
-
         Global.CMaster = cm;
+
+        var dm = new DeckManager("../decks");
+        Global.DManager = dm;
+
     }
 }

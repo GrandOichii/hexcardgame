@@ -8,8 +8,11 @@ namespace core.decks;
 public class DeckTemplate {
     static private string LINE_SPLITTER = "|";
     static private string AMOUNT_SPLITTER = "#";
+    static private string DESCRIPTORS_SPLITTER = ";";
+    static private string DESCRIPTOR_PARTS_SPLITTER = ",";
 
     public Dictionary<string, int> Index { get; }
+    public Dictionary<string, string> Descriptors { get; }=new();
 
     public DeckTemplate() {
         Index = new();
@@ -21,8 +24,21 @@ public class DeckTemplate {
     /// <param name="text">Text of the deck</param>
     /// <returns>The deck template</returns>
     static public DeckTemplate FromText(string text) {
+        // dev::Test Card 1#5|dev::Test Card 2#2;name=deck1,description=Amogus Amogus Amogus
+        
         var result = new DeckTemplate();
-        // dev::Test Card 1#5|dev::Test Card 2#2
+        var gLines = text.Split(DESCRIPTORS_SPLITTER);
+
+        if (gLines.Length == 2) {
+            // add descriptions
+            var descriptors = gLines[1].Split(DESCRIPTOR_PARTS_SPLITTER);
+            foreach (var dLine in descriptors) {
+                var s = dLine.Split("=");
+                result.Descriptors.Add(s[0], s[1]);
+            }
+        }
+
+        text = gLines[0];
         var lines = text.Split(LINE_SPLITTER);
         foreach (var line in lines) {
             var split = line.Split(AMOUNT_SPLITTER);
@@ -70,5 +86,15 @@ public class DeckTemplate {
 
         var result = new Zone<MCard>(list);
         return result;
+    }
+
+    /// <summary>
+    /// Gets the descriptor of the deck
+    /// </summary>
+    /// <param name="name">Name of the descriptor</param>
+    /// <returns>If contains descriptor, returns it's value, else returns empty string</returns>
+    public string GetDescriptor(string name) {
+        if (Descriptors.ContainsKey(name)) return Descriptors[name];
+        return "";
     }
 }

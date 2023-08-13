@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://caimuyxc5y74v"]
+[gd_scene load_steps=4 format=3 uid="uid://caimuyxc5y74v"]
 
 [ext_resource type="PackedScene" uid="uid://cummrh2sybd5e" path="res://Manager/PlayerConfigLine.tscn" id="1_014uv"]
+[ext_resource type="Script" path="res://Manager/CardsContainer.cs" id="1_khdl8"]
+[ext_resource type="Script" path="res://Manager/CardsRequest.cs" id="2_iw2od"]
 
 [node name="UI" type="CanvasLayer"]
 
@@ -13,7 +15,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Cards" type="TabBar" parent="Tabs"]
-visible = false
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Tabs/Cards"]
@@ -52,9 +53,15 @@ size_flags_stretch_ratio = 3.0
 layout_mode = 2
 placeholder_text = "Search by card name"
 
-[node name="CardList" type="ItemList" parent="Tabs/Cards/HBoxContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Tabs/Cards/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="CardsContainer" type="HFlowContainer" parent="Tabs/Cards/HBoxContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_khdl8")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Tabs/Cards/HBoxContainer/VBoxContainer"]
 layout_mode = 2
@@ -71,6 +78,7 @@ size_flags_horizontal = 3
 text = "Delete card"
 
 [node name="Matches" type="TabBar" parent="Tabs"]
+visible = false
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Tabs/Matches"]
@@ -157,3 +165,10 @@ text = "Save"
 layout_mode = 2
 text = "Copy to clipboard
 "
+
+[node name="CardsRequest" type="HTTPRequest" parent="."]
+use_threads = true
+script = ExtResource("2_iw2od")
+
+[connection signal="AddCard" from="CardsRequest" to="Tabs/Cards/HBoxContainer/VBoxContainer/ScrollContainer/CardsContainer" method="OnCardsRequestAddCard"]
+[connection signal="request_completed" from="CardsRequest" to="CardsRequest" method="OnRequestCompleted"]

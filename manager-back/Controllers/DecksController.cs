@@ -15,6 +15,12 @@ public class DecksController : ControllerBase
     {
         return Global.DManager.Decks;
     }
+
+    [HttpGet("random")]
+    public DeckTemplate GetRandom() {
+        // TODO
+        return new DeckTemplate();
+    }
 }
 
 

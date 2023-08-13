@@ -12,6 +12,7 @@ public class CardQuery {
     {
         if (Expansion.Length > 0 && card.Expansion.ToLower() != Expansion.ToLower()) return false;
         if (Name.Length > 0 && card.Name.ToLower() != Name.ToLower()) return false;
+        
         return true;
     }
 }

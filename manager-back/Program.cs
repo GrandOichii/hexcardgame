@@ -41,5 +41,5 @@ public class Program
         var dm = new DeckManager("../decks");
         Global.DManager = dm;
 
-    }
+    }   
 }

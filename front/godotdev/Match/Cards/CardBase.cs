@@ -23,25 +23,30 @@ public partial class CardBase : Node2D
 		}},
 	};
 
-	// nodes
-	public ColorRect Bg { get; private set; }
-	public ColorRect Fg { get; private set; }
+	#region Nodes
+	
+	
+	public PanelContainer BgNode { get; private set; }
+	public PanelContainer FgNode { get; private set; }
 	public Control MainCardNode { get; private set; }
-	private Label NameLabel;
-	private Label TypeLabel;
-	private Label CostLabel;
-	private Label PowerLabel;
-	private Label LifeLabel;
-	private TextureRect ImageNode;
-	private RichTextLabel TextNode;
+	public Label NameLabel { get; private set; }
+	public Label TypeLabel { get; private set; }
+	public Label CostLabel { get; private set; }
+	public Label PowerLabel { get; private set; }
+	public Label LifeLabel { get; private set; }
+	public TextureRect ImageNode { get; private set; }
+	public RichTextLabel TextNode { get; private set; }
+	
+	#endregion
 	
 	public MCardState LastState { get; private set; }
 	
 	public override void _Ready()
 	{
-		// node fetching
-		Bg = GetNode<ColorRect>("%Bg");
-		Fg = GetNode<ColorRect>("%Fg");
+		#region Node fetching
+		
+		BgNode = GetNode<PanelContainer>("%Bg");
+		FgNode = GetNode<PanelContainer>("%Fg");
 		NameLabel = GetNode<Label>("%Name");
 		TypeLabel = GetNode<Label>("%Type");
 		CostLabel = GetNode<Label>("%Cost");
@@ -51,6 +56,14 @@ public partial class CardBase : Node2D
 		TextNode = GetNode<RichTextLabel>("%Text");
 		MainCardNode = GetNode<Control>("%MainCard");
 		
+		#endregion
+	}
+	
+	public Color BGColor {
+		get => BgNode.Get("theme_override/panel/bg_color").As<Color>();
+		set {
+			BgNode.Set("theme_override/panel/bg_color", value);
+		}
 	}
 	
 	public void Load(MCardState card) {

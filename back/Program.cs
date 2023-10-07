@@ -94,6 +94,7 @@ class Program {
         // match.View = view;
         // match.SystemLogger = new FileLogger("../recent_logs.txt");
         // match.SystemLogger = new ConsoleLogger();
+        Console.WriteLine("Waiting for connection...");
 
         // player controllers
         // var p1Controller = new CursesPlayerController(view);
@@ -106,6 +107,7 @@ class Program {
         // var p2Controller = new LuaPlayerController("../bots/random.lua");
         var p2Controller = new LuaPlayerController("../bots/basic.lua");
         // var p2Controller = TCPPC(match);
+
 
         // create players
         var p1 = new Player(match, "P1", deckTemplate, p1Controller);

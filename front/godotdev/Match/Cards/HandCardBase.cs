@@ -4,7 +4,7 @@ using System;
 using core.cards;
 using core.match.states;
 
-public partial class HandCardBase : MarginContainer, IGamePart
+public partial class HandCardBase : Control, IGamePart
 {
 	// TODO with cardbase input processing disabled, can't scroll card text
 	
@@ -20,21 +20,25 @@ public partial class HandCardBase : MarginContainer, IGamePart
 		CardNode = GetNode<CardBase>("%Card");
 //		UpperCardNode = GetNode<CardBase>("%UpperCard");
 		
-		BaseColor = CardNode.Bg.Color;
+		BaseColor = CardNode.BGColor;
 		CustomMinimumSize = CardNode.MainCardNode.CustomMinimumSize;
+		GD.Print(CustomMinimumSize);
+		GetNode<CollisionShape2D>("%CollisionShape").Set("shape/size", CardNode.MainCardNode.CustomMinimumSize);
 		
 		// Load(CardFetcher.Instance.Get("dev::Urakshi Raider"));
 	}
 
 	private void SetColor(Color c) {
 		// CardNode.Bg.Color = HighlightColor;
-		CreateTween().TweenProperty(CardNode.Bg, "color", c, .1f);
+//		CardNode.BgNode.Set("theme_override/panel/bg_color", c);
+//		CardNode.BGColor = c;
+		CreateTween().TweenProperty(CardNode, "BGColor", c, .1f);
 	}
 	
 	private void OnCollisionMouseEntered()
 	{
 		if (!Game.Instance.Accepts(this)) return;
-//		UpperCardNode.Visible = true;
+		
 		SetColor(HighlightColor);
 	}
 	

@@ -29,7 +29,7 @@ script = ExtResource("1_j2fba")
 
 [node name="MainCard" type="Control" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(250, 350)
+custom_minimum_size = Vector2(280, 392)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 280.0

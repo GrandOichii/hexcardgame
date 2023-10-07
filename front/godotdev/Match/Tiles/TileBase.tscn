@@ -23,7 +23,7 @@ scale = Vector2(0.5, 0.5)
 
 [node name="Collision" type="Area2D" parent="Node2D"]
 position = Vector2(36, 32)
-priority = 1.0
+priority = 1
 
 [node name="CollisionPoly" type="CollisionPolygon2D" parent="Node2D/Collision"]
 position = Vector2(116, 96)
@@ -45,6 +45,7 @@ vertex_colors = PackedColorArray(1, 0, 0, 1)
 
 [node name="CoordsLabel" type="Label" parent="Node2D"]
 unique_name_in_owner = true
+visible = false
 offset_left = 48.0
 offset_top = 188.0
 offset_right = 232.0

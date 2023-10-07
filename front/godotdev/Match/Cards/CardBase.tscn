@@ -1,65 +1,109 @@
-[gd_scene load_steps=3 format=3 uid="uid://bs324wim6pf8q"]
+[gd_scene load_steps=6 format=3 uid="uid://bs324wim6pf8q"]
 
 [ext_resource type="Texture2D" uid="uid://bfw67ulwsgd6m" path="res://assets/elf1.png" id="1_a1h4d"]
 [ext_resource type="Script" path="res://Match/Cards/CardBase.cs" id="1_j2fba"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pdnyg"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rpj4d"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3hgwi"]
+bg_color = Color(0.278431, 0.564706, 0.992157, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [node name="CardBase" type="Node2D"]
 script = ExtResource("1_j2fba")
 
-[node name="Bg" type="ColorRect" parent="."]
+[node name="MainCard" type="Control" parent="."]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 350)
-offset_right = 250.0
-offset_bottom = 350.0
-pivot_offset = Vector2(125, 175)
-color = Color(0, 0, 0, 1)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 280.0
+offset_bottom = 392.0
 
-[node name="Fg" type="ColorRect" parent="."]
+[node name="Bg" type="PanelContainer" parent="MainCard"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(250, 350)
-offset_right = 250.0
-offset_bottom = 350.0
-scale = Vector2(0.95, 0.95)
-pivot_offset = Vector2(125, 175)
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Fg"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(125, 175)
+theme_override_styles/panel = SubResource("StyleBoxFlat_pdnyg")
 
-[node name="Name" type="Label" parent="Fg/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MainCard"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Fg" type="PanelContainer" parent="MainCard/MarginContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 350)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rpj4d")
+
+[node name="MarginContainer" type="MarginContainer" parent="MainCard/MarginContainer/Fg"]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainCard/MarginContainer/Fg/MarginContainer"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="MainCard/MarginContainer/Fg/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Card name here"
 
-[node name="HSeparator" type="HSeparator" parent="Fg/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="MainCard/MarginContainer/Fg/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Image" type="TextureRect" parent="Fg/VBoxContainer"]
+[node name="Image" type="TextureRect" parent="MainCard/MarginContainer/Fg/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 166)
 layout_mode = 2
 texture = ExtResource("1_a1h4d")
 expand_mode = 3
 
-[node name="HSeparator2" type="HSeparator" parent="Fg/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="MainCard/MarginContainer/Fg/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Type" type="Label" parent="Fg/VBoxContainer"]
+[node name="Type" type="Label" parent="MainCard/MarginContainer/Fg/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 14
 text = "Card type here"
 
-[node name="HSeparator3" type="HSeparator" parent="Fg/VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="MainCard/MarginContainer/Fg/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Text" type="RichTextLabel" parent="Fg/VBoxContainer"]
+[node name="Text" type="RichTextLabel" parent="MainCard/MarginContainer/Fg/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -69,37 +113,53 @@ bbcode_enabled = true
 text = "Card text here
 Card text here"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Fg/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MainCard/MarginContainer/Fg/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Power" type="Label" parent="Fg/VBoxContainer/HBoxContainer"]
+[node name="Power" type="Label" parent="MainCard/MarginContainer/Fg/MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.815686, 0, 0, 1)
 theme_override_font_sizes/font_size = 24
 text = "2"
+horizontal_alignment = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Fg/VBoxContainer/HBoxContainer"]
+[node name="PLSeparator" type="Label" parent="MainCard/MarginContainer/Fg/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "/"
 
-[node name="Life" type="Label" parent="Fg/VBoxContainer/HBoxContainer"]
+[node name="Life" type="Label" parent="MainCard/MarginContainer/Fg/MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0, 0.686275, 0, 1)
 theme_override_font_sizes/font_size = 24
 text = "3"
 
-[node name="Cost" type="Label" parent="Fg"]
-unique_name_in_owner = true
+[node name="MarginContainer2" type="MarginContainer" parent="MainCard"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -40.0
-offset_bottom = 37.0
+offset_bottom = 40.0
 grow_horizontal = 0
-theme_override_colors/font_color = Color(0, 0, 0.819608, 1)
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="PanelContainer" type="PanelContainer" parent="MainCard/MarginContainer2"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3hgwi")
+
+[node name="Cost" type="Label" parent="MainCard/MarginContainer2/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.0392157, 0.337255, 1)
 theme_override_font_sizes/font_size = 24
 text = "4"
-horizontal_alignment = 2
+horizontal_alignment = 1

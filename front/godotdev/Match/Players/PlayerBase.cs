@@ -3,7 +3,7 @@ using System;
 
 using core.match.states;
 
-public partial class PlayerBase : MarginContainer
+public partial class PlayerBase : Control
 {
 	private Label NameLabel;
 	private Label DeckCountLabel;

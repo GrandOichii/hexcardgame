@@ -21,6 +21,7 @@ public partial class HandCardBase : MarginContainer, IGamePart
 //		UpperCardNode = GetNode<CardBase>("%UpperCard");
 		
 		BaseColor = CardNode.Bg.Color;
+		CustomMinimumSize = CardNode.MainCardNode.CustomMinimumSize;
 		
 		// Load(CardFetcher.Instance.Get("dev::Urakshi Raider"));
 	}

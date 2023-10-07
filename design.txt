@@ -205,3 +205,15 @@ n. - neighboring
 [Blessing Fountain]:1
     Structure
     Discard a [Healing Light] card: target n. Unit you control gains +2 power and +2 life.
+
+
+[TODO]:TODO
+    Unit - Rogue
+    When [CARDNAME] deals damage to a Unit, switch that Unit's and [CARDNAME]'s position.
+    P: TODO
+    L: TODO
+
+
+[TODO]:TODO
+    Spell
+    For each enemy Unit, move it back 1 tile, if able.

@@ -26,6 +26,7 @@ public partial class CardBase : Node2D
 	// nodes
 	public ColorRect Bg { get; private set; }
 	public ColorRect Fg { get; private set; }
+	public Control MainCardNode { get; private set; }
 	private Label NameLabel;
 	private Label TypeLabel;
 	private Label CostLabel;
@@ -48,6 +49,7 @@ public partial class CardBase : Node2D
 		LifeLabel = GetNode<Label>("%Life");
 		ImageNode = GetNode<TextureRect>("%Image");
 		TextNode = GetNode<RichTextLabel>("%Text");
+		MainCardNode = GetNode<Control>("%MainCard");
 		
 	}
 	

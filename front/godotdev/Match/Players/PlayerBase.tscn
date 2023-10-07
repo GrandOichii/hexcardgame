@@ -2,41 +2,46 @@
 
 [ext_resource type="Script" path="res://Match/Players/PlayerBase.cs" id="1_jxfie"]
 
-[node name="PlayerBase" type="MarginContainer"]
-custom_minimum_size = Vector2(194, 111)
-offset_right = 194.0
-offset_bottom = 135.0
+[node name="PlayerBase" type="ColorRect"]
+custom_minimum_size = Vector2(264, 144)
+offset_right = 264.0
+offset_bottom = 144.0
 script = ExtResource("1_jxfie")
 
-[node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect"]
+[node name="PlayerBase" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
 
-[node name="NameLabel" type="Label" parent="ColorRect/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PlayerBase"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="PlayerBase/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Player Name Here"
 
-[node name="EnergyLabel" type="Label" parent="ColorRect/VBoxContainer"]
+[node name="EnergyLabel" type="Label" parent="PlayerBase/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 1, 1)
 text = "Energy: 4"
 
-[node name="DeckCountLabel" type="Label" parent="ColorRect/VBoxContainer"]
+[node name="DeckCountLabel" type="Label" parent="PlayerBase/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Deck count: 23"
 
-[node name="DescardButton" type="Button" parent="ColorRect/VBoxContainer"]
+[node name="DescardButton" type="Button" parent="PlayerBase/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 text = "Discard"

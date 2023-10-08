@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://dgxc5yfib5fry"]
+
+[ext_resource type="Script" path="res://Match/Cards/HandCard.cs" id="1_m431j"]
+[ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Match/Cards/Card.tscn" id="1_qh72h"]
+
+[node name="HandCard" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 151.0
+offset_bottom = 211.0
+script = ExtResource("1_m431j")
+
+[node name="Card" parent="." instance=ExtResource("1_qh72h")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 300.0
+offset_bottom = 420.0
+grow_horizontal = 1
+grow_vertical = 1
+scale = Vector2(0.5, 0.5)

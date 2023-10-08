@@ -76,6 +76,7 @@ class MainPhase : MatchPhase
         { "do", new ExecuteCommandAction() },
         { "play", new PlayCardAction() },
         { "move", new MoveAction() },
+        // { "get", new GetCardAction() },
     };
 
     public override void Exec(Match match, Player player)

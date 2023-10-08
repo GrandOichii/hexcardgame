@@ -10,7 +10,7 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [node name="PlayerInfo" type="Control"]
-custom_minimum_size = Vector2(150, 2.08165e-12)
+custom_minimum_size = Vector2(180, 0)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 155.0
@@ -54,6 +54,13 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "5"
 
-[node name="DiscardContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="DiscardContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3

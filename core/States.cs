@@ -228,12 +228,12 @@ public struct TileState {
 public struct MyDataState {
     [JsonPropertyName("id")]
     public string PlayerID { get; set; }
-    [JsonPropertyName("myHand")]
-    public List<MCardState> MyHand { get; set; }
+    [JsonPropertyName("hand")]
+    public List<MCardState> Hand { get; set; }
 
     public MyDataState(Player player) {
         PlayerID = player.ID;
-        MyHand = MCardState.FromCardList(player.Hand.Cards);
+        Hand = MCardState.FromCardList(player.Hand.Cards);
     }
 }
 

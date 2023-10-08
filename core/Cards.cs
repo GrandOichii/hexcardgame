@@ -53,6 +53,11 @@ public class Card
         result["life"] = Life;
         return result;
     }
+
+
+    public string ToJson() {
+        return JsonSerializer.Serialize(this);
+    }
 }
 
 
@@ -98,7 +103,7 @@ public class FileCardMaster : CardMaster
     public int LoadCardsFrom(string dir) {
         // read the manifest file
         var manifestFile = Path.Join(dir, MANIFEST_FILE);
-        var manifest = File.ReadAllText(manifestFile);
+        var manifest = File.ReadAllText(manifestFile);  
         var cardDirs = JsonSerializer.Deserialize<List<string>>(manifest);
         if (cardDirs is null) {
             throw new Exception("Failed to load manifest file in " + manifestFile);

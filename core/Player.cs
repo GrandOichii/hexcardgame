@@ -74,6 +74,12 @@ abstract public class PlayerController {
     /// <param name="match">Match</param>
     /// <returns></returns>
     abstract public string DoPickTile(List<int[]> choices, Player player, Match match);
+
+    /// <summary>
+    /// Sends the card info to the player
+    /// </summary>
+    /// <param name="card"></param>
+    abstract public void SendCard(Match match, Player player, Card card);
 }
 
 
@@ -97,6 +103,10 @@ public class InactivePlayerController : PlayerController
     public override string DoPromptAction(Player player, Match match)
     {
         return "pass";
+    }
+
+    public override void SendCard(Match match, Player player, Card card)
+    {
     }
 
     public override void Setup(Player player, Match match)
@@ -198,6 +208,14 @@ public class TCPPlayerController : PlayerController
         
         return Read();
     }
+
+    public override void SendCard(Match match, Player player, Card card)
+    {
+        // var state = new MatchState(match, player, "card", new(){card.ToJson()});
+
+        // Write(state.ToJson());
+        Write(card.ToJson());
+    }
 }
 
 
@@ -254,6 +272,10 @@ public class LuaPlayerController : PlayerController {
         // TODO
         return "" + choices[0][0] + "." + choices[1][0];
         // throw new NotImplementedException();
+    }
+
+    public override void SendCard(Match match, Player player, Card card)
+    {
     }
 }
 

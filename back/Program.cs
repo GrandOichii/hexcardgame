@@ -34,6 +34,10 @@ class QueuedActionsPlayerController : PlayerController
     public override void CleanUp()
     {
     }
+
+    public override void SendCard(Match match, Player player, Card card)
+    {
+    }
 }
 
 class CursesPlayerController : QueuedActionsPlayerController

@@ -1,3 +1,4 @@
+using core.match.states;
 using Godot;
 using System;
 
@@ -43,6 +44,16 @@ public partial class Card : Control
 		BgNode.Set("theme_override_styles/panel", _bgStyle.Duplicate());
 
 		_defaultBgColor = BgColor;
+	}
+
+	public void Load(MCardState cardState) {
+		NameLabelNode.Text = cardState.Name;
+		CostLabelNode.Text = " " + cardState.Cost.ToString() + " ";
+		TypeLabelNode.Text = cardState.Type;
+		PowerLabelNode.Text = cardState.Power.ToString();
+		LifeLabelNode.Text = cardState.Life.ToString();
+		DefenceLabelNode.Text = cardState.Defence.ToString();
+		TextLabelNode.Text = cardState.Text;
 	}
 	
 	public Color BgColor {

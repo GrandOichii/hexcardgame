@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dd30gx2sdi87s"]
+[gd_scene load_steps=4 format=3 uid="uid://dd30gx2sdi87s"]
 
 [ext_resource type="Script" path="res://Match/Match.cs" id="1_4p7bj"]
 [ext_resource type="PackedScene" uid="uid://cjb41p44y2lgg" path="res://Match/Players/PlayerInfo.tscn" id="2_urlbd"]
+[ext_resource type="PackedScene" uid="uid://cdurg7ifdio82" path="res://Match/Grid/Grid.tscn" id="3_3s8f7"]
 
 [node name="Match" type="Control"]
 layout_mode = 3
@@ -35,17 +36,43 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/VBoxContainer"]
+[node name="Grid" parent="HBoxContainer/VBoxContainer" instance=ExtResource("3_3s8f7")]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="CommandContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CommandLine" type="LineEdit" parent="HBoxContainer/VBoxContainer/CommandContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter command"
+
+[node name="SubmitCommandButton" type="Button" parent="HBoxContainer/VBoxContainer/CommandContainer"]
+layout_mode = 2
+text = "Submit"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+vertical_scroll_mode = 0
 
 [node name="HandContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="LogsLabel" type="RichTextLabel" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 bbcode_enabled = true
+
+[node name="PollStateTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.1
+
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/CommandContainer/SubmitCommandButton" to="." method="_on_submit_command_button_pressed"]
+[connection signal="timeout" from="PollStateTimer" to="." method="_on_poll_state_timer_timeout"]

@@ -1,0 +1,92 @@
+[gd_scene load_steps=3 format=3 uid="uid://c1ddt7vw6ssai"]
+
+[ext_resource type="Script" path="res://Match/MatchHub.cs" id="1_s6ieh"]
+[ext_resource type="PackedScene" uid="uid://dd30gx2sdi87s" path="res://Match/Match.tscn" id="2_lefb7"]
+
+[node name="MatchHub" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_s6ieh")
+
+[node name="ConnectToMatchWindow" type="Window" parent="."]
+unique_name_in_owner = true
+title = "Connect to a match"
+initial_position = 2
+size = Vector2i(300, 75)
+
+[node name="MarginContainer" type="MarginContainer" parent="ConnectToMatchWindow"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="VBoxContainer" parent="ConnectToMatchWindow/MarginContainer"]
+layout_mode = 2
+
+[node name="MatchURLEdit" type="LineEdit" parent="ConnectToMatchWindow/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "127.0.0.1:9090"
+placeholder_text = "Enter match URL"
+
+[node name="ConnectButton" type="Button" parent="ConnectToMatchWindow/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Connect"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="MatchListContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/HBoxContainer/MatchListContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MatchList" type="ItemList" parent="MarginContainer/HBoxContainer/MatchListContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="NewConnectionButton" type="Button" parent="MarginContainer/HBoxContainer/MatchListContainer"]
+layout_mode = 2
+text = "Connect to a match"
+
+[node name="ToggleMatchListButton" type="Button" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = ">"
+
+[node name="Match" parent="MarginContainer/HBoxContainer" instance=ExtResource("2_lefb7")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="NewMatchConnection" from="." to="MarginContainer/HBoxContainer/Match" method="_on_match_hub_new_match_connection"]
+[connection signal="close_requested" from="ConnectToMatchWindow" to="." method="_on_connect_to_match_window_close_requested"]
+[connection signal="pressed" from="ConnectToMatchWindow/MarginContainer/HBoxContainer/ConnectButton" to="." method="_on_connect_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/MatchListContainer/NewConnectionButton" to="." method="_on_new_connection_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/ToggleMatchListButton" to="." method="_on_toggle_match_list_button_pressed"]

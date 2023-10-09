@@ -29,8 +29,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
 
-[node name="Grid" parent="HBoxContainer/VBoxContainer" instance=ExtResource("3_3s8f7")]
+[node name="ScrollContainer2" type="ScrollContainer" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Grid" parent="HBoxContainer/VBoxContainer/ScrollContainer2" instance=ExtResource("3_3s8f7")]
+unique_name_in_owner = true
+z_index = -1
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="CommandContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]

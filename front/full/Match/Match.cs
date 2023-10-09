@@ -31,6 +31,7 @@ public partial class Match : Control
 	public RichTextLabel LogsLabelNode { get; private set; }
 	public LineEdit CommandLineNode { get; private set; }
 	public Timer PollStateTimerNode { get; private set; }
+	public Grid GridNode { get; private set; }
 	
 	#endregion
 	
@@ -50,6 +51,7 @@ public partial class Match : Control
 		LogsLabelNode = GetNode<RichTextLabel>("%LogsLabel");
 		CommandLineNode = GetNode<LineEdit>("%CommandLine");
 		PollStateTimerNode = GetNode<Timer>("%PollStateTimer");
+		GridNode = GetNode<Grid>("%Grid");
 
 		#endregion
 		
@@ -92,6 +94,7 @@ public partial class Match : Control
 
 		UpdatePlayers();
 		UpdateHand();
+		GridNode.Load(state);
 	}
 
 	#region State update methods
@@ -167,7 +170,6 @@ public partial class Match : Control
 //		GD.Print("poll");
 		try {
 			var message = NetUtil.Read(_stream);
-			GD.Print(message);
 			var state = MatchState.FromJson(message);
 			LoadState(state);
 		} catch (IOException) { return; }

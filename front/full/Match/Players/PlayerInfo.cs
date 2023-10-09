@@ -14,7 +14,7 @@ public partial class PlayerInfo : Control
 
 	#region Exports
 	
-	[Export(PropertyHint.ColorNoAlpha)]
+	[Export]
 	public Color CurrentPlayerColor { get; set; }
 	
 	#endregion
@@ -49,7 +49,6 @@ public partial class PlayerInfo : Control
 		BgNode.Set("theme_override_styles/panel", _bgStyle.Duplicate());
 
 		_defaultBgColor = BgColor;
-		CurrentPlayerColor = new Color(CurrentPlayerColor);
 
 		// populate discard
 //		var count = _rnd.Next(10);

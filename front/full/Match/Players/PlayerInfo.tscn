@@ -24,7 +24,7 @@ offset_right = 155.0
 offset_bottom = 294.0
 size_flags_vertical = 3
 script = ExtResource("1_lhthv")
-CurrentPlayerColor = Color(0, 0.658824, 0, 0)
+CurrentPlayerColor = Color(0, 0.658824, 0, 1)
 
 [node name="Bg" type="PanelContainer" parent="."]
 unique_name_in_owner = true

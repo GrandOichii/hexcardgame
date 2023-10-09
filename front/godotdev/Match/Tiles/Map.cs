@@ -29,10 +29,8 @@ public partial class Map : Panel
 				var a = new List<TileBase>();
 				for (int j = 0; j < state.Tiles[i].Count; j++) {
 					var tile = TileBaseScene.Instantiate() as TileBase;
-//					tile.Visible = false;
 					TilesNode.AddChild(tile);
 					tile.Map = this;
-//					tile._Ready();
 					if (tileHeight == 0) {
 						var size = tile.Size;
 						tileHeight = size.Y;

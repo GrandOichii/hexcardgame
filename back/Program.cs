@@ -97,7 +97,7 @@ class Program {
         // var view = new CursesMatchView();
         // match.View = view;
         // match.SystemLogger = new FileLogger("../recent_logs.txt");
-        // match.SystemLogger = new ConsoleLogger();
+        match.SystemLogger = new ConsoleLogger();
         Console.WriteLine("Waiting for connection...");
 
         // player controllers

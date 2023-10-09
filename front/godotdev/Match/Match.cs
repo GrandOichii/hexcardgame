@@ -82,7 +82,7 @@ public partial class Match : Node2D
 		}
 		
 		// load hand
-		LoadHand(state.MyData.MyHand);
+		LoadHand(state.MyData.Hand);
 
 		// load map
 		MapContainer.Load(state.Map);

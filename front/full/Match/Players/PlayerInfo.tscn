@@ -1,6 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://cjb41p44y2lgg"]
+[gd_scene load_steps=4 format=3 uid="uid://cjb41p44y2lgg"]
 
 [ext_resource type="Script" path="res://Match/Players/PlayerInfo.cs" id="1_lhthv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_660hu"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xjtar"]
 bg_color = Color(0.498039, 0.498039, 0.498039, 1)
@@ -17,49 +24,67 @@ offset_right = 155.0
 offset_bottom = 294.0
 size_flags_vertical = 3
 script = ExtResource("1_lhthv")
+CurrentPlayerColor = Color(0, 0.658824, 0, 0)
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="Bg" type="PanelContainer" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_660hu")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Fg" type="PanelContainer" parent="MarginContainer"]
+layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_xjtar")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Fg"]
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Fg/MarginContainer"]
 layout_mode = 2
 
-[node name="NameLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="NameLabel" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Player name here"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Energy:"
 
-[node name="EnergyLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="EnergyLabel" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "5"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="DiscardContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="DiscardContainer" type="VBoxContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

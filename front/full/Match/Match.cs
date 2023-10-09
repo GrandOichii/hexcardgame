@@ -5,12 +5,14 @@ using System.Net.Sockets;
 using core.match.states;
 using System.IO;
 using System.Text.Json;
+using core.players;
 
 public partial class Match : Control
 {
 	#region Packed scenes
 	
 	private readonly static PackedScene HandCardPS = ResourceLoader.Load<PackedScene>("res://Match/Cards/HandCard.tscn");
+	private readonly static PackedScene PlayerInfoPS = ResourceLoader.Load<PackedScene>("res://Match/Players/PlayerInfo.tscn");
 	
 	#endregion
 	
@@ -35,6 +37,8 @@ public partial class Match : Control
 	private MatchConnection _client;
 	private NetworkStream _stream;
 	private MatchState _state;
+	private bool _fixedPOrder = false;
+	private MatchInfoState _config;
 
 	public override void _Ready()
 	{
@@ -62,8 +66,18 @@ public partial class Match : Control
 
 		// read configuration
 		var message = NetUtil.Read(_stream);
-		GD.Print(message);
+		_config = MatchInfoState.FromJson(message);
+		var pCount = _config.PlayerCount;
 		
+		foreach (var child in PlayerContainerNode.GetChildren())
+			child.Free();
+		
+		for (int i = 0; i < pCount; i++) {
+			var child = PlayerInfoPS.Instantiate() as PlayerInfo;
+			PlayerContainerNode.AddChild(child);
+			child.PlayerI = i;
+		}
+
 		_client.ReceiveTimeout = 20;
 
 		PollStateTimerNode.Start();
@@ -76,6 +90,7 @@ public partial class Match : Control
 		_state = state;
 		EmitSignal(SignalName.StateUpdated, new Wrapper<MatchState>(state));
 
+		UpdatePlayers();
 		UpdateHand();
 	}
 
@@ -83,7 +98,6 @@ public partial class Match : Control
 
 	private void UpdateHand() {
 		var cCount = HandContainerNode.GetChildCount();
-		GD.Print(_state.MyData.Hand);
 		var nCount = _state.MyData.Hand.Count;
 
 		if (nCount > cCount) {
@@ -106,6 +120,28 @@ public partial class Match : Control
 		}
 	}
 
+	private void UpdatePlayers() {
+		if (!_fixedPOrder) {
+			var myI = _config.MyI;
+			var pCount = _config.PlayerCount;
+			for (int i = 0; i < pCount; i++) {
+				var pNode = PlayerContainerNode.GetChild(i) as PlayerInfo;
+				pNode.PlayerI = (i + myI + 1) % pCount;
+			}
+			_fixedPOrder = true;
+		}
+
+		foreach (var child in PlayerContainerNode.GetChildren()) {
+			switch (child) {
+			case PlayerInfo pInfo:
+				pInfo.UpdateState(_state);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	
 	#endregion
 
 	

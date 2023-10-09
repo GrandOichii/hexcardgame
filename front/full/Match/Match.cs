@@ -143,6 +143,10 @@ public partial class Match : Control
 	}
 	
 	#endregion
+	
+	public void Write(string command) {
+		NetUtil.Write(_stream, command);
+	}
 
 	
 	#region Signal connections
@@ -154,7 +158,7 @@ public partial class Match : Control
 
 	private void _on_submit_command_button_pressed()
 	{
-		NetUtil.Write(_client.GetStream(), CommandLineNode.Text);
+		Write(CommandLineNode.Text);
 		CommandLineNode.Text = "";
 	}
 
@@ -168,6 +172,12 @@ public partial class Match : Control
 			LoadState(state);
 		} catch (IOException) { return; }
 	}
+
+	private void _on_pass_button_pressed()
+	{
+		Write("pass");
+	}
 	
 	#endregion
 }
+

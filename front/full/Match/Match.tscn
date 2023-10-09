@@ -47,6 +47,10 @@ placeholder_text = "Enter command"
 layout_mode = 2
 text = "Submit"
 
+[node name="PassButton" type="Button" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Pass"
+
 [node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
 vertical_scroll_mode = 0
@@ -68,4 +72,5 @@ unique_name_in_owner = true
 wait_time = 0.1
 
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/CommandContainer/SubmitCommandButton" to="." method="_on_submit_command_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/PassButton" to="." method="_on_pass_button_pressed"]
 [connection signal="timeout" from="PollStateTimer" to="." method="_on_poll_state_timer_timeout"]

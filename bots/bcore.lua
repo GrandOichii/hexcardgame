@@ -453,7 +453,7 @@ function GetAvailableActions(state)
     end
     -- playing cards
     local result = {}
-    for _, card in ipairs(state.myData.myHand) do
+    for _, card in ipairs(state.myData.hand) do
         if card.cost <= me.energy then
             if card.type == 'Spell' then
                 -- spell

@@ -47,7 +47,7 @@ public partial class Card : Control
 	}
 
 	public void Load(MCardState cardState) {
-		NameLabelNode.Text = cardState.Name;
+		NameLabelNode.Text = cardState.Name + " [" + cardState.MID + "]";
 		CostLabelNode.Text = " " + cardState.Cost.ToString() + " ";
 		TypeLabelNode.Text = cardState.Type;
 		PowerLabelNode.Text = cardState.Power.ToString();

@@ -14,43 +14,60 @@ corner_radius_bottom_left = 6
 script = ExtResource("1_84dlr")
 
 [node name="Tile" parent="." instance=ExtResource("2_6vv2f")]
+visible = false
 
 [node name="CollisionPolygon2D" type="Polygon2D" parent="."]
 color = Color(0.466667, 0.466667, 0.466667, 1)
 polygon = PackedVector2Array(-32, -48, 32, -48, 56, 0, 32, 48, -32, 48, -56, 0)
+
+[node name="MoveIndicator" type="Panel" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(16, 16)
+offset_left = -7.0
+offset_top = 24.0
+offset_right = 9.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_qo5yt")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_top = -18.5
-offset_bottom = 18.5
+offset_left = -56.0
+offset_top = -18.0
+offset_right = 56.0
+offset_bottom = 19.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="PowerLabel" type="Label" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.415686, 0, 0, 1)
 theme_override_font_sizes/font_size = 24
-text = "12"
+text = "1"
+horizontal_alignment = 2
 
-[node name="MoveContainer" type="VBoxContainer" parent="HBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(16, 16)
+[node name="Control" type="Control" parent="HBoxContainer"]
+custom_minimum_size = Vector2(5, 0)
 layout_mode = 2
-alignment = 1
 
-[node name="MoveIndicator" type="Panel" parent="HBoxContainer/MoveContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(16, 16)
+[node name="RightContainer" type="HBoxContainer" parent="HBoxContainer"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_qo5yt")
+size_flags_horizontal = 3
 
-[node name="LifeLabel" type="Label" parent="HBoxContainer"]
+[node name="LifeLabel" type="Label" parent="HBoxContainer/RightContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0.356863, 0, 1)
 theme_override_font_sizes/font_size = 24
-text = "23"
+text = "2"
+
+[node name="DefenceLabel" type="Label" parent="HBoxContainer/RightContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.192157, 0.192157, 0.192157, 1)
+theme_override_font_sizes/font_size = 24
+text = "+1"

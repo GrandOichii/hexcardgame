@@ -25,6 +25,7 @@ public partial class PlayerInfo : Control
 	public PanelContainer BgNode { get; private set; }
 	public Label NameLabelNode { get; private set; }
 	public Label EnergyLabelNode { get; private set; }
+	public Control DiscardScrollNode { get; private set; }
 
 	#endregion
 	
@@ -41,6 +42,7 @@ public partial class PlayerInfo : Control
 		BgNode = GetNode<PanelContainer>("%Bg");
 		NameLabelNode = GetNode<Label>("%NameLabel");
 		EnergyLabelNode = GetNode<Label>("%EnergyLabel");
+		DiscardScrollNode = GetNode<Control>("%DiscardScroll");
 
 		#endregion
 		
@@ -72,8 +74,40 @@ public partial class PlayerInfo : Control
 		var pState = state.Players[PlayerI];
 		NameLabelNode.Text = pState.Name;
 		EnergyLabelNode.Text = pState.Energy.ToString();
+		BgColor = state.CurPlayerID == pState.ID ? CurrentPlayerColor : _defaultBgColor;
 
 		// TODO discard
-		BgColor = state.CurPlayerID == pState.ID ? CurrentPlayerColor : _defaultBgColor;
+		var cCount = DiscardContainerNode.GetChildCount();
+		var nCount = _state.Players[PlayerI].Discard.Count;
+
+		if (nCount > cCount) {
+			// fill discard up to new count
+			for (int i = 0; i < nCount - cCount; i++) {
+				var child = DiscardedCardPS.Instantiate() as DiscardedCard;
+				DiscardContainerNode.AddChild(child);
+			}
+		}
+		if (nCount < cCount) {
+			// trim child count
+			for (int i = nCount + 1; i < cCount; i++) {
+				var child = DiscardContainerNode.GetChild(i);
+				child.QueueFree();
+			}
+		}
+
+		// load card data
+		for (int i = nCount - 1; i >= 0; --i) {
+			(DiscardContainerNode.GetChild(i) as DiscardedCard).Load(_state.Players[PlayerI].Discard[i]);
+		}
 	}
+	
+	#region Signal connections
+
+	private void _on_toggle_discard_button_pressed()
+	{
+		DiscardScrollNode.Visible = !DiscardScrollNode.Visible;
+	}
+	
+	#endregion
 }
+

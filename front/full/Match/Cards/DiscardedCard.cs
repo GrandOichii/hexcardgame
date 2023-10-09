@@ -1,3 +1,4 @@
+using core.match.states;
 using Godot;
 using System;
 
@@ -24,9 +25,8 @@ public partial class DiscardedCard : Control
 		_cardSizeY = CardNode.Size.Y * CardNode.Scale.Y;
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
+	public void Load(MCardState card) {
+		CardNode.Load(card);
 	}
 
 	#region Node connections

@@ -79,13 +79,21 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "5"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
+[node name="ToggleDiscardButton" type="Button" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Discard"
+
+[node name="DiscardScroll" type="ScrollContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="DiscardContainer" type="VBoxContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="DiscardContainer" type="VBoxContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/DiscardScroll"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[connection signal="pressed" from="MarginContainer/Fg/MarginContainer/VBoxContainer/ToggleDiscardButton" to="." method="_on_toggle_discard_button_pressed"]

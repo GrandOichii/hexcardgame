@@ -1,3 +1,4 @@
+using core.cards;
 using core.match.states;
 using Godot;
 using System;
@@ -43,6 +44,17 @@ public partial class Tile : Node2D, IGamePart
 	}
 
 	public string CoordsStr => Coords.Y + "." + Coords.X;
+
+	private string _playerID;
+	public string PlayerID {
+		get => _playerID;
+		set {
+			_playerID = value;
+			var color = Client.PlayerColors[value];
+			// BgNode.Color = new Color(0, 0, 0);
+			FgNode.Color = color;
+		}
+	}
 	
 	public void Load(TileState? state) {
 		State = state;
@@ -52,6 +64,7 @@ public partial class Tile : Node2D, IGamePart
 		}
 
 		Visible = true;
+		PlayerID = state?.OwnerID;
 	}
 	
 	private void _pressed() {
@@ -71,6 +84,8 @@ public partial class Tile : Node2D, IGamePart
 	private void _on_collision_mouse_entered()
 	{
 		if (State is not null && State?.Entity is not null) {
+			MCardState card = (MCardState)(State?.Entity);
+			Client.HoverCard.Load(card);
 			// HoverCard.Visible = true;
 		}
 		

@@ -32,6 +32,7 @@ public partial class Match : Control
 	public LineEdit CommandLineNode { get; private set; }
 	public Timer PollStateTimerNode { get; private set; }
 	public Grid GridNode { get; private set; }
+	public HoverCard HoverCardNode { get; private set; }
 	
 	#endregion
 	
@@ -52,6 +53,7 @@ public partial class Match : Control
 		CommandLineNode = GetNode<LineEdit>("%CommandLine");
 		PollStateTimerNode = GetNode<Timer>("%PollStateTimer");
 		GridNode = GetNode<Grid>("%Grid");
+		HoverCardNode = GetNode<HoverCard>("%HoverCard");
 
 		#endregion
 		
@@ -74,6 +76,7 @@ public partial class Match : Control
 		var message = NetUtil.Read(_stream);
 		Config = MatchInfoState.FromJson(message);
 		Client.Config = Config;
+		Client.HoverCard = HoverCardNode;
 		GridNode.Client = Client;
 		var pCount = Config.PlayerCount;
 		

@@ -20,6 +20,13 @@ public static class GUtil {
 }
 
 public class MatchConnection : TcpClient {
+	public static readonly Color P1Color = Colors.Green;
+	public static readonly Color P2Color = Colors.Red;
+	public Dictionary<string, Color> PlayerColors { get; set; } = new() {
+		{ "", Colors.White },
+		{ "1", P1Color },
+		{ "2", P2Color },
+	};
 	private Dictionary<string, List<Command>> _requestCommandMap;
 	private MatchState _state;
 	public MatchState State { 
@@ -33,6 +40,7 @@ public class MatchConnection : TcpClient {
 	public Command? CurrentCommand { get; set; }
 	private List<Command> _commands = new();
 
+	public HoverCard HoverCard { get; set; }
 	public MatchConnection() : base() {
 		_requestCommandMap = new() {
 			{

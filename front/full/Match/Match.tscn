@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dd30gx2sdi87s"]
+[gd_scene load_steps=4 format=3 uid="uid://dd30gx2sdi87s"]
 
 [ext_resource type="Script" path="res://Match/Match.cs" id="1_4p7bj"]
 [ext_resource type="PackedScene" uid="uid://cdurg7ifdio82" path="res://Match/Grid/Grid.tscn" id="3_3s8f7"]
+[ext_resource type="PackedScene" uid="uid://cmwc31uvgj2a7" path="res://Match/Cards/HoverCard.tscn" id="3_b6uax"]
 
 [node name="Match" type="Control"]
 layout_mode = 3
@@ -68,10 +69,24 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="LogsLabel" type="RichTextLabel" parent="HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+alignment = 1
+
+[node name="HoverCard" parent="HBoxContainer/VBoxContainer2/HBoxContainer" instance=ExtResource("3_b6uax")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 294)
+layout_mode = 2
+
+[node name="LogsLabel" type="RichTextLabel" parent="HBoxContainer/VBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 bbcode_enabled = true
 
 [node name="PollStateTimer" type="Timer" parent="."]

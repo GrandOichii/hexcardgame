@@ -10,10 +10,12 @@ public partial class Entity : Node2D
 	public Label LifeLabelNode { get; private set; }
 	public Label DefenceLabelNode { get; private set; }
 	public Control MoveIndicatorNode { get; private set; }
+	public Polygon2D BgNode { get; private set; }
 
 	#endregion
 
 	public MCardState State { get; set; }
+	public MatchConnection Client { get; set; }
 	
 	public override void _Ready()
 	{
@@ -23,12 +25,16 @@ public partial class Entity : Node2D
 		LifeLabelNode = GetNode<Label>("%LifeLabel");
 		DefenceLabelNode = GetNode<Label>("%DefenceLabel");
 		MoveIndicatorNode = GetNode<Control>("%MoveIndicator");
+		BgNode = GetNode<Polygon2D>("%Bg");
 		
 		#endregion
 	}
 
 	public void Load(MCardState state) {
 		State = state;
+
+		var color = Client.PlayerColors[state.OwnerID];
+		BgNode.Color = color.Darkened(.2f);
 
 		PowerLabelNode.Text = state.Power.ToString();
 		LifeLabelNode.Text = state.Life.ToString();

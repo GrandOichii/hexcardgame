@@ -103,6 +103,7 @@ public partial class Grid : Control
 			var entity = pair.Value;
 			var eNode = EntityPS.Instantiate() as Entity;
 			EntitiesNode.AddChild(eNode);
+			eNode.Client = Client;
 			eNode.Load(entity);
 
 			var loc = newPos[mid];

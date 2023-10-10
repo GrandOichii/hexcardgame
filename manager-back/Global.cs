@@ -7,7 +7,7 @@ public class DeckManager {
         var files = Directory.GetFiles(loadPath);
         int nameI = 1;
         foreach (var file in files) {
-            var deckText = File.ReadAllText("../decks/generated.deck");
+            var deckText = File.ReadAllText(file);
             var deckTemplate = DeckTemplate.FromText(deckText);
             if (deckTemplate.GetDescriptor("name").Length == 0) {
                 deckTemplate.Descriptors["name"] = "deck" + nameI;

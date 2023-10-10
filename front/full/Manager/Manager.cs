@@ -25,6 +25,9 @@ public partial class Manager : Control
 		#endregion 
 		
 		UpdateURL();
+		
+		// TODO remove
+		GetNode<TabContainer>("%TabContainer").CurrentTab = 1;
 	}
 	
 	private void UpdateURL() {

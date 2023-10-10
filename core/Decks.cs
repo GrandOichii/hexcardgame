@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using core.cards;
 using core.match;
@@ -11,8 +12,10 @@ public class DeckTemplate {
     static private string DESCRIPTORS_SPLITTER = ";";
     static private string DESCRIPTOR_PARTS_SPLITTER = ",";
 
-    public Dictionary<string, int> Index { get; }
-    public Dictionary<string, string> Descriptors { get; }=new();
+    [JsonPropertyName("index")]
+    public Dictionary<string, int> Index { get; set; }
+    [JsonPropertyName("descriptors")]
+    public Dictionary<string, string> Descriptors { get; set; }=new();
 
     public DeckTemplate() {
         Index = new();

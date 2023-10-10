@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://pedcbsolvwgw"]
+[gd_scene load_steps=4 format=3 uid="uid://pedcbsolvwgw"]
 
 [ext_resource type="PackedScene" uid="uid://dlmxwv68ql8hl" path="res://Manager/Tabs/CardsTab.tscn" id="1_g12tf"]
 [ext_resource type="Script" path="res://Manager/Manager.cs" id="1_omgef"]
+[ext_resource type="PackedScene" uid="uid://bndeg34pqxyk0" path="res://Manager/Tabs/DecksTab.tscn" id="3_76vlq"]
 
 [node name="Manager" type="Control"]
 layout_mode = 3
@@ -28,10 +29,15 @@ theme_override_constants/margin_bottom = 6
 layout_mode = 2
 
 [node name="TabContainer" type="TabContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
 [node name="Cards" parent="MarginContainer/VBoxContainer/TabContainer" instance=ExtResource("1_g12tf")]
+layout_mode = 2
+
+[node name="Decks" parent="MarginContainer/VBoxContainer/TabContainer" instance=ExtResource("3_76vlq")]
+visible = false
 layout_mode = 2
 
 [node name="URLEdit" type="LineEdit" parent="MarginContainer/VBoxContainer"]
@@ -41,4 +47,5 @@ text = "http://localhost:5113"
 placeholder_text = "Enter backend URL"
 
 [connection signal="URLUpdated" from="." to="MarginContainer/VBoxContainer/TabContainer/Cards" method="_on_manager_url_updated"]
+[connection signal="URLUpdated" from="." to="MarginContainer/VBoxContainer/TabContainer/Decks" method="_on_manager_url_updated"]
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/URLEdit" to="." method="_on_url_edit_text_changed"]

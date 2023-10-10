@@ -32,6 +32,15 @@ public partial class Grid : Control
 	private MatchState _state;
 	private Dictionary<string, MCardState> _entities = new();
 	private Dictionary<string, int[]> _enPositions = new();
+	private MatchConnection _client;
+	public MatchConnection Client {
+		get => _client; 
+		set {
+			_client = value;
+			
+		}
+	}
+
 
 	public override void _Ready()
 	{
@@ -130,6 +139,7 @@ public partial class Grid : Control
 			for (int j = 0; j < state.Tiles[i].Count; j++) {
 				var tile = TilePS.Instantiate() as Tile;
 				TilesNode.AddChild(tile);
+				tile.Client = Client;
 				// tile.Map = this;
 				
 				a.Add(tile);

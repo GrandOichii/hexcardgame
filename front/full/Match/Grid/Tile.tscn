@@ -25,6 +25,7 @@ polygon = PackedVector2Array(-40, -64, 40, -64, 72, 0, 40, 64, -40, 64, -72, 0)
 
 [node name="BBox" type="Control" parent="."]
 unique_name_in_owner = true
+process_mode = 4
 layout_mode = 3
 anchors_preset = 0
 offset_left = -72.0
@@ -32,5 +33,6 @@ offset_top = -64.0
 offset_right = 72.0
 offset_bottom = 64.0
 
+[connection signal="input_event" from="Collision" to="." method="_on_collision_input_event"]
 [connection signal="mouse_entered" from="Collision" to="." method="_on_collision_mouse_entered"]
 [connection signal="mouse_exited" from="Collision" to="." method="_on_collision_mouse_exited"]

@@ -35,11 +35,11 @@ public partial class Match : Control
 	
 	#endregion
 	
-	private MatchConnection _client;
+	public MatchConnection Client { get; private set; }
 	private NetworkStream _stream;
-	private MatchState _state;
+	public MatchState State { get; private set; }
 	private bool _fixedPOrder = false;
-	private MatchInfoState _config;
+	public MatchInfoState Config { get; private set; }
 
 	public override void _Ready()
 	{
@@ -55,21 +55,27 @@ public partial class Match : Control
 
 		#endregion
 		
-		// populate hand
-//		for (int i = 0; i < 10; i++) {
-//			var card = HandCardPS.Instantiate() as HandCard;
-//			HandContainerNode.AddChild(card);
-//		}
+	}
+	
+	public override void _Input(InputEvent e) {
+		if (e.IsActionPressed("cancel-command"))
+			CancelCommand();
+	}
+	
+	private void CancelCommand() {
+		GD.Print("Cancelled");
 	}
 	
 	public void Load(Wrapper<MatchConnection> connection) {
-		_client = connection.Value;
-		_stream = _client.GetStream();
+		Client = connection.Value;
+		_stream = Client.GetStream();
 
 		// read configuration
 		var message = NetUtil.Read(_stream);
-		_config = MatchInfoState.FromJson(message);
-		var pCount = _config.PlayerCount;
+		Config = MatchInfoState.FromJson(message);
+		Client.Config = Config;
+		GridNode.Client = Client;
+		var pCount = Config.PlayerCount;
 		
 		foreach (var child in PlayerContainerNode.GetChildren())
 			child.Free();
@@ -77,19 +83,18 @@ public partial class Match : Control
 		for (int i = 0; i < pCount; i++) {
 			var child = PlayerInfoPS.Instantiate() as PlayerInfo;
 			PlayerContainerNode.AddChild(child);
+			child.Client = Client;
 			child.PlayerI = i;
 		}
 
-		_client.ReceiveTimeout = 20;
+		Client.ReceiveTimeout = 20;
 
 		PollStateTimerNode.Start();
-		// TODO
-
 	}
 
 	private void LoadState(MatchState state) {
-		// _client.LastState = state;
-		_state = state;
+		Client.State = state;
+		State = state;
 		EmitSignal(SignalName.StateUpdated, new Wrapper<MatchState>(state));
 
 		UpdatePlayers();
@@ -101,32 +106,34 @@ public partial class Match : Control
 
 	private void UpdateHand() {
 		var cCount = HandContainerNode.GetChildCount();
-		var nCount = _state.MyData.Hand.Count;
+		var nCount = State.MyData.Hand.Count;
 
 		if (nCount > cCount) {
 			// fill hand up to new count
 			for (int i = 0; i < nCount - cCount; i++) {
 				var child = HandCardPS.Instantiate() as HandCard;
 				HandContainerNode.AddChild(child);
+				child.Client = Client;
 			}
 		}
 		if (nCount < cCount) {
 			// trim child count
-			for (int i = nCount + 1; i < cCount; i++) {
+			for (int i = cCount - 1; i >= nCount; i--) {
+			// for (int i = nCount + 1; i < cCount; i++) {
 				var child = HandContainerNode.GetChild(i);
-				child.QueueFree();
+				child.Free();
 			}
 		}
 		// load card data
 		for (int i = 0; i < nCount; i++) {
-			(HandContainerNode.GetChild(i) as HandCard).Load(_state.MyData.Hand[i]);
+			(HandContainerNode.GetChild(i) as HandCard).Load(State.MyData.Hand[i]);
 		}
 	}
 
 	private void UpdatePlayers() {
 		if (!_fixedPOrder) {
-			var myI = _config.MyI;
-			var pCount = _config.PlayerCount;
+			var myI = Config.MyI;
+			var pCount = Config.PlayerCount;
 			for (int i = 0; i < pCount; i++) {
 				var pNode = PlayerContainerNode.GetChild(i) as PlayerInfo;
 				pNode.PlayerI = (i + myI + 1) % pCount;
@@ -137,7 +144,7 @@ public partial class Match : Control
 		foreach (var child in PlayerContainerNode.GetChildren()) {
 			switch (child) {
 			case PlayerInfo pInfo:
-				pInfo.UpdateState(_state);
+				pInfo.UpdateState(State);
 				break;
 			default:
 				break;

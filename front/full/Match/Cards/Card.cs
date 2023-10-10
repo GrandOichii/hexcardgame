@@ -4,6 +4,13 @@ using System;
 
 public partial class Card : Control
 {
+	#region Signals
+	
+	[Signal]
+	public delegate void AddToActionEventHandler();
+	
+	#endregion
+	
 	#region Nodes
 	
 	public PanelContainer BgNode { get; private set; }
@@ -21,6 +28,8 @@ public partial class Card : Control
 	#endregion
 
 	private Color _defaultBgColor;
+	public MCardState State { get; private set; }
+	public MatchConnection Client { get; set; }
 
 	public override void _Ready()
 	{
@@ -47,6 +56,7 @@ public partial class Card : Control
 	}
 
 	public void Load(MCardState cardState) {
+		State = cardState;
 		NameLabelNode.Text = cardState.Name + " [" + cardState.MID + "]";
 		CostLabelNode.Text = " " + cardState.Cost.ToString() + " ";
 		TypeLabelNode.Text = cardState.Type;
@@ -65,19 +75,25 @@ public partial class Card : Control
 
 	private StyleBoxFlat _bgStyle => BgNode.Get("theme_override_styles/panel").As<StyleBoxFlat>();
 
-	#region Signal connections
+	public void Unfocus() {
+		CreateTween().TweenProperty(this, "BgColor", _defaultBgColor, .1f);	
+		
+	}
 
-	private void _on_mouse_entered()
-	{
+	public void Focus() {
 		CreateTween().TweenProperty(this, "BgColor", new Color(1, 0, 0), .1f);
 	}
 
-	private void _on_mouse_exited()
+	#region Signal connections
+	
+	private void _on_gui_input(InputEvent e)
 	{
-		CreateTween().TweenProperty(this, "BgColor", _defaultBgColor, .1f);	
+		if (e.IsActionPressed("add-to-action"))
+			EmitSignal(SignalName.AddToAction);
 	}
 
 	#endregion
 }
+
 
 

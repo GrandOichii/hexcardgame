@@ -13,6 +13,8 @@ public partial class DiscardedCard : Control
 	private float _defaultMinY;
 	private float _cardSizeY;
 
+	public MatchConnection Client { get; set; }
+
 	public override void _Ready()
 	{
 		#region Node fetching

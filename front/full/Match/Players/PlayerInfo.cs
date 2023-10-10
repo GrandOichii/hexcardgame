@@ -50,18 +50,21 @@ public partial class PlayerInfo : Control
 
 		_defaultBgColor = BgColor;
 
-		// populate discard
-//		var count = _rnd.Next(10);
-//		for (int i = 0; i < 10; i++) {
-//			var card = DiscardedCardPS.Instantiate() as DiscardedCard;
-//			DiscardContainerNode.AddChild(card);
-//		}
 	}
 	
 	public Color BgColor {
 		get => _bgStyle.BgColor;
 		set {
 			_bgStyle.BgColor = value;
+		}
+	}
+
+	private MatchConnection _client;
+	public MatchConnection Client {
+		get => _client; 
+		set {
+			_client = value;
+			
 		}
 	}
 
@@ -84,6 +87,7 @@ public partial class PlayerInfo : Control
 			for (int i = 0; i < nCount - cCount; i++) {
 				var child = DiscardedCardPS.Instantiate() as DiscardedCard;
 				DiscardContainerNode.AddChild(child);
+				child.Client = Client;
 			}
 		}
 		if (nCount < cCount) {

@@ -21,3 +21,7 @@ offset_bottom = 420.0
 grow_horizontal = 1
 grow_vertical = 1
 scale = Vector2(0.5, 0.5)
+
+[connection signal="AddToAction" from="Card" to="." method="_on_card_add_to_action"]
+[connection signal="mouse_entered" from="Card" to="." method="_on_card_mouse_entered"]
+[connection signal="mouse_exited" from="Card" to="." method="_on_card_mouse_exited"]

@@ -1,8 +1,0 @@
-{
-    "name": "Scorch the Earth",
-    "cost": 5,
-    "type": "Spell",
-    "expansion": "starters",
-    "text": "Deal 3 damage to each Unit.",
-    "script": "scorch_the_earth.lua"
-}

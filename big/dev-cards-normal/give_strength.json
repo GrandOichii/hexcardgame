@@ -1,8 +1,0 @@
-{
-    "name": "Give Strength",
-    "cost": 1,
-    "type": "Spell",
-    "expansion": "dev",
-    "text": "Caster gains +2 power and +2 life.",
-    "script": "give_strength.lua"
-}

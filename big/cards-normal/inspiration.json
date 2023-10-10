@@ -1,8 +1,0 @@
-{
-    "name": "Inspiration",
-    "cost": 3,
-    "type": "Spell",
-    "expansion": "starters",
-    "text": "Draw 2 cards.",
-    "script": "\nfunction _Create(props)\n    local result = CardCreation:Spell(props)\n    result.DamageValues.Damage = 1\n    result.EffectP:AddLayer(function(playerID, caster)\n        DrawCards(playerID, 2)\n        return nil, true\n    end)\n    return result\nend"
-}

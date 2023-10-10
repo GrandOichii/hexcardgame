@@ -1,8 +1,0 @@
-{
-    "name": "Dub",
-    "cost": 2,
-    "type": "Spell",
-    "expansion": "dev",
-    "text": "Caster becomes a Warrior. (Keeps all other types)",
-    "script": "dub.lua"
-}

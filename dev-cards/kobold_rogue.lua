@@ -1,5 +1,4 @@
 
--- TODO not tested
 function _Create(props)
     local result = CardCreation:Unit(props)
     result:AddSubtype('Rogue')
@@ -7,7 +6,7 @@ function _Create(props)
         :Check(Common:Moved(result))
         :Cost(Common:NoCost())
         :IsSilent(false)
-        :On(TRIGGERS.TURN_START)
+        :On(TRIGGERS.UNIT_MOVE)
         :Zone(ZONES.PLACED)
         :Effect(function (playerID, args)
             result.power = result.power + 1

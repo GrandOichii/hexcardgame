@@ -1,8 +1,0 @@
-{
-    "name": "Blood for Knowledge",
-    "cost": 2,
-    "type": "Spell",
-    "expansion": "dev",
-    "text": "Deal 1 damage to caster. If survives, draw 2 cards.",
-    "script": "blood_for_knowledge.lua"
-}

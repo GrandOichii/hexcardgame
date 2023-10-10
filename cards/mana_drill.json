@@ -3,7 +3,7 @@
     "cost": 3,
     "type": "Structure",
     "expansion": "dev",
-    "text": "{Unrestricted}\nGenerates 1 energy per turn.",
+    "text": "Generates 1 energy per turn.",
     "life": 3,
     "script": "function _Create(props)\n    local result = CardCreation:Structure(props)\n        result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()\n        :Check(Common:IsOwnersTurn(result))\n        :Cost(Common:NoCost())\n        :IsSilent(false)\n        :On(TRIGGERS.TURN_START)\n        :Zone(ZONES.PLACED)\n        :Effect(function (playerID, args)\n            AddEnergy(playerID, 1)\n        end)\n    :Build()\n    return result\nend"
 }

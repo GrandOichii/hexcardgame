@@ -1,8 +1,0 @@
-{
-    "name": "Spread Influence",
-    "cost": 5,
-    "type": "Spell",
-    "expansion": "dev",
-    "text": "Gain control of the current and all n. neutral tiles.",
-    "script": "\nfunction _Create(props)\n    local result = CardCreation:Spell(props)\n    result.EffectP:AddLayer(function(playerID, caster)\n        local tile = GetTileWith(caster.id)\n        local tiles = GetNeighbors( {tile.iPos, tile.jPos} )\n        tiles[#tiles+1] = tile\n        for _, t in ipairs(tiles) do\n            TileOwnerSet(playerID, { {t.iPos, t.jPos} })\n        end\n        return nil, true\n    end)\n    return result\nend"
-}

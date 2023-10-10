@@ -58,6 +58,7 @@ public struct MCardState
 
     [JsonPropertyName("name")]
     public string Name { get; set; }
+    // [JsonPropertyName("text")]
     [JsonPropertyName("type")]
     public string Type { get; set; }
     [JsonPropertyName("cost")]
@@ -102,7 +103,7 @@ public struct MCardState
 
         Name = card.Name;
         Type = card.Type;
-        Text = card.Original.Text;
+        Text = card.Text;
         Cost = card.Cost;
         Life = card.Life;
         Power = card.Power;

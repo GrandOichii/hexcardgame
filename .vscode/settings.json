@@ -19,7 +19,8 @@
         "PlaceCardInHand",
         "PickTile",
         "GetStructuresOnBoard",
-        "GetUnitsAndStructuresOnBoard"
+        "GetUnitsAndStructuresOnBoard",
+        "GetCard"
     ],
     "dotnet.defaultSolution": "front\\godotdev\\godotdev.sln"
 }

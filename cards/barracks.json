@@ -1,0 +1,9 @@
+{
+    "name": "Barracks",
+    "cost": 2,
+    "type": "Structure",
+    "expansion": "dev",
+    "text": "When you play a Unit into a n. tile, it gains {Fast}.",
+    "life": 4,
+    "script": "function _Create(props)\n    local result = CardCreation:Structure(props)\n\n    result.triggers[#result.triggers+1] = EffectCreation:TriggerBuilder()\n        :Check(Common:IsOwnerEntity(result) and Common:UnitEntered() and Common:IsNeighbor(result))\n        :Cost(Common:NoCost())\n        :IsSilent(false)\n        :On(TRIGGERS.ENTITY_ENTER)\n        :Zone(ZONES.PLACED)\n        :Effect(function (playerID, args)\n            local card = GetCard(args.mid)\n            card:AddBaseKeyword('Fast', true)\n            -- TODO bad\n            card.movement = card.maxMovement\n        end)\n        :Build()\n\n    return result\nend\n"
+}

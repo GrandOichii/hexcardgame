@@ -1,78 +1,78 @@
 
 KEYWORD_MAP = {
-    Virtuous = function (unit)
-        unit.OnEnterP:AddLayer(function (playerID, tile)
-            if not unit:HasKeyword('Virtuous') then
+    Virtuous = function (entity)
+        entity.OnEnterP:AddLayer(function (playerID, tile)
+            if not entity:HasKeyword('Virtuous') then
                 return nil, true
             end
-            local card = SummonCard(unit.id, playerID, 'dev::Healing Light')
+            local card = SummonCard(entity.id, playerID, 'dev::Healing Light')
             PlaceCardInHand(playerID, card.id)
             return nil, true
         end)
     end,
-    Vile = function (unit)
-        unit.OnEnterP:AddLayer(function (playerID, tile)
-            if not unit:HasKeyword('Vile') then
+    Vile = function (entity)
+        entity.OnEnterP:AddLayer(function (playerID, tile)
+            if not entity:HasKeyword('Vile') then
                 return nil, true
             end
-            local card = SummonCard(unit.id, playerID, 'dev::Corrupting Darkness')
+            local card = SummonCard(entity.id, playerID, 'dev::Corrupting Darkness')
             PlaceCardInHand(playerID, card.id)
             return nil, true
         end)
     end,
-    Fast = function (unit)
-        unit.OnEnterP:AddLayer(function (playerID, tile)
-            if not unit:HasKeyword('Fast') then
+    Fast = function (entity)
+        entity.OnEnterP:AddLayer(function (playerID, tile)
+            if not entity:HasKeyword('Fast') then
                 return nil, true
             end
-            unit.movement = unit.maxMovement
+            entity.movement = entity.maxMovement
             return nil, true
         end)
     end
 }
 
 
-function ApplyKeywords(unit, keywordMap)
+function ApplyKeywords(entity, keywordMap)
     for key, value in pairs(keywordMap) do
-        value(unit)
+        value(entity)
     end
 end
 
 
 function _Apply()
     
-    local prevF = CardCreation.Unit
-    function CardCreation:Unit(props)
-        local unit = prevF(CardCreation, props)
+    local prevF = CardCreation.Placeable
+    function CardCreation:Placeable(props)
+        local entity = prevF(CardCreation, props)
 
-        unit.baseKeywords = {}
-        unit.HasKeywordP = Pipeline:New()
-        unit.HasKeywordP:AddLayer(
+        entity.baseKeywords = {}
+        entity.HasKeywordP = Pipeline:New()
+        entity.HasKeywordP:AddLayer(
             function (keyword)
-                for _, k in ipairs(unit.baseKeywords) do
+                for _, k in ipairs(entity.baseKeywords) do
                     if k == keyword then
-                        return true, true
+                        return 1, true
                     end
                 end
-                return false, true
+                return 0, true
             end
         )
 
-        function unit:HasKeyword(keyword)
-            local res, _ = unit.HasKeywordP:Exec(keyword)
-            return res
+        function entity:HasKeyword(keyword)
+            local res, _ = entity.HasKeywordP:Exec(keyword)
+            return res > 0
         end
 
-        function unit:AddBaseKeyword(keyword, addToText)
-            unit.baseKeywords[#unit.baseKeywords+1] = keyword
+        function entity:AddBaseKeyword(keyword, addToText)
+            entity.baseKeywords[#entity.baseKeywords+1] = keyword
             if addToText then
-                unit.text = unit.text .. '\n{' .. keyword .. '}'
+                entity.text = entity.text .. '\n{' .. keyword .. '}'
             end
         end
 
-        ApplyKeywords(unit, KEYWORD_MAP)
+        ApplyKeywords(entity, KEYWORD_MAP)
 
-        return unit
+        return entity
     end
 
 end

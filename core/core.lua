@@ -7,7 +7,8 @@ TRIGGERS = {
     -- SPELL_CAST = 'spell_cast',
     UNIT_MOVE = 'unit_move',
     SPELL_CAST = 'spell_cast',
-    DAMAGE_DEALT = 'damage_dealt'
+    DAMAGE_DEALT = 'damage_dealt',
+    ENTITY_ENTER = 'entity_enter'
 }
 
 
@@ -167,6 +168,38 @@ function Common:IsCaster(card)
 end
 
 
+-- Returns a function that returns true if the entered entity is owned by the owner of the card
+function Common:IsOwnerEntity(card)
+    return function (playerID, args)
+        return GetOwnerID(args.mid) == GetOwnerID(card.id)
+    end
+end
+
+
+-- Returns a function that returns true if the entered entity is a unit
+function Common:UnitEntered()
+    return function (playerID, args)
+        return GetCard(args.mid):IsUnit()
+    end
+end
+
+
+-- Returns a function that returns true if the entered entity is a neighbor of the card
+function Common:IsNeighbor(card)
+    return function (playerID, args)
+        local mid = args.mid
+        local neighbors = Common:GetNeighboringUnitsAndStructures(card)
+        for _, tile in ipairs(neighbors) do
+            if tile ~= nil and tile.entity ~= nil and tile.entity.id == mid then
+                return true
+            end
+        end
+        return false
+    end
+end
+
+
+-- TODO
 function Common:Moved(card)
     return function (playerID, args)
         return card.id == args.mid
@@ -326,7 +359,7 @@ CardCreation = {}
 
 -- Basic card object
 function CardCreation:Card(props)
-    local required = {'name', 'cost', 'type', 'power', 'life'}
+    local required = {'name', 'cost', 'type', 'power', 'life', 'text'}
     local result = {}
 
     for _, value in ipairs(required) do
@@ -364,7 +397,7 @@ function CardCreation:Card(props)
     end
 
     function result:IsUnit()
-        return string.find(result.type, 'Unit')
+        return string.find(result.type, 'Unit') ~= nil
     end
 
     return result
@@ -488,6 +521,10 @@ function CardCreation:Unit(props)
     function result:AddSubtype(type)
         UNIT_SUBTYPE_MANIPULATION[type](result)
     end
+
+    result.OnEnterP:AddLayer(function (playerID, tile)
+        result.movement = 0
+    end)
 
     return result
 end

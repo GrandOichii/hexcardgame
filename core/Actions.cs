@@ -102,6 +102,9 @@ class PlayCardAction : GameAction
             // call OnEnter function
             card.ExecFunc("OnEnter", card.Data, player.ID, tile.ToLuaTable(match.LState));
             
+            // TODO not sure about the ordering, could be weird
+            match.Emit("entity_enter", new() { {"mid", card.MID}, {"tile", tile.ToLuaTable(match.LState)} });
+            
             return;
         }
 

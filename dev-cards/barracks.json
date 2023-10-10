@@ -1,0 +1,9 @@
+{
+    "name": "Barracks",
+    "cost": 2,
+    "type": "Structure",
+    "expansion": "dev",
+    "text": "When you play a Unit into a n. tile, it gains {Fast}.",
+    "life": 4,
+    "script": "barracks.lua"
+}

@@ -51,6 +51,7 @@ public class Card
         result["type"] = Type;
         result["power"] = Power;
         result["life"] = Life;
+        result["text"] = Text;
         return result;
     }
 
@@ -159,6 +160,7 @@ public class MCard {
     public long Defence => LuaUtility.GetLong(Data, "defence");
     public long MaxDefence => LuaUtility.GetLong(Data, "maxDefence");
     public string Type => LuaUtility.TableGet<string>(Data, "type");
+    public string Text => LuaUtility.TableGet<string>(Data, "text");
     public string BaseType { get {
         var t = Type;
         if (!t.Contains(" - ")) return t;

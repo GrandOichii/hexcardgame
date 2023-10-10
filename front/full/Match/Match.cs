@@ -57,7 +57,7 @@ public partial class Match : Control
 
 		#endregion
 		
-		HandContainerNode.CustomMinimumSize = new(0, HandCardPS.Instantiate<HandCard>().CardNode.CustomMinimumSize.Y);
+//		HandContainerNode.CustomMinimumSize = new(0, HandCardPS.Instantiate<HandCard>().CardNode.CustomMinimumSize.Y);
 	}
 	
 	public override void _Input(InputEvent e) {
@@ -66,7 +66,7 @@ public partial class Match : Control
 	}
 	
 	private void CancelCommand() {
-		GD.Print("Cancelled");
+		Client.ResetCommand();
 	}
 	
 	public void Load(Wrapper<MatchConnection> connection) {
@@ -188,6 +188,7 @@ public partial class Match : Control
 
 	private void _on_pass_button_pressed()
 	{
+		Client.ResetCommand();
 		Write("pass");
 	}
 	

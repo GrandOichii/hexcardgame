@@ -147,6 +147,9 @@ public partial class Grid : Control
 			}
 			_tiles.Add(a);
 		}
+		// foreach (var row in _tiles)
+		// 	foreach (var tile in row)
+		// 		GD.Print(tile.Coords + " " + tile.Client);
 	}
 
 	#region Utility static methods

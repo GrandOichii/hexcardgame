@@ -99,13 +99,10 @@ public class MatchConnection : TcpClient {
 		CurrentCommand.Parts[CurrentCommand.PartI].Process(CurrentCommand, o);
 	}
 
-	// private MatchState _lastState;
-	// public MatchState State {
-	// 	get => _lastState;
-	// 	set {
-	// 		_lastState = value;
-	// 	}
-	// }
+	public void ResetCommand() {
+		if (CurrentCommand is not null)
+			CurrentCommand.Reset();
+	}
 	
 }
 

@@ -43,6 +43,12 @@ public partial class Tile : Node2D, IGamePart
 		_defaultBgColor = BgNode.Color;
 	}
 
+	public override void _Input(InputEvent e)
+	{
+		if (e.IsActionPressed("cancel-command"))
+			Recheck();
+	}
+
 	public string CoordsStr => Coords.Y + "." + Coords.X;
 
 	private string _playerID;
@@ -56,6 +62,11 @@ public partial class Tile : Node2D, IGamePart
 		}
 	}
 	
+	public void Recheck() {
+		Unfocus();
+		// _on_collision_mouse_entered();
+	}
+
 	public void Load(TileState? state) {
 		State = state;
 		if (state is null) {
@@ -72,7 +83,7 @@ public partial class Tile : Node2D, IGamePart
 
 		Client.Process(this);
 		// Map.MovementArrow.Visible = false;
-		Unfocus();
+		Recheck();
 	}
 	
 	private void Unfocus() {
@@ -88,7 +99,6 @@ public partial class Tile : Node2D, IGamePart
 			Client.HoverCard.Load(card);
 			// HoverCard.Visible = true;
 		}
-		
 		if (!Client.Accepts(this)) return;
 
 		BgNode.Color = HighlightColor;

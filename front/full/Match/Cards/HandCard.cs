@@ -30,6 +30,17 @@ public partial class HandCard : Control, IGamePart
 		CustomMinimumSize = CardNode.Size * CardNode.Scale;
 	}
 
+	public override void _Input(InputEvent e)
+	{
+		if (e.IsActionPressed("cancel-command"))
+			Recheck();
+	}
+
+	public void Recheck() {
+		CardNode.Unfocus();
+		// _on_card_mouse_entered();
+	}
+
 	public void Load(MCardState card) {
 		CardNode.Load(card);
 	}
@@ -41,11 +52,12 @@ public partial class HandCard : Control, IGamePart
 //		GD.Print("clicked");
 		if (!Client.Accepts(this)) return;
 		Client.Process(this);
-		CardNode.Unfocus();
+		Recheck();
 	}
 
 	private void _on_card_mouse_entered()
 	{
+		// GD.Print("EE");
 		if (!Client.Accepts(this)) return;
 		CardNode.Focus();
 	}

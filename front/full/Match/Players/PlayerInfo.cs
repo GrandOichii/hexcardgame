@@ -94,7 +94,7 @@ public partial class PlayerInfo : Control
 			// trim child count
 			for (int i = nCount + 1; i < cCount; i++) {
 				var child = DiscardContainerNode.GetChild(i);
-				child.QueueFree();
+				child.Free();
 			}
 		}
 

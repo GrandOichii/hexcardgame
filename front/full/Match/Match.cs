@@ -57,6 +57,7 @@ public partial class Match : Control
 
 		#endregion
 		
+		HandContainerNode.CustomMinimumSize = new(0, HandCardPS.Instantiate<HandCard>().CardNode.CustomMinimumSize.Y);
 	}
 	
 	public override void _Input(InputEvent e) {

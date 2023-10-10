@@ -80,12 +80,12 @@ layout_mode = 2
 text = "5"
 
 [node name="ToggleDiscardButton" type="Button" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 text = "Discard"
 
 [node name="DiscardScroll" type="ScrollContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0

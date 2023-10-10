@@ -6,5 +6,5 @@
     "text": "{Vile}",
     "power": 2,
     "life": 2,
-    "script": "-- TODO not tested\nfunction _Create(props)\n    local result = CardCreation:Unit(props)\n\n    -- TODO move to a keyword\n    result.OnEnterP:AddLayer(function (playerID, tile)\n        local card = SummonCard(result.id, playerID, 'dev::Corrupting Darkness')\n        PlaceCardInHand(playerID, card.id)\n        return nil, true\n    end)\n    return result\nend"
+    "script": "-- TODO not tested\nfunction _Create(props)\n    local result = CardCreation:Unit(props)\n\n    result:AddBaseKeyword('Vile', false)\n\n    return result\nend"
 }

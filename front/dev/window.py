@@ -207,7 +207,7 @@ class ClientWindow(Window):
 
         # player info
         left = VerContainer()
-        # TODO ocnfigure player count using received match info
+        # TODO configure player count using received match info
         self.player_widgets = [
             PlayerFullWidget(self, 0),
             PlayerFullWidget(self, 1),

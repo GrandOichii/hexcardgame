@@ -1,12 +1,8 @@
--- TODO not tested
+
 function _Create(props)
     local result = CardCreation:Unit(props)
 
-    -- TODO move to a keyword
-    result.OnEnterP:AddLayer(function (playerID, tile)
-        local card = SummonCard(result.id, playerID, 'dev::Healing Light')
-        PlaceCardInHand(playerID, card.id)
-        return nil, true
-    end)
+    result:AddBaseKeyword('Virtuous', false)
+    
     return result
 end

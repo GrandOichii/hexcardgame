@@ -78,6 +78,9 @@ public class MatchConfig
     [JsonPropertyName("map")]
     public List<List<int>> Map { get; set; }=new();
 
+    [JsonPropertyName("addons")]
+    public List<string> AddonPaths { get; set; }
+
     /// <summary>
     /// Creates the match configuration from JSON
     /// </summary>
@@ -145,6 +148,13 @@ public class Match
 
         SystemLogger.Log("MATCH", "Running core file");
         LState.DoFile(CORE_FILE);
+
+        SystemLogger.Log("MATCH", "Running addons");
+        foreach (var addonPath in config.AddonPaths) {
+            LState.DoFile(addonPath);
+            var f = LState.GetFunction("_Apply");
+            f.Call();
+        }
     }
 
     /// <summary>

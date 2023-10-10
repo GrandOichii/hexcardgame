@@ -169,7 +169,7 @@ end
 
 function Common:Moved(card)
     return function (playerID, args)
-            return card.id == args.mid
+        return card.id == args.mid
     end
 end
 

@@ -173,14 +173,7 @@ public partial class TileBase : Node2D, IGamePart
 
 	private void SetColor(Color c) {
 		CreateTween().TweenProperty(Bg, "color", c, .1f);
-		// Bg.Color = c;
 	}
-
-	// public string ToActionPart(Command command)
-	// {
-	// 	// TODO? more complex behavior (if need entity and not card)
-	// 	return "" + _coords.Y + "." + _coords.X;
-	// }
 
 }
 

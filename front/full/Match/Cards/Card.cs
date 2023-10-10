@@ -49,7 +49,7 @@ public partial class Card : Control
 
 		#endregion
 		
-		// TODO don't know if this is correct, don't see any other way
+		// don't know if this is correct, don't see any other way
 		BgNode.Set("theme_override_styles/panel", _bgStyle.Duplicate());
 
 		_defaultBgColor = BgColor;

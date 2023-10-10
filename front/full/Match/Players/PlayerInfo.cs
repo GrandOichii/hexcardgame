@@ -78,7 +78,6 @@ public partial class PlayerInfo : Control
 		EnergyLabelNode.Text = pState.Energy.ToString();
 		BgColor = state.CurPlayerID == pState.ID ? CurrentPlayerColor : _defaultBgColor;
 
-		// TODO discard
 		var cCount = DiscardContainerNode.GetChildCount();
 		var nCount = _state.Players[PlayerI].Discard.Count;
 

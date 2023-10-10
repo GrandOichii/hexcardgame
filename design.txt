@@ -1,5 +1,5 @@
 == Keywords ==
-{Hidden} - is invisible to opponent until is attacked/attacks.
+{Hidden} - is invisible to opponent until is attacked/attacks/is dealt damage.
 {Fast} - can move as soon as played.
 {Unrestricted} - can have any amount of this card in your deck.
 {Virtuous} = When [CARDNAME] enters play, summon a [Healing Light] card into your hand.
@@ -217,3 +217,11 @@ n. - neighboring
 [TODO]:TODO
     Spell
     For each enemy Unit, move it back 1 tile, if able.
+
+
+[TODO]:TODO
+    Unit
+    {Fast}
+    At the end of your turn, [CARDNAME] deals 1 damage to each n. Unit and Structure and itself.
+    P: 2
+    L: 1

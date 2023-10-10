@@ -11,7 +11,8 @@ public class CardQuery {
     public bool Matches(Card card)
     {
         if (Expansion.Length > 0 && card.Expansion.ToLower() != Expansion.ToLower()) return false;
-        if (Name.Length > 0 && card.Name.ToLower() != Name.ToLower()) return false;
+        if (Name.Length > 0 && !card.Name.ToLower().Contains(Name.ToLower())) return false;
+        // TODO add other parameters
         
         return true;
     }

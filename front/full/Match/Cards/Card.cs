@@ -29,6 +29,7 @@ public partial class Card : Control
 
 	private Color _defaultBgColor;
 	public MCardState State { get; private set; }
+	public core.cards.Card CardState { get; private set; }
 	public MatchConnection Client { get; set; }
 
 	public override void _Ready()
@@ -64,6 +65,18 @@ public partial class Card : Control
 		LifeLabelNode.Text = cardState.Life.ToString();
 		DefenceLabelNode.Text = cardState.Defence.ToString();
 		TextLabelNode.Text = cardState.Text;
+	}
+
+	public void Load(core.cards.Card card) {
+		// State = null;
+		CardState = card;
+		NameLabelNode.Text = card.Name;
+		CostLabelNode.Text = " " + card.Cost.ToString() + " ";
+		TypeLabelNode.Text = card.Type;
+		PowerLabelNode.Text = card.Power.ToString();
+		LifeLabelNode.Text = card.Life.ToString();
+		DefenceLabelNode.Text = "";
+		TextLabelNode.Text = card.Text;		
 	}
 	
 	public Color BgColor {

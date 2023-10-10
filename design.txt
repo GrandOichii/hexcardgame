@@ -207,11 +207,11 @@ n. - neighboring
     Discard a [Healing Light] card: target n. Unit you control gains +2 power and +2 life.
 
 
-[TODO]:TODO
+[TODO]:2
     Unit - Rogue
     When [CARDNAME] deals damage to a Unit, switch that Unit's and [CARDNAME]'s position.
-    P: TODO
-    L: TODO
+    P: 1
+    L: 3
 
 
 [TODO]:TODO
@@ -225,3 +225,27 @@ n. - neighboring
     At the end of your turn, [CARDNAME] deals 1 damage to each n. Unit and Structure and itself.
     P: 2
     L: 1
+
+
+[Surround]:TODO
+    Spell
+    Into each of empty n. tiles of target Unit, summon a TODO into it.
+
+
+[MirrorTODO]:TODO
+    Spell
+    Set Caster's Power and Life to target Unit's Power and Life.
+
+
+[TODOSpymaster]:TODO
+    Unit - Rogue
+    When [CARDNAME] deals damage to a Unit, gain control of that Unit.
+    P: TODO
+    L: TODO
+
+
+[TODOProtector]:TODO
+    Unit
+    [CARDNAME] has +2 power while on a tile you own.
+    P: TODO
+    L: TODO

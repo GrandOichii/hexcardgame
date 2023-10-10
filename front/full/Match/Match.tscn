@@ -88,6 +88,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
+scroll_following = true
+meta_underlined = false
 
 [node name="PollStateTimer" type="Timer" parent="."]
 unique_name_in_owner = true
@@ -95,4 +97,6 @@ wait_time = 0.1
 
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/CommandContainer/SubmitCommandButton" to="." method="_on_submit_command_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/PassButton" to="." method="_on_pass_button_pressed"]
+[connection signal="meta_hover_ended" from="HBoxContainer/VBoxContainer2/LogsLabel" to="." method="_on_logs_label_meta_hover_ended"]
+[connection signal="meta_hover_started" from="HBoxContainer/VBoxContainer2/LogsLabel" to="." method="_on_logs_label_meta_hover_started"]
 [connection signal="timeout" from="PollStateTimer" to="." method="_on_poll_state_timer_timeout"]

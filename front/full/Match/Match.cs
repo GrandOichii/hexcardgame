@@ -104,6 +104,7 @@ public partial class Match : Control
 		UpdatePlayers();
 		UpdateHand();
 		GridNode.Load(state);
+		UpdateLogs();
 	}
 
 	#region State update methods
@@ -155,6 +156,23 @@ public partial class Match : Control
 			}
 		}
 	}
+
+	public void UpdateLogs() {
+		var newLogs = State.NewLogs;
+		
+		foreach (var log in newLogs) {
+			var message = "- ";
+			foreach (var part in log) {
+				var text = part.Text;
+				if (part.CardRef.Length > 0) {
+					text = "[color=red][url=" + part.CardRef + "]" + text + "[/url][/color]";
+				}
+				message += text + " ";
+			}
+			message += "\n";
+			LogsLabelNode.AppendText(message);
+		}
+	}
 	
 	#endregion
 	
@@ -190,6 +208,18 @@ public partial class Match : Control
 	{
 		Client.ResetCommand();
 		Write("pass");
+	}
+
+	private void _on_logs_label_meta_hover_ended(Variant meta)
+	{
+		GD.Print(meta.AsString());
+		// Replace with function body.
+	}
+
+
+	private void _on_logs_label_meta_hover_started(Variant meta)
+	{
+		// Replace with function body.
 	}
 	
 	#endregion

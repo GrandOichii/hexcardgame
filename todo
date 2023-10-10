@@ -2,12 +2,9 @@
     - add records and match playbacks
     - add {Hidden} keyword
     - add destroying units on attack
-    - add every n turns effects
     - figure out fow to implement fort effects
     - add grave functionality
-    - add targeting
     - add cost manipulation
-    - add subtype manipulation
     - add returning cards from discard to hand
     - add Unit transformation
     - add pre_death and post_death triggers
@@ -23,6 +20,7 @@
 - godot front
     - add card pictures
     - add animations
+    - add every n turns effects
 
 - create back + front for managing cards
     - has to: manage cards, 

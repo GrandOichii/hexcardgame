@@ -44,29 +44,6 @@ public class ConfigsManager
     }
 }
 
-public enum MatchTraceStatus
-{
-    WaitingForPlayers,
-    InProgress,
-    Crashed,
-    Finished
-}
-
-public class MatchTrace
-{
-    [JsonIgnore]
-    public Match Match { get; set; }
-    [JsonIgnore]
-    public Task Task { get; set; }
-    [JsonIgnore]
-    public TcpListener Listener { get; set; }
-
-    [JsonPropertyName("id")]
-    public string ID { get; set; }
-    [JsonPropertyName("status")]
-    public MatchTraceStatus Status { get; set; } = MatchTraceStatus.WaitingForPlayers;
-}
-
 public class Global {
     static public CardMaster CMaster { get; set; }
     static public DeckManager DManager { get; set; }

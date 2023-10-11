@@ -80,5 +80,14 @@ size_flags_horizontal = 3
 unique_name_in_owner = true
 use_threads = true
 
+[node name="PollMatchesTimer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
+[node name="MatchesRequest" type="HTTPRequest" parent="."]
+unique_name_in_owner = true
+
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/StartMatchButton" to="." method="_on_start_match_button_pressed"]
 [connection signal="request_completed" from="NewMatchRequest" to="." method="_on_new_match_request_request_completed"]
+[connection signal="timeout" from="PollMatchesTimer" to="." method="_on_poll_matches_timer_timeout"]
+[connection signal="request_completed" from="MatchesRequest" to="." method="_on_matches_request_request_completed"]

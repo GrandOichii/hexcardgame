@@ -28,8 +28,12 @@ public class MatchTrace
 
     [JsonPropertyName("id")]
     public string ID { get; set; }
+    [JsonPropertyName("winner")]
+    public string WinnerName { get; set; }
     [JsonPropertyName("status")]
     public MatchTraceStatus Status { get; set; } = MatchTraceStatus.WaitingForPlayers;
+    [JsonPropertyName("url")]
+    public string URL { get; set; }
 }
 
 

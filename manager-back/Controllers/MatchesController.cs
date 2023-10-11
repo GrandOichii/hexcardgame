@@ -7,6 +7,7 @@ using core.match;
 using core.players;
 using System.Net.Sockets;
 using System.Net;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace manager_back.Controllers;
 
@@ -39,12 +40,15 @@ public class MatchesController : ControllerBase
 
             result.Match = match;
             result.ID = id;
+            result.URL = "-";
+            result.WinnerName = "";
             result.Listener = new TcpListener(IPAddress.Loopback, 0);
             result.Listener.Start();
 
             result.Task = Task.Run(() =>
             {
                 var trace = result;
+                string p = ((IPEndPoint)trace.Listener.LocalEndpoint).ToString();
                 // config players
                 var controllers = new PlayerController[mConfig.Players.Count];
                 var realPlayerTasks = new List<Task>();
@@ -57,16 +61,16 @@ public class MatchesController : ControllerBase
                         controllers[pI] = new LuaPlayerController("../bots/basic.lua");
                         continue;
                     }
-
+                    result.URL = p;
                     realPlayerTasks.Add(Task.Run(() =>
                     {
-                        string p = ((IPEndPoint)trace.Listener.LocalEndpoint).Port.ToString();
                         var controller = new TCPPlayerController(trace.Listener, match);
                         controllers[pI] = controller;
                     }));
                 }
 
                 Task.WaitAll(realPlayerTasks.ToArray());
+                result.URL = "-";
 
                 // create players
                 for (int i = 0; i < controllers.Length; i++)
@@ -81,6 +85,7 @@ public class MatchesController : ControllerBase
                 {
                     match.Start();
                     trace.Status = MatchTraceStatus.Finished;
+                    result.WinnerName = match.Winner.Name;
                 } catch (Exception e)
                 {
                     trace.Status = MatchTraceStatus.Crashed;

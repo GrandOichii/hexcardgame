@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://bwdryd261dim8"]
+
+[ext_resource type="PackedScene" uid="uid://dd30gx2sdi87s" path="res://Match/Match.tscn" id="1_fn0gy"]
+[ext_resource type="Script" path="res://Manager/MatchWindow.cs" id="1_l7fj1"]
+
+[node name="MatchWindow" type="Window"]
+mode = 2
+initial_position = 2
+size = Vector2i(1150, 600)
+script = ExtResource("1_l7fj1")
+
+[node name="Match" parent="." instance=ExtResource("1_fn0gy")]
+unique_name_in_owner = true
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]

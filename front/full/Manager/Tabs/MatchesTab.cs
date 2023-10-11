@@ -12,6 +12,9 @@ public partial class MatchesTab : Control
 	
 	private readonly static PackedScene MatchPlayerPS = ResourceLoader.Load<PackedScene>("res://Manager/MatchPlayer.tscn");
 	
+	private readonly static PackedScene MatchWindowPS = ResourceLoader.Load<PackedScene>("res://Manager/MatchWindow.tscn");
+
+
 	#endregion
 	
 	#region Nodes
@@ -28,6 +31,7 @@ public partial class MatchesTab : Control
 
 	private string _url;
 	private bool _requestCompleted = true;
+	private TreeItem _root;
 	
 	public override void _Ready()
 	{
@@ -43,6 +47,12 @@ public partial class MatchesTab : Control
 		
 		#endregion
 		
+		_root = MatchTracesNode.CreateItem();
+		_root.SetText(0, "ID");
+		_root.SetText(1, "Status");
+		_root.SetText(2, "Winner");
+		_root.SetText(3, "Availability");
+
 		// populate players
 		for (int i = 0; i < 2; i++) {
 			var child = MatchPlayerPS.Instantiate() as MatchPlayer;
@@ -50,6 +60,27 @@ public partial class MatchesTab : Control
 			child.NameEditNode.Text = "P" + (i+1); 
 		}
 		
+	}
+
+	private void UpdateMatch(MatchTrace match) {
+		foreach (var item in _root.GetChildren()) {
+			var id = item.GetText(0);
+			if (id == match.ID) {
+				SetItemData(item, match);
+				return;
+			}
+		}
+
+		var child = _root.CreateChild();
+		SetItemData(child, match);
+	}
+
+	private void SetItemData(TreeItem item, MatchTrace match) {
+		item.SetText(0, match.ID);
+		item.SetText(1, match.Status.ToString());
+		item.SetText(2, match.WinnerName);
+		item.SetText(3, (match.URL == "-" ? "-" : "Join"));
+		item.SetMetadata(3, match.URL);
 	}
 	
 	public void UpdatePlayers(List<DeckTemplate> decks) {
@@ -131,9 +162,24 @@ public partial class MatchesTab : Control
 		
 		var text = System.Text.Encoding.Default.GetString(body);
 		var matches = JsonSerializer.Deserialize<List<MatchTrace>>(text);
-		GD.Print(matches.Count);
+		foreach (var match in matches) {
+			UpdateMatch(match);
+		}
 	}
 	
+	private void _on_match_traces_item_activated()
+	{
+		var row = MatchTracesNode.GetSelected();
+		var col = MatchTracesNode.GetSelectedColumn();
+		if (row.GetText(col) != "Join") return;
+
+		var url = row.GetMetadata(col).As<string>();
+		var w = MatchWindowPS.Instantiate() as MatchWindow;
+		AddChild(w);
+		w.Connect(url);
+	}
 	#endregion
 }
+
+
 

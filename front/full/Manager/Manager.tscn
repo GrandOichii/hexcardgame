@@ -56,6 +56,7 @@ layout_mode = 2
 text = "http://localhost:5113"
 placeholder_text = "Enter backend URL"
 
+[connection signal="URLUpdated" from="." to="MarginContainer/VBoxContainer/TabContainer/Matches" method="_on_manager_url_updated"]
 [connection signal="URLUpdated" from="." to="MarginContainer/VBoxContainer/TabContainer/Cards" method="_on_manager_url_updated"]
 [connection signal="URLUpdated" from="." to="MarginContainer/VBoxContainer/TabContainer/Decks" method="_on_manager_url_updated"]
 [connection signal="URLUpdated" from="." to="MarginContainer/VBoxContainer/TabContainer/Configurations" method="_on_manager_url_updated"]

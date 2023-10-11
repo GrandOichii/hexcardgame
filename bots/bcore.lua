@@ -674,7 +674,7 @@ function bcore:_Cleanup()
             data[action][#data[action]+1] = a
         end
     end
-    WriteJ(path, data)
+    -- WriteJ(path, data)
 end
 
 return bcore

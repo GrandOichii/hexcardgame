@@ -23,6 +23,8 @@ public partial class MatchesTab : Control
 	public LineEdit SeedEditNode { get; private set; }
 	
 	#endregion
+
+	private string _url;
 	
 	public override void _Ready()
 	{
@@ -80,6 +82,8 @@ public partial class MatchesTab : Control
 		}
 
 		var t = config.ToJson();
+		string[] headers = new string[] { "Content-Type: application/json" };
+		NewMatchRequestNode.Request(_url + "/api/Matches", headers, HttpClient.Method.Post, t);
 		GD.Print(t);
 	}
 	
@@ -91,6 +95,24 @@ public partial class MatchesTab : Control
 			ConfigOptionNode.SetItemMetadata(ConfigOptionNode.ItemCount - 1, new Wrapper<ManagerMatchConfig>(config));
 		}
 	}
+
+	private void _on_manager_url_updated(string url)
+	{
+		_url = url;
+	}
+
+	private void _on_new_match_request_request_completed(long result, long response_code, string[] headers, byte[] body)
+	{
+		if (response_code != 200) {
+			GUtil.Alert(this, "Failed to create a new match (response code: " + response_code + ")", "Manager");
+			return;
+		}
+		
+		
+		// Replace with function body.
+	}
 	
 	#endregion
 }
+
+

@@ -1,3 +1,4 @@
+-- TODO fix and add back
 function _Create(props)
     local result = CardCreation:Spell(props)
     result.DamageValues.Damage = 4

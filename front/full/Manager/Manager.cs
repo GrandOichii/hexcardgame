@@ -27,7 +27,7 @@ public partial class Manager : Control
 		UpdateURL();
 		
 		// TODO remove
-		GetNode<TabContainer>("%TabContainer").CurrentTab = 1;
+//		GetNode<TabContainer>("%TabContainer").CurrentTab = 1;
 	}
 	
 	private void UpdateURL() {

@@ -129,10 +129,3 @@ public partial class CardsTab : Control
 
 	#endregion
 }
-
-
-
-
-
-
-

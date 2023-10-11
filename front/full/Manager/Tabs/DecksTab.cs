@@ -12,6 +12,13 @@ public partial class DecksTab : Control
 	
 	#endregion
 	
+	#region Signals
+	
+	[Signal]
+	public delegate void DecksUpdatedEventHandler(Wrapper<List<DeckTemplate>> decksW);
+	
+	#endregion
+	
 	#region Nodes
 	
 	public ItemList DeckListNode { get; private set; }
@@ -61,11 +68,6 @@ public partial class DecksTab : Control
 		Refresh();
 	}
 
-	private void _on_add_button_pressed()
-	{
-		// TODO
-	}
-
 	private void _on_remove_button_pressed()
 	{
 		// TODO
@@ -80,7 +82,6 @@ public partial class DecksTab : Control
 		
 		DeckOverlayNode.Visible = true;
 		var text = System.Text.Encoding.Default.GetString(body);
-		GD.Print(text);
 		var data = JsonSerializer.Deserialize<List<DeckTemplate>>(text);
 
 		DeckListNode.Clear();
@@ -88,6 +89,8 @@ public partial class DecksTab : Control
 			var i = DeckListNode.AddItem(deck.GetDescriptor("name"));
 			DeckListNode.SetItemMetadata(i, new Wrapper<DeckTemplate>(deck));
 		}
+		
+		EmitSignal(SignalName.DecksUpdated, new Wrapper<List<DeckTemplate>>(data));
 	}
 
 	private void _on_deck_list_item_activated(int index)
@@ -104,6 +107,21 @@ public partial class DecksTab : Control
 		}
 	
 		DeckOverlayNode.Visible = false;
+	}
+
+	private void _on_add_card_button_pressed()
+	{
+		// TODO
+	}
+
+	private void _on_import_button_pressed()
+	{
+		// TODO
+	}
+
+	private void _on_generate_button_pressed()
+	{
+		// TODO
 	}
 	
 	#endregion

@@ -1,5 +1,7 @@
 using core.cards;
 using core.decks;
+using core.match;
+using core.manager;
 
 public class DeckManager {
     public List<DeckTemplate> Decks { get; set; } = new();
@@ -18,7 +20,30 @@ public class DeckManager {
     }
 }
 
+
+
+public class ConfigsManager
+{
+    public List<ManagerMatchConfig> Configs { get; set; } = new();
+    public ConfigsManager(string loadPath)
+    {
+        var files = Directory.GetFiles(loadPath);
+        foreach (var file in files)
+        {
+            if (Path.GetExtension(file) != ".json") continue;
+            var name = Path.GetFileNameWithoutExtension(file);
+
+            var c = new ManagerMatchConfig();
+            c.Config = MatchConfig.FromJson(File.ReadAllText(file));
+            c.Name = name;
+
+            Configs.Add(c);
+        }
+    }
+}
+
 public class Global {
     static public CardMaster CMaster { get; set; }
     static public DeckManager DManager { get; set; }
+    static public ConfigsManager CManager { get; set; }
 }

@@ -41,5 +41,8 @@ public class Program
         var dm = new DeckManager("../decks");
         Global.DManager = dm;
 
+        var configM = new ConfigsManager("../configs");
+        Global.CManager = configM;
+
     }   
 }

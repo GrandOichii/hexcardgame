@@ -32,13 +32,17 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="AddButton" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="ImportButton" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-text = "Add"
+text = "Import"
 
 [node name="RemoveButton" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 text = "Remove"
+
+[node name="GenerateButton" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Generate"
 
 [node name="Left" type="Control" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -67,6 +71,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="AddCardButton" type="Button" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer"]
+layout_mode = 2
+text = "Add"
+
 [node name="DeckOverlay" type="Control" parent="VBoxContainer/HBoxContainer/Left"]
 unique_name_in_owner = true
 layout_mode = 1
@@ -84,7 +92,9 @@ text = "Refresh"
 unique_name_in_owner = true
 
 [connection signal="item_activated" from="VBoxContainer/HBoxContainer/VBoxContainer/DeckList" to="." method="_on_deck_list_item_activated"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/AddButton" to="." method="_on_add_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/ImportButton" to="." method="_on_import_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/RemoveButton" to="." method="_on_remove_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/GenerateButton" to="." method="_on_generate_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Left/VBoxContainer/AddCardButton" to="." method="_on_add_card_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
 [connection signal="request_completed" from="Request" to="." method="_on_request_request_completed"]

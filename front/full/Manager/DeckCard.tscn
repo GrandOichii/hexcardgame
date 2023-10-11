@@ -1,6 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://bihrlcnl66fde"]
+[gd_scene load_steps=3 format=3 uid="uid://bihrlcnl66fde"]
 
 [ext_resource type="Script" path="res://Manager/DeckCard.cs" id="1_wwwyf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_26igu"]
+bg_color = Color(0.486275, 0.486275, 0.486275, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [node name="DeckCard" type="Control"]
 custom_minimum_size = Vector2(0, 50)
@@ -10,30 +17,34 @@ offset_right = 379.0
 offset_bottom = 54.0
 script = ExtResource("1_wwwyf")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_26igu")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="NameLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+[node name="NameLabel" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Card name here "
 
-[node name="CountBox" type="SpinBox" parent="MarginContainer/HBoxContainer"]
+[node name="CountBox" type="SpinBox" parent="PanelContainer/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = -1.0
 
-[connection signal="value_changed" from="MarginContainer/HBoxContainer/CountBox" to="." method="_on_count_box_value_changed"]
+[connection signal="value_changed" from="PanelContainer/MarginContainer/HBoxContainer/CountBox" to="." method="_on_count_box_value_changed"]

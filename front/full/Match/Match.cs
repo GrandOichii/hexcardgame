@@ -6,6 +6,7 @@ using core.match.states;
 using System.IO;
 using System.Text.Json;
 using core.players;
+using System.Threading.Tasks;
 
 public partial class Match : Control
 {
@@ -74,8 +75,15 @@ public partial class Match : Control
 		_stream = Client.GetStream();
 
 		// read configuration
-		var message = NetUtil.Read(_stream);
-		Config = MatchInfoState.FromJson(message);
+		Task.Run(() => {
+			var message = NetUtil.Read(_stream);
+			Config = MatchInfoState.FromJson(message);
+			CallDeferred("LoadConfiguration");
+		});
+	}
+	
+	private void LoadConfiguration()
+	{
 		Client.Config = Config;
 		Client.HoverCard = HoverCardNode;
 		GridNode.Client = Client;

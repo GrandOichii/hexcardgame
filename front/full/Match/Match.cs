@@ -81,7 +81,7 @@ public partial class Match : Control
 			CallDeferred("LoadConfiguration");
 		});
 	}
-	
+
 	private void LoadConfiguration()
 	{
 		Client.Config = Config;
@@ -204,7 +204,6 @@ public partial class Match : Control
 
 	private void _on_poll_state_timer_timeout()
 	{
-//		GD.Print("poll");
 		try {
 			var message = NetUtil.Read(_stream);
 			var state = MatchState.FromJson(message);

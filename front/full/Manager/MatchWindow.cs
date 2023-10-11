@@ -27,10 +27,7 @@ public partial class MatchWindow : Window
 		var port = int.Parse(split[1]);
 
 		var client = new MatchConnection();
-		GD.Print("requested connect");
-		client.Connect(address, port);
-		GD.Print("connected");
-		
+		client.Connect(address, port);		
 
 		MatchNode.Load(new Wrapper<MatchConnection>(client));
 		Show();

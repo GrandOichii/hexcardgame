@@ -79,7 +79,7 @@ public partial class MatchesTab : Control
 		item.SetText(0, match.ID);
 		item.SetText(1, match.Status.ToString());
 		item.SetText(2, match.WinnerName);
-		item.SetText(3, (match.URL == "-" ? "-" : "Join"));
+		item.SetText(3, match.URL == "-" ? "-" : "Join");
 		item.SetMetadata(3, match.URL);
 	}
 	

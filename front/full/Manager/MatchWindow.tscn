@@ -4,9 +4,10 @@
 [ext_resource type="Script" path="res://Manager/MatchWindow.cs" id="1_l7fj1"]
 
 [node name="MatchWindow" type="Window"]
-mode = 2
+physics_object_picking = true
 initial_position = 2
 size = Vector2i(1150, 600)
+always_on_top = true
 script = ExtResource("1_l7fj1")
 
 [node name="Match" parent="." instance=ExtResource("1_fn0gy")]

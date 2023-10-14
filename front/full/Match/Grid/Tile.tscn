@@ -7,10 +7,10 @@ script = ExtResource("1_uawrc")
 HighlightColor = Color(0, 0, 0.894118, 1)
 
 [node name="Collision" type="Area2D" parent="."]
+unique_name_in_owner = true
 
 [node name="CollisionPoly" type="CollisionPolygon2D" parent="Collision"]
 unique_name_in_owner = true
-position = Vector2(9.53674e-07, -9.53674e-06)
 polygon = PackedVector2Array(-72, 9.53674e-06, -40, -64, 40, -64, 72, 9.53674e-06, 40, 64, -40, 64)
 
 [node name="Bg" type="Polygon2D" parent="."]
@@ -26,12 +26,14 @@ polygon = PackedVector2Array(-40, -64, 40, -64, 72, 0, 40, 64, -40, 64, -72, 0)
 [node name="BBox" type="Control" parent="."]
 unique_name_in_owner = true
 process_mode = 4
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_left = -72.0
 offset_top = -64.0
 offset_right = 72.0
 offset_bottom = 64.0
+mouse_filter = 2
 
 [connection signal="input_event" from="Collision" to="." method="_on_collision_input_event"]
 [connection signal="mouse_entered" from="Collision" to="." method="_on_collision_mouse_entered"]

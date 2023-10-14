@@ -27,7 +27,8 @@ public partial class MatchWindow : Window
 		var port = int.Parse(split[1]);
 
 		var client = new MatchConnection();
-		client.Connect(address, port);		
+		client.Connect(address, port);
+		
 
 		MatchNode.Load(new Wrapper<MatchConnection>(client));
 		Show();

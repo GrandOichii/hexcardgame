@@ -2,6 +2,7 @@ using core.cards;
 using core.match.states;
 using Godot;
 using System;
+using System.Reflection;
 
 public partial class Tile : Node2D, IGamePart
 {
@@ -39,6 +40,10 @@ public partial class Tile : Node2D, IGamePart
 		CollisionPolyNode = GetNode<CollisionPolygon2D>("%CollisionPoly");
 		
 		#endregion
+		
+		// CollisionPolyNode.SetProcess(true);
+		
+//		GD.Print(GetNode<Area2D>("%Collision").Monitoring);
 		
 		_defaultBgColor = BgNode.Color;
 	}
@@ -128,10 +133,8 @@ public partial class Tile : Node2D, IGamePart
 
 	private void _on_collision_input_event(Node viewport, InputEvent e, long shape_idx)
 	{
-//		GD.Print(e);
 		if (e.IsActionPressed("add-to-action"))
 			_pressed();
-		// Replace with function body.
 	}
 	
 	#endregion

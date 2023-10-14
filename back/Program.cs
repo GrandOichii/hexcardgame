@@ -64,7 +64,6 @@ class CursesPlayerController : QueuedActionsPlayerController
     }
 }
 
-
 class Program {
     static private IPAddress ADDRESS = IPAddress.Any;
     static private int PORT = 9090;
@@ -80,7 +79,7 @@ class Program {
         cm.LoadCardsFrom("../cards");
 
         // load decks
-        var deckText = File.ReadAllText("../decks/generated.deck");
+        var deckText = File.ReadAllText("../decks/deck1.deck");
         var deckTemplate = DeckTemplate.FromText(deckText);
 
         // load match config

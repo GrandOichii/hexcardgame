@@ -47,6 +47,9 @@ function _Apply()
 
         entity.baseKeywords = {}
         entity.HasKeywordP = Pipeline:New()
+        entity.HasKeywordP.collectFunc = function (v)
+            entity.HasKeywordP.result = entity.HasKeywordP.result + v
+        end
         entity.HasKeywordP:AddLayer(
             function (keyword)
                 for _, k in ipairs(entity.baseKeywords) do

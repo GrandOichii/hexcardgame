@@ -20,6 +20,17 @@ public class DeckManager {
             Decks.Add(deckTemplate);
         }
     }
+
+    public DeckTemplate? this[string deckName]
+    {
+        get
+        {
+            foreach (var deck in Decks)
+                if (deck.GetDescriptor("name") == deckName)
+                    return deck;
+            return null;
+        }
+    }
 }
 
 

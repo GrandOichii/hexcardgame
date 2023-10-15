@@ -60,6 +60,7 @@ placeholder_text = "Enter backend URL"
 [connection signal="URLUpdated" from="." to="MarginContainer/VBoxContainer/TabContainer/Cards" method="_on_manager_url_updated"]
 [connection signal="URLUpdated" from="." to="MarginContainer/VBoxContainer/TabContainer/Decks" method="_on_manager_url_updated"]
 [connection signal="URLUpdated" from="." to="MarginContainer/VBoxContainer/TabContainer/Configurations" method="_on_manager_url_updated"]
+[connection signal="CardsUpdated" from="MarginContainer/VBoxContainer/TabContainer/Cards" to="MarginContainer/VBoxContainer/TabContainer/Decks" method="_on_cards_cards_updated"]
 [connection signal="DecksUpdated" from="MarginContainer/VBoxContainer/TabContainer/Decks" to="MarginContainer/VBoxContainer/TabContainer/Matches" method="_on_decks_decks_updated"]
 [connection signal="ConfigsUpdated" from="MarginContainer/VBoxContainer/TabContainer/Configurations" to="MarginContainer/VBoxContainer/TabContainer/Matches" method="_on_configurations_configs_updated"]
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/URLEdit" to="." method="_on_url_edit_text_changed"]

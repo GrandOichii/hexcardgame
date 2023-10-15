@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bndeg34pqxyk0"]
+[gd_scene load_steps=3 format=3 uid="uid://bndeg34pqxyk0"]
 
 [ext_resource type="Script" path="res://Manager/Tabs/DecksTab.cs" id="1_qsbb2"]
+[ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Match/Cards/Card.tscn" id="2_pcsrs"]
 
 [node name="DecksTab" type="Control"]
 layout_mode = 3
@@ -32,9 +33,9 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ImportButton" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="CreateButton" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-text = "Import"
+text = "Create"
 
 [node name="RemoveButton" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
@@ -61,6 +62,19 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_vertical = 3
 
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Name: "
+
+[node name="NameEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter deck name"
+
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -85,16 +99,140 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="RefreshButton" type="Button" parent="VBoxContainer"]
+visible = false
 layout_mode = 2
 text = "Refresh"
 
-[node name="Request" type="HTTPRequest" parent="."]
+[node name="Requests" type="Node" parent="."]
+
+[node name="GetDecksRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
+[node name="PostDeckRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
+[node name="Windows" type="Node" parent="."]
+
+[node name="AddCardWindow" type="Window" parent="Windows"]
+unique_name_in_owner = true
+title = "Add card"
+initial_position = 2
+size = Vector2i(800, 500)
+visible = false
+transient = true
+exclusive = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Windows/AddCardWindow"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Windows/AddCardWindow/MarginContainer"]
+layout_mode = 2
+
+[node name="CardNameEdit" type="LineEdit" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Filter by card name"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CardsList" type="ItemList" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="NewCard" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_pcsrs")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="NewDeckWindow" type="Window" parent="Windows"]
+unique_name_in_owner = true
+title = "Create deck"
+initial_position = 2
+size = Vector2i(500, 80)
+visible = false
+transient = true
+exclusive = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Windows/NewDeckWindow"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Windows/NewDeckWindow/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Windows/NewDeckWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Windows/NewDeckWindow/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Name: "
+
+[node name="NewNameEdit" type="LineEdit" parent="Windows/NewDeckWindow/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Windows/NewDeckWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="EmptyButton" type="Button" parent="Windows/NewDeckWindow/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Empty"
+
+[node name="FromFileButton" type="Button" parent="Windows/NewDeckWindow/MarginContainer/VBoxContainer/HBoxContainer2"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+text = "From file"
+
+[node name="FromClipboardButton" type="Button" parent="Windows/NewDeckWindow/MarginContainer/VBoxContainer/HBoxContainer2"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+text = "From clipboard"
+
+[node name="Timers" type="Node" parent="."]
+
+[node name="ModifyDecksTimer" type="Timer" parent="Timers"]
 unique_name_in_owner = true
 
 [connection signal="item_activated" from="VBoxContainer/HBoxContainer/VBoxContainer/DeckList" to="." method="_on_deck_list_item_activated"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/ImportButton" to="." method="_on_import_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/CreateButton" to="." method="_on_create_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/RemoveButton" to="." method="_on_remove_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/GenerateButton" to="." method="_on_generate_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Left/VBoxContainer/AddCardButton" to="." method="_on_add_card_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
-[connection signal="request_completed" from="Request" to="." method="_on_request_request_completed"]
+[connection signal="request_completed" from="Requests/GetDecksRequest" to="." method="_on_request_request_completed"]
+[connection signal="request_completed" from="Requests/PostDeckRequest" to="." method="_on_post_deck_request_request_completed"]
+[connection signal="close_requested" from="Windows/AddCardWindow" to="." method="_on_add_card_window_close_requested"]
+[connection signal="text_changed" from="Windows/AddCardWindow/MarginContainer/VBoxContainer/CardNameEdit" to="." method="_on_card_name_edit_text_changed"]
+[connection signal="item_activated" from="Windows/AddCardWindow/MarginContainer/VBoxContainer/HBoxContainer/CardsList" to="." method="_on_card_list_item_activated"]
+[connection signal="item_selected" from="Windows/AddCardWindow/MarginContainer/VBoxContainer/HBoxContainer/CardsList" to="." method="_on_card_list_item_selected"]
+[connection signal="close_requested" from="Windows/NewDeckWindow" to="." method="_on_new_deck_window_close_requested"]
+[connection signal="pressed" from="Windows/NewDeckWindow/MarginContainer/VBoxContainer/HBoxContainer2/EmptyButton" to="." method="_on_empty_button_pressed"]
+[connection signal="timeout" from="Timers/ModifyDecksTimer" to="." method="_on_modify_decks_timer_timeout"]

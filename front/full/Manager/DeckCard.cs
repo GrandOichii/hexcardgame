@@ -3,6 +3,13 @@ using System;
 
 public partial class DeckCard : Control
 {
+	#region Signals
+	
+	[Signal]
+	public delegate void AmountChangedEventHandler(int v);
+	
+	#endregion
+	
 	#region Nodes
 	
 	public Label NameLabelNode { get; private set; }
@@ -33,6 +40,7 @@ public partial class DeckCard : Control
 	
 	private void _on_count_box_value_changed(double v)
 	{
+		EmitSignal(SignalName.AmountChanged, (int)v);
 		if (v < 0)
 			QueueFree();
 	}

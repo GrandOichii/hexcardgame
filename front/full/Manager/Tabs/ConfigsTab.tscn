@@ -14,11 +14,4 @@ script = ExtResource("1_8wd3c")
 [node name="Request" type="HTTPRequest" parent="."]
 unique_name_in_owner = true
 
-[node name="RefreshButton" type="Button" parent="."]
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
-text = "Refresh"
-
 [connection signal="request_completed" from="Request" to="." method="_on_request_request_completed"]
-[connection signal="pressed" from="RefreshButton" to="." method="_on_refresh_button_pressed"]

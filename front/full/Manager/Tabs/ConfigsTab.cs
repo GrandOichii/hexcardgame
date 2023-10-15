@@ -64,11 +64,6 @@ public partial class ConfigsTab : Control
 		EmitSignal(SignalName.ConfigsUpdated, new Wrapper<List<ManagerMatchConfig>>(configs));
 	}
 
-	private void _on_refresh_button_pressed()
-	{
-		Refresh();
-	}
-
 	private void _on_manager_url_updated(string url)
 	{
 		_url = url;

@@ -59,6 +59,7 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 4.0
 
 [node name="RefreshButton" type="Button" parent="VBoxContainer"]
+visible = false
 layout_mode = 2
 text = "Refresh"
 

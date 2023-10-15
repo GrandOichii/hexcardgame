@@ -5,6 +5,13 @@ using System.Text.Json;
 
 public partial class CardsTab : Control
 {
+	#region Signals
+	
+	[Signal]
+	public delegate void CardsUpdatedEventHandler(Wrapper<List<core.cards.Card>> cardsW);
+	
+	#endregion
+	
 	#region Packed scenes
 
 	private readonly static PackedScene CardPS = ResourceLoader.Load<PackedScene>("res://Match/Cards/Card.tscn");
@@ -100,6 +107,8 @@ public partial class CardsTab : Control
 			expansions.Add(c.Expansion);
 			var ei = ExpansionListNode.AddItem(c.Expansion);
 		}
+		
+		EmitSignal(SignalName.CardsUpdated, new Wrapper<List<core.cards.Card>>(_cards));
 
 	}
 

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using core.cards;
@@ -99,5 +100,26 @@ public class DeckTemplate {
     public string GetDescriptor(string name) {
         if (Descriptors.ContainsKey(name)) return Descriptors[name];
         return "";
+    }
+
+    /// <summary>
+    /// Sets the descriptor of the deck
+    /// </summary>
+    /// <param name="name">Name of the descriptor</param>
+    /// <param name="value">New descriptor value</param>
+    public void SetDescriptor(string name, string value) {
+        if (!Descriptors.ContainsKey(name)) {
+            Descriptors.Add(name, value);
+            return;
+        }
+        Descriptors[name] = value;
+    }
+
+    /// <summary>
+    /// Returns the JSON format of the deck
+    /// </summary>
+    /// <returns>JSON format of the deck</returns>
+    public string ToJson() {
+        return JsonSerializer.Serialize(this);
     }
 }

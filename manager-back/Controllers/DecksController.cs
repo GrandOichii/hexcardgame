@@ -46,17 +46,7 @@ public class DecksController : ControllerBase
     public List<DeckTemplate> ModifyDeck([FromBody] List<DeckTemplate> newDecks)
     {
         // TODO don't know if this is the best way of doing this
-        // TODO check that no card is assigned <= 0 amount
-        //foreach (var deck in newDecks)
-        //{
-        //    var newIndex = new Dictionary<string, int>();
-        //    foreach (var pair in deck.Index)
-        //    {
-        //        if (pair.Value < 0) continue;
-        //        newIndex.Add(pair.Key, pair.Value);
-        //    }
-        //    deck.Index = newIndex;
-        //}
+
         Global.DManager.Decks = newDecks;
 
         return Global.DManager.Decks;

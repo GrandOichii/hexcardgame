@@ -7,13 +7,13 @@ using System.Net.Mail;
 
 namespace manager_back.Controllers;
 
-public class DeckModification
-{
-    [JsonPropertyName("cid")]
-    public string CID { get; set; }
-    [JsonPropertyName("mod")]
-    public int Mod { get; set; }
-}
+//public class DeckModification
+//{
+//    [JsonPropertyName("cid")]
+//    public string CID { get; set; }
+//    [JsonPropertyName("mod")]
+//    public int Mod { get; set; }
+//}
 
 
 [ApiController]
@@ -42,24 +42,12 @@ public class DecksController : ControllerBase
     }
 
 
-    // TODO don't know if this is the way put is supposed to be used
     [HttpPut]
-    public DeckTemplate ModifyDeck(string deckName, [FromBody] DeckModification mod)
+    public List<DeckTemplate> ModifyDeck([FromBody] List<DeckTemplate> newDecks)
     {
-        var deck = Global.DManager[deckName];
-        if (deck is null)
-        {
-            throw new HttpRequestException("Deck with name " + deckName + " not found", null, System.Net.HttpStatusCode.NotFound);
-        }
-
-        foreach (var key in deck.Index.Keys)
-        {
-            if (key != mod.CID) continue;
-
-            deck.Index[key] += mod.Mod;
-        }
-
-        return deck;
+        // TODO don't know if this is the best way of doing this
+        Global.DManager.Decks = newDecks;
+        return Global.DManager.Decks;
     }
     
 }

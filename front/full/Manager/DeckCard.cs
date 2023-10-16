@@ -6,7 +6,7 @@ public partial class DeckCard : Control
 	#region Signals
 	
 	[Signal]
-	public delegate void AmountChangedEventHandler(int v);
+	public delegate void AmountChangedEventHandler(string cid, int v);
 	
 	#endregion
 	
@@ -40,7 +40,7 @@ public partial class DeckCard : Control
 	
 	private void _on_count_box_value_changed(double v)
 	{
-		EmitSignal(SignalName.AmountChanged, (int)v);
+		EmitSignal(SignalName.AmountChanged, _cID, (int)v);
 		if (v < 0)
 			QueueFree();
 	}

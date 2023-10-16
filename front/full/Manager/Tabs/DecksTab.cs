@@ -25,6 +25,7 @@ public partial class DecksTab : Control
 	public VBoxContainer DeckCardsNode { get; private set; }
 	public HttpRequest GetDecksRequestNode { get; private set; }
 	public HttpRequest PostDeckRequestNode { get; private set; }
+	public HttpRequest PutDecksRequestNode { get; private set; }
 	public Control DeckOverlayNode { get; private set; }
 	public Window AddCardWindowNode { get; private set; }
 	public LineEdit CardNameEditNode { get; private set; }
@@ -40,6 +41,7 @@ public partial class DecksTab : Control
 	private string _url;
 	private List<core.cards.Card> _cards;
 	private List<DeckTemplate> _decks;
+	private DeckTemplate _current;
 
 	
 	public override void _Ready()
@@ -60,6 +62,7 @@ public partial class DecksTab : Control
 		
 		GetDecksRequestNode = GetNode<HttpRequest>("%GetDecksRequest");
 		PostDeckRequestNode = GetNode<HttpRequest>("%PostDeckRequest");
+		PutDecksRequestNode = GetNode<HttpRequest>("%PutDecksRequest");
 		
 		#endregion
 	}
@@ -122,9 +125,11 @@ public partial class DecksTab : Control
 	
 	#region Signal connections
 
-	private void card_value_changed(int changedTo) {
+	private void card_value_changed(string cid, int changedTo) {
+		_current.Index[cid] = changedTo;
+		if (changedTo == 0) _current.Index.Remove(cid);
+
 		RecordChangedDeck();
-		GD.Print("gm");
 	}
 	
 	private void _on_manager_url_updated(string url)
@@ -164,16 +169,16 @@ public partial class DecksTab : Control
 
 	private void _on_deck_list_item_activated(int index)
 	{
-		var deck = DeckListNode.GetItemMetadata(index).As<Wrapper<DeckTemplate>>().Value;
+		_current = DeckListNode.GetItemMetadata(index).As<Wrapper<DeckTemplate>>().Value;
 	
 		// fill descriptors
-		NameEditNode.Text = deck.GetDescriptor("name");
+		NameEditNode.Text = _current.GetDescriptor("name");
 	
 		// fill cards in deck list
 		foreach (var child in DeckCardsNode.GetChildren())
 			child.Free();
 			
-		foreach (var pair in deck.Index) {
+		foreach (var pair in _current.Index) {
 			AddCardToList(pair.Key, pair.Value);
 		}
 	
@@ -258,12 +263,25 @@ public partial class DecksTab : Control
 
 	private void _on_modify_decks_timer_timeout()
 	{
-		GD.Print("timeout");
 		ModifyDecksTimerNode.Stop();
+		var data = JsonSerializer.Serialize(_decks);
+		string[] headers = new string[] { "Content-Type: application/json" };
+		PutDecksRequestNode.Request(_url + "/api/Decks", headers, HttpClient.Method.Put, data);
+	}
+
+	private void _on_put_decks_request_request_completed(long result, long response_code, string[] headers, byte[] body)
+	{
+		if (response_code != 200) {
+			GUtil.Alert(this, "Failed to put decks (response code: " + response_code + ")", "Deck updating");
+			return;
+		}
+		
+		
 	}
 	
 	#endregion
 }
+
 
 
 

@@ -111,6 +111,9 @@ unique_name_in_owner = true
 [node name="PostDeckRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
+[node name="PutDecksRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
 [node name="Windows" type="Node" parent="."]
 
 [node name="AddCardWindow" type="Window" parent="Windows"]
@@ -229,6 +232,7 @@ unique_name_in_owner = true
 [connection signal="pressed" from="VBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
 [connection signal="request_completed" from="Requests/GetDecksRequest" to="." method="_on_request_request_completed"]
 [connection signal="request_completed" from="Requests/PostDeckRequest" to="." method="_on_post_deck_request_request_completed"]
+[connection signal="request_completed" from="Requests/PutDecksRequest" to="." method="_on_put_decks_request_request_completed"]
 [connection signal="close_requested" from="Windows/AddCardWindow" to="." method="_on_add_card_window_close_requested"]
 [connection signal="text_changed" from="Windows/AddCardWindow/MarginContainer/VBoxContainer/CardNameEdit" to="." method="_on_card_name_edit_text_changed"]
 [connection signal="item_activated" from="Windows/AddCardWindow/MarginContainer/VBoxContainer/HBoxContainer/CardsList" to="." method="_on_card_list_item_activated"]

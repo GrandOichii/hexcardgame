@@ -127,7 +127,7 @@ public partial class DecksTab : Control
 
 	private void card_value_changed(string cid, int changedTo) {
 		_current.Index[cid] = changedTo;
-		if (changedTo == 0) _current.Index.Remove(cid);
+		if (changedTo < 0) _current.Index.Remove(cid);
 
 		RecordChangedDeck();
 	}
@@ -204,7 +204,11 @@ public partial class DecksTab : Control
 	private void _on_card_list_item_activated(int index)
 	{
 		var card = CardsListNode.GetItemMetadata(index).As<Wrapper<core.cards.Card>>().Value;
-		GD.Print(card.Name);
+		
+		_current.Index.Add(card.CID, 1);
+		AddCardToList(card.CID, 1);
+		RecordChangedDeck();
+
 		AddCardWindowNode.Hide();
 		NewCardNode.Hide();
 	}

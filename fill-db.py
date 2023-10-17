@@ -120,7 +120,6 @@ def fill():
             amount = int(c_s[1])
             cur.execute("INSERT INTO DeckCards (amount, deckName, cardID) VALUES (%s, %s, %s);", (amount, d_name, cid_map[cid]))
 
-
 DB_NAME = sys.argv[1]
 PASS = sys.argv[2]
 

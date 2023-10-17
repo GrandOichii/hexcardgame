@@ -4,6 +4,10 @@ using core.match;
 using core.manager;
 using System.Text.Json.Serialization;
 using System.Net.Sockets;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using static System.Net.Mime.MediaTypeNames;
+using System.Xml.Linq;
 
 public class DeckManager {
     public List<DeckTemplate> Decks { get; set; } = new();
@@ -56,6 +60,7 @@ public class ConfigsManager
 }
 
 public class Global {
+    static public ManagerContext Ctx { get; set; }
     static public CardMaster CMaster { get; set; }
     static public DeckManager DManager { get; set; }
     static public ConfigsManager CManager { get; set; }

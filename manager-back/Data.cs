@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using core.cards;
+using System.Xml.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace manager_back
 {
@@ -33,6 +36,9 @@ namespace manager_back
         [Column("name")]
         [Key]
         public string Name { get; set; }
+
+        [NotMapped]
+        public List<DeckCardData> Cards { get; set; }
     }
 
     [Table("expansions")]
@@ -64,6 +70,30 @@ namespace manager_back
         [Column("cardname")]
         public string CardNameKey { get; set; }
         
+        #endregion
+    }
+
+    [Table("deckcards")]
+    [Keyless]
+    public class DeckCardData
+    {
+        [Column("amount")]
+        public int Amount { get; set; }
+
+        public DeckData Deck { get; set; }
+
+        public ExpansionCardData Card { get; set; }
+        
+        #region Foreign keys
+
+        [ForeignKey("Deck")]
+        [Column("deckname")]
+        public string DeckNameKey { get; set; }
+
+        [ForeignKey("Card")]
+        [Column("cardid")]
+        public int CardIDKey { get; set; }
+
         #endregion
     }
 }

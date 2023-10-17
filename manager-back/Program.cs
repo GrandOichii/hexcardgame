@@ -10,6 +10,7 @@ public class ManagerContext : DbContext
     public DbSet<DeckData> Decks { get; set; }
     public DbSet<ExpansionData> Expansions { get; set; }
     public DbSet<ExpansionCardData> ExpansionCards { get; set; }
+    public DbSet<DeckCardData> DeckCards { get; set; }
     public ManagerContext()
     {
         Database.EnsureCreated();

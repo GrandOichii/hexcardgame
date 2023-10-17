@@ -4,6 +4,7 @@ using core.decks;
 using System.Xml.Linq;
 using System.Text.Json.Serialization;
 using System.Net.Mail;
+using Microsoft.EntityFrameworkCore;
 
 namespace manager_back.Controllers;
 
@@ -21,36 +22,38 @@ namespace manager_back.Controllers;
 public class DecksController : ControllerBase
 {
     [HttpGet]
-    public IEnumerable<DeckTemplate> Get()
+    public IEnumerable<DeckData> Get()
     {
-        return Global.DManager.Decks;
+        var result = Global.Ctx.Decks.ToList();
+        foreach (var deck in result)
+        {
+            deck.Cards = Global.Ctx.DeckCards.Where(d => d.DeckNameKey == deck.Name).Include(c => c.Card).ToList();
+        }
+        return result.ToList();
     }
 
-    //[HttpGet("random")]
-    //public DeckTemplate GetRandom() {
-    //    // TODO
-    //    return new DeckTemplate();
+
+
+
+    //[HttpPost]
+    //public DeckTemplate CreateNew([FromBody] DeckTemplate deck)
+    //{
+    //    // TODO check if deck with that name already exists?
+    //    Global.DManager.Decks.Add(deck);
+    //    // TODO save decks
+    //    return deck;
     //}
 
-    [HttpPost]
-    public DeckTemplate CreateNew([FromBody] DeckTemplate deck)
-    {
-        // TODO check if deck with that name already exists?
-        Global.DManager.Decks.Add(deck);
-        // TODO save decks
-        return deck;
-    }
 
+    //[HttpPut]
+    //public List<DeckTemplate> ModifyDeck([FromBody] List<DeckTemplate> newDecks)
+    //{
+    //    // TODO don't know if this is the best way of doing this
 
-    [HttpPut]
-    public List<DeckTemplate> ModifyDeck([FromBody] List<DeckTemplate> newDecks)
-    {
-        // TODO don't know if this is the best way of doing this
+    //    Global.DManager.Decks = newDecks;
 
-        Global.DManager.Decks = newDecks;
-
-        return Global.DManager.Decks;
-    }
+    //    return Global.DManager.Decks;
+    //}
     
 }
 

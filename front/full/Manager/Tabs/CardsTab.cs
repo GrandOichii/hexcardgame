@@ -1,3 +1,4 @@
+using core.cards;
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ public partial class CardsTab : Control
 	#region Signals
 	
 	[Signal]
-	public delegate void CardsUpdatedEventHandler(Wrapper<List<core.cards.Card>> cardsW);
+	public delegate void CardsUpdatedEventHandler(Wrapper<List<ExpansionCard>> cardsW);
 	
 	#endregion
 	
@@ -29,7 +30,7 @@ public partial class CardsTab : Control
 	#endregion
 	
 	private String _url = "";
-	private List<core.cards.Card> _cards;
+	private List<ExpansionCard> _cards;
 	
 	public override void _Ready()
 	{
@@ -75,7 +76,7 @@ public partial class CardsTab : Control
 		}
 		
 		var text = System.Text.Encoding.Default.GetString(body);
-		_cards = JsonSerializer.Deserialize<List<core.cards.Card>>(text);
+		_cards = JsonSerializer.Deserialize<List<ExpansionCard>>(text);
 
 		var cCount = CardsContainerNode.GetChildCount();
 		var nCount = _cards.Count;
@@ -105,7 +106,7 @@ public partial class CardsTab : Control
 			card.Load(c);
 		}
 		
-		EmitSignal(SignalName.CardsUpdated, new Wrapper<List<core.cards.Card>>(_cards));
+		EmitSignal(SignalName.CardsUpdated, new Wrapper<List<ExpansionCard>>(_cards));
 
 	}
 

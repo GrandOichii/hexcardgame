@@ -28,6 +28,9 @@ namespace manager_back
         public bool DeckUsable { get; set; }
         [Column("script")]
         public string Script { get; set; }
+
+        [NotMapped]
+        public List<ExpansionData> Expansions { get; set; }
     }
 
     [Table("decks")]
@@ -71,6 +74,14 @@ namespace manager_back
         public string CardNameKey { get; set; }
         
         #endregion
+
+        public ExpansionCard ToCard() {
+            var result = new ExpansionCard();
+
+            // TODO
+
+            return result;
+        }
     }
 
     [Table("deckcards")]

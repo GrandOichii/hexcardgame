@@ -1,6 +1,7 @@
 using core.match.states;
 using Godot;
 using System;
+using core.cards;
 
 public partial class Card : Control
 {
@@ -29,7 +30,7 @@ public partial class Card : Control
 
 	private Color _defaultBgColor;
 	public MCardState State { get; private set; }
-	public core.cards.Card CardState { get; private set; }
+	public ExpansionCard CardState { get; private set; }
 	public MatchConnection Client { get; set; }
 
 	public override void _Ready()
@@ -67,7 +68,7 @@ public partial class Card : Control
 		TextLabelNode.Text = cardState.Text;
 	}
 
-	public void Load(core.cards.Card card) {
+	public void Load(ExpansionCard card) {
 		// State = null;
 		CardState = card;
 		NameLabelNode.Text = card.Name;

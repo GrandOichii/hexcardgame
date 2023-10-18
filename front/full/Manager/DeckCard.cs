@@ -29,11 +29,11 @@ public partial class DeckCard : Control
 		#endregion
 	}
 	
-	public void Load(string cID, int amount) {
-		_cID = cID;
+	public void Load(DeckCardData card) {
+		_cID = card.Card.Expansion + "::" + card.Card.Card.Name;
 		
-		NameLabelNode.Text = cID;
-		CountBoxNode.Value = amount;
+		NameLabelNode.Text = _cID;
+		CountBoxNode.Value = card.Amount;
 	}
 	
 	#region Signal connections

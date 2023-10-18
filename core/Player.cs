@@ -79,7 +79,7 @@ abstract public class PlayerController {
     /// Sends the card info to the player
     /// </summary>
     /// <param name="card"></param>
-    abstract public void SendCard(Match match, Player player, Card card);
+    abstract public void SendCard(Match match, Player player, ExpansionCard card);
 }
 
 
@@ -105,7 +105,7 @@ public class InactivePlayerController : PlayerController
         return "pass";
     }
 
-    public override void SendCard(Match match, Player player, Card card)
+    public override void SendCard(Match match, Player player, ExpansionCard card)
     {
     }
 
@@ -209,7 +209,7 @@ public class TCPPlayerController : PlayerController
         return Read();
     }
 
-    public override void SendCard(Match match, Player player, Card card)
+    public override void SendCard(Match match, Player player, ExpansionCard card)
     {
         // var state = new MatchState(match, player, "card", new(){card.ToJson()});
 
@@ -274,7 +274,7 @@ public class LuaPlayerController : PlayerController {
         // throw new NotImplementedException();
     }
 
-    public override void SendCard(Match match, Player player, Card card)
+    public override void SendCard(Match match, Player player, ExpansionCard card)
     {
     }
 }

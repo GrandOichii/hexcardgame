@@ -15,7 +15,7 @@ public partial class MatchPlayer : Control
 	
 	#endregion
 	
-	private Dictionary<string, DeckTemplate> _deckIndex;
+	private Dictionary<string, DeckData> _deckIndex;
 	
 	public override void _Ready()
 	{
@@ -34,17 +34,17 @@ public partial class MatchPlayer : Control
 			{
 				IsBot = IsBotCheckNode.ButtonPressed,
 				Name = NameEditNode.Text,
-				DeckList = _deckIndex[DeckOptionNode.Text].ToText()
+				DeckList = _deckIndex[DeckOptionNode.Text].ToDeckTemplate().ToText()
 			};
 			return result;
 		}
 	}
 	
-	public void UpdateDecks(List<DeckTemplate> decks) {
+	public void UpdateDecks(List<DeckData> decks) {
 		_deckIndex = new();
 		DeckOptionNode.Clear();
 		foreach (var deck in decks) {
-			var name = deck.GetDescriptor("name");
+			var name = deck.Name;
 			_deckIndex.Add(name, deck);
 
 			DeckOptionNode.AddItem(name);

@@ -66,20 +66,10 @@ public class Program
     private static void ConfigureDB(string password)
     {
        ConnectionString = "Host=localhost;Username=postgres;Password=" + password + ";Database=testdb";
-
-        //var conn = new NpgsqlConnection(connString);
-        //conn.Open();
-
-        //var cmd = new NpgsqlCommand("SELECT version();", conn);
-        //var reader = cmd.ExecuteReader();
-        //Console.Write("PostgreSQL Version: ");
-        //while (reader.Read())
-        //    Console.WriteLine(reader.GetString(0));
     }
 
     private static void ConfigureSources() {
-        var cm = new FileCardMaster();
-        cm.LoadCardsFrom("../cards");
+        var cm = new DBCardMaster();
         Global.CMaster = cm;
 
         var dm = new DeckManager("../decks");

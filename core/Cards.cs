@@ -19,8 +19,8 @@ public class Card
     public int Cost { get; set; }
     [JsonPropertyName("type")]
     public string Type { get; set; }="<no-type>";
-    [JsonPropertyName("expansion")]
-    public string Expansion { get; set; }="<no-expansion>";
+    // [JsonPropertyName("expansion")]
+    // public string Expansion { get; set; }="<no-expansion>";
     [JsonPropertyName("text")]
     public string Text { get; set; }="";
     [JsonPropertyName("power")]
@@ -36,7 +36,7 @@ public class Card
     /// Returns ID of the card in the format of [expansion]::[name].
     /// </summary>
     /// <returns>ID of the card</returns>
-    public string CID => Expansion + "::" + Name;
+    // public string CID => Expansion + "::" + Name;
 
 
     /// <summary>
@@ -61,6 +61,13 @@ public class Card
     }
 }
 
+public class ExpansionCard : Card {
+    [JsonPropertyName("expansion")]
+    public string Expansion { get; set; }
+
+    public string CID => Expansion + "::" + Name;
+}
+
 
 /// <summary>
 /// Card master entity, is used for card fetching
@@ -73,71 +80,71 @@ public abstract class CardMaster
     /// <param name="id">Card ID</param>
     /// <returns>Card with the specified ID</returns>
     /// 
-    abstract public Card Get(string id);
+    abstract public ExpansionCard Get(string id);
     
     /// <summary>
     /// Fetches all cards
     /// </summary>
     /// <returns><Container of all cards/returns>
-    abstract public IEnumerable<Card> GetAll();
+    abstract public IEnumerable<ExpansionCard> GetAll();
 }
 
 
 /// <summary>
 /// File card master, loads cards using a manifest file
 /// </summary>
-public class FileCardMaster : CardMaster
-{
-    private static string MANIFEST_FILE = "manifest.json";
+// public class FileCardMaster : CardMaster
+// {
+//     private static string MANIFEST_FILE = "manifest.json";
 
-    public List<Card> Cards { get; }
+//     public List<Card> Cards { get; }
 
-    public FileCardMaster() {
-        Cards = new();
-    }
+//     public FileCardMaster() {
+//         Cards = new();
+//     }
 
-    /// <summary>
-    /// Loads the cards from the specified directory. Has to contain a manifest.json file.
-    /// </summary>
-    /// <param name="dir">Directory of the cards.</param>
-    /// <returns>The amount of cards loaded.</returns>
-    public int LoadCardsFrom(string dir) {
-        // read the manifest file
-        var manifestFile = Path.Join(dir, MANIFEST_FILE);
-        var manifest = File.ReadAllText(manifestFile);  
-        var cardDirs = JsonSerializer.Deserialize<List<string>>(manifest);
-        if (cardDirs is null) {
-            throw new Exception("Failed to load manifest file in " + manifestFile);
-        }
+//     /// <summary>
+//     /// Loads the cards from the specified directory. Has to contain a manifest.json file.
+//     /// </summary>
+//     /// <param name="dir">Directory of the cards.</param>
+//     /// <returns>The amount of cards loaded.</returns>
+//     public int LoadCardsFrom(string dir) {
+//         // read the manifest file
+//         var manifestFile = Path.Join(dir, MANIFEST_FILE);
+//         var manifest = File.ReadAllText(manifestFile);  
+//         var cardDirs = JsonSerializer.Deserialize<List<string>>(manifest);
+//         if (cardDirs is null) {
+//             throw new Exception("Failed to load manifest file in " + manifestFile);
+//         }
 
-        int result = 0;
-        foreach (var cardDir in cardDirs) {
-            if (cardDir[0] == '!') continue;
+//         int result = 0;
+//         foreach (var cardDir in cardDirs) {
+//             if (cardDir[0] == '!') continue;
             
-            var cardPath = Path.Join(dir, cardDir);
-            var text = File.ReadAllText(cardPath);
-            var card = JsonSerializer.Deserialize<Card>(text);
-            if (card is null) {
-                throw new Exception("Failed to deserialize card from " + cardPath);
-            }
+//             var cardPath = Path.Join(dir, cardDir);
+//             var text = File.ReadAllText(cardPath);
+//             var card = JsonSerializer.Deserialize<Card>(text);
+//             if (card is null) {
+//                 throw new Exception("Failed to deserialize card from " + cardPath);
+//             }
 
-            Cards.Add(card);
-            ++result;
-        }
-        return result;
-    }
+//             Cards.Add(card);
+//             ++result;
+//         }
+//         return result;
+//     }
 
-    public override Card Get(string id)
-    {
-        foreach (var card in Cards)
-            if (card.CID == id)
-                return card;
+//     public override ExpansionCard Get(string id)
+//     {
+//         foreach (var card in Cards)
+//             if (card.CID == id)
+//                 return card;
 
-        throw new Exception("Can't load card with ID " + id);
-    }
+//         throw new Exception("Can't load card with ID " + id);
+//     }
 
-    public override IEnumerable<Card> GetAll() => Cards;
-}
+//     public override IEnumerable<Card> GetAll() => Cards;
+// }
 
 
 public class MCard {
@@ -150,7 +157,7 @@ public class MCard {
     public Player Owner { get; set; }
     public Player OriginalOwner { get; set; }
     public string MID { get; }
-    public Card Original { get; }
+    public ExpansionCard Original { get; }
     public LuaTable Data { get; }
     public bool GoesToDiscard { get; set; }=true;
 
@@ -182,7 +189,7 @@ public class MCard {
 
     public string ToLogForm => "[[" + Name + "#" + Original.CID + "]]";
 
-    public MCard(Match match, Card card, Player player) {
+    public MCard(Match match, ExpansionCard card, Player player) {
         var lState = match.LState;
         lState.DoString(card.Script);
         var mID = match.CardIDCreator.Next();

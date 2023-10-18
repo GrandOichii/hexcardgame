@@ -83,7 +83,7 @@ public partial class MatchesTab : Control
 		item.SetMetadata(3, match.URL);
 	}
 	
-	public void UpdatePlayers(List<DeckTemplate> decks) {
+	public void UpdatePlayers(List<DeckData> decks) {
 		foreach (var child in PlayerContainerNode.GetChildren()) {
 			var p = child as MatchPlayer;
 			p.UpdateDecks(decks);
@@ -92,7 +92,7 @@ public partial class MatchesTab : Control
 	
 	#region Signal connections
 
-	private void _on_decks_decks_updated(Wrapper<List<DeckTemplate>> decksW)
+	private void _on_decks_decks_updated(Wrapper<List<DeckData>> decksW)
 	{
 		UpdatePlayers(decksW.Value);
 	}

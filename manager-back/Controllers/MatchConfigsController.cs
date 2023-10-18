@@ -9,7 +9,7 @@ public class CardQuery {
     public string Name { get; set; }="";
     public string Expansion { get; set; }="";
 
-    public bool Matches(Card card)
+    public bool Matches(ExpansionCard card)
     {
         if (Expansion.Length > 0 && card.Expansion.ToLower() != Expansion.ToLower()) return false;
         if (Name.Length > 0 && !card.Name.ToLower().Contains(Name.ToLower())) return false;

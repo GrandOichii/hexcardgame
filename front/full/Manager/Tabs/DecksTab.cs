@@ -1,3 +1,4 @@
+using core.cards;
 using core.decks;
 using Godot;
 using System;
@@ -15,7 +16,7 @@ public partial class DecksTab : Control
 	#region Signals
 	
 	[Signal]
-	public delegate void DecksUpdatedEventHandler(Wrapper<List<DeckTemplate>> decksW);
+	public delegate void DecksUpdatedEventHandler(Wrapper<List<DeckData>> decksW);
 	
 	#endregion
 	
@@ -39,9 +40,9 @@ public partial class DecksTab : Control
 	#endregion
 	
 	private string _url;
-	private List<core.cards.Card> _cards;
-	private List<DeckTemplate> _decks;
-	private DeckTemplate _current;
+	private List<ExpansionCard> _cards;
+	private List<DeckData> _decks;
+	private DeckData _current;
 
 	
 	public override void _Ready()
@@ -81,37 +82,38 @@ public partial class DecksTab : Control
 		GetDecksRequestNode.Request(_url + "/api/Decks");
 	}
 	
-	public void RequestCreateDeck(DeckTemplate deck) {
+	public void RequestCreateDeck(DeckData deck) {
 		if (NewNameEditNode.Text == "") {
 			GUtil.Alert(this, "Enter deck name", "Create deck");
 			return;
 		}
 		var dName = NewNameEditNode.Text;
 		foreach (var d in _decks) {
-			if (d.GetDescriptor("name") == dName) {
+			if (d.Name == dName) {
 				GUtil.Alert(this, "Deck with name " + dName + " already exists", "Create deck");
 				return;
 			}
 		}
 		
-		deck.SetDescriptor("name", dName);
+		deck.Name = dName;
 		
 		// send deck
-		var data = deck.ToJson();
-		string[] headers = new string[] { "Content-Type: application/json" };
-		PostDeckRequestNode.Request(_url + "/api/Decks", headers, HttpClient.Method.Post, data);
+		// TODO return?
+		// var data = deck.ToJson();
+		// string[] headers = new string[] { "Content-Type: application/json" };
+		// PostDeckRequestNode.Request(_url + "/api/Decks", headers, HttpClient.Method.Post, data);
 		
 		NewDeckWindowNode.Hide();
 		
 		// add deck to list (trust me dude)
-		var i = DeckListNode.AddItem(deck.GetDescriptor("name"));
-		DeckListNode.SetItemMetadata(i, new Wrapper<DeckTemplate>(deck));
+		var i = DeckListNode.AddItem(deck.Name);
+		DeckListNode.SetItemMetadata(i, new Wrapper<DeckData>(deck));
 	}
 
-	private void AddCardToList(string cid, int value) {
+	private void AddCardToList(DeckCardData card) {
 		var item = DeckCardPS.Instantiate() as DeckCard;
 		DeckCardsNode.AddChild(item);
-		item.Load(cid, value);
+		item.Load(card);
 		var c = new Callable(this, "card_value_changed");
 		item.Connect("AmountChanged", c);
 	}
@@ -126,8 +128,8 @@ public partial class DecksTab : Control
 	#region Signal connections
 
 	private void card_value_changed(string cid, int changedTo) {
-		_current.Index[cid] = changedTo;
-		if (changedTo < 0) _current.Index.Remove(cid);
+		var card = _current[cid];
+		if (changedTo < 0) _current.Remove(cid);
 
 		RecordChangedDeck();
 	}
@@ -156,30 +158,30 @@ public partial class DecksTab : Control
 		
 		DeckOverlayNode.Visible = true;
 		var text = System.Text.Encoding.Default.GetString(body);
-		_decks = JsonSerializer.Deserialize<List<DeckTemplate>>(text);
+		_decks = JsonSerializer.Deserialize<List<DeckData>>(text);
 
 		DeckListNode.Clear();
 		foreach (var deck in _decks) {
-			var i = DeckListNode.AddItem(deck.GetDescriptor("name"));
-			DeckListNode.SetItemMetadata(i, new Wrapper<DeckTemplate>(deck));
+			var i = DeckListNode.AddItem(deck.Name);
+			DeckListNode.SetItemMetadata(i, new Wrapper<DeckData>(deck));
 		}
 		
-		EmitSignal(SignalName.DecksUpdated, new Wrapper<List<DeckTemplate>>(_decks));
+		EmitSignal(SignalName.DecksUpdated, new Wrapper<List<DeckData>>(_decks));
 	}
 
 	private void _on_deck_list_item_activated(int index)
 	{
-		_current = DeckListNode.GetItemMetadata(index).As<Wrapper<DeckTemplate>>().Value;
+		_current = DeckListNode.GetItemMetadata(index).As<Wrapper<DeckData>>().Value;
 	
 		// fill descriptors
-		NameEditNode.Text = _current.GetDescriptor("name");
+		NameEditNode.Text = _current.Name;
 	
 		// fill cards in deck list
 		foreach (var child in DeckCardsNode.GetChildren())
 			child.Free();
 			
-		foreach (var pair in _current.Index) {
-			AddCardToList(pair.Key, pair.Value);
+		foreach (var card in _current.Cards) {
+			AddCardToList(card);
 		}
 	
 		DeckOverlayNode.Visible = false;
@@ -196,17 +198,23 @@ public partial class DecksTab : Control
 		// TODO
 	}
 
-	private void _on_cards_cards_updated(Wrapper<List<core.cards.Card>> cardsW)
+	private void _on_cards_cards_updated(Wrapper<List<ExpansionCard>> cardsW)
 	{
 		_cards = cardsW.Value;
 	}
 
 	private void _on_card_list_item_activated(int index)
 	{
-		var card = CardsListNode.GetItemMetadata(index).As<Wrapper<core.cards.Card>>().Value;
+		var card = CardsListNode.GetItemMetadata(index).As<Wrapper<ExpansionCard>>().Value;
 		
-		_current.Index.Add(card.CID, 1);
-		AddCardToList(card.CID, 1);
+		var nCard = new DeckCardData();
+		nCard.Amount = 1;
+		nCard.Card = new();
+		nCard.Card.Expansion = "TODO";
+		nCard.Card.Card = card;
+		// TODO
+		_current.Cards.Add(nCard);
+		AddCardToList(nCard);
 		RecordChangedDeck();
 
 		AddCardWindowNode.Hide();
@@ -222,7 +230,7 @@ public partial class DecksTab : Control
 			if (!card.Name.ToLower().Contains(new_text.ToLower()))
 				continue;
 			var index = CardsListNode.AddItem(card.Name);
-			CardsListNode.SetItemMetadata(index, new Wrapper<core.cards.Card>(card));
+			CardsListNode.SetItemMetadata(index, new Wrapper<ExpansionCard>(card));
 		}
 	}
 
@@ -245,7 +253,7 @@ public partial class DecksTab : Control
 
 	private void _on_empty_button_pressed()
 	{
-		RequestCreateDeck(new DeckTemplate());
+		RequestCreateDeck(new DeckData());
 	}
 
 	private void _on_post_deck_request_request_completed(long result, long response_code, string[] headers, byte[] body)
@@ -254,13 +262,11 @@ public partial class DecksTab : Control
 			GUtil.Alert(this, "Failed to post deck (response code: " + response_code + ")", "Deck creation");
 			return;
 		}
-		
-		
 	}
 
 	private void _on_card_list_item_selected(int index)
 	{
-		var card = CardsListNode.GetItemMetadata(index).As<Wrapper<core.cards.Card>>().Value;
+		var card = CardsListNode.GetItemMetadata(index).As<Wrapper<ExpansionCard>>().Value;
 		NewCardNode.Show();
 		NewCardNode.Load(card);
 	}

@@ -27,7 +27,11 @@ public class DecksController : ControllerBase
         var result = Global.Ctx.Decks.ToList();
         foreach (var deck in result)
         {
-            deck.Cards = Global.Ctx.DeckCards.Where(d => d.DeckNameKey == deck.Name).Include(c => c.Card).ToList();
+            deck.Cards = Global.Ctx.DeckCards
+                .Where(d => d.DeckNameKey == deck.Name)
+                .Include(c => c.Card)
+                    .ThenInclude(c => c.Card)
+                .ToList();
         }
         return result.ToList();
     }

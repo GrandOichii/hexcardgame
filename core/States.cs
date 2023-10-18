@@ -76,7 +76,7 @@ public struct MCardState
     [JsonPropertyName("defence")]
     public long Defence { get; set; }
 
-    public MCardState(Card card) {
+    public MCardState(ExpansionCard card) {
         MID = "";
         ID = card.CID;
         OwnerID = "";

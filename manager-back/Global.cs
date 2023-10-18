@@ -37,8 +37,6 @@ public class DeckManager {
     }
 }
 
-
-
 public class ConfigsManager
 {
     public List<ManagerMatchConfig> Configs { get; set; } = new();
@@ -69,5 +67,28 @@ public class Global {
     static public ManagerContext Ctx
     {
         get => new ManagerContext();
+    }
+}
+
+public class DBCardMaster : CardMaster
+{
+    public override ExpansionCard Get(string cid)
+    {
+        var split = cid.Split("::");
+        var expansion = split[0];
+        var name = split[1];
+
+        var result = Global.Ctx.ExpansionCards.Where(c => c.Card.Name == name && c.ExpansionNameKey == name).ToList();
+        return result[0].ToCard();
+    }
+
+    public override IEnumerable<ExpansionCard> GetAll() {
+        var cards = Global.Ctx.ExpansionCards.ToList();
+        var result = new List<ExpansionCard>();
+
+        foreach (var card in cards)
+            result.Add(card.ToCard());
+
+        return result;
     }
 }

@@ -6,11 +6,17 @@ using System.Data.Common;
 using manager_back;
 public class ManagerContext : DbContext
 {
+    #region DB Sets
+
     public DbSet<CardData> Cards { get; set; }
     public DbSet<DeckData> Decks { get; set; }
     public DbSet<ExpansionData> Expansions { get; set; }
     public DbSet<ExpansionCardData> ExpansionCards { get; set; }
     public DbSet<DeckCardData> DeckCards { get; set; }
+    public DbSet<MatchConfigData> MatchConfigs { get; set; }
+
+    #endregion
+
     public ManagerContext()
     {
         Database.EnsureCreated();

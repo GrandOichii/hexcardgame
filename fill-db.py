@@ -56,6 +56,16 @@ def fill():
                     FOREIGN KEY (cardID) REFERENCES ExpansionCards(id)
                 );
 
+                DROP TABLE IF EXISTS MatchConfigs;
+                CREATE TABLE MatchConfigs (
+                    name VARCHAR NOT NULL PRIMARY KEY,
+                    turnStartDraw INTEGER NOT NULL,
+                    seed INTEGER NOT NULL,
+                    setupScript TEXT NOT NULL,
+                    addons VARCHAR[] NOT NULL,
+                    map TEXT
+                );
+
 ''')
     # fill cards
     manifest = json.loads(open(path.join(CARDS_DIR, 'manifest.json'), 'r').read())
@@ -119,6 +129,22 @@ def fill():
             cid = c_s[0]
             amount = int(c_s[1])
             cur.execute("INSERT INTO DeckCards (amount, deckName, cardID) VALUES (%s, %s, %s);", (amount, d_name, cid_map[cid]))
+
+    # fill configurations
+    config_paths = os.listdir('configs')
+    for config_path in config_paths:
+        if not config_path.endswith('.json'): continue
+
+        config = json.loads(open(path.join('configs', config_path), 'r').read())
+        seed = 0
+        name = path.splitext(config_path)[0]
+        if 'seed' in config:
+            seed = config['seed']
+        map_raw = config['map']
+        m = []
+        for row in map_raw:
+            m += [''.join([str(i) for i in row])]
+        cur.execute("INSERT INTO MatchConfigs VALUES (%s, %s, %s, %s, %s, %s);", (name, config['turnStartDraw'], seed, config['setupScript'], config['addons'], '|'.join(m)))
 
 DB_NAME = sys.argv[1]
 PASS = sys.argv[2]

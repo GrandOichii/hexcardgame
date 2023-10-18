@@ -96,4 +96,24 @@ namespace manager_back
 
         #endregion
     }
+
+    [Table("matchconfigs")]
+    public class MatchConfigData
+    {
+        [Column("name")]
+        [Key]
+        public string Name { get; set; }
+
+        [Column("turnstartdraw")]
+        public int TurnStartDraw { get; set; }
+        [Column("seed")]
+        public int Seed { get; set; }
+        [Column("setupscript")]
+        public string SetupScript { get; set; }
+        [Column("addons")]
+        public string[] Addons { get; set; }
+        [Column("map")]
+        public string Map { get; set; }
+    }
+
 }

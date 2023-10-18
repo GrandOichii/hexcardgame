@@ -73,6 +73,10 @@ public partial class CardEditWindow : Window
 			c.Power = (int)PowerEditNode.Value;
 			c.Life = (int)LifeEditNode.Value;
 			
+			// TODO remove
+			c.Script = _edited?.Script;
+			c.Expansions = _edited?.Expansions;
+			
 			return c;
 		}
 	}
@@ -124,6 +128,8 @@ public partial class CardEditWindow : Window
 		var c = Baked;
 		
 		// TODO check correctness of the data
+		var oldName = "";
+		if (_edited is not null) oldName = _edited.Name;
 		EmitSignal(SignalName.CardEdited, _edited.Name, new Wrapper<CardData>(c));
 	
 		Hide();

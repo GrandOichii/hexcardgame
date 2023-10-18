@@ -164,11 +164,12 @@ public partial class CardsTab : Control
 	{
 		// Replace with function body.
 		var card = cardW.Value;
-		
-//		string[] headers = new string[] { "Content-Type: application/json" };
-//		PutCardRequestNode.Request(_url + "/api/Decks", headers, HttpClient.Method.Put, data);
-		
-		GD.Print(oldName + " -> " + card.Name);
+		var data = card.ToJson();
+		string[] headers = new string[] { "Content-Type: application/json" };
+		GD.Print(data);
+		var url = _url + "/api/Cards?oldName=" + oldName.URIEncode();
+		GD.Print(url);
+		PutCardRequestNode.Request(url, headers, HttpClient.Method.Put, data);
 	}
 
 	private void _on_put_card_request_request_completed(long result, long response_code, string[] headers, byte[] body)
@@ -182,7 +183,13 @@ public partial class CardsTab : Control
 		// Replace with function body.
 	}
 
+	private void _on_add_button_pressed()
+	{
+		CardEditWindowNode.Edit();
+	}
+
 	#endregion
 }
+
 
 

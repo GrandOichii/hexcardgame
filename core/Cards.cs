@@ -14,11 +14,11 @@ namespace core.cards;
 public class Card
 {
     [JsonPropertyName("name")]
-    public string Name { get; set; } = "<no-name>";
+    public string Name { get; set; } = "";
     [JsonPropertyName("cost")]
     public int Cost { get; set; }
     [JsonPropertyName("type")]
-    public string Type { get; set; }="<no-type>";
+    public string Type { get; set; }="";
     // [JsonPropertyName("expansion")]
     // public string Expansion { get; set; }="<no-expansion>";
     [JsonPropertyName("text")]
@@ -56,7 +56,7 @@ public class Card
     }
 
 
-    public string ToJson() {
+    public virtual string ToJson() {
         return JsonSerializer.Serialize(this);
     }
 }

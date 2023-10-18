@@ -51,8 +51,10 @@ public class CardsController : ControllerBase
     [HttpPut]
     public IActionResult Put(string oldName, [FromBody] CardData card)
     {
-
+        Console.WriteLine(oldName + "  " + card.Name);
         var ctx = Global.Ctx;
+        // TODO could be better
+     
         // check that a card with the same name doens't already exists
         var checkCard = ctx.Cards.SingleOrDefault(c => c.Name == card.Name);
         if (card.Name != oldName && checkCard is not null)
@@ -61,8 +63,6 @@ public class CardsController : ControllerBase
         }
 
         var oldCard = ctx.Cards.SingleOrDefault(c => c.Name == oldName);
-
-        // TODO could be better
 
         // delete old record if exists
         if (oldCard is not null)
@@ -82,6 +82,7 @@ public class CardsController : ControllerBase
             ctx.ExpansionCards.Add(n);
         }
 
+        // commit changes
         ctx.SaveChanges();
         return Ok(card);
     }

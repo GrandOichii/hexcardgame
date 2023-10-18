@@ -56,6 +56,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 4.0
 
+[node name="AddButton" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Add"
+
 [node name="RefreshButton" type="Button" parent="VBoxContainer"]
 visible = false
 layout_mode = 2
@@ -81,6 +85,7 @@ visible = false
 
 [connection signal="item_activated" from="VBoxContainer/HBoxContainer/ExpansionList" to="." method="_on_expansion_list_item_activated"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer/VBoxContainer/NameFilterEdit" to="." method="_on_name_filter_edit_text_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/AddButton" to="." method="_on_add_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
 [connection signal="request_completed" from="Requests/CardsRequest" to="." method="_on_request_request_completed"]
 [connection signal="request_completed" from="Requests/ExpansionsRequest" to="." method="_on_expansions_request_request_completed"]

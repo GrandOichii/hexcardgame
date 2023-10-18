@@ -60,9 +60,14 @@ public class ConfigsManager
 }
 
 public class Global {
-    static public ManagerContext Ctx { get; set; }
+    //static public ManagerContext Ctx { get; set; }
     static public CardMaster CMaster { get; set; }
     static public DeckManager DManager { get; set; }
     static public ConfigsManager CManager { get; set; }
     static public List<MatchTrace> MatchTraces { get; set; } = new();
+
+    static public ManagerContext Ctx
+    {
+        get => new ManagerContext();
+    }
 }

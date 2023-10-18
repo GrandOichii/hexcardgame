@@ -78,8 +78,6 @@ public class Program
     }
 
     private static void ConfigureSources() {
-        Global.Ctx = new ManagerContext();
-
         var cm = new FileCardMaster();
         cm.LoadCardsFrom("../cards");
         Global.CMaster = cm;

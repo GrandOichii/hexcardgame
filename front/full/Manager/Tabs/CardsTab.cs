@@ -20,7 +20,8 @@ public partial class CardsTab : Control
 
 	#region Node fetching
 	
-	public HttpRequest RequestNode { get; private set; }
+	public HttpRequest CardsRequestNode { get; private set; }
+	public HttpRequest ExpansionsRequestNode { get; private set; }
 	public FlowContainer CardsContainerNode { get; private set; }
 	public ItemList ExpansionListNode { get; private set; }
 	public LineEdit NameFilterEditNode { get; private set; }
@@ -34,7 +35,8 @@ public partial class CardsTab : Control
 	{
 		#region Node fetching
 		
-		RequestNode = GetNode<HttpRequest>("%Request");
+		CardsRequestNode = GetNode<HttpRequest>("%CardsRequest");
+		ExpansionsRequestNode = GetNode<HttpRequest>("%ExpansionsRequest");
 		CardsContainerNode = GetNode<FlowContainer>("%CardsContainer");
 		ExpansionListNode = GetNode<ItemList>("%ExpansionList");
 		NameFilterEditNode = GetNode<LineEdit>("%NameFilterEdit");
@@ -48,7 +50,8 @@ public partial class CardsTab : Control
 			return;
 		}
 
-		RequestNode.Request(_url + "/api/Cards");
+		CardsRequestNode.Request(_url + "/api/Cards");
+		ExpansionsRequestNode.Request(_url + "/api/Expansions");
 	}
 
 	public override void _Input(InputEvent e)
@@ -95,17 +98,11 @@ public partial class CardsTab : Control
 		ExpansionListNode.Clear();
 		ExpansionListNode.AddItem("All");
 
-		HashSet<string> expansions = new();
 		// load card data
 		for (int i = 0; i < nCount; i++) {
 			var card = CardsContainerNode.GetChild(i) as Card;
 			var c = _cards[i];
 			card.Load(c);
-
-			if (expansions.Contains(c.Expansion)) continue;
-
-			expansions.Add(c.Expansion);
-			var ei = ExpansionListNode.AddItem(c.Expansion);
 		}
 		
 		EmitSignal(SignalName.CardsUpdated, new Wrapper<List<core.cards.Card>>(_cards));
@@ -133,7 +130,21 @@ public partial class CardsTab : Control
 			card.Visible = eName == "All" || card.CardState.Expansion == eName;
 		}
 
-		// NameFilterEditNode.Text = "";
+	}
+
+	private void _on_expansions_request_request_completed(long result, long response_code, string[] headers, byte[] body)
+	{
+		if (response_code != 200) {
+			GUtil.Alert(this, "Failed to fetch expansions data (response code: " + response_code + ")", "Manager");
+			return;
+		}
+
+		var text = System.Text.Encoding.Default.GetString(body);
+		var expansions = JsonSerializer.Deserialize<List<ExpansionData>>(text);
+		foreach (var e in expansions) {
+			var ei = ExpansionListNode.AddItem(e.Name);
+
+		}
 	}
 
 	#endregion

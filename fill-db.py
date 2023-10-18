@@ -53,7 +53,9 @@ def fill():
                     FOREIGN KEY (deckName) REFERENCES Decks(name),
 
                     cardID INTEGER,
-                    FOREIGN KEY (cardID) REFERENCES ExpansionCards(id)
+                    FOREIGN KEY (cardID) REFERENCES ExpansionCards(id),
+                
+                    UNIQUEq (deckName, cardID)
                 );
 
                 DROP TABLE IF EXISTS MatchConfigs;

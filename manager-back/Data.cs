@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using core.cards;
 using System.Xml.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace manager_back
 {
@@ -78,7 +79,14 @@ namespace manager_back
         public ExpansionCard ToCard() {
             var result = new ExpansionCard();
 
-            // TODO
+            result.Name = Card.Name;
+            result.Cost = Card.Cost;
+            result.Type = Card.Type;
+            result.Text = Card.Text;
+            result.Power = Card.Power;
+            result.Life = Card.Life;
+            result.Expansion = ExpansionNameKey;
+            result.Script = Card.Script;
 
             return result;
         }

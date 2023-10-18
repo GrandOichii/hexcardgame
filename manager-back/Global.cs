@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using static System.Net.Mime.MediaTypeNames;
 using System.Xml.Linq;
+using Microsoft.EntityFrameworkCore;
 
 public class DeckManager {
     public List<DeckTemplate> Decks { get; set; } = new();
@@ -78,7 +79,10 @@ public class DBCardMaster : CardMaster
         var expansion = split[0];
         var name = split[1];
 
-        var result = Global.Ctx.ExpansionCards.Where(c => c.Card.Name == name && c.ExpansionNameKey == name).ToList();
+        var result = Global.Ctx.ExpansionCards
+            .Where(c => c.Card.Name == name && c.ExpansionNameKey == expansion)
+            .Include(c => c.Card)
+            .ToList();
         return result[0].ToCard();
     }
 

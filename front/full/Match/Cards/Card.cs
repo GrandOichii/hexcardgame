@@ -5,6 +5,13 @@ using core.cards;
 
 public partial class Card : Control
 {
+	#region Exports
+	
+	[Export]
+	public Color FocusColor { get; set; }
+	
+	#endregion
+
 	#region Signals
 	
 	[Signal]
@@ -30,7 +37,7 @@ public partial class Card : Control
 
 	private Color _defaultBgColor;
 	public MCardState State { get; private set; }
-	public ExpansionCard CardState { get; private set; }
+	public core.cards.Card CardState { get; private set; }
 	public MatchConnection Client { get; set; }
 
 	public override void _Ready()
@@ -68,7 +75,7 @@ public partial class Card : Control
 		TextLabelNode.Text = cardState.Text;
 	}
 
-	public void Load(ExpansionCard card) {
+	public void Load(core.cards.Card card) {
 		// State = null;
 		CardState = card;
 		NameLabelNode.Text = card.Name;
@@ -77,7 +84,7 @@ public partial class Card : Control
 		PowerLabelNode.Text = card.Power.ToString();
 		LifeLabelNode.Text = card.Life.ToString();
 		DefenceLabelNode.Text = "";
-		TextLabelNode.Text = card.Text;		
+		TextLabelNode.Text = card.Text;
 	}
 	
 	public Color BgColor {
@@ -95,7 +102,7 @@ public partial class Card : Control
 	}
 
 	public void Focus() {
-		CreateTween().TweenProperty(this, "BgColor", new Color(1, 0, 0), .1f);
+		CreateTween().TweenProperty(this, "BgColor", FocusColor, .1f);
 	}
 
 	#region Signal connections

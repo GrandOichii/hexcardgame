@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dlmxwv68ql8hl"]
+[gd_scene load_steps=3 format=3 uid="uid://dlmxwv68ql8hl"]
 
 [ext_resource type="Script" path="res://Manager/Tabs/CardsTab.cs" id="1_033s4"]
+[ext_resource type="PackedScene" uid="uid://c5gd4j0ejipik" path="res://Manager/Windows/CardEditWindow.tscn" id="2_i0vvj"]
 
 [node name="CardsTab" type="Control"]
 layout_mode = 3
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 script = ExtResource("1_033s4")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -68,8 +70,19 @@ use_threads = true
 [node name="ExpansionsRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
+[node name="PutCardRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
+[node name="Windows" type="Node" parent="."]
+
+[node name="CardEditWindow" parent="Windows" instance=ExtResource("2_i0vvj")]
+unique_name_in_owner = true
+visible = false
+
 [connection signal="item_activated" from="VBoxContainer/HBoxContainer/ExpansionList" to="." method="_on_expansion_list_item_activated"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer/VBoxContainer/NameFilterEdit" to="." method="_on_name_filter_edit_text_changed"]
 [connection signal="pressed" from="VBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
 [connection signal="request_completed" from="Requests/CardsRequest" to="." method="_on_request_request_completed"]
 [connection signal="request_completed" from="Requests/ExpansionsRequest" to="." method="_on_expansions_request_request_completed"]
+[connection signal="request_completed" from="Requests/PutCardRequest" to="." method="_on_put_card_request_request_completed"]
+[connection signal="CardEdited" from="Windows/CardEditWindow" to="." method="_on_card_edit_window_card_edited"]

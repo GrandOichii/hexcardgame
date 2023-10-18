@@ -5,6 +5,11 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using core.decks;
 
+public class CardData : core.cards.Card {
+    [JsonPropertyName("expansions")]
+    public List<ExpansionData> Expansions { get; set; }
+}
+
 public class ExpansionData {
     [JsonPropertyName("name")]
     public string Name { get; set; }

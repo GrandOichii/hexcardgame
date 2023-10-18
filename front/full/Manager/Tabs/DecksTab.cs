@@ -40,7 +40,7 @@ public partial class DecksTab : Control
 	#endregion
 	
 	private string _url;
-	private List<ExpansionCard> _cards;
+	private List<CardData> _cards;
 	private List<DeckData> _decks;
 	private DeckData _current;
 
@@ -198,14 +198,14 @@ public partial class DecksTab : Control
 		// TODO
 	}
 
-	private void _on_cards_cards_updated(Wrapper<List<ExpansionCard>> cardsW)
+	private void _on_cards_cards_updated(Wrapper<List<CardData>> cardsW)
 	{
 		_cards = cardsW.Value;
 	}
 
 	private void _on_card_list_item_activated(int index)
 	{
-		var card = CardsListNode.GetItemMetadata(index).As<Wrapper<ExpansionCard>>().Value;
+		var card = CardsListNode.GetItemMetadata(index).As<Wrapper<CardData>>().Value;
 		
 		var nCard = new DeckCardData();
 		nCard.Amount = 1;
@@ -230,7 +230,7 @@ public partial class DecksTab : Control
 			if (!card.Name.ToLower().Contains(new_text.ToLower()))
 				continue;
 			var index = CardsListNode.AddItem(card.Name);
-			CardsListNode.SetItemMetadata(index, new Wrapper<ExpansionCard>(card));
+			CardsListNode.SetItemMetadata(index, new Wrapper<CardData>(card));
 		}
 	}
 
@@ -266,7 +266,7 @@ public partial class DecksTab : Control
 
 	private void _on_card_list_item_selected(int index)
 	{
-		var card = CardsListNode.GetItemMetadata(index).As<Wrapper<ExpansionCard>>().Value;
+		var card = CardsListNode.GetItemMetadata(index).As<Wrapper<CardData>>().Value;
 		NewCardNode.Show();
 		NewCardNode.Load(card);
 	}

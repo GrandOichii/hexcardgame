@@ -1,0 +1,50 @@
+[gd_scene load_steps=3 format=3 uid="uid://dmci6hgrdpkcq"]
+
+[ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Match/Cards/Card.tscn" id="1_ac6qq"]
+[ext_resource type="Script" path="res://Manager/CardsTabCard.cs" id="1_fip3q"]
+
+[node name="CardsTabCard" type="Control"]
+custom_minimum_size = Vector2(300, 460)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 300.0
+offset_bottom = 462.0
+script = ExtResource("1_fip3q")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Card" parent="VBoxContainer" instance=ExtResource("1_ac6qq")]
+unique_name_in_owner = true
+layout_mode = 2
+FocusColor = Color(0.427451, 0.607843, 1, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollLeftButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "<"
+
+[node name="ExpansionLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Expansion name here"
+horizontal_alignment = 1
+
+[node name="ScrollRightButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = ">"
+
+[connection signal="gui_input" from="VBoxContainer/Card" to="." method="_on_card_gui_input"]
+[connection signal="mouse_entered" from="VBoxContainer/Card" to="." method="_on_card_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/Card" to="." method="_on_card_mouse_exited"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/ScrollLeftButton" to="." method="_on_scroll_left_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/ScrollRightButton" to="." method="_on_scroll_right_button_pressed"]

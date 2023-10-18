@@ -9,13 +9,13 @@ public partial class CardsTab : Control
 	#region Signals
 	
 	[Signal]
-	public delegate void CardsUpdatedEventHandler(Wrapper<List<ExpansionCard>> cardsW);
+	public delegate void CardsUpdatedEventHandler(Wrapper<List<CardData>> cardsW);
 	
 	#endregion
 	
 	#region Packed scenes
 
-	private readonly static PackedScene CardPS = ResourceLoader.Load<PackedScene>("res://Match/Cards/Card.tscn");
+	private readonly static PackedScene CardsTabCardPS = ResourceLoader.Load<PackedScene>("res://Manager/CardsTabCard.tscn");
 
 	#endregion
 
@@ -23,14 +23,16 @@ public partial class CardsTab : Control
 	
 	public HttpRequest CardsRequestNode { get; private set; }
 	public HttpRequest ExpansionsRequestNode { get; private set; }
+	public HttpRequest PutCardRequestNode { get; private set; }
 	public FlowContainer CardsContainerNode { get; private set; }
 	public ItemList ExpansionListNode { get; private set; }
 	public LineEdit NameFilterEditNode { get; private set; }
+	public CardEditWindow CardEditWindowNode { get; private set; }
 	
 	#endregion
 	
 	private String _url = "";
-	private List<ExpansionCard> _cards;
+	private List<CardData> _cards;
 	
 	public override void _Ready()
 	{
@@ -38,9 +40,11 @@ public partial class CardsTab : Control
 		
 		CardsRequestNode = GetNode<HttpRequest>("%CardsRequest");
 		ExpansionsRequestNode = GetNode<HttpRequest>("%ExpansionsRequest");
+		PutCardRequestNode = GetNode<HttpRequest>("%PutCardRequest");
 		CardsContainerNode = GetNode<FlowContainer>("%CardsContainer");
 		ExpansionListNode = GetNode<ItemList>("%ExpansionList");
 		NameFilterEditNode = GetNode<LineEdit>("%NameFilterEdit");
+		CardEditWindowNode = GetNode<CardEditWindow>("%CardEditWindow");
 		
 		#endregion
 	}
@@ -76,7 +80,7 @@ public partial class CardsTab : Control
 		}
 		
 		var text = System.Text.Encoding.Default.GetString(body);
-		_cards = JsonSerializer.Deserialize<List<ExpansionCard>>(text);
+		_cards = JsonSerializer.Deserialize<List<CardData>>(text);
 
 		var cCount = CardsContainerNode.GetChildCount();
 		var nCount = _cards.Count;
@@ -84,8 +88,10 @@ public partial class CardsTab : Control
 		if (nCount > cCount) {
 			// fill hand up to new count
 			for (int i = 0; i < nCount - cCount; i++) {
-				var child = CardPS.Instantiate() as Card;
+				var child = CardsTabCardPS.Instantiate() as CardsTabCard;
 				CardsContainerNode.AddChild(child);
+				var c = new Callable(this, "_card_edit_requested");
+				child.Connect("CardEditRequested", c);
 			}
 		}
 		if (nCount < cCount) {
@@ -101,12 +107,12 @@ public partial class CardsTab : Control
 
 		// load card data
 		for (int i = 0; i < nCount; i++) {
-			var card = CardsContainerNode.GetChild(i) as Card;
+			var card = CardsContainerNode.GetChild(i) as CardsTabCard;
 			var c = _cards[i];
 			card.Load(c);
 		}
 		
-		EmitSignal(SignalName.CardsUpdated, new Wrapper<List<ExpansionCard>>(_cards));
+		EmitSignal(SignalName.CardsUpdated, new Wrapper<List<CardData>>(_cards));
 
 	}
 
@@ -118,18 +124,19 @@ public partial class CardsTab : Control
 	private void _on_name_filter_edit_text_changed(string new_text)
 	{
 		foreach (var child in CardsContainerNode.GetChildren()) {
-			var card = child as Card;
-			card.Visible = card.CardState.Name.ToLower().Contains(new_text.ToLower());
+			var card = child as CardsTabCard;
+			card.Visible = card.CardNode.CardState.Name.ToLower().Contains(new_text.ToLower());
 		}
 	}
 
 	private void _on_expansion_list_item_activated(int index)
 	{
-		var eName = ExpansionListNode.GetItemText(index);
-		foreach (var child in CardsContainerNode.GetChildren()) {
-			var card = child as Card;
-			card.Visible = eName == "All" || card.CardState.Expansion == eName;
-		}
+		// TODO replace
+		// var eName = ExpansionListNode.GetItemText(index);
+		// foreach (var child in CardsContainerNode.GetChildren()) {
+		// 	var card = child as CardsTabCard;
+		// 	card.Visible = eName == "All" || card.CardNode.CardState.Expansion == eName;
+		// }
 
 	}
 
@@ -148,5 +155,34 @@ public partial class CardsTab : Control
 		}
 	}
 
+	private void _card_edit_requested(Wrapper<CardData> cardW) {
+		var card = cardW.Value;
+		CardEditWindowNode.Edit(card);
+	}
+
+	private void _on_card_edit_window_card_edited(string oldName, Wrapper<CardData> cardW)
+	{
+		// Replace with function body.
+		var card = cardW.Value;
+		
+//		string[] headers = new string[] { "Content-Type: application/json" };
+//		PutCardRequestNode.Request(_url + "/api/Decks", headers, HttpClient.Method.Put, data);
+		
+		GD.Print(oldName + " -> " + card.Name);
+	}
+
+	private void _on_put_card_request_request_completed(long result, long response_code, string[] headers, byte[] body)
+	{
+		if (response_code != 200) {
+			GUtil.Alert(this, "Failed to edit card data (response code: " + response_code + ")", "Manager");
+			return;
+		}
+		
+		Refresh();
+		// Replace with function body.
+	}
+
 	#endregion
 }
+
+

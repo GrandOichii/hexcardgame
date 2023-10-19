@@ -73,9 +73,14 @@ public partial class CardEditWindow : Window
 			c.Power = (int)PowerEditNode.Value;
 			c.Life = (int)LifeEditNode.Value;
 			
+			c.Script = "";
+			c.Expansions = new();
+			
 			// TODO remove
-			c.Script = _edited?.Script;
-			c.Expansions = _edited?.Expansions;
+			if (_edited is not null) {
+				c.Script = _edited.Script;
+				c.Expansions = _edited.Expansions;
+			}
 			
 			return c;
 		}
@@ -130,7 +135,7 @@ public partial class CardEditWindow : Window
 		// TODO check correctness of the data
 		var oldName = "";
 		if (_edited is not null) oldName = _edited.Name;
-		EmitSignal(SignalName.CardEdited, _edited.Name, new Wrapper<CardData>(c));
+		EmitSignal(SignalName.CardEdited, oldName, new Wrapper<CardData>(c));
 	
 		Hide();
 	}

@@ -48,6 +48,24 @@ public class CardsController : ControllerBase
         return result;
     }
 
+    [HttpPost]
+    public IActionResult Put([FromBody] CardData card)
+    {
+        var ctx = Global.Ctx;
+        // check that a card with the same name doens't already exists
+        var checkCard = ctx.Cards.SingleOrDefault(c => c.Name == card.Name);
+        if (checkCard is not null)
+        {
+            return StatusCode(400, "Card with name " + card.Name + " already exists");
+        }
+
+        // update card
+        ctx.Cards.Add(card);
+
+        ctx.SaveChanges();
+        return Ok(card);
+    }
+
     [HttpPut]
     public IActionResult Put(string oldName, [FromBody] CardData card)
     {

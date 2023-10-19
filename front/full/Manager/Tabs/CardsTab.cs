@@ -168,8 +168,13 @@ public partial class CardsTab : Control
 		string[] headers = new string[] { "Content-Type: application/json" };
 		GD.Print(data);
 		var url = _url + "/api/Cards?oldName=" + oldName.URIEncode();
+		var method = HttpClient.Method.Put;
+		if (oldName == "") {
+			url = _url + "/api/Cards";
+			method = HttpClient.Method.Post;
+		}
 		GD.Print(url);
-		PutCardRequestNode.Request(url, headers, HttpClient.Method.Put, data);
+		PutCardRequestNode.Request(url, headers, method, data);
 	}
 
 	private void _on_put_card_request_request_completed(long result, long response_code, string[] headers, byte[] body)

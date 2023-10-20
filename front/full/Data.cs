@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using core.decks;
+using System;
 
 public class CardData : core.cards.Card {
 	[JsonPropertyName("expansions")]
@@ -28,7 +29,54 @@ public class ExpansionCardData {
 	public string Expansion { get; set; }
 }
 
+/*
+{
+  "name": "string",
+  "cards": [
+    {
+      "card": {
+        "id": 0,
+        "expansion": {
+          "name": "string"
+        },
+        "card": {
+          "name": "string",
+          "cost": 0,
+          "type": "string",
+          "text": "string",
+          "power": 0,
+          "life": 0,
+          "deckUsable": true,
+          "script": "string",
+          "expansions": [
+            {
+              "name": "string"
+            }
+          ]
+        },
+        "expansionNameKey": "string",
+        "cardNameKey": "string"
+      },
+      "cardIDKey": 0
+    }
+  ]
+}
+*/
+
 public class DeckCardData {
+
+	[JsonPropertyName("expansionNameKey")]
+	public string ExpansionNameKey { get; set; }
+	
+	[JsonPropertyName("cardNameKey")]
+	public string CardNameKey { get; set; }
+
+	[JsonPropertyName("deck")]
+	public object? Deck { get; } = null;
+	[JsonPropertyName("deckNameKey")]
+	public string DeckNameKey { get; set; } = "";
+
+
 	[JsonPropertyName("amount")]
 	public int Amount { get; set; }
 
@@ -74,5 +122,9 @@ public class DeckData {
 			result.Index.Add(card.CID, card.Amount);
 		}
 		return result;
+	}
+
+	public string ToJson() {
+		return JsonSerializer.Serialize(this);
 	}
 }

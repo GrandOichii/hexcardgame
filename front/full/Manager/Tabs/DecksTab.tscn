@@ -106,10 +106,7 @@ text = "Refresh"
 [node name="GetDecksRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
-[node name="PostDeckRequest" type="HTTPRequest" parent="Requests"]
-unique_name_in_owner = true
-
-[node name="PutDecksRequest" type="HTTPRequest" parent="Requests"]
+[node name="EditDeckRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
 [node name="Windows" type="Node" parent="."]
@@ -187,8 +184,8 @@ unique_name_in_owner = true
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Left/VBoxContainer2/EditButton" to="." method="_on_edit_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
 [connection signal="request_completed" from="Requests/GetDecksRequest" to="." method="_on_request_request_completed"]
-[connection signal="request_completed" from="Requests/PostDeckRequest" to="." method="_on_post_deck_request_request_completed"]
-[connection signal="request_completed" from="Requests/PutDecksRequest" to="." method="_on_put_decks_request_request_completed"]
+[connection signal="request_completed" from="Requests/EditDeckRequest" to="." method="_on_edit_deck_request_request_completed"]
 [connection signal="close_requested" from="Windows/NewDeckWindow" to="." method="_on_new_deck_window_close_requested"]
 [connection signal="pressed" from="Windows/NewDeckWindow/MarginContainer/VBoxContainer/HBoxContainer2/EmptyButton" to="." method="_on_empty_button_pressed"]
+[connection signal="DeckEdited" from="Windows/DeckEditWindow" to="." method="_on_deck_edit_window_deck_edited"]
 [connection signal="timeout" from="Timers/ModifyDecksTimer" to="." method="_on_modify_decks_timer_timeout"]

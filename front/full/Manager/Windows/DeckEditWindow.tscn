@@ -119,7 +119,7 @@ theme_override_constants/margin_bottom = 5
 [node name="VBoxContainer" type="VBoxContainer" parent="Windows/AddCardWindow/MarginContainer"]
 layout_mode = 2
 
-[node name="CardNameEdit" type="LineEdit" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer"]
+[node name="NewCardNameFilter" type="LineEdit" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Filter by card name"
@@ -148,3 +148,6 @@ layout_mode = 2
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HSplitContainer/HBoxContainer/AddButton" to="." method="_on_add_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="close_requested" from="Windows/AddCardWindow" to="." method="_on_add_card_window_close_requested"]
+[connection signal="text_changed" from="Windows/AddCardWindow/MarginContainer/VBoxContainer/NewCardNameFilter" to="." method="_on_new_card_name_filter_text_changed"]
+[connection signal="item_activated" from="Windows/AddCardWindow/MarginContainer/VBoxContainer/HBoxContainer/CardsList" to="." method="_on_cards_list_item_activated"]

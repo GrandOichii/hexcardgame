@@ -69,11 +69,10 @@ public class CardsController : ControllerBase
     [HttpPut]
     public IActionResult Put(string oldName, [FromBody] CardData card)
     {
-        Console.WriteLine(oldName + "  " + card.Name);
         var ctx = Global.Ctx;
         // TODO could be better
      
-        // check that a card with the same name doens't already exists
+        // check that a card with the same name doesn't already exist
         var checkCard = ctx.Cards.SingleOrDefault(c => c.Name == card.Name);
         if (card.Name != oldName && checkCard is not null)
         {

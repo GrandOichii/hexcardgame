@@ -20,6 +20,11 @@ public partial class DeckCard : Control
 	public DeckCardData Data { get; private set; }
 	
 	private string _cID;
+
+	public int Amount {
+		get => (int)CountBoxNode.Value;
+		set => CountBoxNode.Value = value;
+	}
 	
 	public override void _Ready()
 	{
@@ -37,6 +42,17 @@ public partial class DeckCard : Control
 		
 		NameLabelNode.Text = _cID;
 		CountBoxNode.Value = card.Amount;
+	}
+
+	public DeckCardData Baked {
+		get {
+			var result = new DeckCardData();
+
+			result.Amount = Amount;
+			result.Card = Data.Card;
+
+			return result;
+		}
 	}
 	
 	#region Signal connections

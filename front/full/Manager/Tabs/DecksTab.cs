@@ -18,8 +18,9 @@ public partial class DecksTab : Control
 	
 	public ItemList DeckListNode { get; private set; }
 	public HttpRequest GetDecksRequestNode { get; private set; }
-	public HttpRequest PostDeckRequestNode { get; private set; }
-	public HttpRequest PutDecksRequestNode { get; private set; }
+	public HttpRequest EditDeckRequestNode { get; private set; }
+	// public HttpRequest PostDeckRequestNode { get; private set; }
+	// public HttpRequest PutDecksRequestNode { get; private set; }
 	public Control DeckOverlayNode { get; private set; }
 	public Window NewDeckWindowNode { get; private set; }
 	public Timer ModifyDecksTimerNode { get; private set; }
@@ -48,8 +49,7 @@ public partial class DecksTab : Control
 		NewNameEditNode = GetNode<LineEdit>("%NewNameEdit");
 		
 		GetDecksRequestNode = GetNode<HttpRequest>("%GetDecksRequest");
-		PostDeckRequestNode = GetNode<HttpRequest>("%PostDeckRequest");
-		PutDecksRequestNode = GetNode<HttpRequest>("%PutDecksRequest");
+		EditDeckRequestNode = GetNode<HttpRequest>("%EditDeckRequest");
 		
 		#endregion
 	}
@@ -147,9 +147,9 @@ public partial class DecksTab : Control
 
 	private void _on_cards_cards_updated(Wrapper<List<CardData>> cardsW)
 	{
-		_cards = cardsW.Value;
+		// _cards = cardsW.Value;
+		DeckEditWindowNode.Cards = cardsW.Value;
 	}
-
 
 	private void _on_create_button_pressed()
 	{
@@ -166,23 +166,19 @@ public partial class DecksTab : Control
 		RequestCreateDeck(new DeckData());
 	}
 
-	private void _on_post_deck_request_request_completed(long result, long response_code, string[] headers, byte[] body)
-	{
-		if (response_code != 200) {
-			GUtil.Alert(this, "Failed to post deck (response code: " + response_code + ")", "Deck creation");
-			return;
-		}
-	}
+	// private void _on_post_deck_request_request_completed(long result, long response_code, string[] headers, byte[] body)
+	// {
+	// 	if (response_code != 200) {
+	// 		GUtil.Alert(this, "Failed to post deck (response code: " + response_code + ")", "Deck creation");
+	// 		return;
+	// 	}
+	// }
 
-	private void _on_put_decks_request_request_completed(long result, long response_code, string[] headers, byte[] body)
-	{
-		if (response_code != 200) {
-			GUtil.Alert(this, "Failed to put decks (response code: " + response_code + ")", "Deck updating");
-			return;
-		}
+	// private void _on_put_decks_request_request_completed(long result, long response_code, string[] headers, byte[] body)
+	// {
 		
 		
-	}
+	// }
 
 	private void _on_deck_list_item_activated(int index)
 	{
@@ -205,6 +201,34 @@ public partial class DecksTab : Control
 	{
 		DeckEditWindowNode.Load(_current);
 	}
+
+	private void _on_deck_edit_window_deck_edited(string oldName, Wrapper<DeckData> deckW)
+	{
+		// TODO check the data correctness
+		var method = HttpClient.Method.Post;
+		var url = _url + "/api/Decks";
+		if (oldName.Length > 0) {
+			method = HttpClient.Method.Put;
+			url = _url + "/api/Decks?oldName=" + oldName.URIEncode();
+		}
+		string[] headers = new string[] { "Content-Type: application/json" };
+		var data = deckW.Value.ToJson();
+		GD.Print(url);
+		GD.Print(data);
+		EditDeckRequestNode.Request(url, headers, method, data);
+	}
+
+	private void _on_edit_deck_request_request_completed(long result, long response_code, string[] headers, byte[] body)
+	{
+		if (response_code != 200) {
+			GUtil.Alert(this, "Failed to send edited deck (response code: " + response_code + ")", "Deck updating");
+			return;
+		}
+
+		Refresh();
+	}
 	
 	#endregion
 }
+
+

@@ -166,14 +166,12 @@ public partial class CardsTab : Control
 		var card = cardW.Value;
 		var data = card.ToJson();
 		string[] headers = new string[] { "Content-Type: application/json" };
-		GD.Print(data);
 		var url = _url + "/api/Cards?oldName=" + oldName.URIEncode();
 		var method = HttpClient.Method.Put;
 		if (oldName == "") {
 			url = _url + "/api/Cards";
 			method = HttpClient.Method.Post;
 		}
-		GD.Print(url);
 		PutCardRequestNode.Request(url, headers, method, data);
 	}
 
@@ -185,7 +183,7 @@ public partial class CardsTab : Control
 		}
 		
 		Refresh();
-		// Replace with function body.
+		NameFilterEditNode.Clear();
 	}
 
 	private void _on_add_button_pressed()

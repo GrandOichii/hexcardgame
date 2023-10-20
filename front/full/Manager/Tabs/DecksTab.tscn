@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bndeg34pqxyk0"]
+[gd_scene load_steps=4 format=3 uid="uid://bndeg34pqxyk0"]
 
 [ext_resource type="Script" path="res://Manager/Tabs/DecksTab.cs" id="1_qsbb2"]
 [ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Match/Cards/Card.tscn" id="2_pcsrs"]
+[ext_resource type="PackedScene" uid="uid://c78ddk07rvi2s" path="res://Manager/Windows/DeckEditWindow.tscn" id="3_7piuf"]
 
 [node name="DecksTab" type="Control"]
 layout_mode = 3
@@ -50,53 +51,50 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 4.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/Left"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Stats" type="Control" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Name: "
-
-[node name="NameEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "Enter deck name"
-
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="DeckCards" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer/ScrollContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="AddCardButton" type="Button" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer"]
-layout_mode = 2
-text = "Add"
-
 [node name="DeckOverlay" type="Control" parent="VBoxContainer/HBoxContainer/Left"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/Left"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="DeckCards" type="ItemList" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer2/VBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Card" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer2/VBoxContainer/VBoxContainer" instance=ExtResource("2_pcsrs")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="EditButton" type="Button" parent="VBoxContainer/HBoxContainer/Left/VBoxContainer2"]
+layout_mode = 2
+text = "Edit"
 
 [node name="RefreshButton" type="Button" parent="VBoxContainer"]
 visible = false
@@ -219,6 +217,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "From clipboard"
 
+[node name="DeckEditWindow" parent="Windows" instance=ExtResource("3_7piuf")]
+unique_name_in_owner = true
+visible = false
+
 [node name="Timers" type="Node" parent="."]
 
 [node name="ModifyDecksTimer" type="Timer" parent="Timers"]
@@ -228,7 +230,8 @@ unique_name_in_owner = true
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/CreateButton" to="." method="_on_create_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/RemoveButton" to="." method="_on_remove_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/GenerateButton" to="." method="_on_generate_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/Left/VBoxContainer/AddCardButton" to="." method="_on_add_card_button_pressed"]
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer/Left/VBoxContainer2/VBoxContainer/ScrollContainer/DeckCards" to="." method="_on_deck_cards_item_selected"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Left/VBoxContainer2/EditButton" to="." method="_on_edit_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
 [connection signal="request_completed" from="Requests/GetDecksRequest" to="." method="_on_request_request_completed"]
 [connection signal="request_completed" from="Requests/PostDeckRequest" to="." method="_on_post_deck_request_request_completed"]

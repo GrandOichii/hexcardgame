@@ -80,6 +80,7 @@ public class CardsController : ControllerBase
             return StatusCode(400, "Card with name " + card.Name + " already exists");
         }
 
+        //var i = 0;
         var oldCard = ctx.Cards.SingleOrDefault(c => c.Name == oldName);
 
         // delete old record if exists

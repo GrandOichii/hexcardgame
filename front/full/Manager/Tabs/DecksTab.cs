@@ -23,7 +23,6 @@ public partial class DecksTab : Control
 	#region Nodes
 	
 	public ItemList DeckListNode { get; private set; }
-	public VBoxContainer DeckCardsNode { get; private set; }
 	public HttpRequest GetDecksRequestNode { get; private set; }
 	public HttpRequest PostDeckRequestNode { get; private set; }
 	public HttpRequest PutDecksRequestNode { get; private set; }
@@ -31,12 +30,14 @@ public partial class DecksTab : Control
 	public Window AddCardWindowNode { get; private set; }
 	public LineEdit CardNameEditNode { get; private set; }
 	public ItemList CardsListNode { get; private set; }
-	public LineEdit NameEditNode { get; private set; }
 	public LineEdit NewNameEditNode { get; private set; }
 	public Window NewDeckWindowNode { get; private set; }
 	public Card NewCardNode { get; private set; }
 	public Timer ModifyDecksTimerNode { get; private set; }
-	
+	public ItemList DeckCardsNode { get; private set; }
+	public Card CardNode { get; private set; }
+	public DeckEditWindow DeckEditWindowNode { get; private set; }
+
 	#endregion
 	
 	private string _url;
@@ -50,16 +51,17 @@ public partial class DecksTab : Control
 		#region Node fetching
 		
 		DeckListNode = GetNode<ItemList>("%DeckList");
-		DeckCardsNode = GetNode<VBoxContainer>("%DeckCards");
 		DeckOverlayNode = GetNode<Control>("%DeckOverlay");
 		AddCardWindowNode = GetNode<Window>("%AddCardWindow");
 		CardNameEditNode = GetNode<LineEdit>("%CardNameEdit");
 		CardsListNode = GetNode<ItemList>("%CardsList");
-		NameEditNode = GetNode<LineEdit>("%NameEdit");
 		NewNameEditNode = GetNode<LineEdit>("%NewNameEdit");
 		NewDeckWindowNode = GetNode<Window>("%NewDeckWindow");
 		NewCardNode = GetNode<Card>("%NewCard");
 		ModifyDecksTimerNode = GetNode<Timer>("%ModifyDecksTimer");
+		DeckCardsNode = GetNode<ItemList>("%DeckCards");
+		CardNode = GetNode<Card>("%Card");
+		DeckEditWindowNode = GetNode<DeckEditWindow>("%DeckEditWindow");
 		
 		GetDecksRequestNode = GetNode<HttpRequest>("%GetDecksRequest");
 		PostDeckRequestNode = GetNode<HttpRequest>("%PostDeckRequest");
@@ -112,7 +114,6 @@ public partial class DecksTab : Control
 
 	private void AddCardToList(DeckCardData card) {
 		var item = DeckCardPS.Instantiate() as DeckCard;
-		DeckCardsNode.AddChild(item);
 		item.Load(card);
 		var c = new Callable(this, "card_value_changed");
 		item.Connect("AmountChanged", c);
@@ -156,7 +157,7 @@ public partial class DecksTab : Control
 			return;
 		}
 		
-		DeckOverlayNode.Visible = true;
+		// DeckOverlayNode.Visible = true;
 		var text = System.Text.Encoding.Default.GetString(body);
 		_decks = JsonSerializer.Deserialize<List<DeckData>>(text);
 
@@ -167,30 +168,6 @@ public partial class DecksTab : Control
 		}
 		
 		EmitSignal(SignalName.DecksUpdated, new Wrapper<List<DeckData>>(_decks));
-	}
-
-	private void _on_deck_list_item_activated(int index)
-	{
-		_current = DeckListNode.GetItemMetadata(index).As<Wrapper<DeckData>>().Value;
-	
-		// fill descriptors
-		NameEditNode.Text = _current.Name;
-	
-		// fill cards in deck list
-		foreach (var child in DeckCardsNode.GetChildren())
-			child.Free();
-			
-		foreach (var card in _current.Cards) {
-			AddCardToList(card);
-		}
-	
-		DeckOverlayNode.Visible = false;
-	}
-
-	private void _on_add_card_button_pressed()
-	{
-		CardNameEditNode.Clear();
-		AddCardWindowNode.Show();
 	}
 
 	private void _on_generate_button_pressed()
@@ -243,7 +220,6 @@ public partial class DecksTab : Control
 	private void _on_create_button_pressed()
 	{
 		NewDeckWindowNode.Show();
-		NewNameEditNode.Clear();
 	}
 
 	private void _on_new_deck_window_close_requested()
@@ -288,13 +264,28 @@ public partial class DecksTab : Control
 		
 		
 	}
+
+	private void _on_deck_list_item_activated(int index)
+	{
+		_current = DeckListNode.GetItemMetadata(index).As<Wrapper<DeckData>>().Value;
+		
+		DeckCardsNode.Clear();
+		foreach (var card in _current.Cards) {
+			var i = DeckCardsNode.AddItem(card.CID + " x" + card.Amount);
+			DeckCardsNode.SetItemMetadata(i, new Wrapper<DeckCardData>(card));
+		}
+	}
+
+	private void _on_deck_cards_item_selected(int index)
+	{
+		var card = DeckCardsNode.GetItemMetadata(index).As<Wrapper<DeckCardData>>().Value;
+		CardNode.Load(card.Card.Card);
+	}
+
+	private void _on_edit_button_pressed()
+	{
+		DeckEditWindowNode.Load(_current);
+	}
 	
 	#endregion
 }
-
-
-
-
-
-
-

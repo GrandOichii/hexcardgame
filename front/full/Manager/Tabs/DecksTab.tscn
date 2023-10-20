@@ -114,53 +114,6 @@ unique_name_in_owner = true
 
 [node name="Windows" type="Node" parent="."]
 
-[node name="AddCardWindow" type="Window" parent="Windows"]
-unique_name_in_owner = true
-title = "Add card"
-initial_position = 2
-size = Vector2i(800, 500)
-visible = false
-transient = true
-exclusive = true
-
-[node name="MarginContainer" type="MarginContainer" parent="Windows/AddCardWindow"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 5
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 5
-theme_override_constants/margin_bottom = 5
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Windows/AddCardWindow/MarginContainer"]
-layout_mode = 2
-
-[node name="CardNameEdit" type="LineEdit" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-placeholder_text = "Filter by card name"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="CardsList" type="ItemList" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-alignment = 1
-
-[node name="NewCard" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_pcsrs")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-
 [node name="NewDeckWindow" type="Window" parent="Windows"]
 unique_name_in_owner = true
 title = "Create deck"
@@ -236,10 +189,6 @@ unique_name_in_owner = true
 [connection signal="request_completed" from="Requests/GetDecksRequest" to="." method="_on_request_request_completed"]
 [connection signal="request_completed" from="Requests/PostDeckRequest" to="." method="_on_post_deck_request_request_completed"]
 [connection signal="request_completed" from="Requests/PutDecksRequest" to="." method="_on_put_decks_request_request_completed"]
-[connection signal="close_requested" from="Windows/AddCardWindow" to="." method="_on_add_card_window_close_requested"]
-[connection signal="text_changed" from="Windows/AddCardWindow/MarginContainer/VBoxContainer/CardNameEdit" to="." method="_on_card_name_edit_text_changed"]
-[connection signal="item_activated" from="Windows/AddCardWindow/MarginContainer/VBoxContainer/HBoxContainer/CardsList" to="." method="_on_card_list_item_activated"]
-[connection signal="item_selected" from="Windows/AddCardWindow/MarginContainer/VBoxContainer/HBoxContainer/CardsList" to="." method="_on_card_list_item_selected"]
 [connection signal="close_requested" from="Windows/NewDeckWindow" to="." method="_on_new_deck_window_close_requested"]
 [connection signal="pressed" from="Windows/NewDeckWindow/MarginContainer/VBoxContainer/HBoxContainer2/EmptyButton" to="." method="_on_empty_button_pressed"]
 [connection signal="timeout" from="Timers/ModifyDecksTimer" to="." method="_on_modify_decks_timer_timeout"]

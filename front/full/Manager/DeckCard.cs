@@ -3,12 +3,12 @@ using System;
 
 public partial class DeckCard : Control
 {
-	#region Signals
+	// #region Signals
 	
-	[Signal]
-	public delegate void AmountChangedEventHandler(string cid, int v);
+	// [Signal]
+	// public delegate void AmountChangedEventHandler(string cid, int v);
 	
-	#endregion
+	// #endregion
 	
 	#region Nodes
 	
@@ -16,6 +16,8 @@ public partial class DeckCard : Control
 	public SpinBox CountBoxNode { get; private set; }
 	
 	#endregion
+
+	public DeckCardData Data { get; private set; }
 	
 	private string _cID;
 	
@@ -30,6 +32,7 @@ public partial class DeckCard : Control
 	}
 	
 	public void Load(DeckCardData card) {
+		Data = card;
 		_cID = card.Card.Expansion + "::" + card.Card.Card.Name;
 		
 		NameLabelNode.Text = _cID;
@@ -40,7 +43,7 @@ public partial class DeckCard : Control
 	
 	private void _on_count_box_value_changed(double v)
 	{
-		EmitSignal(SignalName.AmountChanged, _cID, (int)v);
+		// EmitSignal(SignalName.AmountChanged, _cID, (int)v);
 		if (v < 0)
 			QueueFree();
 	}

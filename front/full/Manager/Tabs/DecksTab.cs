@@ -7,12 +7,6 @@ using System.Text.Json;
 
 public partial class DecksTab : Control
 {
-	#region Packed scenes
-	
-	private readonly static PackedScene DeckCardPS = ResourceLoader.Load<PackedScene>("res://Manager/DeckCard.tscn");
-	
-	#endregion
-	
 	#region Signals
 	
 	[Signal]
@@ -27,16 +21,12 @@ public partial class DecksTab : Control
 	public HttpRequest PostDeckRequestNode { get; private set; }
 	public HttpRequest PutDecksRequestNode { get; private set; }
 	public Control DeckOverlayNode { get; private set; }
-	public Window AddCardWindowNode { get; private set; }
-	public LineEdit CardNameEditNode { get; private set; }
-	public ItemList CardsListNode { get; private set; }
-	public LineEdit NewNameEditNode { get; private set; }
 	public Window NewDeckWindowNode { get; private set; }
-	public Card NewCardNode { get; private set; }
 	public Timer ModifyDecksTimerNode { get; private set; }
 	public ItemList DeckCardsNode { get; private set; }
 	public Card CardNode { get; private set; }
 	public DeckEditWindow DeckEditWindowNode { get; private set; }
+	public LineEdit NewNameEditNode { get; private set; }
 
 	#endregion
 	
@@ -52,16 +42,10 @@ public partial class DecksTab : Control
 		
 		DeckListNode = GetNode<ItemList>("%DeckList");
 		DeckOverlayNode = GetNode<Control>("%DeckOverlay");
-		AddCardWindowNode = GetNode<Window>("%AddCardWindow");
-		CardNameEditNode = GetNode<LineEdit>("%CardNameEdit");
-		CardsListNode = GetNode<ItemList>("%CardsList");
-		NewNameEditNode = GetNode<LineEdit>("%NewNameEdit");
-		NewDeckWindowNode = GetNode<Window>("%NewDeckWindow");
-		NewCardNode = GetNode<Card>("%NewCard");
-		ModifyDecksTimerNode = GetNode<Timer>("%ModifyDecksTimer");
 		DeckCardsNode = GetNode<ItemList>("%DeckCards");
 		CardNode = GetNode<Card>("%Card");
 		DeckEditWindowNode = GetNode<DeckEditWindow>("%DeckEditWindow");
+		NewNameEditNode = GetNode<LineEdit>("%NewNameEdit");
 		
 		GetDecksRequestNode = GetNode<HttpRequest>("%GetDecksRequest");
 		PostDeckRequestNode = GetNode<HttpRequest>("%PostDeckRequest");
@@ -112,13 +96,6 @@ public partial class DecksTab : Control
 		DeckListNode.SetItemMetadata(i, new Wrapper<DeckData>(deck));
 	}
 
-	private void AddCardToList(DeckCardData card) {
-		var item = DeckCardPS.Instantiate() as DeckCard;
-		item.Load(card);
-		var c = new Callable(this, "card_value_changed");
-		item.Connect("AmountChanged", c);
-	}
-
 	private void RecordChangedDeck() {
 		if (!ModifyDecksTimerNode.IsStopped()) {
 			ModifyDecksTimerNode.Stop();
@@ -127,13 +104,6 @@ public partial class DecksTab : Control
 	}
 	
 	#region Signal connections
-
-	private void card_value_changed(string cid, int changedTo) {
-		var card = _current[cid];
-		if (changedTo < 0) _current.Remove(cid);
-
-		RecordChangedDeck();
-	}
 	
 	private void _on_manager_url_updated(string url)
 	{
@@ -180,42 +150,6 @@ public partial class DecksTab : Control
 		_cards = cardsW.Value;
 	}
 
-	private void _on_card_list_item_activated(int index)
-	{
-		var card = CardsListNode.GetItemMetadata(index).As<Wrapper<CardData>>().Value;
-		
-		var nCard = new DeckCardData();
-		nCard.Amount = 1;
-		nCard.Card = new();
-		nCard.Card.Expansion = "TODO";
-		nCard.Card.Card = card;
-		// TODO
-		_current.Cards.Add(nCard);
-		AddCardToList(nCard);
-		RecordChangedDeck();
-
-		AddCardWindowNode.Hide();
-		NewCardNode.Hide();
-	}
-
-	private void _on_card_name_edit_text_changed(string new_text)
-	{
-		CardsListNode.Clear();
-		
-		// TODO bad?
-		foreach (var card in _cards) {
-			if (!card.Name.ToLower().Contains(new_text.ToLower()))
-				continue;
-			var index = CardsListNode.AddItem(card.Name);
-			CardsListNode.SetItemMetadata(index, new Wrapper<CardData>(card));
-		}
-	}
-
-	private void _on_add_card_window_close_requested()
-	{
-		NewCardNode.Hide();
-		AddCardWindowNode.Hide();
-	}
 
 	private void _on_create_button_pressed()
 	{
@@ -238,21 +172,6 @@ public partial class DecksTab : Control
 			GUtil.Alert(this, "Failed to post deck (response code: " + response_code + ")", "Deck creation");
 			return;
 		}
-	}
-
-	private void _on_card_list_item_selected(int index)
-	{
-		var card = CardsListNode.GetItemMetadata(index).As<Wrapper<CardData>>().Value;
-		NewCardNode.Show();
-		NewCardNode.Load(card);
-	}
-
-	private void _on_modify_decks_timer_timeout()
-	{
-		ModifyDecksTimerNode.Stop();
-		var data = JsonSerializer.Serialize(_decks);
-		string[] headers = new string[] { "Content-Type: application/json" };
-		PutDecksRequestNode.Request(_url + "/api/Decks", headers, HttpClient.Method.Put, data);
 	}
 
 	private void _on_put_decks_request_request_completed(long result, long response_code, string[] headers, byte[] body)

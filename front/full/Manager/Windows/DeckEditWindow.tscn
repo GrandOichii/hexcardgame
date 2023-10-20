@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://c78ddk07rvi2s"]
+[gd_scene load_steps=3 format=3 uid="uid://c78ddk07rvi2s"]
 
 [ext_resource type="Script" path="res://Manager/Windows/DeckEditWindow.cs" id="1_5s8hv"]
+[ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Match/Cards/Card.tscn" id="2_ialsh"]
 
 [node name="DeckEditWindow" type="Window"]
 initial_position = 2
@@ -57,9 +58,19 @@ size_flags_stretch_ratio = 3.0
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CardsContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HSplitContainer/HBoxContainer"]
+[node name="NameFilter" type="LineEdit" parent="MarginContainer/VBoxContainer/HSplitContainer/HBoxContainer"]
+layout_mode = 2
+placeholder_text = "Filter by name"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/HSplitContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="CardsContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HSplitContainer/HBoxContainer/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="AddButton" type="Button" parent="MarginContainer/VBoxContainer/HSplitContainer/HBoxContainer"]
@@ -70,5 +81,70 @@ text = "Add	"
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SaveButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Save"
+
+[node name="CancelButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cancel"
+
+[node name="Windows" type="Node" parent="."]
+
+[node name="AddCardWindow" type="Window" parent="Windows"]
+unique_name_in_owner = true
+title = "Add card"
+initial_position = 2
+size = Vector2i(800, 500)
+visible = false
+transient = true
+exclusive = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Windows/AddCardWindow"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Windows/AddCardWindow/MarginContainer"]
+layout_mode = 2
+
+[node name="CardNameEdit" type="LineEdit" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Filter by card name"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CardsList" type="ItemList" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="NewCard" parent="Windows/AddCardWindow/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_ialsh")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/HSplitContainer/HBoxContainer/NameFilter" to="." method="_on_name_filter_text_changed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HSplitContainer/HBoxContainer/AddButton" to="." method="_on_add_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/CancelButton" to="." method="_on_cancel_button_pressed"]

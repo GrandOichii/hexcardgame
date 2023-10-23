@@ -26,6 +26,14 @@ public class ManagerContext : DbContext
         Console.WriteLine(Program.ConnectionString);
         optionsBuilder.UseNpgsql(Program.ConnectionString);
     }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<ExpansionCardData>()
+            .Property(d => d.ID)
+            .ValueGeneratedOnAdd();
+    }
 }
 
 public class Program 

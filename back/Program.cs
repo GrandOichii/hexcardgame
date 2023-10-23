@@ -35,7 +35,7 @@ class QueuedActionsPlayerController : PlayerController
     {
     }
 
-    public override void SendCard(Match match, Player player, Card card)
+    public override void SendCard(Match match, Player player, ExpansionCard card)
     {
     }
 }

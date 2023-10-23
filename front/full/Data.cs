@@ -23,7 +23,7 @@ public class ExpansionData {
 
 public class ExpansionCardData {
 	[JsonPropertyName("card")]
-	public core.cards.Card Card { get; set; }
+	public CardData Card { get; set; }
 
 	[JsonPropertyName("expansionNameKey")]
 	public string Expansion { get; set; }
@@ -72,7 +72,7 @@ public class DeckCardData {
 	public string CardNameKey { get; set; }
 
 	[JsonPropertyName("deck")]
-	public object? Deck { get; } = null;
+	public DeckData Deck { get; set; }
 	[JsonPropertyName("deckNameKey")]
 	public string DeckNameKey { get; set; } = "";
 
@@ -90,6 +90,8 @@ public class DeckCardData {
 public class DeckData {
 	[JsonPropertyName("name")]
 	public string Name { get; set; }
+	[JsonPropertyName("description")]
+	public string Description { get; set; }
 
 	[JsonPropertyName("cards")]
 	public List<DeckCardData> Cards { get; set; }

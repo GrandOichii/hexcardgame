@@ -44,7 +44,7 @@ CREATE TABLE DeckCards (
     cardID INTEGER,
     FOREIGN KEY (cardID) REFERENCES ExpansionCards(id) ON DELETE CASCADE,
 
-    UNIQUE (deckName, cardID)
+    PRIMARY KEY (deckName, cardID)
 );
 
 DROP TABLE IF EXISTS MatchConfigs;

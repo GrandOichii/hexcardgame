@@ -53,10 +53,11 @@ public partial class DeckEditWindow : Window
 		
 		NameEditNode.Text = d.Name;
 		
-		// TODO add back
-//		DescriptionEditNode.Text = d.Description
+		DescriptionEditNode.Text = d.Description;
 
 		// add cards
+		foreach (var child in CardsContainerNode.GetChildren())
+			child.Free();
 		foreach (var card in d.Cards) {
 			AddCardToDeck(card);
 		}
@@ -77,15 +78,16 @@ public partial class DeckEditWindow : Window
 
 			// TODO
 			result.Name = NameEditNode.Text;
-
-			// TODO add back
-			// result.Description = DescriptionEditNode.Text;
+			result.Description = DescriptionEditNode.Text;
 			
 			result.Cards = new();
 			foreach (var c in CardsContainerNode.GetChildren()) {
 				var child = c as DeckCard;
 				var b = child.Baked;
 				b.DeckNameKey = result.Name;
+				// b.Deck = new DeckData() {
+				// 	Name = result.Name
+				// };
 				result.Cards.Add(b);
 			}
 
@@ -163,9 +165,11 @@ public partial class DeckEditWindow : Window
 			}
 		}
 
+		var e = card.Expansions[0];
 		var newCard = new DeckCardData();
 		newCard.Amount = 1;
 		newCard.Card = new();
+		newCard.ExpansionNameKey = e.Name;
 		newCard.Card.Expansion = card.Expansions[0].Name;
 		newCard.Card.Card = card;
 

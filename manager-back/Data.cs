@@ -31,7 +31,7 @@ namespace manager_back
         public string Script { get; set; }
 
         [NotMapped]
-        public List<ExpansionData> Expansions { get; set; }
+        public List<ExpansionData>? Expansions { get; set; }
     }
 
     [Table("decks")]
@@ -40,6 +40,8 @@ namespace manager_back
         [Column("name")]
         [Key]
         public string Name { get; set; }
+        [Column("description")]
+        public string Description { get; set; }
 
         [NotMapped]
         public List<DeckCardData> Cards { get; set; }
@@ -60,7 +62,7 @@ namespace manager_back
         [Key]
         public int ID { get; set; }
 
-        public ExpansionData Expansion { get; set; }
+        public ExpansionData? Expansion { get; set; }
         
         public CardData Card { get; set; }
 
@@ -72,7 +74,7 @@ namespace manager_back
         
         [ForeignKey("Card")]
         [Column("cardname")]
-        public string CardNameKey { get; set; }
+        public string? CardNameKey { get; set; }
         
         #endregion
 
@@ -93,13 +95,13 @@ namespace manager_back
     }
 
     [Table("deckcards")]
-    [Keyless]
+    [PrimaryKey("CardIDKey", "Amount")]
     public class DeckCardData
     {
         [Column("amount")]
         public int Amount { get; set; }
 
-        public DeckData Deck { get; set; }
+        public DeckData? Deck { get; set; }
 
         public ExpansionCardData Card { get; set; }
         

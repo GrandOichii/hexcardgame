@@ -83,7 +83,7 @@ class Program {
         var deckTemplate = DeckTemplate.FromText(deckText);
 
         // load match config
-        var configText = File.ReadAllText("../configs/small.json");
+        var configText = File.ReadAllText("../configs/normal.json");
         var config = MatchConfig.FromJson(configText);
 
         // match master

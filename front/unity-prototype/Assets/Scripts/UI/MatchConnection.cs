@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 // using Shared;
-using Shared;
 
 public class MatchClient : TcpClient{
     public MatchClient() : base() {
@@ -31,7 +31,10 @@ public class MatchConnection : MonoBehaviour
         client.Connect(address, port);
 
         // read configuration
-        var configRaw = NetUtil.Read(client.GetStream());
-        print(configRaw);
+        var preConfigRaw = NetUtil.Read(client.GetStream());
+        var preConfig = JsonUtility.FromJson<MatchPreConfig>(preConfigRaw);
+
+        Global.Instance.PreConfig = preConfig;
+        SceneManager.LoadScene("Match");
     }
 }

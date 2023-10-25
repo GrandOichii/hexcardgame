@@ -49,16 +49,29 @@ public class MatchController : MonoBehaviour
 
     private void _loadState(MatchState state) {
         _state = state;
-        _updatePlayerData();
 
-        // if (state.request == "action")
-            // _respond("pass");
-            // print("action");
+        _updatePlayerData();
+        _updatePersonalData();
     }
 
     private void _updatePlayerData() {
         foreach (var pd in _playerDisplays) {
             pd.Load(_state);
+        }
+    }
+
+    private void _updatePersonalData() {
+        var data = _state.myData;
+        foreach (Transform child in handDisplay.transform) {
+            Destroy(child.gameObject);
+        }
+
+        foreach (var card in data.hand) {
+            var c = Instantiate(CardTemplate);
+            c.transform.localScale = new(.3f, .3f);
+            c.transform.SetParent(handDisplay.transform);
+            
+            c.GetComponent<Card>().Data = card;
         }
     }
 
@@ -69,12 +82,6 @@ public class MatchController : MonoBehaviour
     }
 
     private void _respond(string response) {
-        // StartCoroutine(_waitRespond(response));
-        NetUtil.Write(Global.Instance.Stream, response);
-    }
-
-    IEnumerator _waitRespond(string response) {
-        yield return new WaitForSeconds(1);
         NetUtil.Write(Global.Instance.Stream, response);
     }
 

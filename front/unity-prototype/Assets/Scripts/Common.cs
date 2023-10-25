@@ -38,12 +38,3 @@ public class Global {
     public MatchClient Client { get; set; }
     public NetworkStream Stream { get; set; }
 }
-
-public struct CardData {
-    public string name;
-    public int cost;
-    public string typeLine;
-    public string text;
-    public int power;
-    public int life;
-}

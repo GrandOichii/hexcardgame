@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
@@ -16,6 +17,7 @@ public struct MatchState {
     public string curPlayerID;
     public List<string> args;
     public string request;
+    public MyState myData;
     public List<PlayerState> players;
 
 
@@ -24,6 +26,94 @@ public struct MatchState {
     }
 }
 
+//     "myData": {
+//         "hand": [
+//             {
+//                 "can": [],
+//                 "cost": 3,
+//                 "defence": 0,
+//                 "hasDefence": false,
+//                 "id": "dev::Healer Initiate",
+//                 "life": 3,
+//                 "mid": "30",
+//                 "movement": 0,
+//                 "name": "Healer Initiate",
+//                 "ownerID": "1",
+//                 "power": 2,
+//                 "text": "{Virtuous}",
+//                 "type": "Unit"
+//             },
+//             {
+//                 "can": [],
+//                 "cost": 2,
+//                 "defence": 0,
+//                 "hasDefence": false,
+//                 "id": "dev::Archdemon Priest",
+//                 "life": 2,
+//                 "mid": "6",
+//                 "movement": 0,
+//                 "name": "Archdemon Priest",
+//                 "ownerID": "1",
+//                 "power": 2,
+//                 "text": "{Vile}",
+//                 "type": "Unit"
+//             },
+//             {
+//                 "can": [],
+//                 "cost": 3,
+//                 "defence": 0,
+//                 "hasDefence": false,
+//                 "id": "dev::Healer Initiate",
+//                 "life": 3,
+//                 "mid": "29",
+//                 "movement": 0,
+//                 "name": "Healer Initiate",
+//                 "ownerID": "1",
+//                 "power": 2,
+//                 "text": "{Virtuous}",
+//                 "type": "Unit"
+//             },
+//             {
+//                 "can": [],
+//                 "cost": 2,
+//                 "defence": 0,
+//                 "hasDefence": false,
+//                 "id": "dev::Archdemon Priest",
+//                 "life": 2,
+//                 "mid": "9",
+//                 "movement": 0,
+//                 "name": "Archdemon Priest",
+//                 "ownerID": "1",
+//                 "power": 2,
+//                 "text": "{Vile}",
+//                 "type": "Unit"
+//             }
+//         ],
+//         "id": "1"
+
+
+[Serializable]
+public struct MyState {
+    public string id;
+    public List<CardState> hand;
+}
+
+[Serializable]
+public struct CardState {
+    public string id;
+    public int cost;
+    public int life;
+    public int power;
+    public string mid;
+    public string name;
+    public string text;
+    public string type;
+//                 "can": [],
+//                 "defence": 0,
+//                 "hasDefence": false,
+//                 "movement": 0,
+//                 "ownerID": "1",
+}
 
 //     "map": {
 //         "tiles": [

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -12,7 +10,18 @@ public class Card : MonoBehaviour
     public TMP_Text powerDisplay;
     public TMP_Text lifeDisplay;
 
-    public CardData Data { get; private set; }
+    private CardState _data;
+    public CardState Data {
+        get => _data;
+        set {
+            _data = value;
 
-
+            nameDisplay.text = _data.name;
+            costDisplay.text = _data.cost.ToString();
+            typeLineDisplay.text = _data.type;
+            textDisplay.text = _data.text;
+            powerDisplay.text = _data.power.ToString();
+            lifeDisplay.text = _data.life.ToString();
+        }
+    }
 }

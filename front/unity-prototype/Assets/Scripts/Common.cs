@@ -1,6 +1,7 @@
 using System.Text;
 using System.Net.Sockets;
 using System;
+using UnityEditor.PackageManager;
 
 
 public static class NetUtil {
@@ -34,4 +35,15 @@ public class Global {
     public static readonly Global Instance = new();
 
     public MatchPreConfig PreConfig { get; set; }
+    public MatchClient Client { get; set; }
+    public NetworkStream Stream { get; set; }
+}
+
+public struct CardData {
+    public string name;
+    public int cost;
+    public string typeLine;
+    public string text;
+    public int power;
+    public int life;
 }

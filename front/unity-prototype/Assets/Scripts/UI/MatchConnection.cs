@@ -34,7 +34,11 @@ public class MatchConnection : MonoBehaviour
         var preConfigRaw = NetUtil.Read(client.GetStream());
         var preConfig = JsonUtility.FromJson<MatchPreConfig>(preConfigRaw);
 
+        client.ReceiveTimeout = 20;
+
         Global.Instance.PreConfig = preConfig;
+        Global.Instance.Client = client;
+        Global.Instance.Stream = client.GetStream();
         SceneManager.LoadScene("Match");
     }
 }

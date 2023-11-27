@@ -17,6 +17,7 @@ public class Card : MonoBehaviour
             _data = value;
 
             nameDisplay.text = _data.name;
+            nameDisplay.text += " [" + _data.mid + "]";
             costDisplay.text = _data.cost.ToString();
             typeLineDisplay.text = _data.type;
             textDisplay.text = _data.text;

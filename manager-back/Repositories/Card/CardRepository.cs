@@ -21,6 +21,11 @@ public class CardRepository : ICardRepository {
         await _collection.InsertOneAsync(card);
     }
 
+
+    public async Task<IEnumerable<CardModel>> Filter(System.Linq.Expressions.Expression<Func<CardModel, bool>> filter) {
+        return (await _collection.FindAsync(filter)).ToList();
+    }
+
     public async Task<IEnumerable<CardModel>> All()
     {
         return (await _collection.FindAsync(_ => true)).ToList();

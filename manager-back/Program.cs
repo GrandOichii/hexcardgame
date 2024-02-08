@@ -8,10 +8,10 @@ public class Program {
 
         // Add service layer
         builder.Services.AddScoped<ICardService, CardService>();
+        builder.Services.AddScoped<IExpansionService, ExpansionService>();
 
         // Add data layer
         builder.Services.AddSingleton<ICardRepository, CardRepository>();
-
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

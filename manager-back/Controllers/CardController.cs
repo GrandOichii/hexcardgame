@@ -20,6 +20,11 @@ public class CardsController : ControllerBase
         return Ok(await _cardService.All());
     }
 
+    [HttpGet("fromexpansion/{expansion}")]
+    public async Task<IActionResult> FromExpansion(string expansion) {
+        return Ok(await _cardService.ByExpansion(expansion));
+    }
+
     [HttpGet("{cid}")]
     public async Task<IActionResult> ByCID(string cid) {
         try {

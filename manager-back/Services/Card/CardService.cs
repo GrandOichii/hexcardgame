@@ -27,7 +27,7 @@ public class CardService : ICardService
 
     public async Task<IEnumerable<ExpansionCard>> All()
     {
-        return (await _cardRepo.All()).Select(c => _mapper.Map<ExpansionCard>(c));
+        return (await _cardRepo.All()).Select(_mapper.Map<ExpansionCard>);
     }
 
     public async Task<ExpansionCard> ByCID(string cid)
@@ -36,6 +36,13 @@ public class CardService : ICardService
             ?? throw new InvalidCIDException(cid);
 
         return result;
+    }
+
+    // TODO make more complex querying
+    public async Task<IEnumerable<ExpansionCard>> ByExpansion(string expansion)
+    {
+        var cards = await _cardRepo.Filter(c => c.Expansion == expansion);
+        return cards.Select(_mapper.Map<ExpansionCard>);
     }
 
     public async Task<ExpansionCard> Create(ExpansionCard card)

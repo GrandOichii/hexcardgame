@@ -218,6 +218,64 @@ public class TCPPlayerController : PlayerController
     }
 }
 
+/// <summary>
+/// Player controller, controlled by a SignalR connection
+/// </summary>
+// public class SignalRPlayerController : PlayerController {
+    
+
+//     // TODO
+//     public override string DoPromptAction(Player player, Match match)
+//     {
+//         var state = new MatchState(match, player, "action");
+
+//         Write(state.ToJson());
+        
+//         return Read();
+//     }
+
+//     // TODO
+//     public override void Setup(Player player, Match match)
+//     {
+//         Write(new MatchInfoState(player, match).ToJson());
+//     }
+
+//     // TODO
+//     public override void Update(Player player, Match match)
+//     {
+//         Write(new MatchState(match, player, "update").ToJson());
+//     }
+
+//     // TODO
+//     public override void CleanUp()
+//     {
+//         // TODO
+//         _handler.Close();
+//     }
+
+//     // TODO
+//     public override string DoPickTile(List<int[]> choices, Player player, Match match)
+//     {
+//         var request = "pt";
+//         var args = new List<string>();
+//         for (int i = 0; i < choices.Count; i++) {
+//             args.Add("" + choices[i][0] + "." + choices[i][1]);
+//         }
+//         Write(new MatchState(match, player, request, args).ToJson());
+        
+//         return Read();
+//     }
+
+//     // TODO
+//     public override void SendCard(Match match, Player player, ExpansionCard card)
+//     {
+//         // var state = new MatchState(match, player, "card", new(){card.ToJson()});
+
+//         // Write(state.ToJson());
+//         Write(card.ToJson());
+//     }
+
+// }
 
 /// <summary>
 /// A player controller, whose actions are controlled by a lua script

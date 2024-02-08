@@ -7,7 +7,7 @@ namespace manager_back.Controllers;
 
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/matchconfigs")]
 public class MatchConfigsController : ControllerBase
 {
     [HttpGet]

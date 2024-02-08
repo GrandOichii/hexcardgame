@@ -21,7 +21,7 @@ public class CardQuery {
 }
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/cards")]
 public class CardsController : ControllerBase
 {
     //[HttpGet]

@@ -18,7 +18,7 @@ namespace manager_back.Controllers;
 
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/decks")]
 public class DecksController : ControllerBase
 {
     [HttpGet]

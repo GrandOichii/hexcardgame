@@ -2,13 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 using core.cards;
 using System.Xml.Linq;
 using Npgsql;
+using Microsoft.EntityFrameworkCore;
 
 namespace manager_back.Controllers;
 
 
 [ApiController]
-[Route("api/[controller]")]
-public class ExpansionsController : ControllerBase
+[Route("api/expansioncards")]
+public class ExpansionCardsController : ControllerBase
 {
     //[HttpGet]
     //public IEnumerable<Card> Get([FromQuery] CardQuery query)
@@ -20,8 +21,11 @@ public class ExpansionsController : ControllerBase
     //}
 
     [HttpGet]
-    public IEnumerable<ExpansionData> GetAll()
+    public IEnumerable<ExpansionCardData> GetAll()
     {
-        return Global.Ctx.Expansions.ToList();
+        return Global.Ctx.ExpansionCards
+            .Include(c => c.Expansion)
+            .Include(c => c.Card)
+            .ToList();
     }
 }

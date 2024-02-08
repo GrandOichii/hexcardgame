@@ -6,7 +6,7 @@ namespace ManagerBack.Services;
 [Serializable]
 public class InvalidCIDException : Exception
 {
-    public InvalidCIDException(string cid) : base($"invalid CID {cid}") { }
+    public InvalidCIDException(string cid) : base($"invalid cid {cid}") { }
 }
 
 [Serializable]

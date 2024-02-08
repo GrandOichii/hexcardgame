@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using AutoMapper;
 
 namespace ManagerBack.Services;
@@ -5,7 +6,13 @@ namespace ManagerBack.Services;
 [Serializable]
 public class InvalidCIDException : Exception
 {
-    public InvalidCIDException(string cid) : base($"no card with CID {cid}") { }
+    public InvalidCIDException(string cid) : base($"invalid CID {cid}") { }
+}
+
+[Serializable]
+public class CardNotFoundException : Exception
+{
+    public CardNotFoundException(string message) : base(message) {}
 }
 
 [Serializable]
@@ -14,7 +21,7 @@ public class CIDTakenException : Exception
     public CIDTakenException(string cid) : base($"cid {cid} is already taken") { }
 }
 
-public class CardService : ICardService
+public partial class CardService : ICardService
 {
     private readonly IMapper _mapper;
     private readonly ICardRepository _cardRepo;
@@ -30,10 +37,13 @@ public class CardService : ICardService
         return (await _cardRepo.All()).Select(_mapper.Map<ExpansionCard>);
     }
 
+    [GeneratedRegex("^.+::.+$")] private static partial Regex CIDPattern();
     public async Task<ExpansionCard> ByCID(string cid)
     {
+        if (!CIDPattern().IsMatch(cid))
+            throw new InvalidCIDException(cid);
         var result = await _cardRepo.ByCID(cid) 
-            ?? throw new InvalidCIDException(cid);
+            ?? throw new CardNotFoundException($"no card with CID {cid}");
 
         return result;
     }
@@ -63,4 +73,5 @@ public class CardService : ICardService
         if (deletedCount != 1) 
             throw new InvalidCIDException(cid);
     }
+
 }

@@ -1,6 +1,12 @@
 
 namespace ManagerBack.Services;
 
+[System.Serializable]
+public class ExpansionNotFoundException : System.Exception
+{
+    public ExpansionNotFoundException(string expansion) : base($"expansion {expansion} not found") { }
+}
+
 public class ExpansionService : IExpansionService
 {
     private readonly ICardRepository _cardRepo;
@@ -27,7 +33,7 @@ public class ExpansionService : IExpansionService
         var mappings = await GetCounts();
         var result = new List<Expansion>();
         foreach (var pair in mappings) {
-            result.Add(new Expansion(){
+            result.Add(new Expansion {
                 Name = pair.Key,
                 CardCount = pair.Value
             });
@@ -35,8 +41,16 @@ public class ExpansionService : IExpansionService
         return result;
     }
 
-    public Task<Expansion> ByName()
+    public async Task<Expansion> ByName(string expansion)
     {
-        throw new NotImplementedException();
+        var mappings = await GetCounts();
+        if (!mappings.ContainsKey(expansion)) {
+            throw new ExpansionNotFoundException(expansion);
+        }
+        var count = mappings[expansion];
+        return new Expansion {
+            Name = expansion,
+            CardCount = count
+        };
     }
 }

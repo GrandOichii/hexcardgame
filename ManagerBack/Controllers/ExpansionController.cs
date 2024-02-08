@@ -16,4 +16,13 @@ public class ExpansionController : ControllerBase {
     public async Task<IActionResult> All() {
         return Ok(await _expansionService.All());
     }
+
+    [HttpGet("{name}")]
+    public async Task<IActionResult> ByName(string name) {
+        try {
+            return Ok(await _expansionService.ByName(name));
+        } catch (ExpansionNotFoundException e) {
+            return BadRequest(e.Message);
+        }
+    }
 }

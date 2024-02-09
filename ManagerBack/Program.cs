@@ -5,10 +5,12 @@ public class Program {
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
+        builder.Services.AddSignalR();
 
         // Add service layer
         builder.Services.AddScoped<ICardService, CardService>();
         builder.Services.AddScoped<IExpansionService, ExpansionService>();
+        builder.Services.AddSingleton<IMatchService, MatchService>();
 
         // Add data layer
         builder.Services.AddSingleton<ICardRepository, CardRepository>();
@@ -38,9 +40,9 @@ public class Program {
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
+        // app.MapHub<MatchHub>("match-hub");
 
         app.MapControllers();
-
         app.Run();
     }
 }

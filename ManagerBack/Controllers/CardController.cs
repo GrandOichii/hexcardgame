@@ -6,11 +6,11 @@ namespace ManagerBack.Controllers;
 
 [ApiController]
 [Route("/api/v1/card")]
-public class CardsController : ControllerBase
+public class CardController : ControllerBase
 {
     private readonly ICardService _cardService;
 
-    public CardsController(ICardService cardService) {
+    public CardController(ICardService cardService) {
         _cardService = cardService;
     }
 
@@ -54,7 +54,7 @@ public class CardsController : ControllerBase
         try {
             await _cardService.Delete(cid);
             return Ok();
-        } catch (InvalidCIDException e) {
+        } catch (CardNotFoundException e) {
             return BadRequest(e.Message);
         }
     }
@@ -65,7 +65,7 @@ public class CardsController : ControllerBase
         try {
             await _cardService.Update(card);
             return Ok();
-        } catch (InvalidCIDException e) {
+        } catch (CardNotFoundException e) {
             return BadRequest(e.Message);
         }
     }

@@ -71,14 +71,14 @@ public partial class CardService : ICardService
     {
         var deletedCount = await _cardRepo.Delete(cid);
         if (deletedCount != 1) 
-            throw new InvalidCIDException(cid);
+            throw new CardNotFoundException(cid);
     }
 
     public async Task Update(ExpansionCard card)
     {
         var count = await _cardRepo.Update(_mapper.Map<CardModel>(card));
         if (count == 0) 
-            throw new InvalidCIDException(card.CID);
+            throw new CardNotFoundException(card.CID);
         
     }
 }

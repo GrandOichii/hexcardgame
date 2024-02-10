@@ -2,7 +2,6 @@
 global using ManagerBack.Services;
 global using ManagerBack.Models;
 global using ManagerBack.Repositories;
-global using ManagerBack.Hubs;
 global using core.cards;
 global using core.decks;
 global using core.match;

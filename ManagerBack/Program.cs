@@ -1,3 +1,8 @@
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
+
 namespace ManagerBack;
 
 public class Program {
@@ -10,10 +15,13 @@ public class Program {
         // Add service layer
         builder.Services.AddScoped<ICardService, CardService>();
         builder.Services.AddScoped<IExpansionService, ExpansionService>();
+        builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddSingleton<IMatchService, MatchService>();
 
         // Add data layer
+        // ? should be singletons or scoped
         builder.Services.AddSingleton<ICardRepository, CardRepository>();
+        builder.Services.AddSingleton<IUserRepository, UserRepository>();
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -24,6 +32,27 @@ public class Program {
         builder.Services.Configure<StoreDatabaseSettings>(
             builder.Configuration.GetSection("Database")
         );
+
+        // Add authentication
+        // Add auth to app
+        builder.Services.AddSwaggerGen(options => {
+            options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme {
+                In = ParameterLocation.Header,
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer"
+            });
+            options.OperationFilter<SecurityRequirementsOperationFilter>();
+        });
+        // Add auth to swagger
+        builder.Services.AddAuthentication().AddJwtBearer(options => {
+            options.TokenValidationParameters = new TokenValidationParameters{
+                ValidateIssuerSigningKey = true,
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value!))
+            };
+        });
 
         // Add mapping profiles
         builder.Services.AddAutoMapper(typeof(Program).Assembly);

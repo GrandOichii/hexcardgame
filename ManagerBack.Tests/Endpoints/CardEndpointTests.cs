@@ -14,8 +14,7 @@ public class CardEndpointTests
         _factory = factory.WithWebHostBuilder(builder => {
             builder.ConfigureServices(services => {
                 services.AddSingleton<ICardRepository, MockCardRepository>();
-        //         services.AddSingleton<IPollService, MockPollService>();
-        //         services.AddSingleton<IUserService, MockUserService>();
+                services.AddSingleton<IUserRepository, MockUserRepository>();
             });
         });
     }

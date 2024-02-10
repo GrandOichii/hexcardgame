@@ -58,4 +58,15 @@ public class CardsController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+
+    // TODO authorize
+    [HttpPut("update")]
+    public async Task<IActionResult> Update([FromBody] ExpansionCard card) {
+        try {
+            await _cardService.Update(card);
+            return Ok();
+        } catch (InvalidCIDException e) {
+            return BadRequest(e.Message);
+        }
+    }
 }

@@ -74,4 +74,11 @@ public partial class CardService : ICardService
             throw new InvalidCIDException(cid);
     }
 
+    public async Task Update(ExpansionCard card)
+    {
+        var count = await _cardRepo.Update(_mapper.Map<CardModel>(card));
+        if (count == 0) 
+            throw new InvalidCIDException(card.CID);
+        
+    }
 }

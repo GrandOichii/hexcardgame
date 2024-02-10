@@ -42,4 +42,9 @@ public class CardRepository : ICardRepository {
         var deleted = await _collection.DeleteOneAsync(c => c.Expansion + "::" + c.Name == cid);
         return deleted.DeletedCount;
     }
+
+    public async Task<long> Update(CardModel card) {
+        var result = await _collection.ReplaceOneAsync(c => c.Expansion == card.Expansion && c.Name == card.Name, card);
+        return result.MatchedCount;
+    }
 }

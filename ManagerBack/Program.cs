@@ -5,8 +5,8 @@ public class Program {
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-        builder.Services.AddSignalR();
-
+        // builder.Services.AddSignalR();
+        
         // Add service layer
         builder.Services.AddScoped<ICardService, CardService>();
         builder.Services.AddScoped<IExpansionService, ExpansionService>();

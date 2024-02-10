@@ -64,7 +64,26 @@ public class CardServiceTests {
     [Fact]
     public async Task ShouldCreate() {
         // Arrange
-        var card = A.Fake<CardModel>();
+        var card = new CardModel {
+            Power = -1,
+            Life = -1,
+            DeckUsable = true,
+            Name = "Dub",
+            Cost = 2,
+            Type = "Spell",
+            Expansion = "dev",
+            Text = "Caster becomes a Warrior. (Keeps all other types)",
+            Script = "function _Create(props)\n" +
+            "    local result = CardCreation:Spell(props)\n" +
+            "    result.DamageValues.damage = 2\n" +
+            "    result.EffectP:AddLayer(function(playerID, caster)\n" +
+            "        caster.type = caster.type..\" Warrior\"\n" +
+            "        caster:AddSubtype(\"Warrior\")\n" +
+            "        return nil, true\n" +
+            "    end)\n" +
+            "    return result\n" +
+            "end"
+        } ;
         CardModel? c = null;
         A.CallTo(() => _cardRepo.ByCID(card.Expansion + "::" + card.Name)).Returns(c);
         A.CallTo(() => _cardRepo.Add(card)).DoesNothing();

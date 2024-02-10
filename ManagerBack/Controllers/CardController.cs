@@ -37,7 +37,7 @@ public class CardController : ControllerBase
         }
     }
 
-    // TODO authorize
+    [Authorize(Roles = "Admin")]
     [HttpPost("create")]
     public async Task<IActionResult> Create([FromBody] ExpansionCard card) {
         try {
@@ -45,10 +45,12 @@ public class CardController : ControllerBase
             return Ok(result);
         } catch (CIDTakenException e) {
             return BadRequest(e.Message);
+        } catch (InvalidCardCreationParametersException e) {
+            return BadRequest(e.Message);
         }
     }
 
-    // TODO authorize
+    [Authorize(Roles = "Admin")]
     [HttpDelete("delete")]
     public async Task<IActionResult> Delete(string cid) {
         try {
@@ -59,7 +61,7 @@ public class CardController : ControllerBase
         }
     }
 
-    // TODO authorize
+    [Authorize(Roles = "Admin")]
     [HttpPut("update")]
     public async Task<IActionResult> Update([FromBody] ExpansionCard card) {
         try {

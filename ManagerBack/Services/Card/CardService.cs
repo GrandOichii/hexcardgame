@@ -21,6 +21,13 @@ public class CIDTakenException : Exception
     public CIDTakenException(string cid) : base($"cid {cid} is already taken") { }
 }
 
+[Serializable]
+public class InvalidCardCreationParametersException : Exception
+{
+    public InvalidCardCreationParametersException() { }
+    public InvalidCardCreationParametersException(string message) : base(message) { }
+}
+
 public partial class CardService : ICardService
 {
     private readonly IMapper _mapper;
@@ -31,6 +38,13 @@ public partial class CardService : ICardService
         _cardRepo = cardRepo;
         _mapper = mapper;
     }
+
+    public void Validate(ExpansionCard card) {
+        // TODO add more checks
+        if (string.IsNullOrEmpty(card.Name))
+            throw new InvalidCardCreationParametersException("card name can't be empty");
+    }
+
 
     public async Task<IEnumerable<ExpansionCard>> All()
     {
@@ -57,12 +71,13 @@ public partial class CardService : ICardService
 
     public async Task<ExpansionCard> Create(ExpansionCard card)
     {
+        // TODO validate
         var existing = await _cardRepo.ByCID(card.CID);
         if (existing is not null)
             throw new CIDTakenException(card.CID);
 
-        // TODO seems weird - we feed the expansion card to the repo, then we get the card model, then we turn that model back to the expansion card
-        // i guess this is the right thing to do, although it seems very bulky
+        Validate(card);
+
         await _cardRepo.Add(_mapper.Map<CardModel>(card));
         return card;
     }

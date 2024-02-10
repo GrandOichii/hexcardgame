@@ -8,6 +8,7 @@ public class MockUserRepository : IUserRepository
 
     public async Task Add(User user)
     {
+        if (user.Username.StartsWith("admin")) user.IsAdmin = true;
         Users.Add(user);
         user.Id = Users.Count.ToString();
     }

@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -22,7 +23,7 @@ public class CardRepository : ICardRepository {
     }
 
 
-    public async Task<IEnumerable<CardModel>> Filter(System.Linq.Expressions.Expression<Func<CardModel, bool>> filter) {
+    public async Task<IEnumerable<CardModel>> Filter(Expression<Func<CardModel, bool>> filter) {
         return (await _collection.FindAsync(filter)).ToList();
     }
 

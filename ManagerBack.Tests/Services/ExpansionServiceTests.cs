@@ -3,7 +3,7 @@ using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ManagerBack.Tests.Controllers;
+namespace ManagerBack.Tests.Services;
 
 public class CardExpansionTests {
     private readonly ExpansionService _expansionService;
@@ -18,17 +18,72 @@ public class CardExpansionTests {
     }
 
     [Fact]
-    public async Task ShouldFetchByCID() {
+    public async Task ShouldFetchAllEmpty() {
         // Arrange
-        var cid = "expansion::card";
-        var card = A.Fake<CardModel>();
-        A.CallTo(() => _cardRepo.ByCID(cid)).Returns(card);
+        A.CallTo(() => _cardRepo.All()).Returns(new List<CardModel>());
 
         // Act
-        var result = await _cardService.ByCID(cid);
+        var result = await _expansionService.All();
 
         // Assert
-        result.Should().Be(card);
+        result.Count().Should().Be(0);
+    }
+
+    [Fact]
+    public async Task ShouldFetchAll() {
+        // Arrange
+        A.CallTo(() => _cardRepo.All()).Returns(new List<CardModel>() { new() {
+            Expansion = "expansion"
+        } });
+
+        // Act
+        var result = await _expansionService.All();
+
+        // Assert
+        result.Count().Should().Be(1);
+    }
+
+    [Fact]
+    public async Task ShouldFetchByName() {
+        var expansion = "expansion";
+        A.CallTo(() => _cardRepo.All()).Returns(new List<CardModel>() { 
+            new() {
+                Expansion = expansion
+            },
+            new() {
+                Expansion = "expansion2"
+            },
+            new() {
+                Expansion = expansion
+            },
+        });
+
+
+        // Act
+        var result = await _expansionService.ByName(expansion);
+
+        // Assert
+        result.Name.Should().Be(expansion);
+        result.CardCount.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task ShouldFailFetchByName() {
+        // Arrange
+        A.CallTo(() => _cardRepo.All()).Returns(new List<CardModel>() { 
+            new() {
+                Expansion = "expansion1"
+            },
+            new() {
+                Expansion = "expansion2"
+            },
+        });
+
+        // Act
+        var act = () => _expansionService.ByName("expansion3");
+
+        // Assert
+        await act.Should().ThrowAsync<ExpansionNotFoundException>();
     }
 
 }

@@ -12,7 +12,7 @@ public class ExpansionController : ControllerBase {
         _expansionService = expansionService;
     }
 
-    [HttpGet("all")]
+    [HttpGet]
     public async Task<IActionResult> All() {
         return Ok(await _expansionService.All());
     }

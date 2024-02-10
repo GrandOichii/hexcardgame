@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using MongoDB.Driver;
 
 namespace ManagerBack.Repositories;
@@ -7,6 +8,6 @@ public interface ICardRepository {
     public Task Add(CardModel card);
     public Task<long> Delete(string cid);
     public Task<IEnumerable<CardModel>> All();
-    public Task<IEnumerable<CardModel>> Filter(System.Linq.Expressions.Expression<Func<CardModel, bool>> filter);
+    public Task<IEnumerable<CardModel>> Filter(Expression<Func<CardModel, bool>> filter);
     public Task<long> Update(CardModel card);
 }

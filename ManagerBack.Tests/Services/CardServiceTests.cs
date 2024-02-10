@@ -3,7 +3,7 @@ using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ManagerBack.Tests.Controllers;
+namespace ManagerBack.Tests.Services;
 
 public class CardServiceTests {
     private readonly CardService _cardService;

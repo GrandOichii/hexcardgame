@@ -156,6 +156,13 @@ public class DeckEndpointTests
                     {"dev::Dub", 0}
                 }
             } };
+            yield return new object[] { new PostDeckDto {
+                Name = "Deck1",
+                Description = "This is the deck's description",
+                Index = new() {
+                    {"dev:Dub", 0}
+                }
+            } };
         }
     }
 

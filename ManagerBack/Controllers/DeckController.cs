@@ -11,7 +11,7 @@ namespace ManagerBack.Controllers;
 public class DeckController : ControllerBase {
     private readonly IDeckService _deckService;
 
-    public DeckController(IUserService userService, IDeckService deckService)
+    public DeckController(IDeckService deckService)
     {
         _deckService = deckService;
     }
@@ -33,7 +33,7 @@ public class DeckController : ControllerBase {
 
             var result = await _deckService.Create(userId, deck);
             return Ok(result);
-            
+
         } catch (InvalidDeckException e) {
             return BadRequest(e.Message);
         } catch (InvalidCIDException e) {

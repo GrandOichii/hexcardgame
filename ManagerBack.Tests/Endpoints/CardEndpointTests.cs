@@ -45,7 +45,7 @@ public class CardEndpointTests
         var client = _factory.CreateClient();
 
         // Act
-        var result = await client.GetAsync("/api/v1/card/all");
+        var result = await client.GetAsync("/api/v1/card");
 
         // Assert
         result.Should().BeSuccessful();
@@ -60,7 +60,7 @@ public class CardEndpointTests
         await Login(client, "admin", "password");
 
         // Act
-        await client.PostAsync("/api/v1/card/create", JsonContent.Create(new ExpansionCard {
+        await client.PostAsync("/api/v1/card", JsonContent.Create(new ExpansionCard {
             Power = -1,
             Life = -1,
             DeckUsable = true,
@@ -134,7 +134,7 @@ public class CardEndpointTests
         await Login(client, "admin", "password");
 
         // Act
-        var result = await client.PostAsync("/api/v1/card/create", JsonContent.Create(new ExpansionCard {
+        var result = await client.PostAsync("/api/v1/card", JsonContent.Create(new ExpansionCard {
             Power = -1,
             Life = -1,
             DeckUsable = true,
@@ -195,7 +195,7 @@ public class CardEndpointTests
         await Login(client, "admin", "password");
 
         // Act
-        var result = await client.PostAsync("/api/v1/card/create", JsonContent.Create(card));
+        var result = await client.PostAsync("/api/v1/card", JsonContent.Create(card));
 
         // Assert
         result.Should().HaveClientError();
@@ -210,7 +210,7 @@ public class CardEndpointTests
             await Login(client, "user", "password");
 
         // Act
-        var result = await client.PostAsync("/api/v1/card/create", JsonContent.Create(new ExpansionCard {
+        var result = await client.PostAsync("/api/v1/card", JsonContent.Create(new ExpansionCard {
             Power = -1,
             Life = -1,
             DeckUsable = true,
@@ -242,7 +242,7 @@ public class CardEndpointTests
         await Login(client, "admin", "password");
 
         // Act
-        await client.PostAsync("/api/v1/card/create", JsonContent.Create(new ExpansionCard {
+        await client.PostAsync("/api/v1/card", JsonContent.Create(new ExpansionCard {
             Power = -1,
             Life = -1,
             DeckUsable = true,
@@ -262,7 +262,7 @@ public class CardEndpointTests
             "    return result\n" +
             "end"
         }));
-        var result = await client.DeleteAsync($"/api/v1/card/delete/dev::Dub");
+        var result = await client.DeleteAsync($"/api/v1/card/dev::Dub");
 
         // Assert
         result.Should().BeSuccessful();
@@ -275,7 +275,7 @@ public class CardEndpointTests
         await Login(client, "admin", "password");
 
         // Act
-        var result = await client.DeleteAsync($"/api/v1/card/delete/dev::Dub");
+        var result = await client.DeleteAsync($"/api/v1/card/dev::Dub");
 
         // Assert
         result.Should().HaveClientError();
@@ -288,7 +288,7 @@ public class CardEndpointTests
         await Login(client, "admin", "password");
 
         // Act
-        await client.PostAsync("/api/v1/card/create", JsonContent.Create(new ExpansionCard {
+        await client.PostAsync("/api/v1/card", JsonContent.Create(new ExpansionCard {
             Power = -1,
             Life = -1,
             DeckUsable = true,
@@ -308,7 +308,7 @@ public class CardEndpointTests
             "    return result\n" +
             "end"
         }));
-        var result = await client.PutAsync($"/api/v1/card/update", JsonContent.Create(new ExpansionCard {
+        var result = await client.PutAsync($"/api/v1/card", JsonContent.Create(new ExpansionCard {
             Name = "Dub",
             Cost = 3,
             Expansion = "dev",
@@ -325,7 +325,7 @@ public class CardEndpointTests
         await Login(client, "admin", "password");
 
         // Act
-        var result = await client.PutAsync($"/api/v1/card/update", JsonContent.Create(new ExpansionCard {
+        var result = await client.PutAsync($"/api/v1/card", JsonContent.Create(new ExpansionCard {
             Name = "Dub",
             Cost = 3,
             Expansion = "dev",

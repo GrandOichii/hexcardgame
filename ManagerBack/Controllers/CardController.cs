@@ -15,7 +15,7 @@ public class CardController : ControllerBase
     }
 
     // TODO remove
-    [HttpGet("all")]
+    [HttpGet]
     public async Task<IActionResult> All() {
         return Ok(await _cardService.All());
     }
@@ -38,7 +38,7 @@ public class CardController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPost("create")]
+    [HttpPost]
     public async Task<IActionResult> Create([FromBody] ExpansionCard card) {
         try {
             var result = await _cardService.Create(card);
@@ -51,7 +51,7 @@ public class CardController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpDelete("delete/{cid}")]
+    [HttpDelete("{cid}")]
     public async Task<IActionResult> Delete(string cid) {
         try {
             await _cardService.Delete(cid);
@@ -62,7 +62,7 @@ public class CardController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPut("update")]
+    [HttpPut]
     public async Task<IActionResult> Update([FromBody] ExpansionCard card) {
         try {
             await _cardService.Update(card);

@@ -62,7 +62,7 @@ public class ExpansionEndpointTests
         await Login(client, "admin", "password");
 
         // Act
-        await client.PostAsync("/api/v1/card/create", JsonContent.Create(new ExpansionCard {
+        await client.PostAsync("/api/v1/card", JsonContent.Create(new ExpansionCard {
             Power = -1,
             Life = -1,
             DeckUsable = true,

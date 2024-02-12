@@ -134,7 +134,7 @@ public class CardServiceTests {
     }
 
     [Fact]
-    public async Task ShouldDelete() {
+    public async Task ShouldDelete () {
         // Arrange
         var cid = "expansion::card";
         A.CallTo(() => _cardRepo.Delete(cid)).Returns(1);

@@ -17,6 +17,7 @@ public class CardEndpointTests
             builder.ConfigureServices(services => {
                 services.AddSingleton<ICardRepository, MockCardRepository>();
                 services.AddSingleton<IUserRepository, MockUserRepository>();
+                services.AddSingleton<IDeckRepository, MockDeckRepository>();
             });
         });
     }
@@ -50,16 +51,35 @@ public class CardEndpointTests
         result.Should().BeSuccessful();
     }
 
-    // [Fact]
+    [Fact]
     public async Task ShouldFetchByCID() {
         // Arrange
-        var name = "card1";
-        var expansion = "expansion1";
+        var name = "Dub";
+        var expansion = "dev";
         var client = _factory.CreateClient();
-
-        // TODO authorize and add the card
+        await Login(client, "admin", "password");
 
         // Act
+        await client.PostAsync("/api/v1/card/create", JsonContent.Create(new ExpansionCard {
+            Power = -1,
+            Life = -1,
+            DeckUsable = true,
+            Name = name,
+            Cost = 2,
+            Type = "Spell",
+            Expansion = expansion,
+            Text = "Caster becomes a Warrior. (Keeps all other types)",
+            Script = "function _Create(props)\n" +
+            "    local result = CardCreation:Spell(props)\n" +
+            "    result.DamageValues.damage = 2\n" +
+            "    result.EffectP:AddLayer(function(playerID, caster)\n" +
+            "        caster.type = caster.type..\" Warrior\"\n" +
+            "        caster:AddSubtype(\"Warrior\")\n" +
+            "        return nil, true\n" +
+            "    end)\n" +
+            "    return result\n" +
+            "end"
+        }));
         var result = await client.GetAsync($"/api/v1/card/{expansion}::{name}");
 
         // Assert

@@ -11,5 +11,7 @@ public class AutoMapperProfile : Profile {
         CreateMap<User, GetUserDto>();
         CreateMap<PostUserDto, User>()
             .ForMember(u => u.PasswordHash, o => o.MapFrom(u => BCrypt.Net.BCrypt.HashPassword(u.Password)));
+
+        CreateMap<PostDeckDto, DeckModel>();
     }
 }

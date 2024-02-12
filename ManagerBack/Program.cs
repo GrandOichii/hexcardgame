@@ -17,11 +17,13 @@ public class Program {
         builder.Services.AddScoped<IExpansionService, ExpansionService>();
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddSingleton<IMatchService, MatchService>();
+        builder.Services.AddSingleton<IDeckService, DeckService>();
 
         // Add data layer
         // ? should be singletons or scoped
         builder.Services.AddSingleton<ICardRepository, CardRepository>();
         builder.Services.AddSingleton<IUserRepository, UserRepository>();
+        builder.Services.AddSingleton<IDeckRepository, DeckRepository>();
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -16,6 +16,7 @@ public class AuthEndpointTests
             builder.ConfigureServices(services => {
                 services.AddSingleton<ICardRepository, MockCardRepository>();
                 services.AddSingleton<IUserRepository, MockUserRepository>();
+                services.AddSingleton<IDeckRepository, MockDeckRepository>();
             });
         });
     }

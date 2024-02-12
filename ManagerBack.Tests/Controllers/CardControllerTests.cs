@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using FakeItEasy;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ManagerBack.Tests.Controllers;
@@ -8,12 +10,23 @@ public class CardControllerTests {
     private readonly CardController _cardController;
     private readonly ICardService _cardService;
 
-    // TODO add authorized tests
 
     public CardControllerTests() {
         _cardService = A.Fake<ICardService>();
 
         _cardController = new(_cardService);
+    }
+
+    private void AddUser(string id, string username, bool isAdmin) {
+        var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+            new(ClaimTypes.NameIdentifier, id),
+            new(ClaimTypes.Role, isAdmin ? "Admin" : "User"),
+        }));
+
+        _cardController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = user }
+        };
     }
 
     [Fact]
@@ -66,5 +79,10 @@ public class CardControllerTests {
 
         // Assert
         result.Should().BeOfType<OkObjectResult>();
+    }
+
+    [Fact]
+    public async Task ShouldCreate() {
+        
     }
 }

@@ -105,9 +105,78 @@ public class DeckServiceTests {
 
     [Fact]
     public async Task ShouldDelete() {
-        
+        // Arrange
+        var userId = "u1";
+        var deckId = "d1";
+        var deck = new DeckModel {
+            Name = "Deck",
+            Description = "deck description",
+            OwnerId = userId
+        };
+        A.CallTo(() => _deckRepo.ById(deckId)).Returns(deck);
+        A.CallTo(() => _deckRepo.Delete(deckId)).Returns(1);
+
+        // Act
+        var act = () => _deckService.Delete(userId, deckId);
+
+        // Assert
+        await act.Should().NotThrowAsync();
     }
 
+    [Fact]
+    public async Task ShouldNotDelete()
+    {
+        // Arrange
+        var userId = "u1";
+        var deckId = "d1";
+        DeckModel? deck = null;
+        A.CallTo(() => _deckRepo.ById(deckId)).Returns(deck);
+        A.CallTo(() => _deckRepo.Delete(deckId)).Returns(0);
 
+        // Act
+        var act = () => _deckService.Delete(userId, deckId);
+
+        // Assert
+        await act.Should().ThrowAsync<DeckNotFoundException>();
+    }
+
+    [Fact]
+    public async Task ShouldUpdate()
+    {
+        // Arrange
+        var userId = "u1";
+        var deckId = "d1";
+        var deck = new DeckModel {
+            Id = deckId,
+            Name = "Deck",
+            Description = "deck description",
+            OwnerId = userId
+        };
+        A.CallTo(() => _deckRepo.ById(deckId)).Returns(deck);
+        A.CallTo(() => _deckRepo.Update(deckId, A<DeckModel>._)).Returns(1);
+
+        // Act
+        var act = () => _deckService.Update(userId, deckId, A.Fake<PostDeckDto>());
+
+        // Assert
+        await act.Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task ShouldNotUpdate()
+    {
+        // Arrange
+        var userId = "u1";
+        var deckId = "d1";
+        DeckModel? deck = null;
+        A.CallTo(() => _deckRepo.ById(deckId)).Returns(deck);
+        A.CallTo(() => _deckRepo.Update(deckId, A<DeckModel>._)).Returns(0);
+
+        // Act
+        var act = () => _deckService.Update(userId, deckId, A.Fake<PostDeckDto>());
+
+        // Assert
+        await act.Should().ThrowAsync<DeckNotFoundException>();
+    }
 
 }

@@ -215,9 +215,103 @@ public class CardEndpointTests
         result.Should().HaveClientError();
     }
 
-    // [Fact]
-    // public async Task ShouldDelete(ExpansionCard card) {
+    [Fact]
+    public async Task ShouldDelete() {
+        // Arrange
+        var client = _factory.CreateClient();
+        await Login(client, "admin", "password");
 
-    // }
+        // Act
+        await client.PostAsync("/api/v1/card/create", JsonContent.Create(new ExpansionCard {
+            Power = -1,
+            Life = -1,
+            DeckUsable = true,
+            Name = "Dub",
+            Cost = 2,
+            Type = "Spell",
+            Expansion = "dev",
+            Text = "Caster becomes a Warrior. (Keeps all other types)",
+            Script = "function _Create(props)\n" +
+            "    local result = CardCreation:Spell(props)\n" +
+            "    result.DamageValues.damage = 2\n" +
+            "    result.EffectP:AddLayer(function(playerID, caster)\n" +
+            "        caster.type = caster.type..\" Warrior\"\n" +
+            "        caster:AddSubtype(\"Warrior\")\n" +
+            "        return nil, true\n" +
+            "    end)\n" +
+            "    return result\n" +
+            "end"
+        }));
+        var result = await client.DeleteAsync($"/api/v1/card/delete/dev::Dub");
 
+        // Assert
+        result.Should().BeSuccessful();
+    }
+
+    [Fact]
+    public async Task ShouldNotDelete() {
+        // Arrange
+        var client = _factory.CreateClient();
+        await Login(client, "admin", "password");
+
+        // Act
+        var result = await client.DeleteAsync($"/api/v1/card/delete/dev::Dub");
+
+        // Assert
+        result.Should().HaveClientError();
+    }
+
+    [Fact]
+    public async Task ShouldUpdate() {
+        // Arrange
+        var client = _factory.CreateClient();
+        await Login(client, "admin", "password");
+
+        // Act
+        await client.PostAsync("/api/v1/card/create", JsonContent.Create(new ExpansionCard {
+            Power = -1,
+            Life = -1,
+            DeckUsable = true,
+            Name = "Dub",
+            Cost = 2,
+            Type = "Spell",
+            Expansion = "dev",
+            Text = "Caster becomes a Warrior. (Keeps all other types)",
+            Script = "function _Create(props)\n" +
+            "    local result = CardCreation:Spell(props)\n" +
+            "    result.DamageValues.damage = 2\n" +
+            "    result.EffectP:AddLayer(function(playerID, caster)\n" +
+            "        caster.type = caster.type..\" Warrior\"\n" +
+            "        caster:AddSubtype(\"Warrior\")\n" +
+            "        return nil, true\n" +
+            "    end)\n" +
+            "    return result\n" +
+            "end"
+        }));
+        var result = await client.PutAsync($"/api/v1/card/update", JsonContent.Create(new ExpansionCard {
+            Name = "Dub",
+            Cost = 3,
+            Expansion = "dev",
+        }));
+
+        // Assert
+        result.Should().BeSuccessful();
+    }
+
+    [Fact]
+    public async Task ShouldNotUpdate() {
+        // Arrange
+        var client = _factory.CreateClient();
+        await Login(client, "admin", "password");
+
+        // Act
+        var result = await client.PutAsync($"/api/v1/card/update", JsonContent.Create(new ExpansionCard {
+            Name = "Dub",
+            Cost = 3,
+            Expansion = "dev",
+        }));
+
+        // Assert
+        result.Should().HaveClientError();
+    }
 }

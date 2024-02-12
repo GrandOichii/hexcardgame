@@ -51,7 +51,7 @@ public class CardController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpDelete("delete")]
+    [HttpDelete("delete/{cid}")]
     public async Task<IActionResult> Delete(string cid) {
         try {
             await _cardService.Delete(cid);

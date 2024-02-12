@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 using AutoMapper;
 using ManagerBack.Dtos;
 using Microsoft.Extensions.Options;
@@ -39,7 +40,14 @@ public class DeckUpdateException : Exception
     public DeckUpdateException(string message) : base(message) { }
 }
 
-public class DeckService : IDeckService
+[Serializable]
+public class InvalidDeckException : Exception
+{
+    public InvalidDeckException() { }
+    public InvalidDeckException(string message) : base(message) { }
+}
+
+public partial class DeckService : IDeckService
 {
     private readonly IMapper _mapper;
     private readonly IDeckRepository _deckRepo;
@@ -53,6 +61,23 @@ public class DeckService : IDeckService
         _cardRepo = cardRepo;
     }
 
+    [GeneratedRegex("^.+::.+$")] private static partial Regex CIDPattern();
+    public async Task Validate(PostDeckDto deck) {
+        // TODO add more checks
+        if (string.IsNullOrEmpty(deck.Name))
+            throw new InvalidDeckException("deck name is empty");
+        foreach (var pair in deck.Index) {
+            var cid = pair.Key;
+            var amount = pair.Value;
+
+            if (!CIDPattern().IsMatch(cid)) throw new InvalidCIDException(cid);
+            var _ = await _cardRepo.ByCID(cid) ?? throw new CardNotFoundException($"card with cid {cid} not found");
+            if (amount <= 0)
+                throw new InvalidDeckException($"amount for card {cid} can't be {amount}");
+            
+        }
+    }
+
     public async Task<IEnumerable<DeckModel>> All(string userId)
     {
         var decks = await _deckRepo.Filter(d => d.OwnerId == userId);
@@ -64,7 +89,7 @@ public class DeckService : IDeckService
         var newDeck = _mapper.Map<DeckModel>(deck);
         newDeck.OwnerId = userId;
         
-        // TODO check deck validity
+        await Validate(deck);
 
         await _deckRepo.Add(newDeck);
         return newDeck;

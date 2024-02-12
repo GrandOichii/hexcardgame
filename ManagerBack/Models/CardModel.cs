@@ -8,7 +8,7 @@ namespace ManagerBack.Models;
 public class CardModel : ExpansionCard {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id;
+    public string? Id { get; set; }
 
     public string GetCID() => CID;
 

@@ -15,7 +15,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Cards" type="TabBar" parent="Tabs"]
-visible = false
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Tabs/Cards"]
@@ -122,6 +121,7 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="Decks" type="TabBar" parent="Tabs"]
+visible = false
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Tabs/Decks"]

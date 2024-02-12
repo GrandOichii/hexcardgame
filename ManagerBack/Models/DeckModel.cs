@@ -6,7 +6,7 @@ namespace ManagerBack.Models;
 public class DeckModel {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id;
+    public string? Id { get; set; }
 
     [BsonRepresentation(BsonType.ObjectId)]
     public required string OwnerId { get; set; }

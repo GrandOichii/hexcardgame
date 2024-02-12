@@ -29,10 +29,18 @@ public class DeckController : ControllerBase {
     public async Task<IActionResult> Create([FromBody] PostDeckDto deck) {
         var userId = this.ExtractClaim(ClaimTypes.NameIdentifier);
 
-        // try {
+        try {
+
             var result = await _deckService.Create(userId, deck);
             return Ok(result);
-        // }
+            
+        } catch (InvalidDeckException e) {
+            return BadRequest(e.Message);
+        } catch (InvalidCIDException e) {
+            return BadRequest(e.Message);
+        } catch (CardNotFoundException e) {
+            return BadRequest(e.Message);
+        }
     }
 
     [Authorize]

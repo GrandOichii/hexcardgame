@@ -71,7 +71,6 @@ public partial class CardService : ICardService
 
     public async Task<ExpansionCard> Create(ExpansionCard card)
     {
-        // TODO validate
         var existing = await _cardRepo.ByCID(card.CID);
         if (existing is not null)
             throw new CIDTakenException(card.CID);

@@ -16,7 +16,7 @@ public class PostUserDto {
     public required string Password { get; set; }
 
     public void Validate() {
-        // TODO better usernae validation
+        // TODO better username validation
         if (string.IsNullOrEmpty(Username))
             throw new InvalidRegisterCredentialsException($"invalid email");
         if (Username.Length < MIN_USERNAME_LENGTH)

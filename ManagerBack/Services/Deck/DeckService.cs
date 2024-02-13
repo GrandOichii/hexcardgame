@@ -63,7 +63,6 @@ public partial class DeckService : IDeckService
 
     [GeneratedRegex("^.+::.+$")] private static partial Regex CIDPattern();
     public async Task Validate(PostDeckDto deck) {
-        // TODO add more checks
         if (string.IsNullOrEmpty(deck.Name))
             throw new InvalidDeckException("deck name is empty");
         foreach (var pair in deck.Index) {
@@ -100,7 +99,6 @@ public partial class DeckService : IDeckService
         var deck = await _deckRepo.ById(deckId)
             ?? throw new DeckNotFoundException($"no deck with id {deckId}");
 
-        // TODO? should admins be able to remove another user's deck
         if (deck.OwnerId != userId)
             throw new UnmatchedUserIdException();
 

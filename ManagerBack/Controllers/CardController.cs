@@ -14,12 +14,6 @@ public class CardController : ControllerBase
         _cardService = cardService;
     }
 
-    // TODO remove
-    [HttpGet]
-    public async Task<IActionResult> All() {
-        return Ok(await _cardService.All());
-    }
-
     [HttpGet("fromexpansion/{expansion}")]
     public async Task<IActionResult> FromExpansion(string expansion) {
         return Ok(await _cardService.ByExpansion(expansion));

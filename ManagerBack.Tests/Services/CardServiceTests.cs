@@ -9,8 +9,6 @@ public class CardServiceTests {
     private readonly CardService _cardService;
     private readonly ICardRepository _cardRepo;
 
-    // TODO add authorized tests
-
     public CardServiceTests() {
         var mC = new MapperConfiguration(cfg => {
             cfg.AddProfile(new AutoMapperProfile());
@@ -121,6 +119,7 @@ public class CardServiceTests {
         await act.Should().NotThrowAsync();
     }
 
+    // TODO? should validation be tested in endpoint tests or here
     [Fact]
     public async Task ShouldNotUpdate() {
         // Arrange

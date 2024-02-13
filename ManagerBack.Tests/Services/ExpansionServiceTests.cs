@@ -5,13 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ManagerBack.Tests.Services;
 
-public class CardExpansionTests {
+public class ExpansionServiceTests {
     private readonly ExpansionService _expansionService;
     private readonly ICardRepository _cardRepo;
 
-    // TODO add authorized tests
-
-    public CardExpansionTests() {
+    public ExpansionServiceTests() {
         _cardRepo = A.Fake<ICardRepository>();
 
         _expansionService = new(_cardRepo);

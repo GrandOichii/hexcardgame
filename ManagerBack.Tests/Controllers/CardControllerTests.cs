@@ -83,6 +83,111 @@ public class CardControllerTests {
 
     [Fact]
     public async Task ShouldCreate() {
-        
+        // Arrange
+        var card = A.Fake<ExpansionCard>();
+        A.CallTo(() => _cardService.Create(card)).Returns(card);
+
+        // Act
+        var result = await _cardController.Create(card);
+
+        // Assert
+        result.Should().BeOfType<OkObjectResult>();
     }
+
+    public static IEnumerable<object[]> CardCreateExceptions {
+        get {
+            yield return new object[] { new CIDTakenException("") };
+            yield return new object[] { new InvalidCardCreationParametersException("") };
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(CardCreateExceptions))]
+    public async Task ShouldNotCreate(Exception e) {
+        // Arrange
+        var card = A.Fake<ExpansionCard>();
+        A.CallTo(() => _cardService.Create(card))
+            .Throws(e)
+        ;
+
+        // Act
+        var result = await _cardController.Create(card);
+
+        // Assert
+        result.Should().BeOfType<BadRequestObjectResult>();
+    }
+
+    
+    [Fact]
+    public async Task ShouldUpdate() {
+        // Arrange
+        var card = A.Fake<ExpansionCard>();
+        A.CallTo(() => _cardService.Update(card)).DoesNothing();
+
+        // Act
+        var result = await _cardController.Update(card);
+
+        // Assert
+        result.Should().BeOfType<OkResult>();
+    }
+
+    public static IEnumerable<object[]> CardUpdateExceptions {
+        get {
+            yield return new object[] { new CardNotFoundException("") };
+            yield return new object[] { new InvalidCardCreationParametersException("") };
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(CardUpdateExceptions))]
+    public async Task ShouldNotUpdate(Exception e) {
+        // Arrange
+        var card = A.Fake<ExpansionCard>();
+        A.CallTo(() => _cardService.Update(card))
+            .Throws(e)
+        ;
+
+        // Act
+        var result = await _cardController.Update(card);
+
+        // Assert
+        result.Should().BeOfType<BadRequestObjectResult>();
+    }
+
+    [Fact]
+    public async Task ShouldDelete() {
+        // Arrange
+        var cid = "expansion::card";
+        A.CallTo(() => _cardService.Delete(cid)).DoesNothing();
+
+        // Act
+        var result = await _cardController.Delete(cid);
+
+        // Assert
+        result.Should().BeOfType<OkResult>();
+    }
+
+    public static IEnumerable<object[]> CardDeleteExceptions {
+        get {
+            yield return new object[] { new CardNotFoundException("") };
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(CardDeleteExceptions))]
+    public async Task ShouldNotDelete(Exception e) {
+        // Arrange
+        var cid = "expansion::card";
+        A.CallTo(() => _cardService.Delete(cid))
+            .Throws(e)
+        ;
+
+        // Act
+        var result = await _cardController.Delete(cid);
+
+        // Assert
+        result.Should().BeOfType<BadRequestObjectResult>();
+    }
+
+
 }

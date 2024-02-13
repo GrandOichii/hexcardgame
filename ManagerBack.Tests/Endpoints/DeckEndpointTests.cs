@@ -135,7 +135,6 @@ public class DeckEndpointTests
 
     }
 
-    // TODO add more cases
     public static IEnumerable<object[]> BadDeckList {
         get {
             yield return new object[] { new PostDeckDto {

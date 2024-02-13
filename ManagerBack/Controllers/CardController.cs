@@ -69,6 +69,8 @@ public class CardController : ControllerBase
             return Ok();
         } catch (CardNotFoundException e) {
             return BadRequest(e.Message);
+        } catch (InvalidCardCreationParametersException e) {
+            return BadRequest(e.Message);
         }
     }
 }

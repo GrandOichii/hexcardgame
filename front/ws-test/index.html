@@ -1,0 +1,22 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WS Test</title>
+</head>
+<body>
+    <script >
+        const ws = new WebSocket('ws://localhost:5239/api/v1/wstest/connect');
+
+        ws.on('error', console.error);
+
+        ws.on('open', function open() {
+        ws.send('something');
+        });
+
+        ws.on('message', function message(data) {
+        console.log('received: %s', data);
+        });
+    </script>
+</body>
+</html>

@@ -103,8 +103,8 @@ class Program {
         // var p1Controller = new CursesPlayerController(view);
         // var p1Controller = new QueuedActionsPlayerController();
         // var p1Controller = new InactivePlayerController();
-        // var p1Controller = new LuaPlayerController("../bots/random.lua");
-        var p1Controller = TCPPC(match);
+        var p1Controller = new LuaPlayerController("../bots/random.lua");
+        // var p1Controller = TCPPC(match);
         
         // var p2Controller = new InactivePlayerController();
         // var p2Controller = new LuaPlayerController("../bots/random.lua");
@@ -172,6 +172,7 @@ class Program {
         while (true) {
             try {
                 RunMatch();
+                break;
             } catch (Exception ex) {
                 System.Console.WriteLine(ex);
             }

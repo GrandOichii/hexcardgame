@@ -1,6 +1,5 @@
-const { connect } = require('http2');
-
-var WebSocketClient = require('websocket').client;
+const reader = require('prompt-sync')();
+const WebSocketClient = require('websocket').client;
 
 var client = new WebSocketClient();
 
@@ -19,18 +18,22 @@ client.on('connect', connection => {
     connection.on('message', (message) => {
         if (message.type === 'utf8') {
             const data = message.utf8Data
-            console.log("Received: '" + message.utf8Data + "'");
-            if (data == 'handshake') {
-                connection.send('handshake')
-                return
-            }
             if (data == 'ping') {
                 connection.send('pong')
                 return
             }
-            connection.send('some data')
+            console.log("Received: '" + message.utf8Data + "'");
+            const state = JSON.parse(message.utf8Data)
+            console.log(state.request);
+            if (!state.request) return
+            if (state.request == 'update') return
+            // connection.send('amopgus')
+
+            connection.send(reader('Enter server response: '))
         }
     });
+
+    // connection.send('connect')
 });
 
 client.connect('http://localhost:5239/api/v1/wstest/connect');

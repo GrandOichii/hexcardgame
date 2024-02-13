@@ -73,7 +73,7 @@ public class Program {
         app.UseAuthorization();
         // app.MapHub<MatchHub>("match-hub");
         app.UseWebSockets(new() {
-            KeepAliveInterval = TimeSpan.FromSeconds(120)
+            KeepAliveInterval = TimeSpan.FromMinutes(10)
         });
 
         app.MapControllers();

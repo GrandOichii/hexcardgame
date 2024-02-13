@@ -7,27 +7,37 @@ namespace ManagerBack.Controllers;
 
 public class Global {
     private static readonly int MAX_CONNECTIONS = 2;
-    private Global() {
-        // KeepAlive();
-    }
+    private Global() {}
     public static Global Instance { get; } = new();
 
     public List<WebSocket> Connections { get; set; } = new();
     private int _cur = 0;
     
-    private async Task KeepAlive() {
-        while (true) {
-            
-            await Task.Delay(100);
+    private async Task KeepAlive(WebSocket socket) {
+        while (socket.State == WebSocketState.Open) {
+            System.Console.WriteLine("Requested response");
+            var buf = new ArraySegment<byte>(new byte[1024]);
+            var ret = await socket.ReceiveAsync(buf, CancellationToken.None);
+
+            if (ret.MessageType == WebSocketMessageType.Close)
+            {
+                break;
+            }                        
+            System.Console.WriteLine("Received response");
         }
+        Connections.Remove(socket);
+        socket.Dispose();
     } 
 
     public async Task ConnectUser(WebSocket socket) {
         Connections.Add(socket);
-        // await Write(socket, "Tell us your name");
-        // var name = await Read(socket);
-        // System.Console.WriteLine(name + " connected!");
+        await Write(socket, "handshake");
+        KeepAlive(socket);
+        var name = await Read(socket);
+        System.Console.WriteLine(name + " connected!");
+        System.Console.WriteLine(Connections.Count + " " + MAX_CONNECTIONS);
         if (CanConnect) return;
+        System.Console.WriteLine("Started run");
 
         Run();
     }
@@ -71,15 +81,15 @@ public class WebsocketTestController : ControllerBase {
             if (Global.Instance.CanConnect) {
                 var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
                 Console.WriteLine("Established ws connection!");
-                await Echo(webSocket);
-                // await Global.Instance.ConnectUser(webSocket);
+                // await Echo(webSocket);
+                await Global.Instance.ConnectUser(webSocket);
             }
         } else {
             HttpContext.Response.StatusCode = 400;
         }
     }
 
-     private async Task Echo(WebSocket socket) {
+    private async Task Echo(WebSocket socket) {
         var buffer = new byte[1024 * 4];
         var result = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
         Console.WriteLine("Message received from Client");

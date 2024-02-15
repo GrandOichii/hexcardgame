@@ -89,8 +89,7 @@ class MainPhase : MatchPhase
 
             var actionWord = words[0];
             // if (actionWord == PASS_TURN_ACTION) break;
-            // TODO remove
-            if (actionWord.CompareTo(PASS_TURN_ACTION) == 0) {
+            if (actionWord == PASS_TURN_ACTION) {
                 ++match.PassCount;
                 if (match.PassCount >= match.MaxPass) {
                     System.Console.WriteLine("EXCEEDED PASS COUNT");

@@ -83,7 +83,6 @@ public class WebsocketTestController : ControllerBase {
             var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
             Console.WriteLine("Established ws connection!");
             await RunMatch(webSocket);
-            // await Echo(webSocket);
         } else {
             HttpContext.Response.StatusCode = 400;
         }
@@ -169,7 +168,9 @@ public class WebSocketPlayerController : PlayerController {
         // the solution seems to be to rework the entire game loop into async/await
         var buffer = new byte[1024 * 4];
         _socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None).Wait();
-        return Encoding.UTF8.GetString(buffer).Trim();
+        var result = Encoding.UTF8.GetString(buffer).Replace("\0", string.Empty);
+
+        return result;
     }
 
     // TODO

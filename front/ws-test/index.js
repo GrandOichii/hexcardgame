@@ -18,10 +18,11 @@ client.on('connect', connection => {
     connection.on('message', (message) => {
         if (message.type === 'utf8') {
             const data = message.utf8Data
-            if (data == 'ping') {
-                connection.send('pong')
+            if (data == 'playerwaiting') {
+                connection.send('accept')
                 return
             }
+
             console.log("Received: '" + message.utf8Data + "'");
             const state = JSON.parse(message.utf8Data)
             console.log(state.request);

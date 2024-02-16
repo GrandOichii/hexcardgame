@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text;
@@ -19,26 +20,33 @@ public class WebsocketTestController : ControllerBase {
         _matchService = matchService;
     }
 
-    // TODO add back
+    // TODO authorize
     // [Authorize]
     [HttpPost("create")]
     public async Task<IActionResult> Create([FromBody] MatchProcessConfig config) {
         // var userId = this.ExtractClaim(ClaimTypes.NameIdentifier);
+        var userId = "";
 
-        var match = await _matchService.Create(config);
+        var match = await _matchService.Create(userId, config);
         return Ok(match.Id);
     }
 
-    // TODO add back
+    // TODO authorize
     // [Authorize]
     [HttpGet("connect/{matchId}")]
     public async Task Connect(string matchId) {
         if (HttpContext.WebSockets.IsWebSocketRequest) {
             // var userId = this.ExtractClaim(ClaimTypes.NameIdentifier);
+            var userId = "";
 
-            var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-            Console.WriteLine("Established ws connection!");
-            await _matchService.Connect(matchId);
+            // ? are these status codes ok
+            try {
+                await _matchService.Connect(HttpContext.WebSockets, userId, matchId);
+            } catch (MatchNotFoundException) {
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+            } catch (MatchRefusedConnectionException) {
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.Locked;
+            }
         } else {
             HttpContext.Response.StatusCode = 400;
         }

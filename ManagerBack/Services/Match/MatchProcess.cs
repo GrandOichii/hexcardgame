@@ -13,6 +13,7 @@ public enum MatchStatus {
 
 public class MatchProcess {
     public MatchStatus Status { get; private set; } = MatchStatus.WAITING_FOR_PLAYERS;
+    public MatchRecord? Record { get; private set; } = null;
     public Guid Id { get; }
 
     private readonly Match _match;
@@ -21,8 +22,16 @@ public class MatchProcess {
     {
         Id = Guid.NewGuid();
 
+        _match = new Match(Id.ToString(), config.MatchConfig, cMaster, "../core/core.lua");
+        // add bot players
+        foreach (var p in new List<PlayerConfig> {config.P1Config, config.P2Config}) {
+            if (p.IsBot) continue;
+
+            // TODO configure bot type
+            var controller = new LuaPlayerController("../bots/random.lua");
+            // TODO figure out how to add decks to bots
+        }
         // TODO
-        // _match = new Match(Id.ToString(), config.MatchConfig, cMaster);
     }
 
     public bool CanAddConnection() {
@@ -39,19 +48,24 @@ public class MatchProcess {
         return false;
     }
 
-    public MatchRecord Start() {
-        // TODO
-        var result = new MatchRecord();
+    public async Task Start() {
+        Status = MatchStatus.IN_PROGRESS;
+        Record = new();
 
         try {
             _match.Start();
             Status = MatchStatus.FINISHED;
         } catch (Exception e) {
             Status = MatchStatus.CRASHED;
-            result.ExceptionMessage = e.Message;
+            Record.ExceptionMessage = e.Message;
         }
-
-        return result;
+    }
+    
+    public async Task Finish() {
+        // TODO this seems wrong
+        while (Status == MatchStatus.IN_PROGRESS) {
+            await Task.Delay(200);
+        }
     }
 
 }

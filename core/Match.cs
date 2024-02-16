@@ -104,8 +104,6 @@ public class MatchConfig
 /// </summary>
 public class Match
 {
-    private static string CORE_FILE = "../core/core.lua";
-
     public Random Rnd { get; }
     static private List<MatchPhase> _phases = new(){
         new TurnStart(),
@@ -134,7 +132,7 @@ public class Match
     // TODO remove
     public readonly int MaxPass = 50;
     public int PassCount { get; set; } = 0;
-    public Match(string id, MatchConfig config, CardMaster master) {
+    public Match(string id, MatchConfig config, CardMaster master, string coreFilePath) {
         CardMaster = master;
         Logger = new(this);
         ID = id;
@@ -147,7 +145,7 @@ public class Match
         Map = Map.FromConfig(this, config);
 
         SystemLogger.Log("MATCH", "Running core file");
-        LState.DoFile(CORE_FILE);
+        LState.DoFile(coreFilePath);
 
         SystemLogger.Log("MATCH", "Running addons");
         foreach (var addonPath in config.AddonPaths) {
@@ -374,6 +372,7 @@ public class Match
 }
 
 
+// TODO remove, complicated for no reason
 /// <summary>
 /// Singleton object for creating and fetching matches
 /// </summary>
@@ -392,9 +391,9 @@ public class MatchMaster
     /// Creates and saves a new Match object
     /// </summary>
     /// <returns>The created match</returns>
-    public Match New(CardMaster cMaster, MatchConfig config) {
+    public Match New(CardMaster cMaster, MatchConfig config, string coreFilePath = "../core/core.lua") {
         var id = IDCreator.Next();
-        var result = new Match(id, config, cMaster);
+        var result = new Match(id, config, cMaster, coreFilePath);
         Index.Add(id, result);
         return result;
     }

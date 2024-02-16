@@ -22,6 +22,10 @@ client.on('connect', connection => {
                 connection.send('accept')
                 return
             }
+            if (data == 'matchstart') {
+                connection.send('accept');
+                return
+            }
 
             console.log("Received: '" + message.utf8Data + "'");
             const state = JSON.parse(message.utf8Data)

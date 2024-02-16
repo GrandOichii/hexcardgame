@@ -57,17 +57,19 @@ public class MatchService : IMatchService
         
         var socket = await manager.AcceptWebSocketAsync();
         match.AddConnection(socket, userId);
+        string resp;
 
-        do {
-            // TODO poll until can start match
+        while (!match.CanStart()) {
+            await Write(socket, "playerwaiting");
+            resp = await Read(socket); 
+            // TODO check response
+        }
+        
+        await Write(socket, "matchstart");
+        resp = await Read(socket);
+        // TODO check response
 
-        } while (!match.CanStart());
-
-        // TODO send notice that match is starting and wait for response
-
-        var record = match.Start();
-
-        // TODO save record to db/cache
+        await match.Finish();
     }
 
     public async Task<MatchProcess> Create(string userId, MatchProcessConfig config)
@@ -75,6 +77,12 @@ public class MatchService : IMatchService
         var result = new MatchProcess(_cardMaster, config);
         _matches.Add(result.Id, result);
         return result;
+    }
+
+    private async Task RunMatch(MatchProcess match) {
+        await match.Run();
+        var record = match.Record;
+        // TODO save record to db/cache
     }
 
     public async Task<IEnumerable<MatchProcess>> All()

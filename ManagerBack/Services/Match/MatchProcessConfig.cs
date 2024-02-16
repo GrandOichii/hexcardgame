@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 namespace ManagerBack.Services;
 
 public class PlayerConfig {
+    // TODO replace with bot config class
     public required bool IsBot { get; set; }
 }
 

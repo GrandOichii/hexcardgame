@@ -78,7 +78,7 @@ public class MatchProcess {
         } catch (Exception e) {
             Status = MatchStatus.CRASHED;
             Record.ExceptionMessage = e.InnerException!.Message;
-            System.Console.WriteLine(e);
+            Console.WriteLine(e);
         }
     }
     

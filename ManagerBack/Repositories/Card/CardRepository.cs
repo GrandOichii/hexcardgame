@@ -6,8 +6,10 @@ namespace ManagerBack.Repositories;
 
 public class CardRepository : ICardRepository {
     private readonly IMongoCollection<CardModel> _collection;
+    private readonly ICachedCardRepository _cachedCards;
 
-    public CardRepository(IOptions<StoreDatabaseSettings> pollStoreDatabaseSettings) {
+    public CardRepository(IOptions<StoreDatabaseSettings> pollStoreDatabaseSettings, ICachedCardRepository cachedCards)
+    {
         _collection = new MongoClient(
             pollStoreDatabaseSettings.Value.ConnectionString
         ).GetDatabase(
@@ -15,11 +17,14 @@ public class CardRepository : ICardRepository {
         ).GetCollection<CardModel>(
             pollStoreDatabaseSettings.Value.CardCollectionName
         );
+
+        _cachedCards = cachedCards;
     }
 
     public async Task Add(CardModel card)
     {
         await _collection.InsertOneAsync(card);
+        await _cachedCards.Remember(card);
     }
 
 
@@ -33,19 +38,27 @@ public class CardRepository : ICardRepository {
     }
 
     public async Task<CardModel?> ByCID(string cid) {
+        var cached = await _cachedCards.Get(cid);
+        if (cached is not null) {
+            return cached;
+        }
         var found = await _collection.FindAsync(c => c.Expansion + "::" + c.Name == cid);
         var result = await found.FirstOrDefaultAsync();
+        await _cachedCards.Remember(result);
         return result;
     }
 
     public async Task<long> Delete(string cid)
     {
+        // TODO don't know if this will throw an exception or not if key is not present
+        await _cachedCards.Forget(cid);
         var deleted = await _collection.DeleteOneAsync(c => c.Expansion + "::" + c.Name == cid);
         return deleted.DeletedCount;
     }
 
     public async Task<long> Update(CardModel card) {
         var result = await _collection.ReplaceOneAsync(c => c.Expansion == card.Expansion && c.Name == card.Name, card);
+        await _cachedCards.Remember(card);
         return result.MatchedCount;
     }
 }

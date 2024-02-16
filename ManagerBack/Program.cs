@@ -22,6 +22,7 @@ public class Program {
         // Add data layer
         // ? should be singletons or scoped
         builder.Services.AddSingleton<ICardRepository, CardRepository>();
+        builder.Services.AddSingleton<ICachedCardRepository, CachedCardRepository>();
         builder.Services.AddSingleton<IUserRepository, UserRepository>();
         builder.Services.AddSingleton<IDeckRepository, DeckRepository>();
 
@@ -34,6 +35,12 @@ public class Program {
         builder.Services.Configure<StoreDatabaseSettings>(
             builder.Configuration.GetSection("Database")
         );
+
+        // Add cache
+        builder.Services.AddStackExchangeRedisCache(options => {
+            var conn = builder.Configuration.GetConnectionString("Redis");
+            options.Configuration = conn;
+        });
 
         // Add authentication
         // Add auth to app

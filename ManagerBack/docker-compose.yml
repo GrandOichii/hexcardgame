@@ -11,5 +11,11 @@ services:
     volumes:
       - hex-dbdata:/data/db
 
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+
 volumes:
   hex-dbdata:

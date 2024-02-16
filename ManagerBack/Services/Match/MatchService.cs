@@ -6,6 +6,13 @@ using System.Text;
 namespace ManagerBack.Services;
 
 [Serializable]
+public class InvalidMatchIdException : Exception
+{
+    public InvalidMatchIdException() { }
+    public InvalidMatchIdException(string matchId) : base($"invalid match id: {matchId}") { }
+}
+
+[Serializable]
 public class MatchNotFoundException : Exception
 {
     public MatchNotFoundException() { }
@@ -28,24 +35,13 @@ public class MatchService : IMatchService
         _cardMaster = new DBCardMaster(cardRepo);
     }
 
-    #region IO
-    
-    private static async Task Write(WebSocket socket, string message) {
-        var serverMsg = Encoding.UTF8.GetBytes(message);
-        await socket.SendAsync(new ArraySegment<byte>(serverMsg, 0, serverMsg.Length), WebSocketMessageType.Text, true, CancellationToken.None);
-    }
-
-    private static async Task<string> Read(WebSocket socket) {
-        var buffer = new byte[1024 * 4];
-        await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-        return Encoding.UTF8.GetString(buffer).Replace("\0", string.Empty);
-    }
-            
-    #endregion
-
     public async Task Connect(WebSocketManager manager, string userId, string matchId)
     {
-        var guid = Guid.Parse(matchId);
+        Guid guid;
+        var parsed = Guid.TryParse(matchId, out guid);
+        if (!parsed)
+            throw new InvalidMatchIdException(matchId);
+        // var guid = Guid.Parse(matchId);
         if (!_matches.ContainsKey(guid))
             throw new MatchNotFoundException(matchId);
 
@@ -56,17 +52,18 @@ public class MatchService : IMatchService
 
         
         var socket = await manager.AcceptWebSocketAsync();
-        match.AddConnection(socket, userId);
         string resp;
 
-        while (!match.CanStart()) {
-            await Write(socket, "playerwaiting");
-            resp = await Read(socket); 
+        await match.AddConnection(socket);
+
+        while (!match.Started()) {
+            await socket.Write("playerwaiting");
+            resp = await socket.Read(); 
             // TODO check response
         }
         
-        await Write(socket, "matchstart");
-        resp = await Read(socket);
+        await socket.Write("matchstart");
+        resp = await socket.Read();
         // TODO check response
 
         await match.Finish();
@@ -77,12 +74,6 @@ public class MatchService : IMatchService
         var result = new MatchProcess(_cardMaster, config);
         _matches.Add(result.Id, result);
         return result;
-    }
-
-    private async Task RunMatch(MatchProcess match) {
-        await match.Run();
-        var record = match.Record;
-        // TODO save record to db/cache
     }
 
     public async Task<IEnumerable<MatchProcess>> All()

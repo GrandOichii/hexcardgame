@@ -15,18 +15,18 @@ public class WebSocketPlayerController : PlayerController {
     }
 
     private void Write(string message) {
-        var serverMsg = Encoding.UTF8.GetBytes(message);
-        _socket.SendAsync(new ArraySegment<byte>(serverMsg, 0, serverMsg.Length), WebSocketMessageType.Text, true, CancellationToken.None).Wait();
+        // var serverMsg = Encoding.UTF8.GetBytes(message);
+        // _socket.SendAsync(new ArraySegment<byte>(serverMsg, 0, serverMsg.Length), WebSocketMessageType.Text, true, CancellationToken.None).Wait();
+        _socket.Write(message).Wait();
     }
 
     private string Read() {
-        // TODO this doesn't work for some reason
-        // the solution seems to be to rework the entire game loop into async/await
-        var buffer = new byte[1024 * 4];
-        _socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None).Wait();
-        var result = Encoding.UTF8.GetString(buffer).Replace("\0", string.Empty);
+        return _socket.Read().GetAwaiter().GetResult();
+        // var buffer = new byte[1024 * 4];
+        // _socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None).Wait();
+        // var result = Encoding.UTF8.GetString(buffer).Replace("\0", string.Empty);
 
-        return result;
+        // return result;
     }
 
     // TODO

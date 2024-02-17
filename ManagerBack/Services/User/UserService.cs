@@ -33,12 +33,13 @@ public class UserService : IUserService
     private readonly IUserRepository _userRepo;
     private readonly IMapper _mapper;
     private readonly IConfiguration _configuration;
-    public UserService(IMapper mapper, IConfiguration configuration, IUserRepository userRepo)
+    private readonly IValidator<PostUserDto> _userValidator;
+    public UserService(IMapper mapper, IConfiguration configuration, IUserRepository userRepo, IValidator<PostUserDto> userValidator)
     {
         _mapper = mapper;
         _configuration = configuration;
         _userRepo = userRepo;
-
+        _userValidator = userValidator;
     }
 
     public async Task<GetUserDto> Register(PostUserDto user)
@@ -46,7 +47,7 @@ public class UserService : IUserService
         if (await _userRepo.ByUsername(user.Username) is not null)
             throw new UsernameTakenException(user.Username);
 
-        user.Validate();
+        await _userValidator.Validate(user);
 
         var result = _mapper.Map<User>(user);
         await _userRepo.Add(result);

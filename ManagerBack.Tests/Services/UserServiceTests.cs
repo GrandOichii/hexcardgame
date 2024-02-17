@@ -23,7 +23,7 @@ public class UserServiceTests {
             .AddJsonFile("appsettings.json")
             .Build();
 
-        _userService = new(_mapper, configuration, _userRepo);
+        _userService = new(_mapper, configuration, _userRepo, new PostUserDtoValidator());
     }
 
     [Fact]

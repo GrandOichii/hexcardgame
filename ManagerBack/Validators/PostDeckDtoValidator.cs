@@ -7,7 +7,6 @@ public class InvalidDeckException : Exception
     public InvalidDeckException(string message) : base(message) { }
 }
 
-
 public class DeckValidator : IValidator<PostDeckDto>
 {
     private readonly ICardRepository _cardRepo;

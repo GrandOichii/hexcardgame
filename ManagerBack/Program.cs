@@ -28,6 +28,7 @@ public class Program {
 
         // Add validators
         builder.Services.AddSingleton<IValidator<PostDeckDto>, DeckValidator>();
+        builder.Services.AddSingleton<IValidator<PostUserDto>, PostUserDtoValidator>();
         builder.Services.AddSingleton<IValidator<string>, CIDValidator>();
 
         builder.Services.AddControllers();

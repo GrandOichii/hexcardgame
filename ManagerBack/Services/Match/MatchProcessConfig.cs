@@ -2,13 +2,18 @@ using System.Text.Json.Serialization;
 
 namespace ManagerBack.Services;
 
+public enum BotType {
+    RANDOM,
+    SMART
+}
+
 public class BotConfig {
     public required string StrDeck { get; set; }
     public required string Name { get; set; }
+    public required BotType BotType { get; set; }
 }
 
 public class PlayerConfig {
-    // TODO replace with bot config class
     public required BotConfig? BotConfig { get; set; }
 }
 

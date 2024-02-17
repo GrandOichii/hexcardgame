@@ -19,6 +19,11 @@ public class MatchProcess {
     private readonly Match _match;
     private int _realPlayerCount;
 
+    private static readonly Dictionary<BotType, string> BOT_TYPE_PATH_MAP = new() {
+        {BotType.RANDOM, "../bots/random.lua"},
+        {BotType.SMART, "../bots/basic.lua"},
+    };
+
     public MatchProcess(CardMaster cMaster, MatchProcessConfig config)
     {
         Id = Guid.NewGuid();
@@ -34,8 +39,7 @@ public class MatchProcess {
                 continue;
             }
 
-            // TODO configure bot type
-            var controller = new LuaPlayerController("../bots/random.lua");
+            var controller = new LuaPlayerController(BOT_TYPE_PATH_MAP[p.BotConfig.BotType]);
             var deck = DeckTemplate.FromText(p.BotConfig.StrDeck);
             // TODO validate deck
             var player = new Player(_match, p.BotConfig.Name, deck, controller);
@@ -51,7 +55,7 @@ public class MatchProcess {
         await socket.Write("name");
         string name = await socket.Read();
 
-        // TODO this allows any user to submit any deck, change this later
+        // TODO this allows any user to submit any deck, change this later to deckId
         await socket.Write("deck");
         var resp = await socket.Read();
         var deck = DeckTemplate.FromText(resp);
@@ -77,7 +81,9 @@ public class MatchProcess {
             Status = MatchStatus.FINISHED;
         } catch (Exception e) {
             Status = MatchStatus.CRASHED;
-            Record.ExceptionMessage = e.InnerException!.Message;
+            Record.ExceptionMessage = e.Message;
+            if (e.InnerException is not null)
+                Record.InnerExceptionMessage = e.InnerException.Message;
             Console.WriteLine(e);
         }
     }

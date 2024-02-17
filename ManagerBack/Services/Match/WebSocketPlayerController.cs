@@ -29,7 +29,6 @@ public class WebSocketPlayerController : PlayerController {
         // return result;
     }
 
-    // TODO
     public override string DoPromptAction(Player player, Match match)
     {
         var state = new MatchState(match, player, "action");
@@ -39,25 +38,20 @@ public class WebSocketPlayerController : PlayerController {
         return Read();
     }
 
-    // TODO
     public override void Setup(Player player, Match match)
     {
         Write(new MatchInfoState(player, match).ToJson());
     }
 
-    // TODO
     public override void Update(Player player, Match match)
     {
         Write(new MatchState(match, player, "update").ToJson());
     }
 
-    // TODO
     public override void CleanUp()
     {
-        // TODO
     }
 
-    // TODO
     public override string DoPickTile(List<int[]> choices, Player player, Match match)
     {
         var request = "pt";
@@ -70,7 +64,6 @@ public class WebSocketPlayerController : PlayerController {
         return Read();
     }
 
-    // TODO
     public override void SendCard(Match match, Player player, ExpansionCard card)
     {
         // var state = new MatchState(match, player, "card", new(){card.ToJson()});

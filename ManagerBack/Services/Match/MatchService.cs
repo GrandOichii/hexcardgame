@@ -37,8 +37,7 @@ public class MatchService : IMatchService
 
     public async Task Connect(WebSocketManager manager, string userId, string matchId)
     {
-        Guid guid;
-        var parsed = Guid.TryParse(matchId, out guid);
+        var parsed = Guid.TryParse(matchId, out Guid guid);
         if (!parsed)
             throw new InvalidMatchIdException(matchId);
         // var guid = Guid.Parse(matchId);

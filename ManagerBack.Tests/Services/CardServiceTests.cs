@@ -16,7 +16,7 @@ public class CardServiceTests {
         var mapper = new Mapper(mC);
         _cardRepo = A.Fake<ICardRepository>();
 
-        _cardService = new(mapper, _cardRepo);
+        _cardService = new(mapper, _cardRepo, new CIDValidator());
     }
 
     [Fact]

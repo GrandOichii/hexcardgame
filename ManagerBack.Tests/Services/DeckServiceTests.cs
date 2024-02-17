@@ -19,7 +19,7 @@ public class DeckServiceTests {
         _deckRepo = A.Fake<IDeckRepository>();
         _cardRepo = A.Fake<ICardRepository>();
 
-        _deckService = new(_deckRepo, _mapper, _cardRepo);
+        _deckService = new(_deckRepo, _mapper, _cardRepo, new DeckValidator(_cardRepo, new CIDValidator()));
     }
 
     [Fact]

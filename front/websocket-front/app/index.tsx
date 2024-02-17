@@ -13,13 +13,12 @@ const Index = () => {
             api.defaults.headers.common = { 'Authorization': `Bearer ${token}` }
         }
         setLoggedIn(!!token)
-        
     }
 
     useEffect(() => { checkLogin() }, [])
 
     return <SafeAreaView style={{flex: 1}}>
-    <Text>Hello, world</Text>
+        <Text>Hello, world</Text>
     </SafeAreaView>
 }
 

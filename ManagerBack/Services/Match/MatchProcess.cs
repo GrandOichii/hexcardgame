@@ -50,7 +50,7 @@ public class MatchProcess {
         return Status == MatchStatus.WAITING_FOR_PLAYERS && _realPlayerCount > 0;
     }
 
-    public async Task AddConnection(WebSocket socket) {
+    public async Task AddWebSocketConnection(WebSocket socket) {
         // TODO change to username
         await socket.Write("name");
         string name = await socket.Read();

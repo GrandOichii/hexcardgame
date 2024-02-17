@@ -53,7 +53,7 @@ public class MatchService : IMatchService
         var socket = await manager.AcceptWebSocketAsync();
         string resp;
 
-        await match.AddConnection(socket);
+        await match.AddWebSocketConnection(socket);
 
         while (!match.Started()) {
             await socket.Write("playerwaiting");

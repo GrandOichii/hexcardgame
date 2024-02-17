@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using AutoMapper;
 using ManagerBack.Dtos;
+using ManagerBack.Validators;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
@@ -40,41 +41,20 @@ public class DeckUpdateException : Exception
     public DeckUpdateException(string message) : base(message) { }
 }
 
-[Serializable]
-public class InvalidDeckException : Exception
-{
-    public InvalidDeckException() { }
-    public InvalidDeckException(string message) : base(message) { }
-}
-
 public partial class DeckService : IDeckService
 {
     private readonly IMapper _mapper;
     private readonly IDeckRepository _deckRepo;
     private readonly ICardRepository _cardRepo;
+    private readonly IValidator<PostDeckDto> _deckValidator;
 
 
-    public DeckService(IDeckRepository deckRepo, IMapper mapper, ICardRepository cardRepo)
+    public DeckService(IDeckRepository deckRepo, IMapper mapper, ICardRepository cardRepo, IValidator<PostDeckDto> deckValidator)
     {
         _deckRepo = deckRepo;
         _mapper = mapper;
         _cardRepo = cardRepo;
-    }
-
-    [GeneratedRegex("^.+::.+$")] private static partial Regex CIDPattern();
-    public async Task Validate(PostDeckDto deck) {
-        if (string.IsNullOrEmpty(deck.Name))
-            throw new InvalidDeckException("deck name is empty");
-        foreach (var pair in deck.Index) {
-            var cid = pair.Key;
-            var amount = pair.Value;
-
-            if (!CIDPattern().IsMatch(cid)) throw new InvalidCIDException(cid);
-            var _ = await _cardRepo.ByCID(cid) ?? throw new CardNotFoundException($"card with cid {cid} not found");
-            if (amount <= 0)
-                throw new InvalidDeckException($"amount for card {cid} can't be {amount}");
-            
-        }
+        _deckValidator = deckValidator;
     }
 
     public async Task<IEnumerable<DeckModel>> All(string userId)
@@ -88,7 +68,7 @@ public partial class DeckService : IDeckService
         var newDeck = _mapper.Map<DeckModel>(deck);
         newDeck.OwnerId = userId;
         
-        await Validate(deck);
+        await _deckValidator.Validate(deck);
 
         await _deckRepo.Add(newDeck);
         return newDeck;

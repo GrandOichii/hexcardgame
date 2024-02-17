@@ -26,6 +26,10 @@ public class Program {
         builder.Services.AddSingleton<IUserRepository, UserRepository>();
         builder.Services.AddSingleton<IDeckRepository, DeckRepository>();
 
+        // Add validators
+        builder.Services.AddSingleton<IValidator<PostDeckDto>, DeckValidator>();
+        builder.Services.AddSingleton<IValidator<string>, CIDValidator>();
+
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();

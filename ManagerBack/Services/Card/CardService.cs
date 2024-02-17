@@ -3,11 +3,6 @@ using AutoMapper;
 
 namespace ManagerBack.Services;
 
-[Serializable]
-public class InvalidCIDException : Exception
-{
-    public InvalidCIDException(string cid) : base($"invalid cid {cid}") { }
-}
 
 [Serializable]
 public class CardNotFoundException : Exception
@@ -32,11 +27,13 @@ public partial class CardService : ICardService
 {
     private readonly IMapper _mapper;
     private readonly ICardRepository _cardRepo;
+    private readonly IValidator<string> _cidValidator;
 
-    public CardService(IMapper mapper, ICardRepository cardRepo)
+    public CardService(IMapper mapper, ICardRepository cardRepo, IValidator<string> cidValidator)
     {
         _cardRepo = cardRepo;
         _mapper = mapper;
+        _cidValidator = cidValidator;
     }
 
     public void Validate(ExpansionCard card) {
@@ -54,8 +51,7 @@ public partial class CardService : ICardService
     [GeneratedRegex("^.+::.+$")] private static partial Regex CIDPattern();
     public async Task<ExpansionCard> ByCID(string cid)
     {
-        if (!CIDPattern().IsMatch(cid))
-            throw new InvalidCIDException(cid);
+        await _cidValidator.Validate(cid);
         var result = await _cardRepo.ByCID(cid) 
             ?? throw new CardNotFoundException($"no card with CID {cid}");
 

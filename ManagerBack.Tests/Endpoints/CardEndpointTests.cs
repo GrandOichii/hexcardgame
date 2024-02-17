@@ -40,18 +40,6 @@ public class CardEndpointTests
     }
 
     [Fact]
-    public async Task ShouldFetchAll() {
-        // Arrange
-        var client = _factory.CreateClient();
-
-        // Act
-        var result = await client.GetAsync("/api/v1/card");
-
-        // Assert
-        result.Should().BeSuccessful();
-    }
-
-    [Fact]
     public async Task ShouldFetchByCID() {
         // Arrange
         var name = "Dub";

@@ -41,7 +41,7 @@ public class MatchController : ControllerBase {
             } catch (MatchNotFoundException) {
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
             } catch (MatchRefusedConnectionException) {
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Locked;
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             }
         } else {
             HttpContext.Response.StatusCode = 400;
@@ -60,12 +60,23 @@ public class MatchController : ControllerBase {
         } catch (MatchNotFoundException) {
             HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
         } catch (MatchRefusedConnectionException) {
-            HttpContext.Response.StatusCode = (int)HttpStatusCode.Locked;
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
         }
     }
 
     [HttpGet]
     public async Task<IActionResult> All() {
         return Ok(await _matchService.All());
+    }
+
+    [HttpGet("{matchId}")]
+    public async Task<IActionResult> ById(string matchId) {
+        try {
+            return Ok(await _matchService.ById(matchId));
+        } catch (MatchNotFoundException e) {
+            return NotFound(e.Message);
+        } catch (MatchRefusedConnectionException e) {
+            return BadRequest(e.Message);
+        }
     }
 }

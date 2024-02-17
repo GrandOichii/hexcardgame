@@ -36,14 +36,7 @@ public class MatchService : IMatchService
     }
 
     private async Task<MatchProcess> GetMatch(string matchId) {
-        var parsed = Guid.TryParse(matchId, out Guid guid);
-        if (!parsed)
-            throw new InvalidMatchIdException(matchId);
-        // var guid = Guid.Parse(matchId);
-        if (!_matches.ContainsKey(guid))
-            throw new MatchNotFoundException(matchId);
-
-        var match = _matches[guid];
+        var match = await ById(matchId);
 
         if (!match.CanAddConnection())
             throw new MatchRefusedConnectionException(matchId);
@@ -87,5 +80,18 @@ public class MatchService : IMatchService
     public async Task<IEnumerable<MatchProcess>> All()
     {
         return _matches.Values;
+    }
+
+    public async Task<MatchProcess> ById(string matchId)
+    {
+        var parsed = Guid.TryParse(matchId, out Guid guid);
+        if (!parsed)
+            throw new InvalidMatchIdException(matchId);
+        // var guid = Guid.Parse(matchId);
+        if (!_matches.ContainsKey(guid))
+            throw new MatchNotFoundException(matchId);
+
+        var match = _matches[guid];
+        return match;
     }
 }

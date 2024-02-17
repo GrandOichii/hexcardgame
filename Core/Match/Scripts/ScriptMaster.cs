@@ -9,7 +9,7 @@ namespace Core.GameMatch.Scripts;
 /// Script master of the match, creates all the utility function
 /// </summary>
 public class ScriptMaster {
-    private Match _match;
+    private readonly Match _match;
     public ScriptMaster(Match match) {
         _match = match;
 

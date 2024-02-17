@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckpn36e637ock"]
+
+[ext_resource type="Script" path="res://Match/MatchTest.cs" id="1_mdjmg"]
+[ext_resource type="PackedScene" uid="uid://dd30gx2sdi87s" path="res://Match/Match.tscn" id="2_gcr3p"]
+
+[node name="MatchTest" type="Node"]
+script = ExtResource("1_mdjmg")
+
+[node name="Match" parent="." instance=ExtResource("2_gcr3p")]
+unique_name_in_owner = true
+
+[node name="Overlay" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.WebSockets;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ManagerBack.Controllers;
@@ -28,15 +29,15 @@ public class MatchController : ControllerBase {
 
     // TODO authorize
     // [Authorize]
-    [HttpGet("connect/{matchId}")]
-    public async Task Connect(string matchId) {
+    [HttpGet("wsconnect/{matchId}")]
+    public async Task WebSocketConnect(string matchId) {
         if (HttpContext.WebSockets.IsWebSocketRequest) {
             // var userId = this.ExtractClaim(ClaimTypes.NameIdentifier);
             var userId = "";
 
             // ? are these status codes ok
             try {
-                await _matchService.Connect(HttpContext.WebSockets, userId, matchId);
+                await _matchService.WSConnect(HttpContext.WebSockets, userId, matchId);
             } catch (MatchNotFoundException) {
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
             } catch (MatchRefusedConnectionException) {
@@ -44,6 +45,22 @@ public class MatchController : ControllerBase {
             }
         } else {
             HttpContext.Response.StatusCode = 400;
+        }
+    }
+
+    // TODO authorize
+    // [Authorize]
+    [HttpGet("tcpconnect/{matchId}")]
+    public async Task TCPConnect(string matchId) {
+        // var userId = this.ExtractClaim(ClaimTypes.NameIdentifier);
+        var userId = "";
+
+        try {
+            await _matchService.TCPConnect(userId, matchId);
+        } catch (MatchNotFoundException) {
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+        } catch (MatchRefusedConnectionException) {
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.Locked;
         }
     }
 

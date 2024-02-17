@@ -139,7 +139,7 @@ public class TCPPlayerController : PlayerController
     /// Writes the message to the socket
     /// </summary>
     /// <param name="message">Message</param>
-    private void Write(string message) {
+    public void Write(string message) {
         var data = Encoding.UTF8.GetBytes(message);
         var handler = _handler.GetStream();
         NetUtil.Write(handler, message);
@@ -149,7 +149,7 @@ public class TCPPlayerController : PlayerController
     /// Reads a message from socket
     /// </summary>
     /// <returns>The read message</returns>
-    private string Read() {
+    public string Read() {
         // return Console.ReadLine();
         
         var stream = _handler.GetStream();

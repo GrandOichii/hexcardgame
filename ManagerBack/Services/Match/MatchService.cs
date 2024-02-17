@@ -35,8 +35,7 @@ public class MatchService : IMatchService
         _cardMaster = new DBCardMaster(cardRepo);
     }
 
-    public async Task Connect(WebSocketManager manager, string userId, string matchId)
-    {
+    private async Task<MatchProcess> GetMatch(string matchId) {
         var parsed = Guid.TryParse(matchId, out Guid guid);
         if (!parsed)
             throw new InvalidMatchIdException(matchId);
@@ -48,7 +47,17 @@ public class MatchService : IMatchService
 
         if (!match.CanAddConnection())
             throw new MatchRefusedConnectionException(matchId);
+        return match;
+    }
 
+    public async Task TCPConnect(string userId, string matchId) {
+        var match = await GetMatch(matchId);
+        await match.AddTCPConnection();
+    }
+
+    public async Task WSConnect(WebSocketManager manager, string userId, string matchId)
+    {
+        var match = await GetMatch(matchId);
         
         var socket = await manager.AcceptWebSocketAsync();
         string resp;

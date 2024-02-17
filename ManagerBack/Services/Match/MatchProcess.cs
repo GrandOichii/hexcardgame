@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
@@ -14,7 +16,10 @@ public enum MatchStatus {
 public class MatchProcess {
     public MatchStatus Status { get; private set; } = MatchStatus.WAITING_FOR_PLAYERS;
     public MatchRecord? Record { get; private set; } = null;
+    public string TcpAddress { get; set; }
     public Guid Id { get; }
+    [JsonIgnore]
+    public TcpListener TcpListener { get; } 
 
     private readonly Match _match;
     private int _realPlayerCount;
@@ -27,6 +32,9 @@ public class MatchProcess {
     public MatchProcess(CardMaster cMaster, MatchProcessConfig config)
     {
         Id = Guid.NewGuid();
+
+        TcpListener = new TcpListener(IPAddress.Loopback, 0);
+        TcpAddress = ((IPEndPoint)TcpListener.LocalEndpoint).ToString();
 
         _match = new Match(Id.ToString(), config.MatchConfig, cMaster, "../core/core.lua");
         // TODO fix the order of the players
@@ -50,6 +58,8 @@ public class MatchProcess {
         return Status == MatchStatus.WAITING_FOR_PLAYERS && _realPlayerCount > 0;
     }
 
+    // TODO code is being repeated, fix
+
     public async Task AddWebSocketConnection(WebSocket socket) {
         // TODO change to username
         await socket.Write("name");
@@ -62,6 +72,23 @@ public class MatchProcess {
         // TODO validate deck
 
         var player = new Player(_match, name, deck, new WebSocketPlayerController(socket));
+        --_realPlayerCount;
+        if (CanAddConnection()) return;
+
+        Run();
+    }
+
+    public async Task AddTCPConnection() {
+        // TODO? add a timeout value
+        var controller = new TCPPlayerController(TcpListener, _match);
+        controller.Write("name");
+        var name = controller.Read();
+
+        controller.Write("deck");
+        var deckRaw = controller.Read();
+        var deck = DeckTemplate.FromText(deckRaw);
+
+        var player = new Player(_match, name, deck, controller);
         --_realPlayerCount;
         if (CanAddConnection()) return;
 

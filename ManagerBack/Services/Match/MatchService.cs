@@ -28,7 +28,7 @@ public class MatchRefusedConnectionException : Exception
 
 public class MatchService : IMatchService
 {
-    private readonly CardMaster _cardMaster;
+    private readonly ICardMaster _cardMaster;
     private readonly Dictionary<Guid, MatchProcess> _matches = new();
     public MatchService(ICardRepository cardRepo)
     {

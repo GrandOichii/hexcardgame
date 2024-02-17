@@ -6,7 +6,7 @@ namespace ManagerBack.Services;
 /// <summary>
 /// Player controller, controlled by a WebSocket connection
 /// </summary>
-public class WebSocketPlayerController : PlayerController {
+public class WebSocketPlayerController : IPlayerController {
     private readonly WebSocket _socket;
 
     public WebSocketPlayerController(WebSocket socket)
@@ -29,7 +29,7 @@ public class WebSocketPlayerController : PlayerController {
         // return result;
     }
 
-    public override string DoPromptAction(Player player, Match match)
+    public string DoPromptAction(Player player, Match match)
     {
         var state = new MatchState(match, player, "action");
 
@@ -38,21 +38,21 @@ public class WebSocketPlayerController : PlayerController {
         return Read();
     }
 
-    public override void Setup(Player player, Match match)
+    public void Setup(Player player, Match match)
     {
         Write(new MatchInfoState(player, match).ToJson());
     }
 
-    public override void Update(Player player, Match match)
+    public void Update(Player player, Match match)
     {
         Write(new MatchState(match, player, "update").ToJson());
     }
 
-    public override void CleanUp()
+    public void CleanUp()
     {
     }
 
-    public override string DoPickTile(List<int[]> choices, Player player, Match match)
+    public string DoPickTile(List<int[]> choices, Player player, Match match)
     {
         var request = "pt";
         var args = new List<string>();
@@ -64,7 +64,7 @@ public class WebSocketPlayerController : PlayerController {
         return Read();
     }
 
-    public override void SendCard(Match match, Player player, ExpansionCard card)
+    public void SendCard(Match match, Player player, ExpansionCard card)
     {
         // var state = new MatchState(match, player, "card", new(){card.ToJson()});
 

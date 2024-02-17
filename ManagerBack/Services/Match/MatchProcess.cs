@@ -29,7 +29,7 @@ public class MatchProcess {
         {BotType.SMART, "../bots/basic.lua"},
     };
 
-    public MatchProcess(CardMaster cMaster, MatchProcessConfig config)
+    public MatchProcess(ICardMaster cMaster, MatchProcessConfig config)
     {
         Id = Guid.NewGuid();
 

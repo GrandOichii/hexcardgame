@@ -1,6 +1,5 @@
 using System.Reflection;
 using Microsoft.AspNetCore.SignalR;
-using util;
 
 namespace ManagerBack.Hubs;
 public sealed class MatchHub : Hub {
@@ -62,7 +61,7 @@ public sealed class MatchHub : Hub {
 /// <summary>
 /// Player controller, controlled by a SignalR connection
 /// </summary>
-public class SignalRPlayerController : PlayerController {
+public class SignalRPlayerController : IPlayerController {
     private readonly string _connId;
     private readonly string _userId;
     private readonly IHubContext<MatchHub> _hubContext;
@@ -88,7 +87,7 @@ public class SignalRPlayerController : PlayerController {
     }
 
     // TODO
-    public override string DoPromptAction(Player player, Match match)
+    public string DoPromptAction(Player player, Match match)
     {
         var state = new MatchState(match, player, "action");
 
@@ -98,25 +97,25 @@ public class SignalRPlayerController : PlayerController {
     }
 
     // TODO
-    public override void Setup(Player player, Match match)
+    public void Setup(Player player, Match match)
     {
         Write(new MatchInfoState(player, match).ToJson());
     }
 
     // TODO
-    public override void Update(Player player, Match match)
+    public void Update(Player player, Match match)
     {
         Write(new MatchState(match, player, "update").ToJson());
     }
 
     // TODO
-    public override void CleanUp()
+    public void CleanUp()
     {
         // TODO
     }
 
     // TODO
-    public override string DoPickTile(List<int[]> choices, Player player, Match match)
+    public string DoPickTile(List<int[]> choices, Player player, Match match)
     {
         var request = "pt";
         var args = new List<string>();
@@ -129,7 +128,7 @@ public class SignalRPlayerController : PlayerController {
     }
 
     // TODO
-    public override void SendCard(Match match, Player player, ExpansionCard card)
+    public void SendCard(Match match, Player player, ExpansionCard card)
     {
         // var state = new MatchState(match, player, "card", new(){card.ToJson()});
 

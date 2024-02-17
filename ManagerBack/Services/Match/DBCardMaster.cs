@@ -1,7 +1,7 @@
 
 namespace ManagerBack.Services;
 
-public class DBCardMaster : CardMaster
+public class DBCardMaster : ICardMaster
 {
     private readonly ICardRepository _cardRepo;
 
@@ -10,12 +10,12 @@ public class DBCardMaster : CardMaster
         _cardRepo = cardRepo;
     }
 
-    public override ExpansionCard Get(string id)
+    public ExpansionCard Get(string id)
     {
         return _cardRepo.ByCID(id).GetAwaiter().GetResult()!;
     }
 
-    public override IEnumerable<ExpansionCard> GetAll()
+    public IEnumerable<ExpansionCard> GetAll()
     {
         return _cardRepo.All().GetAwaiter().GetResult();
     }

@@ -18,6 +18,7 @@ public class PlayerConfig {
 }
 
 public class MatchProcessConfig {
+    // TODO? change to matchConfigId when will implement ConfigController
     [JsonPropertyName("mConfig")]
     public required MatchConfig MatchConfig { get; set; }
 

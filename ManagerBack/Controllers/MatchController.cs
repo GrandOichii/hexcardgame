@@ -38,6 +38,8 @@ public class MatchController : ControllerBase {
             // ? are these status codes ok
             try {
                 await _matchService.WSConnect(HttpContext.WebSockets, userId, matchId);
+            } catch (InvalidMatchIdException) {
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest; 
             } catch (MatchNotFoundException) {
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
             } catch (MatchRefusedConnectionException) {
@@ -57,6 +59,8 @@ public class MatchController : ControllerBase {
 
         try {
             await _matchService.TCPConnect(userId, matchId);
+        } catch (InvalidMatchIdException) {
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest; 
         } catch (MatchNotFoundException) {
             HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
         } catch (MatchRefusedConnectionException) {
@@ -73,6 +77,8 @@ public class MatchController : ControllerBase {
     public async Task<IActionResult> ById(string matchId) {
         try {
             return Ok(await _matchService.ById(matchId));
+        } catch (InvalidMatchIdException e) {
+            return BadRequest(e.Message);
         } catch (MatchNotFoundException e) {
             return NotFound(e.Message);
         } catch (MatchRefusedConnectionException e) {

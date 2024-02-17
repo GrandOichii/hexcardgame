@@ -8,8 +8,10 @@ public partial class MatchTest : Node
 
 	public Match MatchNode { get; private set; }
 	public Control OverlayNode { get; private set; }
+	public Label ErrorLabelNode { get; private set; }
 
 	public LineEdit MatchIdEditNode { get; private set; }
+	
 	#endregion
 	
 	// Called when the node enters the scene tree for the first time.
@@ -20,6 +22,7 @@ public partial class MatchTest : Node
 		MatchNode = GetNode<Match>("%Match");
 		OverlayNode = GetNode<Control>("%Overlay");
 		MatchIdEditNode = GetNode<LineEdit>("%MatchIdEdit");
+		ErrorLabelNode = GetNode<Label>("%ErrorLabel");
 
 		#endregion
 
@@ -44,8 +47,9 @@ public partial class MatchTest : Node
 
 	private void OnConnectButtonPressed()
 	{
-		
-		// Replace with function body.
+		// TODO request the match from the server
+		// if success, connect to it using tcp
+		// if error, log it to the error label
 	}
 
 	#endregion

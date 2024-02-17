@@ -41,7 +41,12 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "Connect"
 
-[node name="Label2" type="Label" parent="Overlay/VBoxContainer"]
+[node name="ErrorLabel" type="Label" parent="Overlay/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 28
+text = "
+"
 
 [connection signal="pressed" from="Overlay/VBoxContainer/ConnectButton" to="." method="OnConnectButtonPressed"]

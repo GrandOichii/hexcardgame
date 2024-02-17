@@ -1,6 +1,6 @@
 global using Xunit;
 global using ManagerBack.Services;
-global using core.cards;
+global using Core.Cards;
 global using ManagerBack.Controllers;
 global using ManagerBack.Models;
 global using ManagerBack.Repositories;

@@ -9,8 +9,8 @@ using MongoDB.Bson.Serialization.Conventions;
 
 namespace ManagerBack.Controllers;
 
-[ApiController]
-[Route("/api/v1/wstest")]
+// [ApiController]
+// [Route("/api/v1/wstest")]
 public class WebsocketTestController : ControllerBase {
 
     private readonly IMatchService _matchService;

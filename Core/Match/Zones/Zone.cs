@@ -1,8 +1,7 @@
-using Core.Cards;
 using NLua;
 using Util;
 
-namespace Core.GameMatch;
+namespace Core.GameMatch.Zones;
 
 public class Zone<T> where T : MCard {
 

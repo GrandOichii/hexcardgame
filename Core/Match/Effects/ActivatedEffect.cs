@@ -1,9 +1,8 @@
 using NLua;
 using Util;
 
-using Core.Players;
+namespace Core.GameMatch.Effects;
 
-namespace Core.Effects;
 
 /// <summary>
 /// Activated effect of a card
@@ -61,17 +60,4 @@ class ActivatedEffect {
     /// <param name="player">Owner of the effect</param>
     /// <param name="args">Additional arguments</param>
     public void ExecEffect(Lua lState, Player player, Dictionary<string, object> args) => EffectF.Call(player.ID, LuaUtility.CreateTable(lState, args));
-}
-
-/// <summary>
-/// Triggered effect of a card
-/// </summary>
-class Trigger : ActivatedEffect {        
-    public string On { get; }
-    public bool IsSilent { get; }
-
-    public Trigger(LuaTable table) : base(table) {
-        On = LuaUtility.TableGet<string>(table, "on");
-        IsSilent = LuaUtility.GetBool(table, "isSilent");
-    }   
 }

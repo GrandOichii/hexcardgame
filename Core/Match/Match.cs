@@ -1,103 +1,7 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using NLua;
-using Core.Decks;
-using Core.Players;
 using Util;
-using Core.Scripts;
-using Core.Effects;
-using Core.Tiles;
-using Core.Cards;
-using System.Text.RegularExpressions;
 
 namespace Core.GameMatch;
-
-/// <summary>
-/// View model of the match status
-/// </summary>
-abstract public class MatchView
-{
-    /// <summary>
-    /// Start the view
-    /// </summary>
-    abstract public void Start();
-
-    /// <summary>
-    /// Updates the view with the new match data
-    /// </summary>
-    /// <param name="match">The displayed match</param>
-    abstract public void Update(Match match);
-
-    /// <summary>
-    /// Ends the view
-    /// </summary>
-    abstract public void End();
-}
-
-
-/// <summary>
-/// Empty match view, does nothing with the new information
-/// </summary>
-public class EmptyMatchView : MatchView
-{
-    public override void Start()
-    {
-    }
-
-    public override void Update(Match match)
-    {
-    }
-    public override void End()
-    {
-    }
-}
-
-
-/// <summary>
-/// Configuraton object for match creation
-/// </summary>
-public class MatchConfig
-{
-    static Random _rnd = new Random();
-
-
-    [JsonPropertyName("startingEnergy")]
-    public int StartingEnergy { get; set; } = 0;
-    [JsonPropertyName("energyPerTurn")]
-    public int EnergyPerTurn { get; set; } = 1;
-    [JsonPropertyName("maxEnergy")]
-    public int MaxEnergy { get; set; } = -1;
-    [JsonPropertyName("startingHandSize")]
-    public int StartingHandSize { get; set; }
-    [JsonPropertyName("turnStartDraw")]
-    public int TurnStartDraw { get; set; }
-    [JsonPropertyName("seed")]
-    public int Seed { get; set; } = -1;
-    [JsonPropertyName("setupScript")]
-    public string SetupScript { get; set; }="error('NO SETUP SCRIPT')";
-    [JsonPropertyName("map")]
-    public List<List<int>> Map { get; set; }=new();
-
-    [JsonPropertyName("addons")]
-    public List<string> AddonPaths { get; set; }
-
-    /// <summary>
-    /// Creates the match configuration from JSON
-    /// </summary>
-    /// <param name="text"></param>
-    /// <returns></returns>
-    static public MatchConfig FromJson(string text) {
-        var result = JsonSerializer.Deserialize<MatchConfig>(text);
-        if (result is null) {
-            throw new Exception("Failed to parse MatchConfig from " + text);
-        }
-        if (result.Seed == -1) {
-            result.Seed = _rnd.Next();
-        }
-        return result;
-    }
-}
-
 
 /// <summary>
 /// Match object, is used for playing matches
@@ -105,15 +9,15 @@ public class MatchConfig
 public class Match
 {
     public Random Rnd { get; }
-    static private List<MatchPhase> _phases = new(){
+    private static readonly List<IMatchPhase> _phases = new(){
         new TurnStart(),
         new MainPhase(),
         new TurnEnd()
     };
 
-    public IDCreator PlayerIDCreator { get; set; } = new BasicIDCreator();
-    public IDCreator CardIDCreator { get; set; } = new BasicIDCreator();
-    public CardMaster CardMaster { get; }
+    public IIdCreator PlayerIDCreator { get; set; } = new BasicIDCreator();
+    public IIdCreator CardIDCreator { get; set; } = new BasicIDCreator();
+    public ICardMaster CardMaster { get; }
     public string ID { get; }
     public bool StrictMode { get; set; } = true;
     public List<Player> Players { get; }
@@ -123,8 +27,8 @@ public class Match
     public Player? Winner { get; set; } = null;
     public bool Active => Winner is null;
     public bool AllowCommands { get; set; }
-    public Logger SystemLogger { get; set; } = new EmptyLogger();
-    public MatchView View { get; set; } = new EmptyMatchView();
+    public ILogger SystemLogger { get; set; } = new EmptyLogger();
+    public IMatchView View { get; set; } = new EmptyMatchView();
     public MatchConfig Config { get; }
     public MatchLogger Logger { get; }
 
@@ -132,7 +36,7 @@ public class Match
     // TODO remove
     public readonly int MaxPass = 50;
     public int PassCount { get; set; } = 0;
-    public Match(string id, MatchConfig config, CardMaster master, string coreFilePath) {
+    public Match(string id, MatchConfig config, ICardMaster master, string coreFilePath) {
         CardMaster = master;
         Logger = new(this);
         ID = id;
@@ -279,8 +183,7 @@ public class Match
                 var card = pair.Key;
                 var triggers = LuaUtility.TableGet<LuaTable>(card.Data, "triggers");
                 foreach (var triggerO in triggers.Values) {
-                    var triggerRaw = triggerO as LuaTable;
-                    if (triggerRaw is null) throw new Exception("Trigger of card " + card.ShortStr + " is somehow value " + triggerO + " (not LuaTable)");
+                    var triggerRaw = triggerO as LuaTable ?? throw new Exception("Trigger of card " + card.ShortStr + " is somehow value " + triggerO + " (not LuaTable)");
                     var z = LuaUtility.TableGet<string>(triggerRaw, "zone");
                     if (z != zone) continue;
                     var on = LuaUtility.TableGet<string>(triggerRaw, "on");
@@ -339,7 +242,7 @@ public class Match
                 
                 en.Owner.Discard.AddToBack(en);
                 SystemLogger.Log("MATCH", "Placing card " + en.ShortStr + " into discard");
-                en.Owner.AllCards[en] = Zones.DISCARD;
+                en.Owner.AllCards[en] = ZoneTypes.DISCARD;
 
                 if (en.IsUnit) tile.HasGrave = true;
             }
@@ -372,98 +275,3 @@ public class Match
 }
 
 
-// TODO remove, complicated for no reason
-/// <summary>
-/// Singleton object for creating and fetching matches
-/// </summary>
-public class MatchMaster
-{
-    static public MatchMaster Instance { get; } = new MatchMaster();
-    static public IDCreator IDCreator { get; set; } = new BasicIDCreator();
-
-
-    public Dictionary<string, Match> Index { get; set; }
-    private MatchMaster() {
-        Index = new();
-    }
-
-    /// <summary>
-    /// Creates and saves a new Match object
-    /// </summary>
-    /// <returns>The created match</returns>
-    public Match New(CardMaster cMaster, MatchConfig config, string coreFilePath = "../core/core.lua") {
-        var id = IDCreator.Next();
-        var result = new Match(id, config, cMaster, coreFilePath);
-        Index.Add(id, result);
-        return result;
-    }
-}
-
-
-/// <summary>
-/// Part of the message in the public log
-/// </summary>
-public struct MatchLogEntryPart {
-    [JsonPropertyName("text")]
-    public string Text { get; set; }
-    [JsonPropertyName("cardRef")]
-    public string CardRef { get; set; }
-
-    public MatchLogEntryPart(string message, string cardRef) {
-        Text = message;
-        CardRef = cardRef;
-    }
-}
-
-
-/// <summary>
-/// Class for logging public messages in match
-/// </summary>
-public class MatchLogger {
-    static public Regex CARD_NAME_MATCHER = new Regex("\\[\\[([^\\[]+)#([^\\[]+)\\]\\]");
-
-    public List<List<MatchLogEntryPart>> Messages { get; }
-    private Match _match;
-
-    public MatchLogger(Match match) {
-        _match = match;
-        Messages = new();
-    }
-
-    public void Log(List<MatchLogEntryPart> message) {
-        Messages.Add(message);
-
-        foreach (var player in _match.Players)
-            player.NewLogs.Add(message);
-    }
-
-    public void ParseAndLog(string message) {
-        // TODO leave the task to parse the message to the client
-        // TODO add tile location to cards, when moused over will highlight the tile with the card
-        
-        var groups = CARD_NAME_MATCHER.Split(message);
-        var result = new List<MatchLogEntryPart>();
-        // every odd is a match
-        // 0 - normal message
-        // 1 - card label
-        // 2 - actual card name
-        var lastMessage = "";
-        for (int i = 0; i < groups.Length; i++) {
-            var g = groups[i];
-            if (g == "") continue;
-
-            var a = i % 3;
-            if (a == 0) {
-                result.Add(new MatchLogEntryPart(g, ""));
-                continue;
-            }
-            if (a == 1) {
-                lastMessage = g;
-                continue;
-            }
-
-            result.Add(new MatchLogEntryPart(lastMessage, g));
-        }
-        Log(result);
-    }
-}

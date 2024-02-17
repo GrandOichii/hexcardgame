@@ -7,7 +7,6 @@ using Core.GameMatch;
 
 namespace Core.Manager;
 
-
 public enum MatchTraceStatus
 {
     WaitingForPlayers,

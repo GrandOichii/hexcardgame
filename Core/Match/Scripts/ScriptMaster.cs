@@ -1,18 +1,9 @@
-using Core.GameMatch;
-using System.Reflection;
 using System.Linq.Expressions;
-using Util;
+using System.Reflection;
 using NLua;
-using Core.Cards;
-using Core.Tiles;
+using Util;
 
-namespace Core.Scripts;
-
-/// <summary>
-/// Marks the method as a Lua function
-/// </summary>
-[AttributeUsage(AttributeTargets.Method)]
-internal class LuaCommand : Attribute {}
+namespace Core.GameMatch.Scripts;
 
 /// <summary>
 /// Script master of the match, creates all the utility function
@@ -41,15 +32,9 @@ public class ScriptMaster {
     /// </summary>
     /// <param name="coords">Lua table of coordinates</param>
     /// <returns>An integer array of coordinates</returns>
-    public int[] ParseCoords(LuaTable coords) {
-        long? iPos = coords[1] as long?;
-        if (iPos is null) {
-            throw new Exception("Invalid point coordinates");
-        }
-        long? jPos = coords[2] as long?;
-        if (jPos is null) {
-            throw new Exception("Invalid point coordinates");
-        }
+    static public int[] ParseCoords(LuaTable coords) {
+        long? iPos = coords[1] as long? ?? throw new Exception("Invalid point coordinates");
+        long? jPos = coords[2] as long? ?? throw new Exception("Invalid point coordinates");
         return new int[] {(int)iPos, (int)jPos};
     }
 
@@ -138,10 +123,7 @@ public class ScriptMaster {
     [LuaCommand]
     public void TileOwnerSet(string pID, LuaTable points) {
         foreach (var pointRaw in points.Values) {
-            var point = pointRaw as LuaTable;
-            if (point is null) {
-                throw new Exception("Invalid point arguments for TileOwnerSet function");
-            }
+            var point = pointRaw as LuaTable ?? throw new Exception("Invalid point arguments for TileOwnerSet function");
             var tile = TileAt(point);
             if (tile is null) {
                 return;
@@ -191,8 +173,10 @@ public class ScriptMaster {
     public void CreateAndPutEntity(string pID, LuaTable point, string cID) {
         var player = _match.PlayerWithID(pID);
         var card = _match.CardMaster.Get(cID);
-        var mCard = new MCard(_match, card, player);
-        mCard.GoesToDiscard = false;
+        var mCard = new MCard(_match, card, player)
+        {
+            GoesToDiscard = false
+        };
 
         var tile = TileAt(point);
         if (tile is null) {
@@ -201,7 +185,7 @@ public class ScriptMaster {
         }
         tile.Entity = mCard;
 
-        player.AllCards.Add(mCard, Zones.PLACED);
+        player.AllCards.Add(mCard, ZoneTypes.PLACED);
     }
 
     /// <summary>
@@ -350,8 +334,10 @@ public class ScriptMaster {
         var fromC = _match.GetCard(fromMID);
         var card = _match.CardMaster.Get(cID);
 
-        var newCard = new MCard(_match, card, player);
-        newCard.GoesToDiscard = false;
+        var newCard = new MCard(_match, card, player)
+        {
+            GoesToDiscard = false
+        };
         player.AllCards.Add(newCard, "");
         return newCard.Data;
     }
@@ -365,7 +351,7 @@ public class ScriptMaster {
     public void PlaceCardInHand(string pID, string mID) {
         var player = _match.PlayerWithID(pID);
         var card = _match.GetCard(mID);
-        player.AllCards[card] = Zones.HAND;
+        player.AllCards[card] = ZoneTypes.HAND;
         player.Hand.AddToBack(card);
     }
 
@@ -379,7 +365,7 @@ public class ScriptMaster {
         return _match.GetCard(mID).Data;
     }
 
-
+    // TODO add docs
     [LuaCommand]
     public LuaTable? PickTile(string pID, string mID, LuaTable choices) {
         var player = _match.PlayerWithID(pID);

@@ -1,89 +1,6 @@
-using System.Text;
 using NLua;
 
-using Core.Exceptions;
-
 namespace Util;
-
-/// <summary>
-/// Abstract logger class, logs info with a prefix
-/// </summary>
-abstract public class Logger {
-    /// <summary>
-    /// Logs the info in the format of [prefix]: [text]
-    /// </summary>
-    /// <param name="prefix">Prefix of the information</param>
-    /// <param name="text">Information</param>
-    abstract public void Log(string prefix, string text);
-}
-
-
-/// <summary>
-/// Basic console logger
-/// </summary>
-public class ConsoleLogger : Logger
-{
-    public override void Log(string prefix, string text)
-    {
-        System.Console.WriteLine(prefix + ": " + text);
-    }
-}
-
-
-/// <summary>
-/// Empty logger class, logged information is not saved anywhere
-/// </summary>
-public class EmptyLogger : Logger
-{
-    public override void Log(string prefix, string text)
-    {
-    }
-}
-
-
-/// <summary>
-/// Basic file logger
-/// </summary>
-public class FileLogger : Logger
-{
-    public FileStream Stream { get; }
-    public FileLogger(string path) : base() {
-        Stream = File.OpenWrite(path);
-    }
-
-    public override void Log(string prefix, string text)
-    {
-        string data = prefix + ": " + text + "\n";
-        byte[] info = new UTF8Encoding(true).GetBytes(data);
-        Stream.Write(info, 0, info.Length);
-        Stream.Flush();
-    }
-}
-
-
-/// <summary>
-/// Abstract class for creating unique ids
-/// </summary>
-abstract public class IDCreator {
-    /// <summary>
-    /// Generates a new unique ID
-    /// </summary>
-    /// <returns>New ID</returns>
-    abstract public string Next();
-}
-
-
-/// <summary>
-/// Basic ID creator, gives out a string format of a number
-/// </summary>
-public class BasicIDCreator : IDCreator {
-    private int _count = 0;
-    public override string Next()
-    {
-        return (++_count).ToString();
-    }
-}
-
 
 /// <summary>
 /// Static class of Utiity functions for Lua
@@ -209,22 +126,5 @@ static class LuaUtility {
         var f = table[name] as T;
         if (f is null) throw new GLuaTableException(table, "Failed to get T " + name + " from Lua table ");
         return (T)f;
-    }
-}
-
-
-/// <summary>
-/// General utility class
-/// </summary>
-static class Utility {
-    /// <summary>
-    /// Returns the shuffled list
-    /// </summary>
-    /// <param name="list">List</param>
-    /// <param name="rnd">Random number generator</param>
-    /// <typeparam name="T">Type of contained value</typeparam>
-    /// <returns>The shuffled list</returns>
-    static public List<T> Shuffled<T>(List<T> list, Random rnd) {
-        return list.OrderBy(a => rnd.Next()).ToList();
     }
 }

@@ -1,6 +1,6 @@
-namespace Core.GameMatch;
+namespace Core.GameMatch.Zones;
 
-static public class Zones {
+static public class ZoneTypes {
     static public readonly string DISCARD = "discard";
     static public readonly string DECK = "deck";
     static public readonly string HAND = "hand";

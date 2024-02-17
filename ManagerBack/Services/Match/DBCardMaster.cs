@@ -12,13 +12,11 @@ public class DBCardMaster : CardMaster
 
     public override ExpansionCard Get(string id)
     {
-        // TODO test
         return _cardRepo.ByCID(id).GetAwaiter().GetResult()!;
     }
 
     public override IEnumerable<ExpansionCard> GetAll()
     {
-        // TODO test
         return _cardRepo.All().GetAwaiter().GetResult();
     }
 }

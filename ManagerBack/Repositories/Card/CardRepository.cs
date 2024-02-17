@@ -44,7 +44,8 @@ public class CardRepository : ICardRepository {
         }
         var found = await _collection.FindAsync(c => c.Expansion + "::" + c.Name == cid);
         var result = await found.FirstOrDefaultAsync();
-        await _cachedCards.Remember(result);
+        if (result is not null)
+            await _cachedCards.Remember(result);
         return result;
     }
 

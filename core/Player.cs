@@ -1,13 +1,13 @@
 using System.Net.Sockets;
 using System.Text;
-using core.cards;
-using core.decks;
-using core.match;
-using core.match.states;
+using Core.Cards;
+using Core.Decks;
+using Core.GameMatch;
+using Core.GameMatch.States;
 using NLua;
 using Shared;
-using util;
-namespace core.players;
+using Util;
+namespace Core.Players;
 
 /// <summary>
 /// Controller class, handles actions of player

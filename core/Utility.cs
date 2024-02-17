@@ -1,9 +1,9 @@
 using System.Text;
 using NLua;
 
-using core.exceptions;
+using Core.Exceptions;
 
-namespace util;
+namespace Util;
 
 /// <summary>
 /// Abstract logger class, logs info with a prefix

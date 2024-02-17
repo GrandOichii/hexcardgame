@@ -1,11 +1,11 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using core.match;
-using util;
+using Core.GameMatch;
+using Util;
 using NLua;
-using core.players;
+using Core.Players;
 
-namespace core.cards;
+namespace Core.Cards;
 
 
 /// <summary>

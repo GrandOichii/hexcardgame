@@ -1,10 +1,10 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using core.cards;
-using core.players;
-using core.tiles;
+using Core.Cards;
+using Core.Players;
+using Core.Tiles;
 
-namespace core.match.states;
+namespace Core.GameMatch.States;
 
 
 /// <summary>

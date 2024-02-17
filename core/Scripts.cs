@@ -1,12 +1,12 @@
-using core.match;
+using Core.GameMatch;
 using System.Reflection;
 using System.Linq.Expressions;
-using util;
+using Util;
 using NLua;
-using core.cards;
-using core.tiles;
+using Core.Cards;
+using Core.Tiles;
 
-namespace core.scripts;
+namespace Core.Scripts;
 
 /// <summary>
 /// Marks the method as a Lua function

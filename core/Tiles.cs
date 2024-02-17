@@ -1,10 +1,10 @@
-using core.cards;
-using core.match;
-using core.players;
+using Core.Cards;
+using Core.GameMatch;
+using Core.Players;
 using NLua;
-using util;
+using Util;
 
-namespace core.tiles;
+namespace Core.Tiles;
 
 // directions
 //        0

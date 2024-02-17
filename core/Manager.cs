@@ -3,9 +3,9 @@ using System.Net.Sockets;
 
 using System.Text.Json.Serialization;
 
-using core.match;
+using Core.GameMatch;
 
-namespace core.manager;
+namespace Core.Manager;
 
 
 public enum MatchTraceStatus

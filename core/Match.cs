@@ -1,16 +1,16 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using NLua;
-using core.decks;
-using core.players;
-using util;
-using core.scripts;
-using core.effects;
-using core.tiles;
-using core.cards;
+using Core.Decks;
+using Core.Players;
+using Util;
+using Core.Scripts;
+using Core.Effects;
+using Core.Tiles;
+using Core.Cards;
 using System.Text.RegularExpressions;
 
-namespace core.match;
+namespace Core.GameMatch;
 
 /// <summary>
 /// View model of the match status

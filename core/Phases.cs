@@ -1,6 +1,6 @@
-using core.players;
+using Core.Players;
 
-namespace core.match;
+namespace Core.GameMatch;
 
 /// <summary>
 /// Match phase

@@ -1,8 +1,8 @@
-using core.cards;
-using core.players;
-using core.tiles;
+using Core.Cards;
+using Core.Players;
+using Core.Tiles;
 
-namespace core.match;
+namespace Core.GameMatch;
 
 
 /// <summary>

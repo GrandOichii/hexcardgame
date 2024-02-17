@@ -1,11 +1,11 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-using core.cards;
-using core.match;
-using core.players;
+using Core.Cards;
+using Core.GameMatch;
+using Core.Players;
 
-namespace core.decks;
+namespace Core.Decks;
 
 public class DeckTemplate {
     static private string LINE_SPLITTER = "|";
@@ -74,7 +74,7 @@ public class DeckTemplate {
     /// </summary>
     /// <param name="cMaster">Card master object, is used for fetching cards</param>
     /// <returns>Deck, created from template</returns>
-    public Zone<MCard> ToDeck(core.match.Match match, Player owner) {
+    public Zone<MCard> ToDeck(Core.GameMatch.Match match, Player owner) {
         var list = new List<MCard>();
 
         var cm = match.CardMaster;

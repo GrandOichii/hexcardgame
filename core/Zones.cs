@@ -1,4 +1,4 @@
-namespace core.match;
+namespace Core.GameMatch;
 
 static public class Zones {
     static public readonly string DISCARD = "discard";

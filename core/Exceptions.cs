@@ -1,4 +1,4 @@
-namespace core.exceptions;
+namespace Core.Exceptions;
 
 using NLua;
 

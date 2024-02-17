@@ -1,9 +1,9 @@
 using NLua;
-using util;
+using Util;
 
-using core.players;
+using Core.Players;
 
-namespace core.effects;
+namespace Core.Effects;
 
 /// <summary>
 /// Activated effect of a card

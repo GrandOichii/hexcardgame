@@ -1,5 +1,3 @@
-using core.cards;
-using core.match.states;
 using Godot;
 using System;
 using System.Reflection;
@@ -100,7 +98,7 @@ public partial class Tile : Node2D, IGamePart
 	private void _on_collision_mouse_entered()
 	{
 		if (State is not null && State?.Entity is not null) {
-			MCardState card = (MCardState)(State?.Entity);
+			MatchCardState card = (MatchCardState)(State?.Entity);
 			Client.HoverCard.Load(card);
 			// HoverCard.Visible = true;
 		}

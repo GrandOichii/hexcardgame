@@ -1,4 +1,3 @@
-using core.match.states;
 using Godot;
 using System;
 
@@ -41,7 +40,7 @@ public partial class HandCard : Control, IGamePart
 		// _on_card_mouse_entered();
 	}
 
-	public void Load(MCardState card) {
+	public void Load(MatchCardState card) {
 		CardNode.Load(card);
 	}
 	

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text.Json;
-using core.match.states;
 using Godot;
 using Shared;
 
@@ -252,7 +251,7 @@ public class SelectMovable : SelectTile {
 	protected override bool CanSelect(Command c, Tile tile) {
 		if (tile.State is null) return false;
 		if (tile.State?.Entity is null) return false;
-		MCardState en = (MCardState)(tile.State?.Entity);
+		MatchCardState en = (MatchCardState)(tile.State?.Entity);
 		return en.AvailableActions.Contains("move");;
 	}
 }
@@ -276,7 +275,7 @@ public class SelectDirection : CommandPart
 
 	static public int GetDirection(Tile from, Tile to) {
 		var coords = to.Coords;
-		var all_dir_arr = core.tiles.Map.DIR_ARR;
+		var all_dir_arr = HexCore.GameMatch.Tiles.Map.DIR_ARR;
 		var ii = (int)coords.Y % 2;
 		var dir_arr = all_dir_arr[ii];
 		var compare = from.Coords;

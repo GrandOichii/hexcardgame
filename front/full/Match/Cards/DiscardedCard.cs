@@ -1,4 +1,3 @@
-using core.match.states;
 using Godot;
 using System;
 
@@ -27,7 +26,7 @@ public partial class DiscardedCard : Control
 		_cardSizeY = CardNode.Size.Y * CardNode.Scale.Y;
 	}
 
-	public void Load(MCardState card) {
+	public void Load(MatchCardState card) {
 		CardNode.Load(card);
 	}
 

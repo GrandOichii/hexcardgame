@@ -1,7 +1,5 @@
-using core.match.states;
 using Godot;
 using System;
-using core.cards;
 
 public partial class Card : Control
 {
@@ -36,8 +34,8 @@ public partial class Card : Control
 	#endregion
 
 	private Color _defaultBgColor;
-	public MCardState State { get; private set; }
-	public core.cards.Card CardState { get; private set; }
+	public MatchCardState State { get; private set; }
+	public HexCore.Cards.Card CardState { get; private set; }
 	public MatchConnection Client { get; set; }
 
 	public override void _Ready()
@@ -64,7 +62,7 @@ public partial class Card : Control
 		_defaultBgColor = BgColor;
 	}
 
-	public void Load(MCardState cardState) {
+	public void Load(MatchCardState cardState) {
 		State = cardState;
 		NameLabelNode.Text = cardState.Name + " [" + cardState.MID + "]";
 		CostLabelNode.Text = " " + cardState.Cost.ToString() + " ";
@@ -75,7 +73,7 @@ public partial class Card : Control
 		TextLabelNode.Text = cardState.Text;
 	}
 
-	public void Load(core.cards.Card card) {
+	public void Load(HexCore.Cards.Card card) {
 		// State = null;
 		CardState = card;
 		NameLabelNode.Text = card.Name;

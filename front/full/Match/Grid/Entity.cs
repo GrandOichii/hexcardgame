@@ -1,4 +1,3 @@
-using core.match.states;
 using Godot;
 using System;
 
@@ -14,7 +13,7 @@ public partial class Entity : Node2D
 
 	#endregion
 
-	public MCardState State { get; set; }
+	public MatchCardState State { get; set; }
 	public MatchConnection Client { get; set; }
 	
 	public override void _Ready()
@@ -30,7 +29,7 @@ public partial class Entity : Node2D
 		#endregion
 	}
 
-	public void Load(MCardState state) {
+	public void Load(MatchCardState state) {
 		State = state;
 
 		var color = Client.PlayerColors[state.OwnerID];

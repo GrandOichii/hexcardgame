@@ -1,4 +1,3 @@
-using core.match.states;
 using Godot;
 using System;
 
@@ -34,7 +33,7 @@ public partial class HoverCard : Control
 //		CustomMinimumSize = CardNode.Size * CardNode.Scale;
 	}
 	
-	public void Load(MCardState card) {
+	public void Load(MatchCardState card) {
 		CardNode.Load(card);
 	}
 	

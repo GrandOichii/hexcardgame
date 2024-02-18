@@ -1,4 +1,3 @@
-using core.match.states;
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -30,7 +29,7 @@ public partial class Grid : Control
 
 	private List<List<Tile>> _tiles = null;
 	private MatchState _state;
-	private Dictionary<string, MCardState> _entities = new();
+	private Dictionary<string, MatchCardState> _entities = new();
 	private Dictionary<string, int[]> _enPositions = new();
 	private MatchConnection _client;
 	public MatchConnection Client {
@@ -66,14 +65,14 @@ public partial class Grid : Control
 		}
 
 		var tiles = state.Map.Tiles;
-		var newEn = new Dictionary<string, MCardState>();
+		var newEn = new Dictionary<string, MatchCardState>();
 		var newPos = new Dictionary<string, int[]>();
 		for (int i = 0; i < tiles.Count; i++) {
 			var row = tiles[i];
 			for (int j = 0; j < row.Count; j++) {
 				var tile = row[j];
 				if (tile is null || tile?.Entity is null) continue;
-				var en = (MCardState)(tile?.Entity);
+				var en = (MatchCardState)(tile?.Entity);
 				newEn.Add(en.MID, en);
 				newPos.Add(en.MID, new int[]{i, j});
 			}
@@ -154,15 +153,15 @@ public partial class Grid : Control
 
 	#region Utility static methods
 
-	private static List<string> SameKeys(Dictionary<string, MCardState> first, Dictionary<string, MCardState> second) {
+	private static List<string> SameKeys(Dictionary<string, MatchCardState> first, Dictionary<string, MatchCardState> second) {
 		var result = new List<string>();
 		foreach (var key in first.Keys)
 			if (second.ContainsKey(key)) result.Add(key);
 		return result;
 	}
 	
-	private static Dictionary<string, MCardState> Difference(Dictionary<string, MCardState> first, Dictionary<string, MCardState> second) {
-		var result = new Dictionary<string, MCardState>();
+	private static Dictionary<string, MatchCardState> Difference(Dictionary<string, MatchCardState> first, Dictionary<string, MatchCardState> second) {
+		var result = new Dictionary<string, MatchCardState>();
 		foreach (var key in first.Keys) {
 			if (second.ContainsKey(key)) continue;
 			result.Add(key, first[key]);

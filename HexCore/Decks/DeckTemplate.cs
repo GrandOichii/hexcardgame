@@ -3,7 +3,12 @@ using System.Text.Json.Serialization;
 
 namespace HexCore.Decks;
 
-// TODO add deck parse exception
+[Serializable]
+public class DeckParseException : Exception
+{
+    public DeckParseException() { }
+    public DeckParseException(string message) : base(message) { }
+}
 
 public class DeckTemplate {
     private static readonly string LINE_SPLITTER = "|";
@@ -42,7 +47,7 @@ public class DeckTemplate {
         foreach (var line in lines) {
             var split = line.Split(AMOUNT_SPLITTER);
             if (split.Length != 2) {
-                throw new Exception("Failed to parse card line " + line);
+                throw new DeckParseException("Failed to parse card line " + line);
             }
             var cid = split[0];
             var amount = int.Parse(split[1]);
@@ -61,7 +66,7 @@ public class DeckTemplate {
             var line = pair.Key + AMOUNT_SPLITTER + pair.Value;
             lines.Add(line);
         }
-        return String.Join(LINE_SPLITTER, lines);
+        return string.Join(LINE_SPLITTER, lines);
     }
 
     /// <summary>
@@ -69,21 +74,21 @@ public class DeckTemplate {
     /// </summary>
     /// <param name="cMaster">Card master object, is used for fetching cards</param>
     /// <returns>Deck, created from template</returns>
-    public Zone<MCard> ToDeck(Core.GameMatch.Match match, Player owner) {
-        var list = new List<MCard>();
+    public async Task<Zone<MatchCard>> ToDeck(Match match, Player owner) {
+        var list = new List<MatchCard>();
 
         var cm = match.CardMaster;
         foreach (var pair in Index) {
             var cardID = pair.Key;
-            var card = cm.Get(cardID);
+            var card = await cm.Get(cardID);
             var amount = pair.Value;
             for (int i = 0; i < amount; i++) {
-                var mCard = new MCard(match, card, owner);
+                var mCard = new MatchCard(match, card, owner);
                 list.Add(mCard);
             }
         }
 
-        var result = new Zone<MCard>(list);
+        var result = new Zone<MatchCard>(list);
         return result;
     }
 
@@ -115,6 +120,6 @@ public class DeckTemplate {
     /// </summary>
     /// <returns>JSON format of the deck</returns>
     public string ToJson() {
-        return JsonSerializer.Serialize(this);
+        return JsonSerializer.Serialize(this, Common.JSON_SERIALIZATION_OPTIONS);
     }
 }

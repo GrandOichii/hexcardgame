@@ -7,6 +7,7 @@ namespace HexCore.Cards;
 /// <summary>
 /// Card object, for storage in database
 /// </summary>
+// []
 public class Card
 {
     public required string Name { get; set; }
@@ -35,7 +36,7 @@ public class Card
     }
 
     public virtual string ToJson() {
-        return JsonSerializer.Serialize(this);
+        return JsonSerializer.Serialize(this, Common.JSON_SERIALIZATION_OPTIONS);
     }
 }
 

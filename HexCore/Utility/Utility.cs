@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace Utility;
 
 /// <summary>
@@ -14,4 +16,8 @@ static class Common {
     static public List<T> Shuffled<T>(List<T> list, Random rnd) {
         return list.OrderBy(a => rnd.Next()).ToList();
     }
+
+    static public readonly JsonSerializerOptions JSON_SERIALIZATION_OPTIONS = new() {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
 }

@@ -31,14 +31,14 @@ public class FileCardMaster : ICardMaster
         // read the manifest file
         var manifestFile = Path.Join(dir, MANIFEST_FILE);
         var manifest = File.ReadAllText(manifestFile);  
-        var cardDirs = JsonSerializer.Deserialize<List<string>>(manifest) ?? throw new Exception("Failed to load manifest file in " + manifestFile);
+        var cardDirs = JsonSerializer.Deserialize<List<string>>(manifest, Common.JSON_SERIALIZATION_OPTIONS) ?? throw new Exception("Failed to load manifest file in " + manifestFile);
         int result = 0;
         foreach (var cardDir in cardDirs) {
             if (cardDir[0] == '!') continue;
             
             var cardPath = Path.Join(dir, cardDir);
             var text = File.ReadAllText(cardPath);
-            var card = JsonSerializer.Deserialize<ExpansionCard>(text) ?? throw new Exception("Failed to deserialize card from " + cardPath);
+            var card = JsonSerializer.Deserialize<ExpansionCard>(text, Common.JSON_SERIALIZATION_OPTIONS) ?? throw new Exception("Failed to deserialize card from " + cardPath);
             Cards.Add(card);
             ++result;
         }

@@ -402,7 +402,7 @@ DIR_ARR = {
 
 
 function GetAvailableActions(state)
-    local myID = state.myData.id
+    local myID = state.myData.playerID
     local tiles = state.map.tiles
     local tilesForEntities = {}
     local tilesForSpells = {}

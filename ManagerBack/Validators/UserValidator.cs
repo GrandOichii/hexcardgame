@@ -12,7 +12,7 @@ public class PostUserDtoValidator : IValidator<PostUserDto>
     private static readonly int MIN_USERNAME_LENGTH = 4;
     private static readonly int MIN_PASSWORD_LENGTH = 8;
 
-    public async Task Validate(PostUserDto user)
+    public Task Validate(PostUserDto user)
     {
         // TODO better username validation
         if (string.IsNullOrEmpty(user.Username))
@@ -24,5 +24,7 @@ public class PostUserDtoValidator : IValidator<PostUserDto>
             throw new InvalidRegisterCredentialsException($"invalid password");
         if (user.Password.Length < MIN_PASSWORD_LENGTH)
             throw new InvalidRegisterCredentialsException($"password too short: minimal length is {MIN_PASSWORD_LENGTH}");
+
+        return Task.CompletedTask;
     }
 }

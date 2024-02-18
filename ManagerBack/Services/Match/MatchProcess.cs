@@ -28,20 +28,27 @@ public class MatchProcess {
         {BotType.RANDOM, "../bots/random.lua"},
         {BotType.SMART, "../bots/basic.lua"},
     };
+    private readonly MatchProcessConfig _config;
 
     public MatchProcess(ICardMaster cMaster, MatchProcessConfig config)
     {
+        _config = config;
         Id = Guid.NewGuid();
 
         TcpListener = new TcpListener(IPAddress.Loopback, 0);
         TcpAddress = ((IPEndPoint)TcpListener.LocalEndpoint).ToString();
 
-        _match = new Match(Id.ToString(), config.MatchConfig, cMaster, "../core/core.lua");
+        _match = new Match(Id.ToString(), config.MatchConfig, cMaster);
+        _match.InitialSetup("../HexCore/core.lua");
         // TODO fix the order of the players
 
         _realPlayerCount = 0;
-        // add bot players
-        foreach (var p in new List<PlayerConfig> {config.P1Config, config.P2Config}) {
+
+
+    }
+
+    public async Task AddBots() {
+        foreach (var p in new List<PlayerConfig> {_config.P1Config, _config.P2Config}) {
             if (p.BotConfig is null) {
                 ++_realPlayerCount;
                 continue;
@@ -50,7 +57,7 @@ public class MatchProcess {
             var controller = new LuaPlayerController(BOT_TYPE_PATH_MAP[p.BotConfig.BotType]);
             var deck = DeckTemplate.FromText(p.BotConfig.StrDeck);
             // TODO validate deck
-            var player = new Player(_match, p.BotConfig.Name, deck, controller);
+            await _match.AddPlayer(p.BotConfig.Name, deck, controller);
         }
     }
 
@@ -71,7 +78,9 @@ public class MatchProcess {
         var deck = DeckTemplate.FromText(resp);
         // TODO validate deck
 
-        var player = new Player(_match, name, deck, new WebSocketPlayerController(socket));
+        var controller = new WebSocketPlayerController(socket);
+        await _match.AddPlayer(name, deck, controller);
+
         --_realPlayerCount;
         if (CanAddConnection()) return;
 
@@ -81,14 +90,14 @@ public class MatchProcess {
     public async Task AddTCPConnection() {
         // TODO? add a timeout value
         var controller = new TCPPlayerController(TcpListener, _match);
-        controller.Write("name");
-        var name = controller.Read();
+        await controller.Write("name");
+        var name = await controller.Read();
 
-        controller.Write("deck");
-        var deckRaw = controller.Read();
+        await controller.Write("deck");
+        var deckRaw = await controller.Read();
         var deck = DeckTemplate.FromText(deckRaw);
 
-        var player = new Player(_match, name, deck, controller);
+        await _match.AddPlayer( name, deck, controller);
         --_realPlayerCount;
         if (CanAddConnection()) return;
 
@@ -104,7 +113,7 @@ public class MatchProcess {
         Record = new();
 
         try {
-            _match.Start();
+            await _match.Start();
             Status = MatchStatus.FINISHED;
         } catch (Exception e) {
             Status = MatchStatus.CRASHED;

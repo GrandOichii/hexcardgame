@@ -67,9 +67,9 @@ public partial class CardService : ICardService
 
     public async Task<ExpansionCard> Create(ExpansionCard card)
     {
-        var existing = await _cardRepo.ByCID(card.CID);
+        var existing = await _cardRepo.ByCID(card.GetCID());
         if (existing is not null)
-            throw new CIDTakenException(card.CID);
+            throw new CIDTakenException(card.GetCID());
 
         Validate(card);
 
@@ -88,7 +88,7 @@ public partial class CardService : ICardService
     {
         var count = await _cardRepo.Update(_mapper.Map<CardModel>(card));
         if (count == 0) 
-            throw new CardNotFoundException(card.CID);
+            throw new CardNotFoundException(card.GetCID());
         
     }
 }

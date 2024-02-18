@@ -10,13 +10,13 @@ public class DBCardMaster : ICardMaster
         _cardRepo = cardRepo;
     }
 
-    public ExpansionCard Get(string id)
+    public async Task<ExpansionCard> Get(string cid)
     {
-        return _cardRepo.ByCID(id).GetAwaiter().GetResult()!;
+        return (await _cardRepo.ByCID(cid))!;
     }
 
-    public IEnumerable<ExpansionCard> GetAll()
+    public async Task<IEnumerable<ExpansionCard>> GetAll()
     {
-        return _cardRepo.All().GetAwaiter().GetResult();
+        return await _cardRepo.All();
     }
 }

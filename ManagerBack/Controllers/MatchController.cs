@@ -1,6 +1,4 @@
 using System.Net;
-using System.Net.WebSockets;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ManagerBack.Controllers;

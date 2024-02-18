@@ -13,8 +13,9 @@ public partial class CIDValidator : IValidator<string>
 {
     [GeneratedRegex("^.+::.+$")] private static partial Regex CIDPattern();
 
-    public async Task Validate(string cid)
+    public Task Validate(string cid)
     {
         if (!CIDPattern().IsMatch(cid)) throw new InvalidCIDException(cid);
+        return Task.CompletedTask;
     }
 }

@@ -73,16 +73,17 @@ public class MatchService : IMatchService
     public async Task<MatchProcess> Create(string userId, MatchProcessConfig config)
     {
         var result = new MatchProcess(_cardMaster, config);
+        await result.AddBots();
         _matches.Add(result.Id, result);
         return result;
     }
 
-    public async Task<IEnumerable<MatchProcess>> All()
+    public Task<IEnumerable<MatchProcess>> All()
     {
-        return _matches.Values;
+        return Task.FromResult(_matches.Values.AsEnumerable());
     }
 
-    public async Task<MatchProcess> ById(string matchId)
+    public Task<MatchProcess> ById(string matchId)
     {
         var parsed = Guid.TryParse(matchId, out Guid guid);
         if (!parsed)
@@ -92,6 +93,6 @@ public class MatchService : IMatchService
             throw new MatchNotFoundException(matchId);
 
         var match = _matches[guid];
-        return match;
+        return Task.FromResult(match);
     }
 }

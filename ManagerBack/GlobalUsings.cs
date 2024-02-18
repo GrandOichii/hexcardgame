@@ -4,10 +4,10 @@ global using ManagerBack.Repositories;
 global using ManagerBack.Extensions;
 global using ManagerBack.Validators;
 global using ManagerBack.Dtos;
-global using Core.Cards;
-global using Core.Decks;
-global using Core.GameMatch;
-global using Core.GameMatch.States;
-global using Core.GameMatch.Players;
-global using Core.GameMatch.Players.Controllers;
-global using Util.Logging;
+
+global using HexCore.Cards;
+global using HexCore.Decks;
+global using HexCore.GameMatch;
+global using HexCore.GameMatch.Players;
+global using HexCore.GameMatch.Players.Controllers;
+global using HexCore.Cards.Masters;

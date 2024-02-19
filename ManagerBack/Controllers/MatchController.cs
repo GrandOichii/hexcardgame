@@ -33,7 +33,6 @@ public class MatchController : ControllerBase {
             // var userId = this.ExtractClaim(ClaimTypes.NameIdentifier);
             var userId = "";
 
-            // ? are these status codes ok
             try {
                 await _matchService.WSConnect(HttpContext.WebSockets, userId, matchId);
             } catch (InvalidMatchIdException) {
@@ -50,21 +49,21 @@ public class MatchController : ControllerBase {
 
     // TODO authorize
     // [Authorize]
-    [HttpGet("tcpconnect/{matchId}")]
-    public async Task TCPConnect(string matchId) {
-        // var userId = this.ExtractClaim(ClaimTypes.NameIdentifier);
-        var userId = "";
+    // [HttpGet("tcpconnect/{matchId}")]
+    // public async Task TCPConnect(string matchId) {
+    //     // var userId = this.ExtractClaim(ClaimTypes.NameIdentifier);
+    //     var userId = "";
 
-        try {
-            await _matchService.TCPConnect(userId, matchId);
-        } catch (InvalidMatchIdException) {
-            HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest; 
-        } catch (MatchNotFoundException) {
-            HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
-        } catch (MatchRefusedConnectionException) {
-            HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-        }
-    }
+    //     try {
+    //         await _matchService.TCPConnect(userId, matchId);
+    //     } catch (InvalidMatchIdException) {
+    //         HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest; 
+    //     } catch (MatchNotFoundException) {
+    //         HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+    //     } catch (MatchRefusedConnectionException) {
+    //         HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+    //     }
+    // }
 
     [HttpGet]
     public async Task<IActionResult> All() {

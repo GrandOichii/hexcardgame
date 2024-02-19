@@ -54,5 +54,9 @@ text = "
 [node name="GetMatchRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
+[node name="TCPConnectRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
 [connection signal="pressed" from="Overlay/VBoxContainer/ConnectButton" to="." method="OnConnectButtonPressed"]
-[connection signal="request_completed" from="Requests/GetMatchRequest" to="." method="OnGetMatchRequestNodeRequestCompleted"]
+[connection signal="request_completed" from="Requests/GetMatchRequest" to="." method="OnGetMatchRequestRequestCompleted"]
+[connection signal="request_completed" from="Requests/TCPConnectRequest" to="." method="OnTcpConnectRequestRequestCompleted"]

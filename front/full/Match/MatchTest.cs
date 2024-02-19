@@ -29,6 +29,7 @@ public partial class MatchTest : Node
 
 	// public HttpRequest CreateMatchRequestNode { get; private set; }
 	public HttpRequest GetMatchRequestNode { get; private set; }
+	public HttpRequest TCPConnectRequestNode { get; private set; }
 	
 	#endregion
 	
@@ -43,6 +44,7 @@ public partial class MatchTest : Node
 		ErrorLabelNode = GetNode<Label>("%ErrorLabel");
 
 		GetMatchRequestNode = GetNode<HttpRequest>("%GetMatchRequest");
+		TCPConnectRequestNode = GetNode<HttpRequest>("%TCPConnectRequest");
 
 		#endregion
 
@@ -50,14 +52,15 @@ public partial class MatchTest : Node
 	}
 
 	public void Connect(string address, int port) {
+		GD.Print("connected!");
 		// TODO get address and port
 		var client = new MatchConnection();
 		client.Connect(address, port);
 		var stream = client.GetStream();
 		NetUtil.Read(stream);
-		NetUtil.Write(stream, "dev::Mana Drill#3|dev::Brute#3|dev::Mage Initiate#3|dev::Warrior Initiate#3|dev::Rogue Initiate#3|dev::Flame Eruption#3|dev::Urakshi Shaman#3|dev::Urakshi Raider#3|dev::Give Strength#3|dev::Blood for Knowledge#3|dev::Dragotha Mage#3|dev::Prophecy Scholar#3|dev::Trained Knight#3|dev::Cast Armor#3|dev::Druid Outcast#3|starters::Knowledge Tower#3|dev::Elven Idealist#3|dev::Elven Outcast#3|dev::Dub#3|dev::Barracks#3|dev::Shieldmate#3|dev::Healer Initiate#3|dev::Archdemon Priest#3|starters::Scorch the Earth#3|dev::Kobold Warrior#3|dev::Kobold Mage#3|dev::Kobold Rogue#3|starters::Dragotha Student#3|starters::Tutoring Sphinx#3|starters::Dragotha Battlemage#3|starters::Inspiration#3");
-		NetUtil.Read(stream);
 		NetUtil.Write(stream, "tcp-player");
+		NetUtil.Read(stream);
+		NetUtil.Write(stream, "dev::Mana Drill#3|dev::Brute#3|dev::Mage Initiate#3|dev::Warrior Initiate#3|dev::Rogue Initiate#3|dev::Flame Eruption#3|dev::Urakshi Shaman#3|dev::Urakshi Raider#3|dev::Give Strength#3|dev::Blood for Knowledge#3|dev::Dragotha Mage#3|dev::Prophecy Scholar#3|dev::Trained Knight#3|dev::Cast Armor#3|dev::Druid Outcast#3|starters::Knowledge Tower#3|dev::Elven Idealist#3|dev::Elven Outcast#3|dev::Dub#3|dev::Barracks#3|dev::Shieldmate#3|dev::Healer Initiate#3|dev::Archdemon Priest#3|starters::Scorch the Earth#3|dev::Kobold Warrior#3|dev::Kobold Mage#3|dev::Kobold Rogue#3|starters::Dragotha Student#3|starters::Tutoring Sphinx#3|starters::Dragotha Battlemage#3|starters::Inspiration#3");
 
 		OverlayNode.Visible = false;
 		MatchNode.Visible = true;
@@ -67,28 +70,34 @@ public partial class MatchTest : Node
 
 	private void OnConnectButtonPressed()
 	{
-		// TODO request the match from the server
-		// if success, connect to it using tcp
-		// if error, log it to the error label
-		
 		GetMatchRequestNode.Request($"http://localhost:5239/api/v1/match/{MatchIdEditNode.Text}");
 	}
+	
+	private string _address;
+	private int _port;
 
-	private void OnGetMatchRequestNodeRequestCompleted(long result, long response_code, string[] headers, byte[] body)
+	private void OnGetMatchRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
-		if (result != (long)HttpRequest.Result.Success) {
-			ErrorLabelNode.Text = $"Failed to fetch match (response code: {response_code})";
-			return;
-		}
 		var data = body.GetStringFromUtf8();
 		var match = JsonSerializer.Deserialize<MatchProcess>(data, Common.JSON_SERIALIZATION_OPTIONS);
 		var split = match.TcpAddress.Split(":");
-		var address = split[0];
-		var port = int.Parse(split[1]);
-		Connect(address, port);
+		_address = split[0];
+		_port = int.Parse(split[1]);
+		GD.Print(_address);
+//		TCPConnectRequestNode.Request($"http://localhost:5239/api/v1/match/tcpconnect/{MatchIdEditNode.Text}");
+		Connect(_address, _port);
+	}
+
+	private void OnTcpConnectRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
+	{
+		GD.Print("Split complete");
+//		if (result != (long)HttpRequest.Result.Success) {
+//			ErrorLabelNode.Text = $"Failed to fetch match (response code: {response_code})";
+//			return;
+//		}
+		GD.Print(_address, _port);
 	}
 
 	#endregion
 }
-
 

@@ -36,6 +36,7 @@ public class MatchProcess {
         Id = Guid.NewGuid();
 
         TcpListener = new TcpListener(IPAddress.Loopback, 0);
+        TcpListener.Start();
         TcpAddress = ((IPEndPoint)TcpListener.LocalEndpoint).ToString();
 
         _match = new Match(Id.ToString(), config.MatchConfig, cMaster);
@@ -43,8 +44,12 @@ public class MatchProcess {
         // TODO fix the order of the players
 
         _realPlayerCount = 0;
+    }
 
-
+    public async Task ConnectTcpPlayers() {
+        while (CanAddConnection()) {
+            await AddTCPConnection();
+        }
     }
 
     public async Task AddBots() {
@@ -59,6 +64,7 @@ public class MatchProcess {
             // TODO validate deck
             await _match.AddPlayer(p.BotConfig.Name, deck, controller);
         }
+        Task.Run(ConnectTcpPlayers);
     }
 
     public bool CanAddConnection() {
@@ -120,7 +126,8 @@ public class MatchProcess {
             Record.ExceptionMessage = e.Message;
             if (e.InnerException is not null)
                 Record.InnerExceptionMessage = e.InnerException.Message;
-            Console.WriteLine(e);
+            System.Console.WriteLine(e.StackTrace);
+            
         }
     }
     

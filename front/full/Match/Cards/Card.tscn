@@ -35,7 +35,6 @@ offset_bottom = -228.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ts64u")
-FocusColor = Color(0.341176, 0.541176, 1, 1)
 
 [node name="Bg" type="PanelContainer" parent="."]
 unique_name_in_owner = true

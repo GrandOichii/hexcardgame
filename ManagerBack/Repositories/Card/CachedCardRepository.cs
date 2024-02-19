@@ -1,4 +1,5 @@
 
+using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
@@ -24,7 +25,7 @@ public class CachedCardRepository : ICachedCardRepository
         var key = ToKey(cid);
         var data = await _cache.GetStringAsync(key);
         if (string.IsNullOrEmpty(data)) return null;
-        return BsonSerializer.Deserialize<CardModel>(data);
+        return JsonSerializer.Deserialize<CardModel>(data);
     }
 
     public async Task Remember(CardModel card)

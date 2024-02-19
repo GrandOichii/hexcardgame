@@ -4,10 +4,9 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Text.Json;
-using core.decks;
 using System;
 
-public class CardData : core.cards.Card {
+public class CardData : HexCore.Cards.Card {
 	[JsonPropertyName("expansions")]
 	public List<ExpansionData> Expansions { get; set; }
 

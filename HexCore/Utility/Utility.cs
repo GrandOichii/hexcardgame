@@ -5,7 +5,7 @@ namespace Utility;
 /// <summary>
 /// General utility class
 /// </summary>
-static class Common {
+public static class Common {
     /// <summary>
     /// Returns the shuffled list
     /// </summary>

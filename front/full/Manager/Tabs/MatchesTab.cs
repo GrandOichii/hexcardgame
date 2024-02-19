@@ -1,10 +1,42 @@
-using core.decks;
 using Godot;
 using System;
-using core.manager;
 using System.Collections.Generic;
-using core.manager;
+using System.Net.Sockets;
 using System.Text.Json;
+using System.Threading.Tasks;
+
+public enum MatchTraceStatus
+{
+    WaitingForPlayers,
+    InProgress,
+    Crashed,
+    Finished
+}
+
+public class MatchTrace
+{
+    public Match Match { get; set; }
+    public Task Task { get; set; }
+    public TcpListener Listener { get; set; }
+
+    public string ID { get; set; }
+    public string WinnerName { get; set; }
+    public MatchTraceStatus Status { get; set; } = MatchTraceStatus.WaitingForPlayers;
+    public string URL { get; set; }
+}
+
+
+public class MatchCreationConfig {
+    public List<PlayerConfig> Players { get; set; }
+    public string Seed { get; set; }
+    public MatchConfig Config { get; set; }
+    public int Batch { get; set; }
+
+    public string ToJson() {
+        return JsonSerializer.Serialize(this);
+    }
+}
+
 
 public partial class MatchesTab : Control
 {

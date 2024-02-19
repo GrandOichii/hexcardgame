@@ -1,6 +1,5 @@
 using Godot;
 using System;
-using core.cards;
 
 public partial class CardsTabCard : Control
 {

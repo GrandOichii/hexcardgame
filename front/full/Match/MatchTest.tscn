@@ -49,4 +49,10 @@ theme_override_font_sizes/font_size = 28
 text = "
 "
 
+[node name="Requests" type="Node" parent="."]
+
+[node name="GetMatchRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
 [connection signal="pressed" from="Overlay/VBoxContainer/ConnectButton" to="." method="OnConnectButtonPressed"]
+[connection signal="request_completed" from="Requests/GetMatchRequest" to="." method="OnGetMatchRequestNodeRequestCompleted"]

@@ -2,9 +2,14 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-using core.match;
-using core.manager;
 using System.Text.Json;
+
+
+public class ManagerMatchConfig {
+    public string Name { get; set; }
+    public MatchConfig Config { get; set; }
+}
+
 
 public partial class ConfigsTab : Control
 {

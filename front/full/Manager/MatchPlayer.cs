@@ -2,8 +2,12 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-using core.decks;
-using core.manager;
+
+public class PlayerConfig {
+    public bool IsBot { get; set; }
+    public string Name { get; set; }
+    public string DeckList { get; set; }
+}
 
 public partial class MatchPlayer : Control
 {

@@ -1,5 +1,3 @@
-using core.cards;
-using core.decks;
 using Godot;
 using System;
 using System.Collections.Generic;

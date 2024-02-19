@@ -10,13 +10,21 @@ namespace HexCore.Cards;
 // []
 public class Card
 {
+    [JsonPropertyName("name")]
     public required string Name { get; set; }
+    [JsonPropertyName("cost")]
     public required int Cost { get; set; }
+    [JsonPropertyName("type")]
     public required string Type { get; set; }
+    [JsonPropertyName("text")]
     public required string Text { get; set; }
+    [JsonPropertyName("power")]
     public int Power { get; set; } = -1;
+    [JsonPropertyName("life")]
     public int Life { get; set; } = -1;
+    [JsonPropertyName("deckUsable")]
     public bool DeckUsable { get; set; } = true;
+    [JsonPropertyName("script")]
     public required string Script { get; set; }
 
     /// <summary>
@@ -44,6 +52,7 @@ public class Card
 /// Represents card data that has an expansion
 /// </summary>
 public class ExpansionCard : Card {
+    [JsonPropertyName("expansion")]
     public required string Expansion { get; set; }
 
     /// <summary>

@@ -22,7 +22,7 @@ public class MatchController : ControllerBase {
         var userId = "";
 
         var match = await _matchService.Create(userId, config);
-        return Ok(match.Id);
+        return Ok(match);
     }
 
     // TODO authorize

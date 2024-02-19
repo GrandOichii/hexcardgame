@@ -1,4 +1,3 @@
-using core.cards;
 using Godot;
 using System;
 
@@ -45,7 +44,13 @@ public partial class CardEditWindow : Window
 	
 	public void Edit(CardData? card=null) {
 		_edited = card;
-		var c = _edited ?? new();
+		var c = _edited ?? new() {
+			Name = "",
+			Cost = -1,
+			Type = "",
+			Text = "",
+			Script = "",
+		};
 
 		NameEditNode.Text = c.Name;
 		CostEditNode.Value = c.Cost;
@@ -64,7 +69,13 @@ public partial class CardEditWindow : Window
 
 	private CardData Baked {
 		get {
-			var c = new CardData();
+			var c = new CardData(){
+				Name = "",
+				Cost = -1,
+				Type = "",
+				Text = "",
+				Script = "",
+			};
 			
 			c.Name = NameEditNode.Text;
 			c.Cost = (int)CostEditNode.Value;

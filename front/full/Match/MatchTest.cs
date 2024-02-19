@@ -1,6 +1,22 @@
 using Godot;
 using System;
 using Shared;
+using System.Text.Json;
+using Utility;
+
+public enum MatchStatus {
+	WAITING_FOR_PLAYERS,
+	IN_PROGRESS,
+	FINISHED,
+	CRASHED
+}
+
+public class MatchProcess {
+	public MatchStatus Status { get; set; }
+	// public MatchRecord? Record { get; private set; } = null;
+	public string TcpAddress { get; set; }
+	public Guid Id { get; }
+}
 
 public partial class MatchTest : Node
 {
@@ -9,8 +25,10 @@ public partial class MatchTest : Node
 	public Match MatchNode { get; private set; }
 	public Control OverlayNode { get; private set; }
 	public Label ErrorLabelNode { get; private set; }
-
 	public LineEdit MatchIdEditNode { get; private set; }
+
+	// public HttpRequest CreateMatchRequestNode { get; private set; }
+	public HttpRequest GetMatchRequestNode { get; private set; }
 	
 	#endregion
 	
@@ -23,6 +41,8 @@ public partial class MatchTest : Node
 		OverlayNode = GetNode<Control>("%Overlay");
 		MatchIdEditNode = GetNode<LineEdit>("%MatchIdEdit");
 		ErrorLabelNode = GetNode<Label>("%ErrorLabel");
+
+		GetMatchRequestNode = GetNode<HttpRequest>("%GetMatchRequest");
 
 		#endregion
 
@@ -50,8 +70,25 @@ public partial class MatchTest : Node
 		// TODO request the match from the server
 		// if success, connect to it using tcp
 		// if error, log it to the error label
+		
+		GetMatchRequestNode.Request($"http://localhost:5239/api/v1/match/{MatchIdEditNode.Text}");
+	}
+
+	private void OnGetMatchRequestNodeRequestCompleted(long result, long response_code, string[] headers, byte[] body)
+	{
+		if (result != (long)HttpRequest.Result.Success) {
+			ErrorLabelNode.Text = $"Failed to fetch match (response code: {response_code})";
+			return;
+		}
+		var data = body.GetStringFromUtf8();
+		var match = JsonSerializer.Deserialize<MatchProcess>(data, Common.JSON_SERIALIZATION_OPTIONS);
+		var split = match.TcpAddress.Split(":");
+		var address = split[0];
+		var port = int.Parse(split[1]);
+		Connect(address, port);
 	}
 
 	#endregion
 }
+
 

@@ -2,6 +2,9 @@
 
 using System.Net.WebSockets;
 using System.Text;
+using ManagerBack.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using MongoDB.Bson;
 
 namespace ManagerBack.Services;
 
@@ -30,9 +33,11 @@ public class MatchService : IMatchService
 {
     private readonly ICardMaster _cardMaster;
     private readonly Dictionary<Guid, MatchProcess> _matches = new();
-    public MatchService(ICardRepository cardRepo)
+    private readonly IHubContext<MatchLiveHub> _hubContext;
+    public MatchService(ICardRepository cardRepo, IHubContext<MatchLiveHub> hubContext)
     {
         _cardMaster = new DBCardMaster(cardRepo);
+        _hubContext = hubContext;
     }
 
     private async Task<MatchProcess> GetMatch(string matchId) {
@@ -72,9 +77,10 @@ public class MatchService : IMatchService
 
     public async Task<MatchProcess> Create(string userId, MatchProcessConfig config)
     {
-        var result = new MatchProcess(_cardMaster, config);
+        var result = new MatchProcess(this, _cardMaster, config);
         await result.AddBots();
         _matches.Add(result.Id, result);
+        await ServiceStatusUpdated(result);
         return result;
     }
 
@@ -94,5 +100,31 @@ public class MatchService : IMatchService
 
         var match = _matches[guid];
         return Task.FromResult(match);
+    }
+
+    private readonly List<WatcherConnection> _watchers = new();
+
+    public async Task ServiceStatusUpdated(MatchProcess match)
+    {
+        foreach (var watcher in _watchers) {
+            // TODO check if disconnected
+            await _hubContext.Clients.Client(watcher.ConnectionId).SendAsync("Update", match.ToJson());
+        }
+    }
+
+    public async Task AddWatcher(string connectionId, string userId)
+    {
+        await _hubContext.Clients.Client(connectionId).SendAsync("Confirm");
+        _watchers.Add(new(connectionId, userId));
+    }
+
+    public Task RemoveWatcher(string connectionId)
+    {
+        // TODO this seems unsafe
+        var watcher = _watchers.FirstOrDefault(w => w.ConnectionId == connectionId);
+        if (watcher is null)
+            return Task.CompletedTask;
+        _watchers.Remove(watcher);
+        return Task.CompletedTask;
     }
 }

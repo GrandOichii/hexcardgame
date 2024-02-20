@@ -72,9 +72,7 @@ public partial class MatchTest : Node
 
 	private void OnConnectButtonPressed()
 	{
-		string[] headers = new string[] { "Content-Type: application/json" };
-		var data = File.ReadAllText("create-post.json");
-		CreateMatchRequestNode.Request("http://localhost:5239/api/v1/match/create", headers, HttpClient.Method.Post, data);
+		
 	}
 	
 
@@ -103,6 +101,14 @@ public partial class MatchTest : Node
 
 		Connect(address, port);
 	}
+
+	private void OnCreateMatchButtonPressed()
+	{
+		string[] headers = new string[] { "Content-Type: application/json" };
+		var data = File.ReadAllText("create-post.json");
+		CreateMatchRequestNode.Request("http://localhost:5239/api/v1/match/create", headers, HttpClient.Method.Post, data);
+	}
 	
 	#endregion
 }
+

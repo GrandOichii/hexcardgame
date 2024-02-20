@@ -1,4 +1,5 @@
 using System.Text;
+using ManagerBack.Hubs;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -31,6 +32,7 @@ public class Program {
         builder.Services.AddSingleton<IValidator<PostUserDto>, PostUserDtoValidator>();
         builder.Services.AddSingleton<IValidator<string>, CIDValidator>();
 
+        builder.Services.AddSignalR();
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
@@ -83,7 +85,9 @@ public class Program {
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-        // app.MapHub<MatchHub>("match-hub");
+        
+        app.MapHub<MatchLiveHub>("/api/v1/match/live");
+
         app.UseWebSockets(new() {
             KeepAliveInterval = TimeSpan.FromMinutes(10)
         });

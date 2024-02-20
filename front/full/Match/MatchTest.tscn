@@ -25,6 +25,13 @@ theme_override_constants/margin_bottom = 5
 [node name="VBoxContainer" type="VBoxContainer" parent="Overlay"]
 layout_mode = 2
 
+[node name="CreateMatchButton" type="Button" parent="Overlay/VBoxContainer"]
+layout_mode = 2
+text = "Create new match"
+
+[node name="HSeparator" type="HSeparator" parent="Overlay/VBoxContainer"]
+layout_mode = 2
+
 [node name="HBoxContainer" type="HBoxContainer" parent="Overlay/VBoxContainer"]
 layout_mode = 2
 
@@ -60,6 +67,7 @@ unique_name_in_owner = true
 [node name="CreateMatchRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
+[connection signal="pressed" from="Overlay/VBoxContainer/CreateMatchButton" to="." method="OnCreateMatchButtonPressed"]
 [connection signal="pressed" from="Overlay/VBoxContainer/ConnectButton" to="." method="OnConnectButtonPressed"]
 [connection signal="request_completed" from="Requests/GetMatchRequest" to="." method="OnGetMatchRequestRequestCompleted"]
 [connection signal="request_completed" from="Requests/TCPConnectRequest" to="." method="OnTcpConnectRequestRequestCompleted"]

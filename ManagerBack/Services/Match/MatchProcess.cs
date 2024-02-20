@@ -23,15 +23,16 @@ public class MatchProcess {
 
     private readonly Match _match;
     private int _realPlayerCount;
-
     private static readonly Dictionary<BotType, string> BOT_TYPE_PATH_MAP = new() {
         {BotType.RANDOM, "../bots/random.lua"},
         {BotType.SMART, "../bots/basic.lua"},
     };
     private readonly MatchProcessConfig _config;
+    private readonly IMatchService _matchService;
 
-    public MatchProcess(ICardMaster cMaster, MatchProcessConfig config)
+    public MatchProcess(IMatchService matchService, ICardMaster cMaster, MatchProcessConfig config)
     {
+        _matchService = matchService;
         _config = config;
         Id = Guid.NewGuid();
 
@@ -46,7 +47,13 @@ public class MatchProcess {
         _realPlayerCount = 0;
     }
 
+    public async Task SetStatus(MatchStatus status) {
+        Status = status;
+        await _matchService.ServiceStatusUpdated(this);
+    }
+
     public async Task ConnectTcpPlayers() {
+        // TODO add timeout
         while (CanAddConnection()) {
             await AddTCPConnection();
         }
@@ -115,19 +122,17 @@ public class MatchProcess {
     }
 
     private async Task Run() {
-        Status = MatchStatus.IN_PROGRESS;
+        await SetStatus(MatchStatus.IN_PROGRESS);
         Record = new();
 
         try {
             await _match.Start();
-            Status = MatchStatus.FINISHED;
+            await SetStatus(MatchStatus.FINISHED);
         } catch (Exception e) {
-            Status = MatchStatus.CRASHED;
+            await SetStatus(MatchStatus.CRASHED);
             Record.ExceptionMessage = e.Message;
             if (e.InnerException is not null)
-                Record.InnerExceptionMessage = e.InnerException.Message;
-            System.Console.WriteLine(e.StackTrace);
-            
+                Record.InnerExceptionMessage = e.InnerException.Message;            
         }
     }
     

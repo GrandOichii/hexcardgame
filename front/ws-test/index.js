@@ -49,5 +49,5 @@ client.on('connect', connection => {
     // connection.send('connect')
 });
 
-client.connect(`http://localhost:5239/api/v1/match/connect/${process.argv[2]}`);
+client.connect(`http://localhost:5239/api/v1/match/wsconnect/${process.argv[2]}`);
 // client.connect(`http://localhost:5239/api/v1/wstest/connect/e8b0c6d3-ae5a-46b2-ab25-be37d2342579`);

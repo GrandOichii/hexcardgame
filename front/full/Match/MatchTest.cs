@@ -27,6 +27,7 @@ public partial class MatchTest : Node
 	public Control OverlayNode { get; private set; }
 	public Label ErrorLabelNode { get; private set; }
 	public LineEdit MatchIdEditNode { get; private set; }
+	public LineEdit UrlEditNode { get; private set; }
 
 	public HttpRequest CreateMatchRequestNode { get; private set; }
 	public HttpRequest GetMatchRequestNode { get; private set; }
@@ -43,6 +44,7 @@ public partial class MatchTest : Node
 		OverlayNode = GetNode<Control>("%Overlay");
 		MatchIdEditNode = GetNode<LineEdit>("%MatchIdEdit");
 		ErrorLabelNode = GetNode<Label>("%ErrorLabel");
+		UrlEditNode = GetNode<LineEdit>("%UrlEdit");
 
 		GetMatchRequestNode = GetNode<HttpRequest>("%GetMatchRequest");
 		TCPConnectRequestNode = GetNode<HttpRequest>("%TCPConnectRequest");
@@ -52,6 +54,8 @@ public partial class MatchTest : Node
 
 		MatchNode.Visible = false;
 	}
+	
+	private string Url => UrlEditNode.Text;
 
 	public void Connect(string address, int port) {
 		// TODO get address and port
@@ -106,7 +110,7 @@ public partial class MatchTest : Node
 	{
 		string[] headers = new string[] { "Content-Type: application/json" };
 		var data = File.ReadAllText("create-post.json");
-		CreateMatchRequestNode.Request("http://localhost:5239/api/v1/match/create", headers, HttpClient.Method.Post, data);
+		CreateMatchRequestNode.Request(Url + "/match/create", headers, HttpClient.Method.Post, data);
 	}
 	
 	#endregion

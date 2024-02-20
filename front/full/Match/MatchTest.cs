@@ -99,6 +99,7 @@ public partial class MatchTest : Node
 	{
 		var data = body.GetStringFromUtf8();
 		var match = JsonSerializer.Deserialize<MatchProcess>(data, Common.JSON_SERIALIZATION_OPTIONS);
+		GD.Print(match.Id);
 		var split = match.TcpAddress.Split(":");
 		var address = split[0];
 		var port = int.Parse(split[1]);

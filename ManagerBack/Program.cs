@@ -87,6 +87,7 @@ public class Program {
         app.UseAuthorization();
         
         app.MapHub<MatchLiveHub>("/api/v1/match/live");
+        app.MapHub<MatchViewHub>("/api/v1/match/watch");
 
         app.UseWebSockets(new() {
             KeepAliveInterval = TimeSpan.FromMinutes(10)

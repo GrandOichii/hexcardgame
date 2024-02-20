@@ -12,12 +12,8 @@ public class TCPPlayerController : IOPlayerController
 {
     private readonly TcpClient _handler;
 
-    public TCPPlayerController(TcpListener listener, Match match) {
-        match.SystemLogger.LogInformation("Waiting for connection");
-
-        _handler = listener.AcceptTcpClient();
-        
-        match.SystemLogger.LogInformation("Connection established, sending match info");
+    public TCPPlayerController(TcpClient handler, Match match) {
+        _handler = handler;        
     }
 
     public override Task<string> Read()

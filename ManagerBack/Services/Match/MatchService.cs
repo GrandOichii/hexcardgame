@@ -2,6 +2,7 @@
 
 using System.Net.WebSockets;
 using System.Text;
+using HexCore.GameMatch.States;
 using ManagerBack.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using MongoDB.Bson;
@@ -33,11 +34,13 @@ public class MatchService : IMatchService
 {
     private readonly ICardMaster _cardMaster;
     private readonly Dictionary<Guid, MatchProcess> _matches = new();
-    private readonly IHubContext<MatchLiveHub> _hubContext;
-    public MatchService(ICardRepository cardRepo, IHubContext<MatchLiveHub> hubContext)
+    private readonly IHubContext<MatchLiveHub> _liveHubContext;
+    private readonly IHubContext<MatchViewHub> _viewHubContext;
+    public MatchService(ICardRepository cardRepo, IHubContext<MatchLiveHub> hubContext, IHubContext<MatchViewHub> viewHubContext)
     {
         _cardMaster = new DBCardMaster(cardRepo);
-        _hubContext = hubContext;
+        _liveHubContext = hubContext;
+        _viewHubContext = viewHubContext;
     }
 
     private async Task<MatchProcess> GetMatch(string matchId) {
@@ -102,10 +105,15 @@ public class MatchService : IMatchService
         return Task.FromResult(match);
     }
 
-
     public async Task ServiceStatusUpdated(MatchProcess match)
     {
-        await _hubContext.Clients.All.SendAsync("Update", match.ToJson());
+        await _liveHubContext.Clients.All.SendAsync("Update", match.ToJson());
     }
 
+    public async Task UpdateView(string matchId, BaseMatchState state)
+    {
+        var data = state.ToJson();
+        var group = MatchViewHub.ToGroupName(matchId);
+        await _viewHubContext.Clients.Group(group).SendAsync("Update", data);
+    }
 }

@@ -27,7 +27,7 @@ public class MatchController : ControllerBase {
 
     // TODO authorize
     // [Authorize]
-    [HttpGet("wsconnect/{matchId}")]
+    [HttpGet("connect/{matchId}")]
     public async Task WebSocketConnect(string matchId) {
         if (HttpContext.WebSockets.IsWebSocketRequest) {
             // var userId = this.ExtractClaim(ClaimTypes.NameIdentifier);

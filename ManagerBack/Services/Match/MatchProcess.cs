@@ -3,6 +3,9 @@ using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using HexCore.GameMatch.View;
+using ManagerBack.Hubs;
+using Microsoft.VisualBasic;
 
 namespace ManagerBack.Services;
 
@@ -29,6 +32,7 @@ public class MatchProcess {
     };
     private readonly MatchProcessConfig _config;
     private readonly IMatchService _matchService;
+    public ConnectedMatchView View { get; }
 
     public MatchProcess(IMatchService matchService, ICardMaster cMaster, MatchProcessConfig config)
     {
@@ -41,6 +45,9 @@ public class MatchProcess {
         TcpAddress = ((IPEndPoint)TcpListener.LocalEndpoint).ToString();
 
         _match = new Match(Id.ToString(), config.MatchConfig, cMaster);
+        View = new ConnectedMatchView(Id, matchService);
+        _match.View = View;
+        
         _match.InitialSetup("../HexCore/core.lua");
         // TODO fix the order of the players
 
@@ -53,8 +60,8 @@ public class MatchProcess {
     }
 
     public async Task ConnectTcpPlayers() {
-        // TODO add timeout
-        while (CanAddConnection()) {
+        // TODO keeps listening even after the match starts
+        while (CanAddConnection() && !Started()) {
             await AddTCPConnection();
         }
     }
@@ -82,10 +89,8 @@ public class MatchProcess {
         return Status == MatchStatus.WAITING_FOR_PLAYERS && _realPlayerCount > 0;
     }
 
-    // TODO code is being repeated, fix
-
     public async Task AddWebSocketConnection(WebSocket socket) {
-        // TODO change to username
+        // TODO change to username extracted from jwt
         await socket.Write("name");
         string name = await socket.Read();
 
@@ -100,8 +105,15 @@ public class MatchProcess {
     }
 
     public async Task AddTCPConnection() {
-        // TODO? add a timeout value
-        var controller = new TCPPlayerController(TcpListener, _match);
+        // var task = TcpListener.AcceptTcpClientAsync();
+        // var success = task.Wait(100);
+        // if (!success) {
+        //     return;
+        // }
+        // var client = task.Result;
+        var client = TcpListener.AcceptTcpClient();
+        // if (!)
+        var controller = new TCPPlayerController(client, _match);
         await controller.Write("name");
         var name = await controller.Read();
 

@@ -13,15 +13,15 @@ for card_path in manifest:
     if card_path[0] == '!': continue
     card = json.loads(open(path.join(CARDS_DIR, card_path), 'r').read())
     result = {
-        'power': card['power'] if 'power' in card else -1,
-        'life': card['power'] if 'power' in card else -1,
-        'deckUsable': card['deckUsable'] if 'deckUsable' in card else True,
-        'name': card['name'],
-        'cost': card['cost'],
-        'type': card['type'],
-        'expansion': card['expansion'],
-        'text': card['text'],
-        'script': card['script']
+        'Power': card['power'] if 'power' in card else -1,
+        'Life': card['power'] if 'power' in card else -1,
+        'DeckUsable': card['deckUsable'] if 'deckUsable' in card else True,
+        'Name': card['name'],
+        'Cost': card['cost'],
+        'Type': card['type'],
+        'Expansion': card['expansion'],
+        'Text': card['text'],
+        'Script': card['script']
     }
     
     cards += [result]

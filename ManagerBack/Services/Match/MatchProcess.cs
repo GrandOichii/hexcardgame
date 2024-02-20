@@ -60,10 +60,12 @@ public class MatchProcess {
     }
 
     public async Task ConnectTcpPlayers() {
+        System.Console.WriteLine("started listening");
         // TODO keeps listening even after the match starts
         while (CanAddConnection() && !Started()) {
             await AddTCPConnection();
         }
+        System.Console.WriteLine("stopped listening");
     }
 
     private Task<RecordingPlayerController> AddRecordedPlayer(string name, IPlayerController baseController) {
@@ -130,6 +132,8 @@ public class MatchProcess {
         await baseController.Write("deck");
         var deckRaw = await baseController.Read();
         var deck = DeckTemplate.FromText(deckRaw);
+
+        // TODO validate deck
         
         var controller = await AddRecordedPlayer(name, baseController);
         await AddPlayer(name, deck, controller, true);
@@ -162,6 +166,8 @@ public class MatchProcess {
             if (e.InnerException is not null)
                 Record.InnerExceptionMessage = e.InnerException.Message;            
         }
+
+        TcpListener.Stop();
     }
     
     public async Task Finish() {

@@ -31,6 +31,14 @@ public class ExpansionServiceTests {
     public async Task ShouldFetchAll() {
         // Arrange
         A.CallTo(() => _cardRepo.All()).Returns(new List<CardModel>() { new() {
+            Power = -1,
+            Life = -1,
+            DeckUsable = true,
+            Name = "Card",
+            Cost = 2,
+            Type = "Spell",
+            Text = "",
+            Script = "",
             Expansion = "expansion"
         } });
 
@@ -46,12 +54,38 @@ public class ExpansionServiceTests {
         var expansion = "expansion";
         A.CallTo(() => _cardRepo.All()).Returns(new List<CardModel>() { 
             new() {
+                Power = -1,
+                Life = -1,
+                DeckUsable = true,
+                Name = "Card",
+                Cost = 2,
+                Type = "Spell",
+                Text = "",
+                Script = "",
                 Expansion = expansion
             },
             new() {
+                Power = -1,
+                Life = -1,
+                DeckUsable = true,
+                Name = "Card",
+                Cost = 2,
+                Type = "Spell",
+                Text = "",
+                Script = "",
+
                 Expansion = "expansion2"
             },
             new() {
+                Power = -1,
+                Life = -1,
+                DeckUsable = true,
+                Name = "Card",
+                Cost = 2,
+                Type = "Spell",
+                Text = "",
+                Script = "",
+
                 Expansion = expansion
             },
         });
@@ -70,9 +104,25 @@ public class ExpansionServiceTests {
         // Arrange
         A.CallTo(() => _cardRepo.All()).Returns(new List<CardModel>() { 
             new() {
+                Power = -1,
+                Life = -1,
+                DeckUsable = true,
+                Name = "Card",
+                Cost = 2,
+                Type = "Spell",
+                Text = "",
+                Script = "",
                 Expansion = "expansion1"
             },
             new() {
+                Power = -1,
+                Life = -1,
+                DeckUsable = true,
+                Name = "Card",
+                Cost = 2,
+                Type = "Spell",
+                Text = "",
+                Script = "",
                 Expansion = "expansion2"
             },
         });

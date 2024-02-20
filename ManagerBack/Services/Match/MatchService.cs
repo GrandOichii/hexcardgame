@@ -10,6 +10,13 @@ using MongoDB.Bson;
 
 namespace ManagerBack.Services;
 
+[System.Serializable]
+public class WebSocketPlayerBadResponseException : System.Exception
+{
+    public WebSocketPlayerBadResponseException() { }
+    public WebSocketPlayerBadResponseException(string message) : base(message) { }
+}
+
 [Serializable]
 public class InvalidMatchIdException : Exception
 {
@@ -69,12 +76,12 @@ public class MatchService : IMatchService
         while (!match.Started()) {
             await socket.Write("playerwaiting");
             resp = await socket.Read(); 
-            // TODO check response
+            if (resp != "accept") throw new WebSocketPlayerBadResponseException("expected to receive \"accept\"");
         }
         
         await socket.Write("matchstart");
         resp = await socket.Read();
-        // TODO check response
+        if (resp != "accept") throw new WebSocketPlayerBadResponseException("expected to receive \"accept\"");
 
         await match.Finish();
     }

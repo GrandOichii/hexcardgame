@@ -51,7 +51,6 @@ public class CardRepository : ICardRepository {
 
     public async Task<long> Delete(string cid)
     {
-        // TODO don't know if this will throw an exception or not if key is not present
         await _cachedCards.Forget(cid);
         var deleted = await _collection.DeleteOneAsync(c => c.Expansion + "::" + c.Name == cid);
         return deleted.DeletedCount;

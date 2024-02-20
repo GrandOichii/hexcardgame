@@ -16,32 +16,20 @@ public class CIDTakenException : Exception
     public CIDTakenException(string cid) : base($"cid {cid} is already taken") { }
 }
 
-[Serializable]
-public class InvalidCardCreationParametersException : Exception
-{
-    public InvalidCardCreationParametersException() { }
-    public InvalidCardCreationParametersException(string message) : base(message) { }
-}
-
 public partial class CardService : ICardService
 {
     private readonly IMapper _mapper;
     private readonly ICardRepository _cardRepo;
     private readonly IValidator<string> _cidValidator;
+    private readonly IValidator<ExpansionCard> _cardValidator;
 
-    public CardService(IMapper mapper, ICardRepository cardRepo, IValidator<string> cidValidator)
+    public CardService(IMapper mapper, ICardRepository cardRepo, IValidator<string> cidValidator, IValidator<ExpansionCard> cardValidator)
     {
         _cardRepo = cardRepo;
         _mapper = mapper;
         _cidValidator = cidValidator;
+        _cardValidator = cardValidator;
     }
-
-    public void Validate(ExpansionCard card) {
-        // TODO add more checks
-        if (string.IsNullOrEmpty(card.Name))
-            throw new InvalidCardCreationParametersException("card name can't be empty");
-    }
-
 
     public async Task<IEnumerable<ExpansionCard>> All()
     {
@@ -70,7 +58,7 @@ public partial class CardService : ICardService
         if (existing is not null)
             throw new CIDTakenException(card.GetCID());
 
-        Validate(card);
+        await _cardValidator.Validate(card);
 
         await _cardRepo.Add(_mapper.Map<CardModel>(card));
         return card;

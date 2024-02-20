@@ -26,7 +26,6 @@ public class WebSocketPlayerController : IOPlayerController {
 
     public override async Task CleanUp()
     {
-        // TODO? more
-        await _socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "matchend", CancellationToken.None);
+        await _socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "MatchEnd", CancellationToken.None);
     }
 }

@@ -297,9 +297,25 @@ public class CardEndpointTests
             "end"
         }));
         var result = await client.PutAsync($"/api/v1/card", JsonContent.Create(new ExpansionCard {
-            Name = "Dub",
             Cost = 3,
+            
+            Name = "Dub",
             Expansion = "dev",
+            Power = -1,
+            Life = -1,
+            DeckUsable = true,
+            Type = "Spell",
+            Text = "Caster becomes a Warrior. (Keeps all other types)",
+            Script = "function _Create(props)\n" +
+            "    local result = CardCreation:Spell(props)\n" +
+            "    result.DamageValues.damage = 2\n" +
+            "    result.EffectP:AddLayer(function(playerID, caster)\n" +
+            "        caster.type = caster.type..\" Warrior\"\n" +
+            "        caster:AddSubtype(\"Warrior\")\n" +
+            "        return nil, true\n" +
+            "    end)\n" +
+            "    return result\n" +
+            "end"
         }));
 
         // Assert
@@ -317,6 +333,13 @@ public class CardEndpointTests
             Name = "Dub",
             Cost = 3,
             Expansion = "dev",
+
+            Power = -1,
+            Life = -1,
+            DeckUsable = true,
+            Type = "Spell",
+            Text = "",
+            Script = "",
         }));
 
         // Assert

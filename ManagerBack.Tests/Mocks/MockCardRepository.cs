@@ -19,12 +19,12 @@ public class MockCardRepository : ICardRepository
 
     public async Task<CardModel?> ByCID(string cid)
     {
-        return Cards.FirstOrDefault(c => c.CID == cid);
+        return Cards.FirstOrDefault(c => c.GetCID() == cid);
     }
 
     public async Task<long> Delete(string cid)
     {
-        var found = Cards.FirstOrDefault(c => c.CID == cid);
+        var found = Cards.FirstOrDefault(c => c.GetCID() == cid);
         if (found is null)
             return 0;
         Cards.Remove(found);
@@ -39,7 +39,7 @@ public class MockCardRepository : ICardRepository
 
     public async Task<long> Update(CardModel card)
     {
-        var deleted = await Delete(card.CID);
+        var deleted = await Delete(card.GetCID());
         if (deleted == 0) return 0;
         Cards.Add(card);
         return 1;

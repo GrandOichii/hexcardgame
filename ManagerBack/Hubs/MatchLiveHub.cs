@@ -10,16 +10,6 @@ public sealed class MatchLiveHub : Hub {
         _matchServices = matchServices;
     }
 
-    public override async Task OnConnectedAsync() {
-        System.Console.WriteLine("New connection established");
-        await _matchServices.AddWatcher(Context.ConnectionId, Context.UserIdentifier!);
-        // await Clients.All.SendAsync("ReceiveMessage", $"{Context.ConnectionId} has joined");
-    }
+    // TODO add some message handlers
 
-    public override async Task OnDisconnectedAsync(Exception? exception)
-    {
-        await _matchServices.RemoveWatcher(Context.ConnectionId);
-
-        await base.OnDisconnectedAsync(exception);
-    }
 }

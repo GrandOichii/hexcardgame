@@ -102,29 +102,10 @@ public class MatchService : IMatchService
         return Task.FromResult(match);
     }
 
-    private readonly List<WatcherConnection> _watchers = new();
 
     public async Task ServiceStatusUpdated(MatchProcess match)
     {
-        foreach (var watcher in _watchers) {
-            // TODO check if disconnected
-            await _hubContext.Clients.Client(watcher.ConnectionId).SendAsync("Update", match.ToJson());
-        }
+        await _hubContext.Clients.All.SendAsync("Update", match.ToJson());
     }
 
-    public async Task AddWatcher(string connectionId, string userId)
-    {
-        await _hubContext.Clients.Client(connectionId).SendAsync("Confirm");
-        _watchers.Add(new(connectionId, userId));
-    }
-
-    public Task RemoveWatcher(string connectionId)
-    {
-        // TODO this seems unsafe
-        var watcher = _watchers.FirstOrDefault(w => w.ConnectionId == connectionId);
-        if (watcher is null)
-            return Task.CompletedTask;
-        _watchers.Remove(watcher);
-        return Task.CompletedTask;
-    }
 }

@@ -32,9 +32,10 @@ public class MatchProcess {
     };
     private readonly MatchProcessConfig _config;
     private readonly IMatchService _matchService;
+    private readonly IValidator<DeckTemplate> _deckValidator;
     public ConnectedMatchView View { get; }
 
-    public MatchProcess(IMatchService matchService, ICardMaster cMaster, MatchProcessConfig config)
+    public MatchProcess(IMatchService matchService, ICardMaster cMaster, MatchProcessConfig config, IValidator<DeckTemplate> deckValidator)
     {
         _matchService = matchService;
         _config = config;
@@ -47,11 +48,12 @@ public class MatchProcess {
         _match = new Match(Id.ToString(), config.MatchConfig, cMaster);
         View = new ConnectedMatchView(Id, matchService);
         _match.View = View;
-        
+
         _match.InitialSetup("../HexCore/core.lua");
         // TODO fix the order of the players
 
         _realPlayerCount = 0;
+        _deckValidator = deckValidator;
     }
 
     public async Task SetStatus(MatchStatus status) {
@@ -60,12 +62,10 @@ public class MatchProcess {
     }
 
     public async Task ConnectTcpPlayers() {
-        System.Console.WriteLine("started listening");
         // TODO keeps listening even after the match starts
         while (CanAddConnection() && !Started()) {
             await AddTCPConnection();
         }
-        System.Console.WriteLine("stopped listening");
     }
 
     private Task<RecordingPlayerController> AddRecordedPlayer(string name, IPlayerController baseController) {
@@ -85,7 +85,7 @@ public class MatchProcess {
             }
 
             var controller = await AddRecordedPlayer(p.BotConfig.Name, new LuaPlayerController(BOT_TYPE_PATH_MAP[p.BotConfig.BotType]));
-            var deck = DeckTemplate.FromText(p.BotConfig.StrDeck);
+            var deck = await LoadDeck(p.BotConfig.StrDeck);
             // TODO validate deck
             await _match.AddPlayer(p.BotConfig.Name, deck, controller);
         }
@@ -94,6 +94,12 @@ public class MatchProcess {
             return;
         }
         Task.Run(ConnectTcpPlayers);
+    }
+
+    private async Task<DeckTemplate> LoadDeck(string deck) {
+        var result = DeckTemplate.FromText(deck);
+        await _deckValidator.Validate(result);
+        return result;
     }
 
     public bool CanAddConnection() {
@@ -108,7 +114,8 @@ public class MatchProcess {
         // TODO this allows any user to submit any deck, change this later to deckId
         await socket.Write("deck");
         var resp = await socket.Read();
-        var deck = DeckTemplate.FromText(resp);
+        var deck = await LoadDeck(resp);
+        
         // TODO validate deck
 
         var controller = await AddRecordedPlayer(name, new WebSocketPlayerController(socket));
@@ -131,7 +138,7 @@ public class MatchProcess {
 
         await baseController.Write("deck");
         var deckRaw = await baseController.Read();
-        var deck = DeckTemplate.FromText(deckRaw);
+        var deck = await LoadDeck(deckRaw);
 
         // TODO validate deck
         

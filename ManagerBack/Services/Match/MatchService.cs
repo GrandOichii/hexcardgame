@@ -44,11 +44,13 @@ public class MatchService : IMatchService
     private readonly Dictionary<Guid, MatchProcess> _matches = new();
     private readonly IHubContext<MatchLiveHub> _liveHubContext;
     private readonly IHubContext<MatchViewHub> _viewHubContext;
-    public MatchService(ICardRepository cardRepo, IHubContext<MatchLiveHub> hubContext, IHubContext<MatchViewHub> viewHubContext)
+    private readonly IValidator<DeckTemplate> _deckValidator;
+    public MatchService(ICardRepository cardRepo, IHubContext<MatchLiveHub> hubContext, IHubContext<MatchViewHub> viewHubContext, IValidator<DeckTemplate> deckValidator)
     {
         _cardMaster = new DBCardMaster(cardRepo);
         _liveHubContext = hubContext;
         _viewHubContext = viewHubContext;
+        _deckValidator = deckValidator;
     }
 
     private async Task<MatchProcess> GetMatch(string matchId) {
@@ -88,7 +90,7 @@ public class MatchService : IMatchService
 
     public async Task<MatchProcess> Create(string userId, MatchProcessConfig config)
     {
-        var result = new MatchProcess(this, _cardMaster, config);
+        var result = new MatchProcess(this, _cardMaster, config, _deckValidator);
         await result.AddBots();
         _matches.Add(result.Id, result);
         await ServiceStatusUpdated(result);

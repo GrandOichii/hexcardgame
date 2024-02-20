@@ -1,28 +1,20 @@
 namespace ManagerBack.Validators;
 
-[Serializable]
-public class InvalidDeckException : Exception
-{
-    public InvalidDeckException() { }
-    public InvalidDeckException(string message) : base(message) { }
-}
 
-public class PostDeckDtoValidator : IValidator<PostDeckDto>
+public class DeckTemplateValidator : IValidator<DeckTemplate>
 {
     private readonly ICardRepository _cardRepo;
     private readonly IValidator<string> _cidValidator;
 
-    public PostDeckDtoValidator(ICardRepository cardRepo, IValidator<string> cidValidator)
+    public DeckTemplateValidator(ICardRepository cardRepo, IValidator<string> cidValidator)
     {
         _cardRepo = cardRepo;
         _cidValidator = cidValidator;
     }
 
-    public async Task Validate(PostDeckDto deck)
+    public async Task Validate(DeckTemplate deck)
     {
-        if (string.IsNullOrEmpty(deck.Name))
-            throw new InvalidDeckException("deck name is empty");
-            
+        // TODO repeated code 
         foreach (var pair in deck.Index) {
             var cid = pair.Key;
             var amount = pair.Value;

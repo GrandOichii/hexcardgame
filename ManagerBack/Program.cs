@@ -28,7 +28,8 @@ public class Program {
         builder.Services.AddSingleton<IDeckRepository, DeckRepository>();
 
         // Add validators
-        builder.Services.AddSingleton<IValidator<PostDeckDto>, DeckValidator>();
+        builder.Services.AddSingleton<IValidator<PostDeckDto>, PostDeckDtoValidator>();
+        builder.Services.AddSingleton<IValidator<DeckTemplate>, DeckTemplateValidator>();
         builder.Services.AddSingleton<IValidator<PostUserDto>, PostUserDtoValidator>();
         builder.Services.AddSingleton<IValidator<ExpansionCard>, ExpansionCardValidator>();
         builder.Services.AddSingleton<IValidator<string>, CIDValidator>();

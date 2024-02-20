@@ -29,15 +29,13 @@ public class ConnectedMatchView : IMatchView
         _matchId = matchId;
     }
 
-    public Task End()
+    public async Task End()
     {
-        // TODO
-        return Task.CompletedTask;
+        await _matchService.EndView(_matchId.ToString());
     }
 
     public Task Start()
     {
-        // TODO
         return Task.CompletedTask;
     }
 

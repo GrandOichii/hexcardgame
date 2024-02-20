@@ -2,6 +2,7 @@
 
 using System.Net.WebSockets;
 using System.Text;
+using System.Text.Json;
 using HexCore.GameMatch.States;
 using ManagerBack.Hubs;
 using Microsoft.AspNetCore.SignalR;
@@ -107,7 +108,8 @@ public class MatchService : IMatchService
 
     public async Task ServiceStatusUpdated(MatchProcess match)
     {
-        await _liveHubContext.Clients.All.SendAsync("Update", match.ToJson());
+        var data = JsonSerializer.Serialize(match);
+        await _liveHubContext.Clients.All.SendAsync("Update", data);
     }
 
     public async Task UpdateView(string matchId, BaseMatchState state)
@@ -115,5 +117,11 @@ public class MatchService : IMatchService
         var data = state.ToJson();
         var group = MatchViewHub.ToGroupName(matchId);
         await _viewHubContext.Clients.Group(group).SendAsync("Update", data);
+    }
+
+    public async Task EndView(string matchId)
+    {
+        var group = MatchViewHub.ToGroupName(matchId);
+        await _viewHubContext.Clients.Group(group).SendAsync("EndView");
     }
 }

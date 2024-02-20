@@ -144,6 +144,7 @@ public class MatchProcess {
         try {
             await _match.Start();
             await SetStatus(MatchStatus.FINISHED);
+            Record.WinnerName = _match.Winner!.Name;
         } catch (Exception e) {
             await SetStatus(MatchStatus.CRASHED);
             Record.ExceptionMessage = e.Message;

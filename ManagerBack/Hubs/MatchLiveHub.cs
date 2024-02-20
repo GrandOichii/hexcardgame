@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.AspNetCore.SignalR;
+using MongoDB.Bson;
 
 namespace ManagerBack.Hubs;
 public sealed class MatchLiveHub : Hub {
@@ -10,6 +11,9 @@ public sealed class MatchLiveHub : Hub {
         _matchServices = matchServices;
     }
 
-    // TODO add some message handlers
+    public async Task Get() {
+        var data = await _matchServices.All();
+        await Clients.Client(Context.ConnectionId).SendAsync(data.ToJson());
+    }
 
 }

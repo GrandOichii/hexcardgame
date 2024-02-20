@@ -13,9 +13,14 @@ public class MatchViewHub : Hub {
     public static string ToGroupName(string matchId) => $"match-{matchId}";
 
     // TODO authorize
-    // TODO prevent from invoking multiple times
     public async Task Connect(string matchId) {
+        await RemoveFromAll(Context.ConnectionId);
         await Groups.AddToGroupAsync(Context.ConnectionId, ToGroupName(matchId));
     }
-
+    public async Task RemoveFromAll(string connectionId) {
+        foreach (var match in await _matchService.All()) {
+            var group = ToGroupName(match.Id.ToString());
+            await Groups.RemoveFromGroupAsync(connectionId, group);
+        }
+    }
 }

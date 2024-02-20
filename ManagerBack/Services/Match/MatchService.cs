@@ -106,6 +106,7 @@ public class MatchService : IMatchService
         return Task.FromResult(match);
     }
 
+    // TODO? this updates only when changing status, perhaps add the ability to see the updated actions
     public async Task ServiceStatusUpdated(MatchProcess match)
     {
         var data = JsonSerializer.Serialize(match);

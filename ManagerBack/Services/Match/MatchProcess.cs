@@ -18,7 +18,7 @@ public enum MatchStatus {
 
 public class MatchProcess {
     public MatchStatus Status { get; private set; } = MatchStatus.WAITING_FOR_PLAYERS;
-    public MatchRecord? Record { get; private set; } = null;
+    public MatchRecord Record { get; private set; } = new();
     public string TcpAddress { get; set; }
     public Guid Id { get; }
     [JsonIgnore]
@@ -66,6 +66,15 @@ public class MatchProcess {
         }
     }
 
+    private Task<RecordingPlayerController> AddRecordedPlayer(string name, IPlayerController baseController) {
+        var record = new PlayerRecord() {
+            Name = name
+        };
+        Record.Players.Add(record);
+        var result = new RecordingPlayerController(baseController, record);
+        return Task.FromResult(result);
+    }
+
     public async Task AddBots() {
         foreach (var p in new List<PlayerConfig> {_config.P1Config, _config.P2Config}) {
             if (p.BotConfig is null) {
@@ -73,7 +82,7 @@ public class MatchProcess {
                 continue;
             }
 
-            var controller = new LuaPlayerController(BOT_TYPE_PATH_MAP[p.BotConfig.BotType]);
+            var controller = await AddRecordedPlayer(p.BotConfig.Name, new LuaPlayerController(BOT_TYPE_PATH_MAP[p.BotConfig.BotType]));
             var deck = DeckTemplate.FromText(p.BotConfig.StrDeck);
             // TODO validate deck
             await _match.AddPlayer(p.BotConfig.Name, deck, controller);
@@ -100,7 +109,8 @@ public class MatchProcess {
         var deck = DeckTemplate.FromText(resp);
         // TODO validate deck
 
-        var controller = new WebSocketPlayerController(socket);
+        var controller = await AddRecordedPlayer(name, new WebSocketPlayerController(socket));
+
         await AddPlayer(name, deck, controller, true);
     }
 
@@ -112,14 +122,16 @@ public class MatchProcess {
         // }
         // var client = task.Result;
         var client = TcpListener.AcceptTcpClient();
-        // if (!)
-        var controller = new TCPPlayerController(client, _match);
-        await controller.Write("name");
-        var name = await controller.Read();
+        var baseController = new TCPPlayerController(client, _match);
 
-        await controller.Write("deck");
-        var deckRaw = await controller.Read();
+        await baseController.Write("name");
+        var name = await baseController.Read();
+
+        await baseController.Write("deck");
+        var deckRaw = await baseController.Read();
         var deck = DeckTemplate.FromText(deckRaw);
+        
+        var controller = await AddRecordedPlayer(name, baseController);
         await AddPlayer(name, deck, controller, true);
     }
 
@@ -139,7 +151,6 @@ public class MatchProcess {
 
     private async Task Run() {
         await SetStatus(MatchStatus.IN_PROGRESS);
-        Record = new();
 
         try {
             await _match.Start();

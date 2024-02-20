@@ -71,6 +71,10 @@ public class MatchProcess {
             // TODO validate deck
             await _match.AddPlayer(p.BotConfig.Name, deck, controller);
         }
+        if (!CanAddConnection()) {
+            Run();
+            return;
+        }
         Task.Run(ConnectTcpPlayers);
     }
 
@@ -92,12 +96,7 @@ public class MatchProcess {
         // TODO validate deck
 
         var controller = new WebSocketPlayerController(socket);
-        await _match.AddPlayer(name, deck, controller);
-
-        --_realPlayerCount;
-        if (CanAddConnection()) return;
-
-        Run();
+        await AddPlayer(name, deck, controller, true);
     }
 
     public async Task AddTCPConnection() {
@@ -109,9 +108,14 @@ public class MatchProcess {
         await controller.Write("deck");
         var deckRaw = await controller.Read();
         var deck = DeckTemplate.FromText(deckRaw);
+        await AddPlayer(name, deck, controller, true);
+    }
 
-        await _match.AddPlayer( name, deck, controller);
-        --_realPlayerCount;
+    private async Task AddPlayer(string name, DeckTemplate deck, IPlayerController controller, bool isReal)  {
+
+        await _match.AddPlayer(name, deck, controller);
+        if (isReal)
+            --_realPlayerCount;
         if (CanAddConnection()) return;
 
         Run();

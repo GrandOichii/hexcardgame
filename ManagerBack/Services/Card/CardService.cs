@@ -48,7 +48,6 @@ public partial class CardService : ICardService
         return (await _cardRepo.All()).Select(_mapper.Map<ExpansionCard>);
     }
 
-    [GeneratedRegex("^.+::.+$")] private static partial Regex CIDPattern();
     public async Task<ExpansionCard> ByCID(string cid)
     {
         await _cidValidator.Validate(cid);

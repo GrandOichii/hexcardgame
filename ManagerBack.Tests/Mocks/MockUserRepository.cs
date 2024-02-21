@@ -6,15 +6,16 @@ public class MockUserRepository : IUserRepository
 {
     public List<User> Users { get; set; } = new();
 
-    public async Task Add(User user)
+    public Task Add(User user)
     {
         if (user.Username.StartsWith("admin")) user.IsAdmin = true;
         Users.Add(user);
         user.Id = Users.Count.ToString();
+        return Task.CompletedTask;
     }
 
-    public async Task<User?> ByUsername(string username)
+    public Task<User?> ByUsername(string username)
     {
-        return Users.FirstOrDefault(u => u.Username == username);
+        return Task.FromResult(Users.FirstOrDefault(u => u.Username == username));
     }
 }

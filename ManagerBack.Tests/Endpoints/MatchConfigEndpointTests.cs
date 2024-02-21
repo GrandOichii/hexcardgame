@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using FluentAssertions;
+using HexCore.GameMatch;
 using IdentityModel.Client;
 using ManagerBack.Tests.Mocks;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -7,22 +8,21 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ManagerBack.Tests.Endpoints;
 
-public class ExpansionEndpointTests
+public class MatchConfigEndpointTests
     : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
 
-    public ExpansionEndpointTests(WebApplicationFactory<Program> factory) {
+    public MatchConfigEndpointTests(WebApplicationFactory<Program> factory) {
         _factory = factory.WithWebHostBuilder(builder => {
             builder.ConfigureServices(services => {
+                services.AddSingleton<ICardRepository, MockCardRepository>();
                 services.AddSingleton<IUserRepository, MockUserRepository>();
                 services.AddSingleton<IDeckRepository, MockDeckRepository>();
-                services.AddSingleton<ICardRepository, MockCardRepository>();
                 services.AddSingleton<IMatchConfigRepository, MockMatchConfigRepository>();
             });
         });
     }
-
 
     private static async Task<string> GetJwtToken(HttpClient client, string username, string password) {
         var user = new PostUserDto {
@@ -41,66 +41,64 @@ public class ExpansionEndpointTests
         client.SetBearerToken(token);
     }
 
+
     [Fact]
     public async Task ShouldFetchAll() {
         // Arrange
         var client = _factory.CreateClient();
 
         // Act
-        var result = await client.GetAsync($"/api/v1/expansion");
+        var result = await client.GetAsync("/api/v1/config");
 
         // Assert
         result.Should().BeSuccessful();
-
     }
 
     [Fact]
-    public async Task ShouldFetchByName() {
+    public async Task ShouldCreate() {
         // Arrange
-        var expansion = "dev";
         var client = _factory.CreateClient();
-
         await Login(client, "admin", "password");
 
         // Act
-        await client.PostAsync("/api/v1/card", JsonContent.Create(new ExpansionCard {
-            Power = -1,
-            Life = -1,
-            DeckUsable = true,
-            Name = "Dub",
-            Cost = 2,
-            Type = "Spell",
-            Expansion = expansion,
-            Text = "Caster becomes a Warrior. (Keeps all other types)",
-            Script = "function _Create(props)\n" +
-            "    local result = CardCreation:Spell(props)\n" +
-            "    result.DamageValues.damage = 2\n" +
-            "    result.EffectP:AddLayer(function(playerID, caster)\n" +
-            "        caster.type = caster.type..\" Warrior\"\n" +
-            "        caster:AddSubtype(\"Warrior\")\n" +
-            "        return nil, true\n" +
-            "    end)\n" +
-            "    return result\n" +
-            "end"
+        var result = await client.PostAsync("/api/v1/config", JsonContent.Create(new MatchConfig {
+            // TODO add more fields
+            SetupScript = "script"
         }));
-        var result = await client.GetAsync($"/api/v1/expansion/{expansion}");
 
         // Assert
         result.Should().BeSuccessful();
+
     }
 
     [Fact]
-    public async Task ShouldFailFetchByName() {
+    public async Task ShouldFetchById() {
+// Arrange
+        var client = _factory.CreateClient();
+        await Login(client, "admin", "password");
+        var response = await client.PostAsync("/api/v1/config", JsonContent.Create(new MatchConfig {
+            // TODO add more fields
+            SetupScript = "script"
+        }));
+        var id = (await response.Content.ReadFromJsonAsync<MatchConfigModel>())!.Id;
+
+        // Act
+        var result = await client.GetAsync($"/api/v1/config/{id}");
+
+        // Assert
+        result.Should().BeSuccessful();
+
+    }
+
+    [Fact]
+    public async Task ShouldNotFetchById() {
         // Arrange
-        var expansion = "expansion1";
         var client = _factory.CreateClient();
 
         // Act
-        var result = await client.GetAsync($"/api/v1/expansion/{expansion}");
+        var result = await client.GetAsync("/api/v1/config/invalid-id");
 
         // Assert
         result.Should().HaveClientError();
     }
-
-    
 }

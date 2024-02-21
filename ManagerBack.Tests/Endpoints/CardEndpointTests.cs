@@ -18,6 +18,7 @@ public class CardEndpointTests
                 services.AddSingleton<ICardRepository, MockCardRepository>();
                 services.AddSingleton<IUserRepository, MockUserRepository>();
                 services.AddSingleton<IDeckRepository, MockDeckRepository>();
+                services.AddSingleton<IMatchConfigRepository, MockMatchConfigRepository>();
             });
         });
     }

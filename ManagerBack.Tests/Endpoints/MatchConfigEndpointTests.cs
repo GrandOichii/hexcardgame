@@ -63,12 +63,26 @@ public class MatchConfigEndpointTests
         // Act
         var result = await client.PostAsync("/api/v1/config", JsonContent.Create(new MatchConfig {
             // TODO add more fields
-            SetupScript = "script"
+            SetupScript = "print('setup')"
         }));
 
         // Assert
         result.Should().BeSuccessful();
+    }
 
+    [Fact]
+    public async Task ShouldNotCreate() {
+        // Arrange
+        var client = _factory.CreateClient();
+        await Login(client, "admin", "password");
+
+        // Act
+        var result = await client.PostAsync("/api/v1/config", JsonContent.Create(new MatchConfig {
+            SetupScript = ""
+        }));
+
+        // Assert
+        result.Should().HaveClientError();
     }
 
     [Fact]

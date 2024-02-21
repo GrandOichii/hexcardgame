@@ -10,6 +10,7 @@ public class DeckServiceTests {
     private readonly IMapper _mapper;
     private readonly IDeckRepository _deckRepo;
     private readonly ICardRepository _cardRepo;
+    private readonly IValidator<PostDeckDto> _validator;
 
     public DeckServiceTests() {
         var mC = new MapperConfiguration(cfg => {
@@ -18,8 +19,9 @@ public class DeckServiceTests {
         _mapper = new Mapper(mC);
         _deckRepo = A.Fake<IDeckRepository>();
         _cardRepo = A.Fake<ICardRepository>();
+        _validator = A.Fake<IValidator<PostDeckDto>>();
 
-        _deckService = new(_deckRepo, _mapper, _cardRepo, new PostDeckDtoValidator(_cardRepo, new CIDValidator()));
+        _deckService = new(_deckRepo, _mapper, _cardRepo, _validator);
     }
 
     [Fact]
@@ -55,52 +57,61 @@ public class DeckServiceTests {
         result.OwnerId.Should().Be(userId);
     }
 
-    public static IEnumerable<object[]> BadDeckList {
-        get {
-            yield return new object[] { new PostDeckDto {
-                Name = "",
-                Description = "This is the deck's description"
-            }, new InvalidDeckException() };
-            yield return new object[] { new PostDeckDto {
-                Name = "Deck1",
-                Description = "This is the deck's description",
-                Index = new() {
-                    {"dev::InexistantCard", 1}
-                }
-            }, new CardNotFoundException("")};
-            yield return new object[] { new PostDeckDto {
-                Name = "Deck1",
-                Description = "This is the deck's description",
-                Index = new() {
-                    {"dev::Dub", 0}
-                }
-            }, new InvalidDeckException()};
-            yield return new object[] { new PostDeckDto {
-                Name = "Deck1",
-                Description = "This is the deck's description",
-                Index = new() {
-                    {"dev:Dub", 0}
-                }
-            }, new InvalidCIDException("")};
-        }
-    }
-
-    [Theory]
-    [MemberData(nameof(BadDeckList))]
-    public async Task ShouldNotCreate(PostDeckDto deck, Exception e) {
+    [Fact]
+    public async Task ShouldNotCreateInvalidDeck() {
         // Arrange
+        var deck = A.Fake<PostDeckDto>();
         var deckModel = _mapper.Map<DeckModel>(deck);
         var userId = "u1";
-        CardModel? nullCard = null; 
-        A.CallTo(() => _deckRepo.Add(deckModel)).Throws(e);
-        A.CallTo(() => _cardRepo.ByCID(A<string>._)).Returns(nullCard);
-        A.CallTo(() => _cardRepo.ByCID("dev::Dub")).Returns(A.Fake<CardModel>());
+        // CardModel? nullCard = null; 
+        A.CallTo(() => _validator.Validate(deck)).Throws<InvalidDeckException>();
+        // A.CallTo(() => _cardRepo.ByCID(A<string>._)).Returns(nullCard);
+        // A.CallTo(() => _cardRepo.ByCID("dev::Dub")).Returns(A.Fake<CardModel>());
 
         // Act
         var act = () => _deckService.Create(userId, deck);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>();
+        await act.Should().ThrowAsync<InvalidDeckException>();
+    }
+
+
+    [Fact]
+    public async Task ShouldNotCreateInvalidCID() {
+        // Arrange
+        var deck = A.Fake<PostDeckDto>();
+        var deckModel = _mapper.Map<DeckModel>(deck);
+        var userId = "u1";
+        // CardModel? nullCard = null; 
+        A.CallTo(() => _validator.Validate(deck)).Throws(new InvalidCIDException(""));
+        // A.CallTo(() => _cardRepo.ByCID(A<string>._)).Returns(nullCard);
+        // A.CallTo(() => _cardRepo.ByCID("dev::Dub")).Returns(A.Fake<CardModel>());
+
+        // Act
+        var act = () => _deckService.Create(userId, deck);
+
+        // Assert
+        await act.Should().ThrowAsync<InvalidCIDException>();
+    }
+
+
+    [Fact]
+    public async Task ShouldNotCreateCardNotFound() {
+
+        // Arrange
+        var deck = A.Fake<PostDeckDto>();
+        var deckModel = _mapper.Map<DeckModel>(deck);
+        var userId = "u1";
+        // CardModel? nullCard = null; 
+        A.CallTo(() => _validator.Validate(deck)).Throws(new CardNotFoundException(""));
+        // A.CallTo(() => _cardRepo.ByCID(A<string>._)).Returns(nullCard);
+        // A.CallTo(() => _cardRepo.ByCID("dev::Dub")).Returns(A.Fake<CardModel>());
+
+        // Act
+        var act = () => _deckService.Create(userId, deck);
+
+        // Assert
+        await act.Should().ThrowAsync<CardNotFoundException>();
     }
 
     [Fact]

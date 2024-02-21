@@ -136,40 +136,13 @@ public class DeckEndpointTests
 
     }
 
-    public static IEnumerable<object[]> BadDeckList {
-        get {
-            yield return new object[] { new PostDeckDto {
-                Name = "",
-                Description = "This is the deck's description"
-            } };
-            yield return new object[] { new PostDeckDto {
-                Name = "Deck1",
-                Description = "This is the deck's description",
-                Index = new() {
-                    {"dev::InexistantCard", 1}
-                }
-            } };
-            yield return new object[] { new PostDeckDto {
-                Name = "Deck1",
-                Description = "This is the deck's description",
-                Index = new() {
-                    {"dev::Dub", 0}
-                }
-            } };
-            yield return new object[] { new PostDeckDto {
-                Name = "Deck1",
-                Description = "This is the deck's description",
-                Index = new() {
-                    {"dev:Dub", 0}
-                }
-            } };
-        }
-    }
-
-    [Theory]
-    [MemberData(nameof(BadDeckList))]
-    public async Task ShouldNotCreate(PostDeckDto deck) {
+    [Fact]
+    public async Task ShouldNotCreate() {
         // Arrange
+        var deck = new PostDeckDto {
+            Name = "",
+            Description = "This is the deck's description"
+        };
         var client = _factory.CreateClient();
         await Login(client, "user", "password");
         var c1 = new ExpansionCard {

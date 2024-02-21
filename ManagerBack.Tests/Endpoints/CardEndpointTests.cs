@@ -148,38 +148,29 @@ public class CardEndpointTests
         result.Should().BeSuccessful();
     }
 
-    // TODO add more test cases
-    public static IEnumerable<object[]> BadCardList
-    {
-        get
-        {
-            yield return new object[] { new ExpansionCard {
-                Power = -1,
-                Life = -1,
-                DeckUsable = true,
-                Name = "",
-                Cost = 2,
-                Type = "Spell",
-                Expansion = "dev",
-                Text = "Caster becomes a Warrior. (Keeps all other types)",
-                Script = "function _Create(props)\n" +
-                "    local result = CardCreation:Spell(props)\n" +
-                "    result.DamageValues.damage = 2\n" +
-                "    result.EffectP:AddLayer(function(playerID, caster)\n" +
-                "        caster.type = caster.type..\" Warrior\"\n" +
-                "        caster:AddSubtype(\"Warrior\")\n" +
-                "        return nil, true\n" +
-                "    end)\n" +
-                "    return result\n" +
-                "end"
-            } };
-        }
-    }
-
-    [Theory]
-    [MemberData(nameof(BadCardList))]
-    public async Task ShouldNotCreate(ExpansionCard card) {
+    [Fact]
+    public async Task ShouldNotCreate() {
         // Arrange
+        var card = new ExpansionCard {
+            Power = -1,
+            Life = -1,
+            DeckUsable = true,
+            Name = "",
+            Cost = 2,
+            Type = "Spell",
+            Expansion = "dev",
+            Text = "Caster becomes a Warrior. (Keeps all other types)",
+            Script = "function _Create(props)\n" +
+            "    local result = CardCreation:Spell(props)\n" +
+            "    result.DamageValues.damage = 2\n" +
+            "    result.EffectP:AddLayer(function(playerID, caster)\n" +
+            "        caster.type = caster.type..\" Warrior\"\n" +
+            "        caster:AddSubtype(\"Warrior\")\n" +
+            "        return nil, true\n" +
+            "    end)\n" +
+            "    return result\n" +
+            "end"
+        } ;
         var client = _factory.CreateClient();
         await Login(client, "admin", "password");
 

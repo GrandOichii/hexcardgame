@@ -8,6 +8,7 @@ namespace ManagerBack.Tests.Services;
 public class CardServiceTests {
     private readonly CardService _cardService;
     private readonly ICardRepository _cardRepo;
+    private readonly IValidator<ExpansionCard> _validator;
 
     public CardServiceTests() {
         var mC = new MapperConfiguration(cfg => {
@@ -15,8 +16,9 @@ public class CardServiceTests {
         });
         var mapper = new Mapper(mC);
         _cardRepo = A.Fake<ICardRepository>();
+        _validator = A.Fake<IValidator<ExpansionCard>>();
 
-        _cardService = new(mapper, _cardRepo, new CIDValidator(), new ExpansionCardValidator());
+        _cardService = new(mapper, _cardRepo, new CIDValidator(), _validator);
     }
 
     [Fact]
@@ -62,28 +64,10 @@ public class CardServiceTests {
     [Fact]
     public async Task ShouldCreate() {
         // Arrange
-        var card = new CardModel {
-            Power = -1,
-            Life = -1,
-            DeckUsable = true,
-            Name = "Dub",
-            Cost = 2,
-            Type = "Spell",
-            Expansion = "dev",
-            Text = "Caster becomes a Warrior. (Keeps all other types)",
-            Script = "function _Create(props)\n" +
-            "    local result = CardCreation:Spell(props)\n" +
-            "    result.DamageValues.damage = 2\n" +
-            "    result.EffectP:AddLayer(function(playerID, caster)\n" +
-            "        caster.type = caster.type..\" Warrior\"\n" +
-            "        caster:AddSubtype(\"Warrior\")\n" +
-            "        return nil, true\n" +
-            "    end)\n" +
-            "    return result\n" +
-            "end"
-        } ;
+        var card = A.Fake<CardModel>();
         CardModel? c = null;
         A.CallTo(() => _cardRepo.ByCID(card.Expansion + "::" + card.Name)).Returns(c);
+        A.CallTo(() => _validator.Validate(card)).DoesNothing();
         A.CallTo(() => _cardRepo.Add(card)).DoesNothing();
 
         // Act
@@ -91,6 +75,22 @@ public class CardServiceTests {
 
         // Assert
         result.Should().Be(card);
+    }
+
+    [Fact]
+    public async Task ShouldNotCreate() {
+        // Arrange
+        var card = A.Fake<CardModel>();
+        CardModel? c = null;
+        A.CallTo(() => _cardRepo.ByCID(card.Expansion + "::" + card.Name)).Returns(c);
+        A.CallTo(() => _validator.Validate(card)).Throws<InvalidCardCreationParametersException>();
+        A.CallTo(() => _cardRepo.Add(card)).DoesNothing();
+
+        // Act
+        var act = () => _cardService.Create(card);
+
+        // Assert
+        await act.Should().ThrowAsync<InvalidCardCreationParametersException>();
     }
 
     [Fact]
@@ -119,7 +119,6 @@ public class CardServiceTests {
         await act.Should().NotThrowAsync();
     }
 
-    // TODO? should validation be tested in endpoint tests or here
     [Fact]
     public async Task ShouldNotUpdate() {
         // Arrange

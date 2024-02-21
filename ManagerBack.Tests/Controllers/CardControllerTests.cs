@@ -52,7 +52,7 @@ public class CardControllerTests {
         var result = await _cardController.ByCID(cid);
 
         // Assert
-        result.Should().BeOfType<BadRequestObjectResult>();
+        result.Should().BeOfType<NotFoundObjectResult>();
     }
 
     [Fact]
@@ -131,6 +131,7 @@ public class CardControllerTests {
         result.Should().BeOfType<OkResult>();
     }
 
+    // TODO split into different tests - CardNotFoundException should return a NotFoundObjectResult
     public static IEnumerable<object[]> CardUpdateExceptions {
         get {
             yield return new object[] { new CardNotFoundException("") };

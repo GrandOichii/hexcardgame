@@ -27,7 +27,7 @@ public class CardController : ControllerBase
         } catch (InvalidCIDException e) {
             return BadRequest(e.Message);
         } catch (CardNotFoundException e) {
-            return BadRequest(e.Message);
+            return NotFound(e.Message);
         }
     }
 

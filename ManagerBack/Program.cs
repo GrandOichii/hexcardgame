@@ -17,21 +17,26 @@ public class Program {
         builder.Services.AddScoped<ICardService, CardService>();
         builder.Services.AddScoped<IExpansionService, ExpansionService>();
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IDeckService, DeckService>();
+        builder.Services.AddScoped<IMatchConfigService, MatchConfigService>();
         builder.Services.AddSingleton<IMatchService, MatchService>();
-        builder.Services.AddSingleton<IDeckService, DeckService>();
 
         // Add data layer
         // ? should be singletons or scoped
         builder.Services.AddSingleton<ICardRepository, CardRepository>();
-        builder.Services.AddSingleton<ICachedCardRepository, CachedCardRepository>();
         builder.Services.AddSingleton<IUserRepository, UserRepository>();
         builder.Services.AddSingleton<IDeckRepository, DeckRepository>();
+        builder.Services.AddSingleton<IMatchConfigRepository, MatchConfigRepository>();
+
+        builder.Services.AddSingleton<ICachedCardRepository, CachedCardRepository>();
+        builder.Services.AddSingleton<ICachedMatchConfigRepository, CachedMatchConfigRepository>();
 
         // Add validators
         builder.Services.AddSingleton<IValidator<PostDeckDto>, PostDeckDtoValidator>();
         builder.Services.AddSingleton<IValidator<DeckTemplate>, DeckTemplateValidator>();
         builder.Services.AddSingleton<IValidator<PostUserDto>, PostUserDtoValidator>();
         builder.Services.AddSingleton<IValidator<ExpansionCard>, ExpansionCardValidator>();
+        builder.Services.AddSingleton<IValidator<MatchConfig>, MatchConfigValidator>();
         builder.Services.AddSingleton<IValidator<string>, CIDValidator>();
 
         builder.Services.AddSignalR();

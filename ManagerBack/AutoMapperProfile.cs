@@ -7,6 +7,8 @@ public class AutoMapperProfile : Profile {
     public AutoMapperProfile()
     {
         CreateMap<ExpansionCard, CardModel>();
+        
+        CreateMap<MatchConfig, MatchConfigModel>();
 
         CreateMap<User, GetUserDto>();
         CreateMap<PostUserDto, User>()

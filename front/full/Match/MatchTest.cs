@@ -57,8 +57,13 @@ public partial class MatchTest : Node
 	
 	private string Url => UrlEditNode.Text;
 
-	public void Connect(string address, int port) {
-		// TODO get address and port
+	
+	private void Connect(MatchProcess match) {
+		GD.Print(match.Id);
+		var split = match.TcpAddress.Split(":");
+		var address = split[0];
+		var port = int.Parse(split[1]);
+
 		var client = new MatchConnection();
 		client.Connect(address, port);
 		var stream = client.GetStream();
@@ -70,13 +75,13 @@ public partial class MatchTest : Node
 		MatchNode.Load(new Wrapper<MatchConnection>(client));
 		OverlayNode.Visible = false;
 		MatchNode.Visible = true;
-	}	
+	}
 
 	#region Signal connections
 
 	private void OnConnectButtonPressed()
 	{
-		
+		GetMatchRequestNode.Request(Url + "/match/" + MatchIdEditNode.Text);
 	}
 	
 
@@ -84,7 +89,7 @@ public partial class MatchTest : Node
 	{
 		var data = body.GetStringFromUtf8();
 		var match = JsonSerializer.Deserialize<MatchProcess>(data, Common.JSON_SERIALIZATION_OPTIONS);
-		// Connect(_address, _port);
+		Connect(match);
 	}
 
 	private void OnTcpConnectRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
@@ -99,12 +104,7 @@ public partial class MatchTest : Node
 	{
 		var data = body.GetStringFromUtf8();
 		var match = JsonSerializer.Deserialize<MatchProcess>(data, Common.JSON_SERIALIZATION_OPTIONS);
-		GD.Print(match.Id);
-		var split = match.TcpAddress.Split(":");
-		var address = split[0];
-		var port = int.Parse(split[1]);
-
-		Connect(address, port);
+		Connect(match);
 	}
 
 	private void OnCreateMatchButtonPressed()

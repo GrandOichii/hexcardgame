@@ -5,30 +5,31 @@ namespace ManagerBack.Tests.Mocks;
 public class FakeDeckRepository : IDeckRepository
 {
     public List<DeckModel> Decks { get; set; } = new();
-    public async Task Add(DeckModel deck)
+    public Task Add(DeckModel deck)
     {
         deck.Id = Decks.Count.ToString();
         Decks.Add(deck);
+        return Task.CompletedTask;
     }
 
-    public async Task<DeckModel?> ById(string id)
+    public Task<DeckModel?> ById(string id)
     {
-        return Decks.FirstOrDefault(d => d.Id == id);
+        return Task.FromResult(Decks.FirstOrDefault(d => d.Id == id));
     }
 
-    public async Task<long> Delete(string id)
+    public Task<long> Delete(string id)
     {
         var deck = Decks.FirstOrDefault(d => d.Id == id);
         if (deck is null)
-            return 0;
+            return Task.FromResult((long)0);
         Decks.Remove(deck);
-        return 1;
+        return Task.FromResult((long)1);
     }
 
-    public async Task<IEnumerable<DeckModel>> Filter(Expression<Func<DeckModel, bool>> filter)
+    public Task<IEnumerable<DeckModel>> Filter(Expression<Func<DeckModel, bool>> filter)
     {
         var f = filter.Compile();
-        return Decks.FindAll(f.Invoke);
+        return Task.FromResult(Decks.FindAll(f.Invoke).AsEnumerable());
     }
 
     public async Task<long> Update(string deckId, DeckModel update)

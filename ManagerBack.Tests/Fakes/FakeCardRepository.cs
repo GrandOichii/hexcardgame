@@ -7,34 +7,35 @@ public class FakeCardRepository : ICardRepository
     public List<CardModel> Cards { get; set; } = new();
 
 
-    public async Task Add(CardModel card)
+    public Task Add(CardModel card)
     {
         Cards.Add(card);
+        return Task.CompletedTask;
     }
 
-    public async Task<IEnumerable<CardModel>> All()
+    public Task<IEnumerable<CardModel>> All()
     {
-        return Cards;
+        return Task.FromResult(Cards.AsEnumerable());
     }
 
-    public async Task<CardModel?> ByCID(string cid)
+    public Task<CardModel?> ByCID(string cid)
     {
-        return Cards.FirstOrDefault(c => c.GetCID() == cid);
+        return Task.FromResult(Cards.FirstOrDefault(c => c.GetCID() == cid));
     }
 
-    public async Task<long> Delete(string cid)
+    public Task<long> Delete(string cid)
     {
         var found = Cards.FirstOrDefault(c => c.GetCID() == cid);
         if (found is null)
-            return 0;
+            return Task.FromResult((long)0);
         Cards.Remove(found);
-        return 1;
+        return Task.FromResult((long)1);
     }
 
-    public async Task<IEnumerable<CardModel>> Filter(Expression<Func<CardModel, bool>> filter)
+    public Task<IEnumerable<CardModel>> Filter(Expression<Func<CardModel, bool>> filter)
     {
         var f = filter.Compile();
-        return Cards.FindAll(f.Invoke);
+        return Task.FromResult(Cards.FindAll(f.Invoke).AsEnumerable());
     }
 
     public async Task<long> Update(CardModel card)

@@ -108,7 +108,6 @@ public class DeckEndpointTests
             "    local result = CardCreation:Unit(props)\n" +
             "    result:AddSubtype(\"Rogue\")\n" +
             "\n" +
-            "    -- TODO replace with trigger\n" +
             "    result.OnEnterP:AddLayer(function (playerID, tile)\n" +
             "        DealDamage(result.id, {tile.iPos, tile.jPos}, 1)\n" +
             "        return nil, true\n" +
@@ -178,7 +177,6 @@ public class DeckEndpointTests
             "    local result = CardCreation:Unit(props)\n" +
             "    result:AddSubtype(\"Rogue\")\n" +
             "\n" +
-            "    -- TODO replace with trigger\n" +
             "    result.OnEnterP:AddLayer(function (playerID, tile)\n" +
             "        DealDamage(result.id, {tile.iPos, tile.jPos}, 1)\n" +
             "        return nil, true\n" +
@@ -294,7 +292,6 @@ public class DeckEndpointTests
             "    local result = CardCreation:Unit(props)\n" +
             "    result:AddSubtype(\"Rogue\")\n" +
             "\n" +
-            "    -- TODO replace with trigger\n" +
             "    result.OnEnterP:AddLayer(function (playerID, tile)\n" +
             "        DealDamage(result.id, {tile.iPos, tile.jPos}, 1)\n" +
             "        return nil, true\n" +

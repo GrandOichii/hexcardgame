@@ -60,7 +60,6 @@ public class DeckControllerTests {
         result.Should().BeOfType<OkObjectResult>();
     }
 
-    // TODO split off CardNotFoundException
     public static IEnumerable<object[]> DeckCreateExceptions {
         get {
             yield return new object[] { new InvalidDeckException() };

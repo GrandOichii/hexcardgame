@@ -68,7 +68,7 @@ public class MatchProcess {
         }
     }
 
-    private Task<RecordingPlayerController> AddRecordedPlayer(string name, IPlayerController baseController) {
+    private Task<RecordingPlayerController> CreateRecordedPlayer(string name, IPlayerController baseController) {
         var record = new PlayerRecord() {
             Name = name
         };
@@ -84,9 +84,8 @@ public class MatchProcess {
                 continue;
             }
 
-            var controller = await AddRecordedPlayer(p.BotConfig.Name, new LuaPlayerController(BOT_TYPE_PATH_MAP[p.BotConfig.BotType]));
+            var controller = await CreateRecordedPlayer(p.BotConfig.Name, new LuaPlayerController(BOT_TYPE_PATH_MAP[p.BotConfig.BotType]));
             var deck = await LoadDeck(p.BotConfig.StrDeck);
-            // TODO validate deck
             await _match.AddPlayer(p.BotConfig.Name, deck, controller);
         }
         if (!CanAddConnection()) {
@@ -107,20 +106,9 @@ public class MatchProcess {
     }
 
     public async Task AddWebSocketConnection(WebSocket socket) {
-        // TODO change to username extracted from jwt
-        await socket.Write("name");
-        string name = await socket.Read();
+        var controller = new WebSocketPlayerController(socket);
 
-        // TODO this allows any user to submit any deck, change this later to deckId
-        await socket.Write("deck");
-        var resp = await socket.Read();
-        var deck = await LoadDeck(resp);
-        
-        // TODO validate deck
-
-        var controller = await AddRecordedPlayer(name, new WebSocketPlayerController(socket));
-
-        await AddPlayer(name, deck, controller, true);
+        await AddPlayer(controller);
     }
 
     public async Task AddTCPConnection() {
@@ -133,24 +121,23 @@ public class MatchProcess {
         var client = TcpListener.AcceptTcpClient();
         var baseController = new TCPPlayerController(client, _match);
 
+        await AddPlayer(baseController);
+    }
+
+    private async Task AddPlayer(IOPlayerController baseController)  {
+        // TODO change to username extracted from jwt
         await baseController.Write("name");
         var name = await baseController.Read();
 
+        // TODO this allows any user to submit any deck, change this later to deckId
         await baseController.Write("deck");
         var deckRaw = await baseController.Read();
         var deck = await LoadDeck(deckRaw);
 
-        // TODO validate deck
-        
-        var controller = await AddRecordedPlayer(name, baseController);
-        await AddPlayer(name, deck, controller, true);
-    }
-
-    private async Task AddPlayer(string name, DeckTemplate deck, IPlayerController controller, bool isReal)  {
-
+        var controller = await CreateRecordedPlayer(name, baseController);
         await _match.AddPlayer(name, deck, controller);
-        if (isReal)
-            --_realPlayerCount;
+
+        --_realPlayerCount;
         if (CanAddConnection()) return;
 
         Run();
@@ -162,7 +149,6 @@ public class MatchProcess {
 
     private async Task Run() {
         await SetStatus(MatchStatus.IN_PROGRESS);
-
         try {
             await _match.Start();
             await SetStatus(MatchStatus.FINISHED);

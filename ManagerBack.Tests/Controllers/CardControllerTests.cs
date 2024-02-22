@@ -131,21 +131,27 @@ public class CardControllerTests {
         result.Should().BeOfType<OkResult>();
     }
 
-    // TODO split into different tests - CardNotFoundException should return a NotFoundObjectResult
-    public static IEnumerable<object[]> CardUpdateExceptions {
-        get {
-            yield return new object[] { new CardNotFoundException("") };
-            yield return new object[] { new InvalidCardCreationParametersException("") };
-        }
-    }
-
-    [Theory]
-    [MemberData(nameof(CardUpdateExceptions))]
-    public async Task ShouldNotUpdate(Exception e) {
+    [Fact]
+    public async Task ShouldNotUpdateCardNotFound() {
         // Arrange
         var card = A.Fake<ExpansionCard>();
         A.CallTo(() => _cardService.Update(card))
-            .Throws(e)
+            .Throws(new CardNotFoundException(""))
+        ;
+
+        // Act
+        var result = await _cardController.Update(card);
+
+        // Assert
+        result.Should().BeOfType<NotFoundObjectResult>();
+    }
+
+    [Fact]
+    public async Task ShouldNotUpdateInvalidParameters() {
+        // Arrange
+        var card = A.Fake<ExpansionCard>();
+        A.CallTo(() => _cardService.Update(card))
+            .Throws(new InvalidCardCreationParametersException(""))
         ;
 
         // Act

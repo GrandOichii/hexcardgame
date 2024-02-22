@@ -65,7 +65,6 @@ public class DeckControllerTests {
         get {
             yield return new object[] { new InvalidDeckException() };
             yield return new object[] { new InvalidCIDException("") };
-            yield return new object[] { new CardNotFoundException("") };
         }
     }
 
@@ -86,6 +85,23 @@ public class DeckControllerTests {
 
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
+    }
+
+    [Fact]
+    public async Task ShouldNotCreateCardNotFound() {
+        // Arrange
+        var userId = "1";
+        var newDeck = A.Fake<PostDeckDto>();
+        AddUser(userId, "user", false);
+        A.CallTo(() => _deckService.Create(userId, newDeck))
+            .Throws(new CardNotFoundException(""))
+        ;
+
+        // Act
+        var result = await _deckController.Create(newDeck);
+
+        // Assert
+        result.Should().BeOfType<NotFoundObjectResult>();
     }
 
     [Fact]

@@ -62,7 +62,7 @@ public class CardController : ControllerBase
             await _cardService.Update(card);
             return Ok();
         } catch (CardNotFoundException e) {
-            return BadRequest(e.Message);
+            return NotFound(e.Message);
         } catch (InvalidCardCreationParametersException e) {
             return BadRequest(e.Message);
         }

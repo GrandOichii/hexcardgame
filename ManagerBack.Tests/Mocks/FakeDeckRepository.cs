@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 
 namespace ManagerBack.Tests.Mocks;
 
-public class MockDeckRepository : IDeckRepository
+public class FakeDeckRepository : IDeckRepository
 {
     public List<DeckModel> Decks { get; set; } = new();
     public async Task Add(DeckModel deck)

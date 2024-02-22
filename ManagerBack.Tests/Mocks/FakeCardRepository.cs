@@ -1,10 +1,8 @@
-// TODO are these actually mocks
-
 using System.Linq.Expressions;
 
 namespace ManagerBack.Tests.Mocks;
 
-public class MockCardRepository : ICardRepository
+public class FakeCardRepository : ICardRepository
 {
     public List<CardModel> Cards { get; set; } = new();
 

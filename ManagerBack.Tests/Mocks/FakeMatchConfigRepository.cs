@@ -1,8 +1,6 @@
-using System.Linq.Expressions;
-
 namespace ManagerBack.Tests.Mocks;
 
-public class MockMatchConfigRepository : IMatchConfigRepository
+public class FakeMatchConfigRepository : IMatchConfigRepository
 {
     public List<MatchConfigModel> Configs { get; } = new();
     public Task Add(MatchConfigModel config)

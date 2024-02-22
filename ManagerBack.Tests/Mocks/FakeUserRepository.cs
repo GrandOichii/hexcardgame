@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 
 namespace ManagerBack.Tests.Mocks;
 
-public class MockUserRepository : IUserRepository
+public class FakeUserRepository : IUserRepository
 {
     public List<User> Users { get; set; } = new();
 

@@ -16,10 +16,10 @@ public class MatchConfigEndpointTests
     public MatchConfigEndpointTests(WebApplicationFactory<Program> factory) {
         _factory = factory.WithWebHostBuilder(builder => {
             builder.ConfigureServices(services => {
-                services.AddSingleton<ICardRepository, MockCardRepository>();
-                services.AddSingleton<IUserRepository, MockUserRepository>();
-                services.AddSingleton<IDeckRepository, MockDeckRepository>();
-                services.AddSingleton<IMatchConfigRepository, MockMatchConfigRepository>();
+                services.AddSingleton<ICardRepository, FakeCardRepository>();
+                services.AddSingleton<IUserRepository, FakeUserRepository>();
+                services.AddSingleton<IDeckRepository, FakeDeckRepository>();
+                services.AddSingleton<IMatchConfigRepository, FakeMatchConfigRepository>();
             });
         });
     }

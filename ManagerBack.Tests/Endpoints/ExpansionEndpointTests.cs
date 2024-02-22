@@ -15,10 +15,10 @@ public class ExpansionEndpointTests
     public ExpansionEndpointTests(WebApplicationFactory<Program> factory) {
         _factory = factory.WithWebHostBuilder(builder => {
             builder.ConfigureServices(services => {
-                services.AddSingleton<IUserRepository, MockUserRepository>();
-                services.AddSingleton<IDeckRepository, MockDeckRepository>();
-                services.AddSingleton<ICardRepository, MockCardRepository>();
-                services.AddSingleton<IMatchConfigRepository, MockMatchConfigRepository>();
+                services.AddSingleton<IUserRepository, FakeUserRepository>();
+                services.AddSingleton<IDeckRepository, FakeDeckRepository>();
+                services.AddSingleton<ICardRepository, FakeCardRepository>();
+                services.AddSingleton<IMatchConfigRepository, FakeMatchConfigRepository>();
             });
         });
     }

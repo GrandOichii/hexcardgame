@@ -20,9 +20,12 @@ public class MatchController : ControllerBase {
     public async Task<IActionResult> Create([FromBody] MatchProcessConfig config) {
         // var userId = this.ExtractClaim(ClaimTypes.NameIdentifier);
         var userId = "";
-
-        var match = await _matchService.Create(userId, config);
-        return Ok(match);
+        try {
+            var match = await _matchService.Create(userId, config);
+            return Ok(match);
+        } catch (MatchConfigNotFoundException e) {
+            return NotFound(e.Message);
+        }
     }
 
     // TODO authorize

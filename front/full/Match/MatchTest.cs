@@ -4,6 +4,8 @@ using Shared;
 using System.Text.Json;
 using Utility;
 using System.IO;
+using Microsoft.AspNetCore.SignalR.Client;
+using System.Threading.Tasks;
 
 public enum MatchStatus {
 	WAITING_FOR_PLAYERS,
@@ -28,6 +30,8 @@ public partial class MatchTest : Node
 	public Label ErrorLabelNode { get; private set; }
 	public LineEdit MatchIdEditNode { get; private set; }
 	public LineEdit UrlEditNode { get; private set; }
+	public LineEdit WatchMatchIdEditNode { get; private set; }
+	public Label WatchErrorLabelNode { get; private set; }
 
 	public HttpRequest CreateMatchRequestNode { get; private set; }
 	public HttpRequest GetMatchRequestNode { get; private set; }
@@ -45,9 +49,10 @@ public partial class MatchTest : Node
 		MatchIdEditNode = GetNode<LineEdit>("%MatchIdEdit");
 		ErrorLabelNode = GetNode<Label>("%ErrorLabel");
 		UrlEditNode = GetNode<LineEdit>("%UrlEdit");
+		WatchMatchIdEditNode = GetNode<LineEdit>("%WatchMatchIdEdit");
+		WatchErrorLabelNode = GetNode<Label>("%WatchErrorLabel");
 
 		GetMatchRequestNode = GetNode<HttpRequest>("%GetMatchRequest");
-		TCPConnectRequestNode = GetNode<HttpRequest>("%TCPConnectRequest");
 		CreateMatchRequestNode = GetNode<HttpRequest>("%CreateMatchRequest");
 
 		#endregion
@@ -92,17 +97,10 @@ public partial class MatchTest : Node
 		Connect(match);
 	}
 
-	private void OnTcpConnectRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
-	{
-//		if (result != (long)HttpRequest.Result.Success) {
-//			ErrorLabelNode.Text = $"Failed to fetch match (response code: {response_code})";
-//			return;
-//		}
-	}
-
 	private void OnCreateMatchRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
 		var data = body.GetStringFromUtf8();
+		GD.Print(data);
 		var match = JsonSerializer.Deserialize<MatchProcess>(data, Common.JSON_SERIALIZATION_OPTIONS);
 		Connect(match);
 	}
@@ -114,6 +112,45 @@ public partial class MatchTest : Node
 		CreateMatchRequestNode.Request(Url + "/match/create", headers, HttpClient.Method.Post, data);
 	}
 	
+	private async void OnWatchButtonPressed()
+	{
+		var matchId = WatchMatchIdEditNode.Text;
+		var connection = new HubConnectionBuilder()
+			.WithUrl(Url + "/match/watch")
+			.Build();
+		connection.Closed += OnWatchMatchConnectionClosed;
+		// connection.
+
+		connection.On<string>("Update", (message) => {
+			GD.Print("New update:");
+			GD.Print(message);
+			GD.Print("");
+		});
+		connection.On("ViewEnd", () => {
+			GD.Print("Ended view");
+		});
+		try {
+			GD.Print("Connecting...");
+			await connection.StartAsync();
+			await connection.SendAsync("Connect", matchId);
+			GD.Print("Connected!");
+		} catch (Exception e) {
+			GD.Print("Failed to connect");
+			GD.Print(e.Message);
+		}
+	}
+	
 	#endregion
+
+	private Task OnWatchMatchConnectionClosed(Exception e) {
+		GD.Print("Closed!");
+		GD.Print(e.Message);
+		return Task.CompletedTask;
+	}
+
+
+
 }
+
+
 

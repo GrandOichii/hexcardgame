@@ -41,16 +41,18 @@ public class MatchRefusedConnectionException : Exception
 public class MatchService : IMatchService
 {
     private readonly ICardMaster _cardMaster;
+    private readonly IMatchConfigRepository _configRepo;
     private readonly Dictionary<Guid, MatchProcess> _matches = new();
     private readonly IHubContext<MatchLiveHub> _liveHubContext;
     private readonly IHubContext<MatchViewHub> _viewHubContext;
     private readonly IValidator<DeckTemplate> _deckValidator;
-    public MatchService(ICardRepository cardRepo, IHubContext<MatchLiveHub> hubContext, IHubContext<MatchViewHub> viewHubContext, IValidator<DeckTemplate> deckValidator)
+    public MatchService(ICardRepository cardRepo, IHubContext<MatchLiveHub> hubContext, IHubContext<MatchViewHub> viewHubContext, IValidator<DeckTemplate> deckValidator, IMatchConfigRepository configRepo)
     {
         _cardMaster = new DBCardMaster(cardRepo);
         _liveHubContext = hubContext;
         _viewHubContext = viewHubContext;
         _deckValidator = deckValidator;
+        _configRepo = configRepo;
     }
 
     private async Task<MatchProcess> GetMatch(string matchId) {
@@ -90,7 +92,11 @@ public class MatchService : IMatchService
 
     public async Task<MatchProcess> Create(string userId, MatchProcessConfig config)
     {
-        var result = new MatchProcess(this, _cardMaster, config, _deckValidator);
+        var mConfig = await _configRepo.ById(config.MatchConfigId)
+            ?? throw new MatchConfigNotFoundException($"no match config with id {config.MatchConfigId}")
+        ;
+        
+        var result = new MatchProcess(this, _cardMaster, config, mConfig, _deckValidator);
         await result.AddBots();
         _matches.Add(result.Id, result);
         await ServiceStatusUpdated(result);

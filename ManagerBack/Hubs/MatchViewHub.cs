@@ -15,7 +15,6 @@ public class MatchViewHub : Hub {
     // TODO authorize
     // public async Task Connect(string matchId, string jwtToken) {
     public async Task Connect(string matchId) {
-
         await RemoveFromAll(Context.ConnectionId);
         await Groups.AddToGroupAsync(Context.ConnectionId, ToGroupName(matchId));
     }

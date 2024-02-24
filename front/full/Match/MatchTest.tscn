@@ -49,6 +49,7 @@ text = "Match id: "
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+placeholder_text = "Enter match id"
 
 [node name="ConnectButton" type="Button" parent="Overlay/VBoxContainer"]
 layout_mode = 2
@@ -62,12 +63,29 @@ theme_override_font_sizes/font_size = 28
 text = "
 "
 
+[node name="HSeparator2" type="HSeparator" parent="Overlay/VBoxContainer"]
+layout_mode = 2
+
+[node name="WatchMatchIdEdit" type="LineEdit" parent="Overlay/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Enter match id"
+
+[node name="WatchButton" type="Button" parent="Overlay/VBoxContainer"]
+layout_mode = 2
+text = "Watch match"
+
+[node name="WatchErrorLabel" type="Label" parent="Overlay/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 28
+text = "
+"
+
 [node name="Requests" type="Node" parent="."]
 
 [node name="GetMatchRequest" type="HTTPRequest" parent="Requests"]
-unique_name_in_owner = true
-
-[node name="TCPConnectRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
 [node name="CreateMatchRequest" type="HTTPRequest" parent="Requests"]
@@ -75,6 +93,6 @@ unique_name_in_owner = true
 
 [connection signal="pressed" from="Overlay/VBoxContainer/CreateMatchButton" to="." method="OnCreateMatchButtonPressed"]
 [connection signal="pressed" from="Overlay/VBoxContainer/ConnectButton" to="." method="OnConnectButtonPressed"]
+[connection signal="pressed" from="Overlay/VBoxContainer/WatchButton" to="." method="OnWatchButtonPressed"]
 [connection signal="request_completed" from="Requests/GetMatchRequest" to="." method="OnGetMatchRequestRequestCompleted"]
-[connection signal="request_completed" from="Requests/TCPConnectRequest" to="." method="OnTcpConnectRequestRequestCompleted"]
 [connection signal="request_completed" from="Requests/CreateMatchRequest" to="." method="OnCreateMatchRequestRequestCompleted"]

@@ -35,7 +35,7 @@ public class MatchProcess {
     private readonly IValidator<DeckTemplate> _deckValidator;
     public ConnectedMatchView View { get; }
 
-    public MatchProcess(IMatchService matchService, ICardMaster cMaster, MatchProcessConfig config, IValidator<DeckTemplate> deckValidator)
+    public MatchProcess(IMatchService matchService, ICardMaster cMaster, MatchProcessConfig config, MatchConfig mConfig, IValidator<DeckTemplate> deckValidator)
     {
         _matchService = matchService;
         _config = config;
@@ -45,7 +45,8 @@ public class MatchProcess {
         TcpListener.Start();
         TcpAddress = ((IPEndPoint)TcpListener.LocalEndpoint).ToString();
 
-        _match = new Match(Id.ToString(), config.MatchConfig, cMaster);
+
+        _match = new Match(Id.ToString(), mConfig, cMaster);
         View = new ConnectedMatchView(Id, matchService);
         _match.View = View;
 

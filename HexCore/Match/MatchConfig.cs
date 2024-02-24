@@ -18,7 +18,6 @@ public class MatchConfig
     public int Seed { get; set; } = -1;
     public required string SetupScript { get; set; }
     public List<List<int>> Map { get; set; } = new();
-    [JsonPropertyName("addons")]
     public List<string> AddonPaths { get; set; } = new();
 
     /// <summary>

@@ -6,6 +6,7 @@ public class PlayerRecord {
 }
 
 public class MatchRecord {
+    public required MatchProcessConfig Config { get; set; }
     public string ExceptionMessage { get; set; } = "";
     public string InnerExceptionMessage { get; set; } = "";
     public string? WinnerName { get; set; }

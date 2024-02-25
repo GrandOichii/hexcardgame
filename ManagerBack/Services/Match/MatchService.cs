@@ -130,7 +130,7 @@ public class MatchService : IMatchService
 
     public async Task UpdateView(string matchId, BaseMatchState state)
     {
-        var data = state.ToJson();
+        var data = JsonSerializer.Serialize(state);
         var group = MatchViewHub.ToGroupName(matchId);
         await _viewHubContext.Clients.Group(group).SendAsync("Update", data);
     }
@@ -140,4 +140,5 @@ public class MatchService : IMatchService
         var group = MatchViewHub.ToGroupName(matchId);
         await _viewHubContext.Clients.Group(group).SendAsync("EndView");
     }
+
 }

@@ -18,7 +18,7 @@ public enum MatchStatus {
 
 public class MatchProcess {
     public MatchStatus Status { get; private set; } = MatchStatus.WAITING_FOR_PLAYERS;
-    public MatchRecord Record { get; private set; } = new();
+    public MatchRecord Record { get; }
     public string TcpAddress { get; set; }
     public Guid Id { get; }
     [JsonIgnore]
@@ -55,6 +55,10 @@ public class MatchProcess {
 
         _realPlayerCount = 0;
         _deckValidator = deckValidator;
+
+        Record = new() {
+            Config = config
+        };
     }
 
     public async Task SetStatus(MatchStatus status) {

@@ -3,8 +3,6 @@ using HexCore.GameMatch.States;
 
 namespace ManagerBack.Services;
 
-
-
 public interface IMatchService {
     public Task<MatchProcess> Create(string userId, MatchProcessConfig config);
     public Task WSConnect(WebSocketManager manager, string userId, string matchId);

@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://barxytyxwfr12"]
+
+[ext_resource type="Script" path="res://Match/ConnectedMatch.cs" id="1_louh5"]
+[ext_resource type="PackedScene" uid="uid://bdi8qkiqq33ej" path="res://Match/Match.tscn" id="1_xb34f"]
+
+[node name="ConnectedMatch" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_louh5")
+
+[node name="Match" parent="." instance=ExtResource("1_xb34f")]
+unique_name_in_owner = true
+layout_mode = 1

@@ -1,0 +1,102 @@
+[gd_scene load_steps=2 format=3 uid="uid://c38yxw6uhifrx"]
+
+[ext_resource type="Script" path="res://Client/Root.cs" id="1_8ihfd"]
+
+[node name="Root" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8ihfd")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="BaseUrlEdit" type="LineEdit" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "http://localhost:5239/api/v1/"
+placeholder_text = "Enter base url"
+
+[node name="HSeparator4" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="CreateContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="CreateMatchLabel" type="Label" parent="MarginContainer/VBoxContainer/CreateContainer"]
+layout_mode = 2
+text = "Create match"
+
+[node name="IsBotCheck" type="CheckBox" parent="MarginContainer/VBoxContainer/CreateContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Versus bot"
+
+[node name="CreateMatchButton" type="Button" parent="MarginContainer/VBoxContainer/CreateContainer"]
+layout_mode = 2
+text = "Create"
+
+[node name="CreateRequest" type="HTTPRequest" parent="MarginContainer/VBoxContainer/CreateContainer"]
+unique_name_in_owner = true
+
+[node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ConnectContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ConnectToMatchLabel" type="Label" parent="MarginContainer/VBoxContainer/ConnectContainer"]
+layout_mode = 2
+text = "Connect to a match"
+
+[node name="ConnectMatchIdEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/ConnectContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Enter match id"
+
+[node name="ConnectButton" type="Button" parent="MarginContainer/VBoxContainer/ConnectContainer"]
+layout_mode = 2
+text = "Connect"
+
+[node name="ConnectRequest" type="HTTPRequest" parent="MarginContainer/VBoxContainer/ConnectContainer"]
+unique_name_in_owner = true
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="WatchContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="WatchMatchLabel" type="Label" parent="MarginContainer/VBoxContainer/WatchContainer"]
+layout_mode = 2
+text = "Watch match"
+
+[node name="WatchMatchIdEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/WatchContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Enter match id"
+
+[node name="WatchButton" type="Button" parent="MarginContainer/VBoxContainer/WatchContainer"]
+layout_mode = 2
+text = "Watch match"
+
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/BaseUrlEdit" to="." method="OnBaseUrlEditTextChanged"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/CreateContainer/CreateMatchButton" to="." method="OnCreateMatchButtonPressed"]
+[connection signal="request_completed" from="MarginContainer/VBoxContainer/CreateContainer/CreateRequest" to="." method="OnCreateRequestRequestCompleted"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/ConnectContainer/ConnectButton" to="." method="OnConnectButtonPressed"]
+[connection signal="request_completed" from="MarginContainer/VBoxContainer/ConnectContainer/ConnectRequest" to="." method="OnConnectRequestRequestCompleted"]

@@ -1,5 +1,8 @@
 using Godot;
 using System;
+using System.Net.WebSockets;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace HexClient.Match;
 
@@ -21,6 +24,12 @@ public partial class ConnectedMatch : Control
 		MatchNode = GetNode<Match>("%Match");
 		
 		#endregion
+	}
+
+	private async Task Connect() {
+		var client = new ClientWebSocket();
+		// TODO format base url
+		await client.ConnectAsync(new Uri("http://localhost:5239/api/v1/match/connect/1"), CancellationToken.None);
 	}
 
 	public void LoadConnection(IConnection connection) {

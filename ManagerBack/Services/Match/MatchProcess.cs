@@ -129,19 +129,34 @@ public class MatchProcess {
         // }
         // var client = task.Result;
         var client = TcpListener.AcceptTcpClient();
+        client.ReceiveTimeout = 1000;
         var baseController = new TCPPlayerController(client, _match);
 
         await AddPlayer(baseController);
+        System.Console.WriteLine("Connected player!");
+        client.ReceiveTimeout = 0;
     }
 
-    private async Task AddPlayer(IOPlayerController baseController)  {
-        // TODO change to username extracted from jwt
-        await baseController.Write("name");
-        var name = await baseController.Read();
+    private async Task AddPlayer(IOPlayerController baseController) {
+        string name = "";
+        string deckRaw = "";
+        try {
+            // TODO change to username extracted from jwt
+            await baseController.Write("name");
+            System.Console.WriteLine("requested name");
+            name = await baseController.Read();
+            // var name = await baseController.Read();
 
-        // TODO this allows any user to submit any deck, change this later to deckId
-        await baseController.Write("deck");
-        var deckRaw = await baseController.Read();
+            // TODO this allows any user to submit any deck, change this later to deckId
+            await baseController.Write("deck");
+            System.Console.WriteLine("requested deck");
+            deckRaw = await baseController.Read();
+            // var deckRaw = await baseController.Read();
+        } catch (Exception e) {
+            System.Console.WriteLine(e.Message);
+            System.Console.WriteLine("Failed to connect");
+            return;
+        }
         var deck = await LoadDeck(deckRaw);
 
         var controller = await CreateRecordedPlayer(name, baseController);

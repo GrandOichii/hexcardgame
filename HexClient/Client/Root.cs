@@ -113,21 +113,13 @@ public partial class Root : Control
 	private void OnCreateMatchButtonPressed()
 	{
 		string[] headers = new string[] { "Content-Type: application/json" };
-		var data = IsBotCheckNode.ButtonPressed ? File.ReadAllText("real.json") : File.ReadAllText("bot.json");
+		var data = IsBotCheckNode.ButtonPressed ? File.ReadAllText("bot.json") : File.ReadAllText("real.json");
 		CreateRequestNode.Request(BaseUrl + "match/create", headers, HttpClient.Method.Post, data);
 	}
 
 	private void OnCreateRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
 		OnConnectRequestRequestCompleted(result, response_code, headers, body);
-//		if (response_code != 200) {
-//			// TODO show message box
-//			GD.Print("Error! Response code: " + response_code);
-//			return;
-//		}
-//
-//		var match = JsonSerializer.Deserialize<MatchProcess>(body, Common.JSON_SERIALIZATION_OPTIONS);
-//		GD.Print(match.Id);
 	}
 
 	private void OnConnectRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)

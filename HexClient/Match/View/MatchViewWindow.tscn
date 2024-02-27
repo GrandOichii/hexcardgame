@@ -6,8 +6,6 @@
 [node name="MatchViewWindow" type="Window"]
 initial_position = 2
 size = Vector2i(800, 600)
-transient = true
-exclusive = true
 script = ExtResource("1_04yqy")
 
 [node name="MatchView" parent="." instance=ExtResource("1_6jev0")]

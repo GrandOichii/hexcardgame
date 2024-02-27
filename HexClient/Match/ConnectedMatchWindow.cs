@@ -27,7 +27,7 @@ public partial class ConnectedMatchWindow : Window
 
 	private void OnCloseRequested()
 	{
-		// TODO disconnect
+		ConnectedMatchNode.Connection.Close().Wait();
 		QueueFree();
 	}
 	

@@ -1,3 +1,4 @@
 global using HexClient.Match;
 global using HexClient.Utility;
-namespace HexClient.Match.View;
+global using HexClient.Match.View;
+global using HexClient.Connection;

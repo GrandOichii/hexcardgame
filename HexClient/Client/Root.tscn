@@ -69,6 +69,19 @@ unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Enter match id"
 
+[node name="WebSocketCheck" type="CheckBox" parent="MarginContainer/VBoxContainer/ConnectContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+text = "WebSocket"
+
+[node name="TcpCheck" type="CheckBox" parent="MarginContainer/VBoxContainer/ConnectContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Tcp"
+
 [node name="ConnectButton" type="Button" parent="MarginContainer/VBoxContainer/ConnectContainer"]
 layout_mode = 2
 text = "Connect"
@@ -101,6 +114,8 @@ unique_name_in_owner = true
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/BaseUrlEdit" to="." method="OnBaseUrlEditTextChanged"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/CreateContainer/CreateMatchButton" to="." method="OnCreateMatchButtonPressed"]
 [connection signal="request_completed" from="MarginContainer/VBoxContainer/CreateContainer/CreateRequest" to="." method="OnCreateRequestRequestCompleted"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/ConnectContainer/WebSocketCheck" to="." method="OnWebSocketCheckToggled"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/ConnectContainer/TcpCheck" to="." method="OnTcpCheckToggled"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/ConnectContainer/ConnectButton" to="." method="OnConnectButtonPressed"]
 [connection signal="request_completed" from="MarginContainer/VBoxContainer/ConnectContainer/ConnectRequest" to="." method="OnConnectRequestRequestCompleted"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/WatchContainer/WatchButton" to="." method="OnWatchButtonPressed"]

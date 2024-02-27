@@ -6,12 +6,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Godot;
+using Shared;
 
-namespace HexClient;
+namespace HexClient.Connection;
 
 public interface IConnection {
 
-    public delegate void MessageHandler(string message);
+    public delegate Task MessageHandler(string message);
     public delegate void CloseHandler();
     public Task Write(string message);
     public void SubscribeToUpdate(MessageHandler func);
@@ -70,19 +71,29 @@ public class WebSocketConnection : IConnection
     }
 }
 
-// public class TcpConnection : IConnection
-// {
-//     private readonly TcpClient _client;
+public class TcpConnection : IConnection
+{
+    private readonly TcpClient _client;
 
-//     public TcpConnection(TcpClient client) {
-//         _client = client;
-//     }
+    public TcpConnection(TcpClient client) {
+        _client = client;
+    }
 
-//     public Task Write(string message)
-//     {
-//         // TODO
-//         var client = new ClientWebSocket();
-//         client.ConnectAsync
-//         throw new System.NotImplementedException();
-//     }
-// }
+    public void SubscribeToUpdate(IConnection.MessageHandler func)
+    {
+        // TODO
+        throw new NotImplementedException();
+    }
+
+    public void SubscriveToClose(IConnection.CloseHandler func)
+    {
+        // TODO
+        throw new NotImplementedException();
+    }
+
+    public Task Write(string message)
+    {
+        NetUtil.Write(_client.GetStream(), message);
+        return Task.CompletedTask;
+    }
+}

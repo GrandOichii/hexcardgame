@@ -7,6 +7,12 @@ using Utility;
 using Microsoft.AspNetCore.SignalR.Client;
 using HexClient.Match.View;
 using HexClient.Utility;
+using System.Net.WebSockets;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Primitives;
+using System.Threading;
+using System.Net.Sockets;
+using System.Net;
 
 namespace HexClient.Client;
 
@@ -27,6 +33,7 @@ public class MatchProcess {
 public partial class Root : Control
 {
 	private readonly static PackedScene MatchViewWindowPS = ResourceLoader.Load<PackedScene>("res://Match/View/MatchViewWindow.tscn");
+	private readonly static PackedScene ConnectedMatchWindowPS = ResourceLoader.Load<PackedScene>("res://Match/ConnectedMatchWindow.tscn");
 
 	#region Nodes
 	
@@ -36,6 +43,8 @@ public partial class Root : Control
 	public HttpRequest ConnectRequestNode { get; private set; }
 	public CheckBox IsBotCheckNode { get; private set; }
 	public Node WindowsNode { get; private set; }
+	public CheckBox WebSocketCheckNode { get; private set; }
+	public CheckBox TcpCheckNode { get; private set; }
 	
 	#endregion
 	
@@ -52,6 +61,8 @@ public partial class Root : Control
 		ConnectMatchIdEditNode = GetNode<LineEdit>("%ConnectMatchIdEdit");
 		WatchMatchIdEditNode = GetNode<LineEdit>("%WatchMatchIdEdit");
 		IsBotCheckNode = GetNode<CheckBox>("%IsBotCheck");
+		WebSocketCheckNode = GetNode<CheckBox>("%WebSocketCheck");
+		TcpCheckNode = GetNode<CheckBox>("%TcpCheck");
 
 		ConnectRequestNode = GetNode<HttpRequest>("%ConnectRequest");
 		CreateRequestNode = GetNode<HttpRequest>("%CreateRequest");
@@ -61,12 +72,37 @@ public partial class Root : Control
 		OnBaseUrlEditTextChanged(GetNode<LineEdit>("%BaseUrlEdit").Text);
 	}
 
+	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match) {
+		var client = new ClientWebSocket();
+		// FIXME freezes
+		await client.ConnectAsync(new Uri(BaseUrl + "match/connect/" + match.Id.ToString()), CancellationToken.None);
+		var result = new WebSocketConnection(client);
+		return result;
+	}
+
+	private async Task<TcpConnection> CreateTcpConnection(MatchProcess match) {
+		var client = new TcpClient();
+		await client.ConnectAsync(IPEndPoint.Parse(match.TcpAddress));
+		var result = new TcpConnection(client);
+		return result;
+	}
+
+	private async Task ConnectTo(MatchProcess match) {
+		IConnection client =
+			WebSocketCheckNode.ButtonPressed
+			? await CreateWebSocketConnection(match)
+			: await CreateTcpConnection(match)
+		;
+		var window = ConnectedMatchWindowPS.Instantiate() as ConnectedMatchWindow;
+		WindowsNode.AddChild(window);
+		await window.Load(client);
+	}
+
 	#region Signal connection
 
 	private void OnConnectButtonPressed()
 	{
-		// TODO
-
+		ConnectRequestNode.Request(BaseUrl + "match/" + ConnectMatchIdEditNode.Text);
 	}
 
 	private void OnBaseUrlEditTextChanged(string newText)
@@ -83,19 +119,28 @@ public partial class Root : Control
 
 	private void OnCreateRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
+		OnConnectRequestRequestCompleted(result, response_code, headers, body);
+//		if (response_code != 200) {
+//			// TODO show message box
+//			GD.Print("Error! Response code: " + response_code);
+//			return;
+//		}
+//
+//		var match = JsonSerializer.Deserialize<MatchProcess>(body, Common.JSON_SERIALIZATION_OPTIONS);
+//		GD.Print(match.Id);
+	}
+
+	private void OnConnectRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
+	{
 		if (response_code != 200) {
 			// TODO show message box
 			GD.Print("Error! Response code: " + response_code);
 			return;
 		}
 
-		var match = JsonSerializer.Deserialize<MatchProcess>(body, Common.JSON_SERIALIZATION_OPTIONS);
-		GD.Print(match.Id);
-	}
+		var info = JsonSerializer.Deserialize<MatchProcess>(body, Common.JSON_SERIALIZATION_OPTIONS);
 
-	private void OnConnectRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
-	{
-		// TODO
+		_ = ConnectTo(info);
 	}
 
 	private void OnWatchButtonPressed()
@@ -106,9 +151,20 @@ public partial class Root : Control
 
 		var window = MatchViewWindowPS.Instantiate() as MatchViewWindow;
 		WindowsNode.AddChild(window);
-		window.Connect(connection, WatchMatchIdEditNode.Text);
+		_ = window.Connect(connection, WatchMatchIdEditNode.Text);
+	}
+
+	private void OnWebSocketCheckToggled(bool buttonPressed)
+	{
+		TcpCheckNode.ButtonPressed = !buttonPressed;
+	}
+
+	private void OnTcpCheckToggled(bool buttonPressed)
+	{
+		WebSocketCheckNode.ButtonPressed = !buttonPressed;
 	}
 	
 	#endregion
 }
+
 

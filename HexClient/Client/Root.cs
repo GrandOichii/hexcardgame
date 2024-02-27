@@ -3,6 +3,10 @@ using System;
 using System.IO;
 using System.Text.Json;
 using Shared;
+using Utility;
+using Microsoft.AspNetCore.SignalR.Client;
+using HexClient.Match.View;
+using HexClient.Utility;
 
 namespace HexClient.Client;
 
@@ -22,12 +26,16 @@ public class MatchProcess {
 
 public partial class Root : Control
 {
+	private readonly static PackedScene MatchViewWindowPS = ResourceLoader.Load<PackedScene>("res://Match/View/MatchViewWindow.tscn");
+
 	#region Nodes
 	
 	public LineEdit ConnectMatchIdEditNode { get; private set; }
+	public LineEdit WatchMatchIdEditNode { get; private set; }
 	public HttpRequest CreateRequestNode { get; private set; }
 	public HttpRequest ConnectRequestNode { get; private set; }
 	public CheckBox IsBotCheckNode { get; private set; }
+	public Node WindowsNode { get; private set; }
 	
 	#endregion
 	
@@ -40,7 +48,9 @@ public partial class Root : Control
 	{
 		#region Node fetching
 		
+		WindowsNode = GetNode<Node>("%Windows");
 		ConnectMatchIdEditNode = GetNode<LineEdit>("%ConnectMatchIdEdit");
+		WatchMatchIdEditNode = GetNode<LineEdit>("%WatchMatchIdEdit");
 		IsBotCheckNode = GetNode<CheckBox>("%IsBotCheck");
 
 		ConnectRequestNode = GetNode<HttpRequest>("%ConnectRequest");
@@ -80,13 +90,25 @@ public partial class Root : Control
 		}
 
 		var match = JsonSerializer.Deserialize<MatchProcess>(body, Common.JSON_SERIALIZATION_OPTIONS);
-		// GD.Print(match.Id);
+		GD.Print(match.Id);
 	}
 
 	private void OnConnectRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
 		// TODO
 	}
+
+	private void OnWatchButtonPressed()
+	{
+		var connection = new HubConnectionBuilder()
+			.WithUrl(BaseUrl + "/match/watch")
+			.Build();
+
+		var window = MatchViewWindowPS.Instantiate() as MatchViewWindow;
+		WindowsNode.AddChild(window);
+		window.Connect(connection, WatchMatchIdEditNode.Text);
+	}
 	
 	#endregion
 }
+

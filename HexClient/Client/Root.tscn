@@ -95,8 +95,12 @@ placeholder_text = "Enter match id"
 layout_mode = 2
 text = "Watch match"
 
+[node name="Windows" type="Node" parent="."]
+unique_name_in_owner = true
+
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/BaseUrlEdit" to="." method="OnBaseUrlEditTextChanged"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/CreateContainer/CreateMatchButton" to="." method="OnCreateMatchButtonPressed"]
 [connection signal="request_completed" from="MarginContainer/VBoxContainer/CreateContainer/CreateRequest" to="." method="OnCreateRequestRequestCompleted"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/ConnectContainer/ConnectButton" to="." method="OnConnectButtonPressed"]
 [connection signal="request_completed" from="MarginContainer/VBoxContainer/ConnectContainer/ConnectRequest" to="." method="OnConnectRequestRequestCompleted"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/WatchContainer/WatchButton" to="." method="OnWatchButtonPressed"]

@@ -7,6 +7,8 @@ using HexCore.GameMatch.View;
 using ManagerBack.Hubs;
 using Microsoft.VisualBasic;
 
+// TODO add games with password
+
 namespace ManagerBack.Services;
 
 public enum MatchStatus {
@@ -34,6 +36,9 @@ public class MatchProcess {
     private readonly IMatchService _matchService;
     private readonly IValidator<DeckTemplate> _deckValidator;
     public ConnectedMatchView View { get; }
+
+    public DateTime? StartTime { get; set; }
+    public DateTime? EndTime { get; set; }
 
     public MatchProcess(IMatchService matchService, ICardMaster cMaster, MatchProcessConfig config, MatchConfig mConfig, IValidator<DeckTemplate> deckValidator)
     {
@@ -154,6 +159,7 @@ public class MatchProcess {
 
     private async Task Run() {
         await SetStatus(MatchStatus.IN_PROGRESS);
+        StartTime = DateTime.Now;
         try {
             await _match.Start();
             await SetStatus(MatchStatus.FINISHED);
@@ -164,7 +170,7 @@ public class MatchProcess {
             if (e.InnerException is not null)
                 Record.InnerExceptionMessage = e.InnerException.Message;            
         }
-
+        EndTime = DateTime.Now; 
         TcpListener.Stop();
     }
     

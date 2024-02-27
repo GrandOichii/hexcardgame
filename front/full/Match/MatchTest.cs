@@ -119,7 +119,6 @@ public partial class MatchTest : Node
 			.WithUrl(Url + "/match/watch")
 			.Build();
 		connection.Closed += OnWatchMatchConnectionClosed;
-		// connection.
 
 		connection.On<string>("Update", (message) => {
 			GD.Print("New update:");
@@ -147,7 +146,6 @@ public partial class MatchTest : Node
 		GD.Print(e.Message);
 		return Task.CompletedTask;
 	}
-
 
 
 }

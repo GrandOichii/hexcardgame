@@ -46,7 +46,7 @@ public class WebSocketConnection : IConnection
 				{
 					result = await _client.ReceiveAsync(buffer, CancellationToken.None);
 					string messagePart = Encoding.UTF8.GetString(buffer.Array, 0, result.Count);
-					message.Append(message);
+					message.Append(messagePart);
 				}
 				while (!result.EndOfMessage);
 				OnReceive?.Invoke(message.ToString());

@@ -20,7 +20,7 @@ public class DeckTemplateValidator : IValidator<DeckTemplate>
             var amount = pair.Value;
 
             await _cidValidator.Validate(cid);
-            var _ = await _cardRepo.ByCID(cid) ?? throw new CardNotFoundException($"card with cid {cid} not found");
+            _ = await _cardRepo.ByCID(cid) ?? throw new CardNotFoundException($"card with cid {cid} not found");
             if (amount <= 0)
                 throw new InvalidDeckException($"amount for card {cid} can't be {amount}");
             

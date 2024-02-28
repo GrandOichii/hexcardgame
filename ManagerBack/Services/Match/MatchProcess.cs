@@ -99,10 +99,10 @@ public class MatchProcess {
             await _match.AddPlayer(p.BotConfig.Name, deck, controller);
         }
         if (!CanAddConnection()) {
-            Run();
+            _ = Run();
             return;
         }
-        Task.Run(ConnectTcpPlayers);
+        _ = ConnectTcpPlayers();
     }
 
     private async Task<DeckTemplate> LoadDeck(string deck) {
@@ -128,7 +128,13 @@ public class MatchProcess {
         //     return;
         // }
         // var client = task.Result;
+        
         var client = TcpListener.AcceptTcpClient();
+        if (!CanAddConnection()) {
+            client.Close();
+            return;
+        }
+        
         client.ReceiveTimeout = 1000;
         var baseController = new TCPPlayerController(client, _match);
 
@@ -165,7 +171,7 @@ public class MatchProcess {
         --_realPlayerCount;
         if (CanAddConnection()) return;
 
-        Run();
+        _ = Run();
     }
 
     public bool Started() {

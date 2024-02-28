@@ -118,6 +118,7 @@ public partial class Root : Control
 	{
 		string[] headers = new string[] { "Content-Type: application/json" };
 		var data = IsBotCheckNode.ButtonPressed ? File.ReadAllText("bot.json") : File.ReadAllText("real.json");
+		GD.Print(BaseUrl + "match/create");
 		CreateRequestNode.Request(BaseUrl + "match/create", headers, HttpClient.Method.Post, data);
 	}
 

@@ -25,12 +25,13 @@ public partial class ConnectedMatchWindow : Window
 
 	#region Signal connection
 
-	private void OnCloseRequested()
+	private async void OnCloseRequested()
 	{
-		ConnectedMatchNode.Connection.Close().Wait();
+		await ConnectedMatchNode.Connection.Close();
 		QueueFree();
 	}
 	
 	#endregion
 }
+
 

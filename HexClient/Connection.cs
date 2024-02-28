@@ -26,9 +26,9 @@ public class WebSocketConnection : IConnection
 
 	#nullable enable
 	private event IConnection.MessageHandler? OnReceive;
-	#nullable disable
 
 	private event IConnection.CloseHandler? OnClose;
+	#nullable disable
 
 	public WebSocketConnection(ClientWebSocket client)
 	{
@@ -73,14 +73,18 @@ public class WebSocketConnection : IConnection
 
 	public async Task Close()
 	{
-		await _client.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+		await _client.CloseAsync(WebSocketCloseStatus.NormalClosure, "ClientClose", CancellationToken.None);
 	}
 }
 
 public class TcpConnection : IConnection
 {
 	private readonly TcpClient _client;
+
+	#nullable enable
 	private event IConnection.MessageHandler? OnReceive;
+	private event IConnection.CloseHandler? OnClose;
+	#nullable disable
 
 	public TcpConnection(TcpClient client) {
 		_client = client;
@@ -96,20 +100,20 @@ public class TcpConnection : IConnection
 					continue;
 				}
 			}
+			OnClose?.Invoke();
 		});
 	}
 
 	public void SubscribeToUpdate(IConnection.MessageHandler func)
 	{
 		// TODO
-		// throw new NotImplementedException();
 		OnReceive += func;
 	}
 
 	public void SubscriveToClose(IConnection.CloseHandler func)
 	{
 		// TODO
-		// throw new NotImplementedException();
+		OnClose += func;
 	}
 
 	public Task Write(string message)

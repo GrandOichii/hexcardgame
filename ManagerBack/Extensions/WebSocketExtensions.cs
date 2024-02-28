@@ -5,8 +5,18 @@ namespace ManagerBack.Extensions;
 
 public static class WebSocketExtensions {
     public static async Task<string> Read (this WebSocket socket) {
+        if (socket.State == WebSocketState.Closed)  {
+            // TODO
+            throw new Exception("socket us closed");
+        }
         var buffer = new byte[1024 * 4];
-        await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+        var response = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+        if (response.MessageType == WebSocketMessageType.Close) {
+            // TODO check
+            // socket.close
+            await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "SocketClose", CancellationToken.None);
+            return "";
+        }
         return Encoding.UTF8.GetString(buffer).Replace("\0", string.Empty);
     }
 

@@ -99,10 +99,10 @@ public class MatchProcess {
             await _match.AddPlayer(p.BotConfig.Name, deck, controller);
         }
         if (!CanAddConnection()) {
-            _ = Run();
+            Run();
             return;
         }
-        _ = ConnectTcpPlayers();
+        Task.Run(ConnectTcpPlayers);
     }
 
     private async Task<DeckTemplate> LoadDeck(string deck) {
@@ -171,7 +171,7 @@ public class MatchProcess {
         --_realPlayerCount;
         if (CanAddConnection()) return;
 
-        _ = Run();
+        Run();
     }
 
     public bool Started() {
@@ -195,9 +195,9 @@ public class MatchProcess {
         TcpListener.Stop();
     }
     
-    public async Task Finish() {
+    public async Task Finish(WebSocket socket) {
         // TODO this seems wrong
-        while (Status == MatchStatus.IN_PROGRESS) {
+        while (Status == MatchStatus.IN_PROGRESS && socket.State == WebSocketState.Open) {
             await Task.Delay(200);
         }
     }

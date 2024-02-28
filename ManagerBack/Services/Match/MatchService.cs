@@ -87,11 +87,12 @@ public class MatchService : IMatchService
         resp = await socket.Read();
         if (resp != "accept") throw new WebSocketPlayerBadResponseException("expected to receive \"accept\"");
 
-        await match.Finish();
+        await match.Finish(socket);
     }
 
     public async Task<MatchProcess> Create(string userId, MatchProcessConfig config)
     {
+
         var mConfig = await _configRepo.ById(config.MatchConfigId)
             ?? throw new MatchConfigNotFoundException($"no match config with id {config.MatchConfigId}")
         ;

@@ -8,6 +8,7 @@ namespace HexCore.GameMatch.States;
 /// Match info state, used for sending to players for UI setup
 /// </summary>
 public struct MatchInfoState {
+    public string MatchId { get; set; }
     public string MyID { get; set; }
     public int MyI { get; set; }
     public int PlayerCount { get; set; }
@@ -16,6 +17,7 @@ public struct MatchInfoState {
         MyID = player.ID;
         MyI = match.Players.IndexOf(player);
         PlayerCount = match.Players.Count;
+        MatchId = match.ID;
     }
 
     /// <summary>

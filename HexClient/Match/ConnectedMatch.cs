@@ -19,6 +19,15 @@ public partial class ConnectedMatch : Control
 	
 	public IConnection Connection { get; private set; }
 
+	private HexCore.GameMatch.States.MatchInfoState _personalConfig;
+	public HexCore.GameMatch.States.MatchInfoState PersonalConfig { 
+		get => _personalConfig;
+		private set {
+			_personalConfig = value;
+			MatchNode.MatchId = _personalConfig.MatchId;
+		}
+	}
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -47,9 +56,9 @@ public partial class ConnectedMatch : Control
 		if (message == "name") return Task.CompletedTask;
 		if (message.StartsWith(CONFIG_PREFIX)) {
 			message = message[CONFIG_PREFIX.Length..];
-			var config = JsonSerializer.Deserialize<HexCore.GameMatch.States.MatchInfoState>(message, Common.JSON_SERIALIZATION_OPTIONS);
-			GD.Print("read config");
-			GD.Print(message);
+			PersonalConfig = JsonSerializer.Deserialize<HexCore.GameMatch.States.MatchInfoState>(message, Common.JSON_SERIALIZATION_OPTIONS);
+			
+			GD.Print("match id: " + PersonalConfig.MatchId);
 			return Task.CompletedTask;
 		}
 
@@ -64,12 +73,10 @@ public partial class ConnectedMatch : Control
 	private void OnSendActionButtonPressed()
 	{
 		var action = ActionEditNode.Text;
-		// GD.Print(action);
 		ActionEditNode.Text = "";
 		Connection.Write(action);
 	}
 	
 	#endregion
 }
-
 

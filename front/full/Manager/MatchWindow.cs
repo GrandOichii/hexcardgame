@@ -8,6 +8,7 @@ public partial class MatchWindow : Window
 	public Match MatchNode { get; private set; }
 	
 	#endregion
+
 	
 	public override void _Ready()
 	{

@@ -119,16 +119,11 @@ public class MatchProcess {
         var controller = new WebSocketPlayerController(socket);
 
         await AddPlayer(controller);
+
+        await TryRun();
     }
 
     public async Task AddTCPConnection() {
-        // var task = TcpListener.AcceptTcpClientAsync();
-        // var success = task.Wait(100);
-        // if (!success) {
-        //     return;
-        // }
-        // var client = task.Result;
-        
         var client = TcpListener.AcceptTcpClient();
         if (!CanAddConnection()) {
             client.Close();
@@ -139,13 +134,14 @@ public class MatchProcess {
         var baseController = new TCPPlayerController(client, _match);
 
         await AddPlayer(baseController);
-        System.Console.WriteLine("Connected player!");
         client.ReceiveTimeout = 0;
+
+        await TryRun();
     }
 
     private async Task AddPlayer(IOPlayerController baseController) {
-        string name = "";
-        string deckRaw = "";
+        string name;
+        string deckRaw;
         try {
             // TODO change to username extracted from jwt
             await baseController.Write("name");
@@ -169,16 +165,20 @@ public class MatchProcess {
         await _match.AddPlayer(name, deck, controller);
 
         --_realPlayerCount;
-        if (CanAddConnection()) return;
-
-        _ = Run();
     }
 
     public bool Started() {
         return Status != MatchStatus.WAITING_FOR_PLAYERS;
     }
 
+    private async Task TryRun() {
+        if (CanAddConnection()) return;
+
+        Run();
+    }
+
     private async Task Run() {
+        System.Console.WriteLine("Match started!");
         await SetStatus(MatchStatus.IN_PROGRESS);
         StartTime = DateTime.Now;
         try {
@@ -189,7 +189,9 @@ public class MatchProcess {
             await SetStatus(MatchStatus.CRASHED);
             Record.ExceptionMessage = e.Message;
             if (e.InnerException is not null)
-                Record.InnerExceptionMessage = e.InnerException.Message;            
+                Record.InnerExceptionMessage = e.InnerException.Message;      
+            System.Console.WriteLine(e.Message);      
+            System.Console.WriteLine(e.StackTrace);
         }
         EndTime = DateTime.Now; 
         TcpListener.Stop();

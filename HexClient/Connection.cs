@@ -116,6 +116,7 @@ public class TcpConnection : IConnection
 	public Task Write(string message)
 	{
 		NetUtil.Write(_client.GetStream(), message);
+		GD.Print("writing " + message);
 		return Task.CompletedTask;
 	}
 

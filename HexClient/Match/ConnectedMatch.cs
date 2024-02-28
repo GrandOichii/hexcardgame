@@ -41,9 +41,17 @@ public partial class ConnectedMatch : Control
 		await Connection.Write(deck);
 	}
 
+	private static string CONFIG_PREFIX = "config-";
 	private Task OnMatchUpdate(string message) {
 		if (message == "deck") return Task.CompletedTask;
 		if (message == "name") return Task.CompletedTask;
+		if (message.StartsWith(CONFIG_PREFIX)) {
+			message = message[CONFIG_PREFIX.Length..];
+			var config = JsonSerializer.Deserialize<HexCore.GameMatch.States.MatchInfoState>(message, Common.JSON_SERIALIZATION_OPTIONS);
+			GD.Print("read config");
+			GD.Print(message);
+			return Task.CompletedTask;
+		}
 
 		var state = JsonSerializer.Deserialize<MatchState>(message, Common.JSON_SERIALIZATION_OPTIONS);
 		state.ApplyTo(MatchNode);

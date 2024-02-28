@@ -31,7 +31,7 @@ public abstract class IOPlayerController : IPlayerController
 
     public async Task Setup(Player player, Match match)
     {
-        await Write(new MatchInfoState(player, match).ToJson());
+        await Write("config-" + new MatchInfoState(player, match).ToJson());
     }
 
     public async Task Update(Player player, Match match)

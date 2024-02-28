@@ -12,6 +12,30 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_louh5")
 
-[node name="Match" parent="." instance=ExtResource("1_xb34f")]
-unique_name_in_owner = true
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Match" parent="VBoxContainer" instance=ExtResource("1_xb34f")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActionContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="SendActionButton" type="Button" parent="VBoxContainer/ActionContainer"]
+layout_mode = 2
+text = " Send "
+
+[node name="ActionEdit" type="LineEdit" parent="VBoxContainer/ActionContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter action"
+
+[connection signal="pressed" from="VBoxContainer/ActionContainer/SendActionButton" to="." method="OnSendActionButtonPressed"]

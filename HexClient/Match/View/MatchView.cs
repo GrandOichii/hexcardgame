@@ -47,21 +47,21 @@ public partial class MatchView : Control
 		return true;
 	}
 
-	private async Task OnConnectionClosed(Exception? e) {
+	private Task OnConnectionClosed(Exception e) {
 		// TODO
 		GD.Print("Connection closed");
+		return Task.CompletedTask;
 	}
 
-	private async Task OnViewUpdate(string data) {
-		// TODO
-		GD.Print("New update:");
+	private Task OnViewUpdate(string data) {
 		var state = JsonSerializer.Deserialize<BaseState>(data, Common.JSON_SERIALIZATION_OPTIONS);
-		GD.Print("matchplayerid: " + state.CurPlayerID);
-		GD.Print("");
+		state.ApplyTo(MatchNode);
+		return Task.CompletedTask;
 	}
 
-	private async Task OnViewEnd() {
+	private Task OnViewEnd() {
 		// TODO
 		GD.Print("Ended view");
+		return Task.CompletedTask;
 	}
 }

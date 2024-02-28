@@ -79,14 +79,15 @@ public class MatchService : IMatchService
         await match.AddWebSocketConnection(socket);
 
         while (!match.Started()) {
-            await socket.Write("playerwaiting");
-            resp = await socket.Read(); 
-            if (resp != "accept") throw new WebSocketPlayerBadResponseException("expected to receive \"accept\"");
+            await Task.Delay(200);
+            // await socket.Write("playerwaiting");
+            // resp = await socket.Read(); 
+            // if (resp != "accept") throw new WebSocketPlayerBadResponseException($"expected to receive \"accept\", received {resp}");
         }
         
-        await socket.Write("matchstart");
-        resp = await socket.Read();
-        if (resp != "accept") throw new WebSocketPlayerBadResponseException("expected to receive \"accept\"");
+        // await socket.Write("matchstart");
+        // resp = await socket.Read();
+        // if (resp != "accept") throw new WebSocketPlayerBadResponseException($"expected to receive \"accept\", received {resp}");
 
         await match.Finish(socket);
     }

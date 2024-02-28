@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Godot;
 using HexCore.GameMatch;
 using HexCore.GameMatch.States;
 
@@ -14,5 +15,6 @@ public class BaseState {
 
     public virtual void ApplyTo(Match match) {
         // TODO
+        GD.Print("cur player i: " + CurPlayerID);
     }
 }

@@ -13,6 +13,7 @@ public partial class ConnectedMatch : Control
 	#region Nodes
 	
 	public Match MatchNode { get; private set; }
+	public LineEdit ActionEditNode { get; private set; }
 	
 	#endregion
 	
@@ -24,7 +25,8 @@ public partial class ConnectedMatch : Control
 		#region Node fetching
 		
 		MatchNode = GetNode<Match>("%Match");
-		
+		ActionEditNode = GetNode<LineEdit>("%ActionEdit");
+
 		#endregion
 	}
 
@@ -44,11 +46,24 @@ public partial class ConnectedMatch : Control
 	private Task OnMatchUpdate(string message) {
 		if (message == "deck") return Task.CompletedTask;
 		if (message == "name") return Task.CompletedTask;
-		if (message == "matchstart") return Task.CompletedTask;
-		
+
 		var state = JsonSerializer.Deserialize<MatchState>(message, Common.JSON_SERIALIZATION_OPTIONS);
-		GD.Print("curplayerid: " + state.CurPlayerID);
+		state.ApplyTo(MatchNode);
 
 		return Task.CompletedTask;
 	}
+	
+	#region Signal connections
+	
+	private void OnSendActionButtonPressed()
+	{
+		var action = ActionEditNode.Text;
+		// GD.Print(action);
+		ActionEditNode.Text = "";
+		Connection.Write(action);
+	}
+	
+	#endregion
 }
+
+

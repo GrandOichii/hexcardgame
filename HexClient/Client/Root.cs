@@ -75,7 +75,11 @@ public partial class Root : Control
 	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match) {
 		var client = new ClientWebSocket();
 		// FIXME freezes
-		await client.ConnectAsync(new Uri(BaseUrl + "match/connect/" + match.Id.ToString()), CancellationToken.None);
+		GD.Print("attemptuing connection");
+		GD.Print(BaseUrl + "match/connect/" + match.Id.ToString());
+		// TODO ugly
+		await client.ConnectAsync(new Uri(BaseUrl.Replace("http", "ws") + "match/connect/" + match.Id.ToString()), CancellationToken.None);
+		GD.Print("connected!");
 		var result = new WebSocketConnection(client);
 		return result;
 	}
@@ -130,7 +134,9 @@ public partial class Root : Control
 			return;
 		}
 
+
 		var info = JsonSerializer.Deserialize<MatchProcess>(body, Common.JSON_SERIALIZATION_OPTIONS);
+		GD.Print(info.Id);
 
 		_ = ConnectTo(info);
 	}

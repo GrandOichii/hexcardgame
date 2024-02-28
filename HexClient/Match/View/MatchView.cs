@@ -55,7 +55,6 @@ public partial class MatchView : Control
 	private async Task OnViewUpdate(string data) {
 		// TODO
 		GD.Print("New update:");
-		GD.Print(data);
 		var state = JsonSerializer.Deserialize<BaseState>(data, Common.JSON_SERIALIZATION_OPTIONS);
 		GD.Print("matchplayerid: " + state.CurPlayerID);
 		GD.Print("");

@@ -11,8 +11,8 @@ public class BaseState {
     public MapState Map { get; set; }
     public string CurPlayerID { get; set; }
     public List<string> Args { get; set; }
-}
 
-public class MatchState : BaseState {
-    public MyDataState MyData { get; set; }
+    public virtual void ApplyTo(Match match) {
+        // TODO
+    }
 }

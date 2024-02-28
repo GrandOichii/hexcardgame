@@ -1,8 +1,10 @@
 using Godot;
 using System;
 using System.Net.WebSockets;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Utility;
 
 namespace HexClient.Match;
 
@@ -40,9 +42,12 @@ public partial class ConnectedMatch : Control
 	}
 
 	private Task OnMatchUpdate(string message) {
-		GD.Print("Match update:");
-		GD.Print(message);
-		GD.Print("");
+		if (message == "deck") return Task.CompletedTask;
+		if (message == "name") return Task.CompletedTask;
+		if (message == "matchstart") return Task.CompletedTask;
+		
+		var state = JsonSerializer.Deserialize<MatchState>(message, Common.JSON_SERIALIZATION_OPTIONS);
+		GD.Print("curplayerid: " + state.CurPlayerID);
 
 		return Task.CompletedTask;
 	}

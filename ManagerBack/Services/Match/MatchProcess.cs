@@ -171,7 +171,7 @@ public class MatchProcess {
         --_realPlayerCount;
         if (CanAddConnection()) return;
 
-        Run();
+        _ = Run();
     }
 
     public bool Started() {

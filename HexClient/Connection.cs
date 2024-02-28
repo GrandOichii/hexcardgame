@@ -16,7 +16,7 @@ public interface IConnection {
 	public delegate void CloseHandler();
 	public Task Write(string message);
 	public void SubscribeToUpdate(MessageHandler func);
-	public void SubscriveToClose(CloseHandler func);
+	public void SubscribeToClose(CloseHandler func);
 	public Task Close();
 }
 
@@ -66,7 +66,7 @@ public class WebSocketConnection : IConnection
 		await _client.SendAsync(message.ToUtf8Buffer(), WebSocketMessageType.Text, true, CancellationToken.None);
 	}
 
-	public void SubscriveToClose(IConnection.CloseHandler func)
+	public void SubscribeToClose(IConnection.CloseHandler func)
 	{
 		OnClose += func;
 	}
@@ -94,7 +94,6 @@ public class TcpConnection : IConnection
 			while (_client.Connected) {
 				try {
 					var message = NetUtil.Read(_client.GetStream());
-					GD.Print("read " + message);
 					OnReceive?.Invoke(message);
 				} catch {
 					continue;
@@ -106,13 +105,11 @@ public class TcpConnection : IConnection
 
 	public void SubscribeToUpdate(IConnection.MessageHandler func)
 	{
-		// TODO
 		OnReceive += func;
 	}
 
-	public void SubscriveToClose(IConnection.CloseHandler func)
+	public void SubscribeToClose(IConnection.CloseHandler func)
 	{
-		// TODO
 		OnClose += func;
 	}
 

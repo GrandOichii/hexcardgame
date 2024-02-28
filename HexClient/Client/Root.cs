@@ -2,14 +2,10 @@ using Godot;
 using System;
 using System.IO;
 using System.Text.Json;
-using Shared;
 using Utility;
 using Microsoft.AspNetCore.SignalR.Client;
-using HexClient.Match.View;
-using HexClient.Utility;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Primitives;
 using System.Threading;
 using System.Net.Sockets;
 using System.Net;
@@ -75,7 +71,6 @@ public partial class Root : Control
 	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match) {
 		var client = new ClientWebSocket();
 		// FIXME freezes
-		GD.Print("attemptuing connection");
 		GD.Print(BaseUrl + "match/connect/" + match.Id.ToString());
 		// TODO ugly
 		await client.ConnectAsync(new Uri(BaseUrl.Replace("http", "ws") + "match/connect/" + match.Id.ToString()), CancellationToken.None);
@@ -134,7 +129,6 @@ public partial class Root : Control
 			GD.Print("Error! Response code: " + response_code);
 			return;
 		}
-
 
 		var info = JsonSerializer.Deserialize<MatchProcess>(body, Common.JSON_SERIALIZATION_OPTIONS);
 		GD.Print(info.Id);

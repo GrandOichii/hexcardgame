@@ -138,8 +138,9 @@ public partial class Root : Control
 
 	private void OnWatchButtonPressed()
 	{
+		GD.Print(BaseUrl + "match/watch");
 		var connection = new HubConnectionBuilder()
-			.WithUrl(BaseUrl + "/match/watch")
+			.WithUrl(BaseUrl + "match/watch")
 			.Build();
 
 		var window = MatchViewWindowPS.Instantiate() as MatchViewWindow;

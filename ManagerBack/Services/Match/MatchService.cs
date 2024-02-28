@@ -7,6 +7,7 @@ using HexCore.GameMatch.States;
 using ManagerBack.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using MongoDB.Bson;
+using Utility;
 
 namespace ManagerBack.Services;
 
@@ -131,7 +132,7 @@ public class MatchService : IMatchService
 
     public async Task UpdateView(string matchId, BaseMatchState state)
     {
-        var data = JsonSerializer.Serialize(state);
+        var data = JsonSerializer.Serialize(state, Common.JSON_SERIALIZATION_OPTIONS);
         var group = MatchViewHub.ToGroupName(matchId);
         await _viewHubContext.Clients.Group(group).SendAsync("Update", data);
     }

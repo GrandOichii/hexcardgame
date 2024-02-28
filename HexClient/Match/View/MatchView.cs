@@ -1,7 +1,9 @@
 using Godot;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Utility;
 
 namespace HexClient.Match.View;
 
@@ -54,6 +56,8 @@ public partial class MatchView : Control
 		// TODO
 		GD.Print("New update:");
 		GD.Print(data);
+		var state = JsonSerializer.Deserialize<BaseState>(data, Common.JSON_SERIALIZATION_OPTIONS);
+		GD.Print("matchplayerid: " + state.CurPlayerID);
 		GD.Print("");
 	}
 

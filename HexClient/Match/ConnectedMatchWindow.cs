@@ -19,8 +19,8 @@ public partial class ConnectedMatchWindow : Window
 		#endregion
 	}
 
-	public async Task Load(IConnection connection) {
-		await ConnectedMatchNode.LoadConnection(connection);
+	public async Task Load(IConnection connection, string name, string deck) {
+		await ConnectedMatchNode.LoadConnection(connection, name, deck);
 	}
 
 	#region Signal connection

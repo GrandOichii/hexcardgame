@@ -41,6 +41,7 @@ public partial class Root : Control
 	public Node WindowsNode { get; private set; }
 	public CheckBox WebSocketCheckNode { get; private set; }
 	public CheckBox TcpCheckNode { get; private set; }
+	public LineEdit PlayerNameEditNode { get; private set; }
 	
 	#endregion
 	
@@ -53,6 +54,7 @@ public partial class Root : Control
 	{
 		#region Node fetching
 		
+		PlayerNameEditNode = GetNode<LineEdit>("%PlayerNameEdit");
 		WindowsNode = GetNode<Node>("%Windows");
 		ConnectMatchIdEditNode = GetNode<LineEdit>("%ConnectMatchIdEdit");
 		WatchMatchIdEditNode = GetNode<LineEdit>("%WatchMatchIdEdit");
@@ -94,7 +96,13 @@ public partial class Root : Control
 		;
 		var window = ConnectedMatchWindowPS.Instantiate() as ConnectedMatchWindow;
 		WindowsNode.AddChild(window);
-		await window.Load(client);
+
+		var name = PlayerNameEditNode.Text;
+
+		// TODO choose deck
+		var deck = "dev::Mana Drill#3|dev::Brute#3|dev::Mage Initiate#3|dev::Warrior Initiate#3|dev::Rogue Initiate#3|dev::Flame Eruption#3|dev::Urakshi Shaman#3|dev::Urakshi Raider#3|dev::Give Strength#3|dev::Blood for Knowledge#3|dev::Dragotha Mage#3|dev::Prophecy Scholar#3|dev::Trained Knight#3|dev::Cast Armor#3|dev::Druid Outcast#3|starters::Knowledge Tower#3|dev::Elven Idealist#3|dev::Elven Outcast#3|dev::Dub#3|dev::Barracks#3|dev::Shieldmate#3|dev::Healer Initiate#3|dev::Archdemon Priest#3|starters::Scorch the Earth#3|dev::Kobold Warrior#3|dev::Kobold Mage#3|dev::Kobold Rogue#3|starters::Dragotha Student#3|starters::Tutoring Sphinx#3|starters::Dragotha Battlemage#3|starters::Inspiration#3";
+
+		await window.Load(client, name, deck);
 	}
 
 	#region Signal connection

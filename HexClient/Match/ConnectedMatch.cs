@@ -30,17 +30,15 @@ public partial class ConnectedMatch : Control
 		#endregion
 	}
 
-	public async Task LoadConnection(IConnection connection) {
+	public async Task LoadConnection(IConnection connection, string name, string deck) {
 		Connection = connection;
 
 		// TODO load configuration
 		Connection.SubscribeToUpdate(OnMatchUpdate);
 
-		// TODO choose name
-		await Connection.Write("connected-player");
+		await Connection.Write(name);
 
-		// TODO choose deck
-		await Connection.Write("dev::Mana Drill#3|dev::Brute#3|dev::Mage Initiate#3|dev::Warrior Initiate#3|dev::Rogue Initiate#3|dev::Flame Eruption#3|dev::Urakshi Shaman#3|dev::Urakshi Raider#3|dev::Give Strength#3|dev::Blood for Knowledge#3|dev::Dragotha Mage#3|dev::Prophecy Scholar#3|dev::Trained Knight#3|dev::Cast Armor#3|dev::Druid Outcast#3|starters::Knowledge Tower#3|dev::Elven Idealist#3|dev::Elven Outcast#3|dev::Dub#3|dev::Barracks#3|dev::Shieldmate#3|dev::Healer Initiate#3|dev::Archdemon Priest#3|starters::Scorch the Earth#3|dev::Kobold Warrior#3|dev::Kobold Mage#3|dev::Kobold Rogue#3|starters::Dragotha Student#3|starters::Tutoring Sphinx#3|starters::Dragotha Battlemage#3|starters::Inspiration#3");
+		await Connection.Write(deck);
 	}
 
 	private Task OnMatchUpdate(string message) {

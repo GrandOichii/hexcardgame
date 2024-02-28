@@ -249,3 +249,9 @@ n. - neighboring
     [CARDNAME] has +2 power while on a tile you own.
     P: TODO
     L: TODO
+
+
+[TODO]:TODO
+    Structure
+    At the start of your turn, reduce the cost of Spells in your hand by 1. (Can't go below 0)
+    L: TODO

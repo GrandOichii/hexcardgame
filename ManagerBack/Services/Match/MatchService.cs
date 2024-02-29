@@ -144,4 +144,11 @@ public class MatchService : IMatchService
         await _viewHubContext.Clients.Group(group).SendAsync("EndView");
     }
 
+    public async Task SendMatchInfo(string matchId, string connectionId)
+    {
+        var match = await ById(matchId);
+        var info = new MatchInfoState(match.Match);
+        var data = JsonSerializer.Serialize(info, Common.JSON_SERIALIZATION_OPTIONS);
+        await _viewHubContext.Clients.Client(connectionId).SendAsync("Config", data);
+    }
 }

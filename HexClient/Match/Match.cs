@@ -8,6 +8,7 @@ public partial class Match : Control
 	#region Node
 	
 	public Window OptionsWindowNode { get; private set; }
+	public Control PlayerContainerNode { get; private set; }
 	
 	#endregion
 
@@ -22,6 +23,7 @@ public partial class Match : Control
 		#region Node fetching
 		
 		OptionsWindowNode = GetNode<Window>("%OptionsWindow");
+		PlayerContainerNode = GetNode<Control>("%PlayerContainer");
 		
 		#endregion
 		
@@ -33,8 +35,6 @@ public partial class Match : Control
 	}
 
 	#region Signal connections
-	
-
 
 	private void OnShowCardIdsToggleToggled(bool buttonPressed)
 	{

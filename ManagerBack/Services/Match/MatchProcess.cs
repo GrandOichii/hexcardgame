@@ -25,8 +25,8 @@ public class MatchProcess {
     public Guid Id { get; }
     [JsonIgnore]
     public TcpListener TcpListener { get; } 
-
-    private readonly Match _match;
+    [JsonIgnore]
+    public Match Match { get; }
     private int _realPlayerCount;
     private static readonly Dictionary<BotType, string> BOT_TYPE_PATH_MAP = new() {
         {BotType.RANDOM, "../bots/random.lua"},
@@ -51,11 +51,11 @@ public class MatchProcess {
         TcpAddress = ((IPEndPoint)TcpListener.LocalEndpoint).ToString();
 
 
-        _match = new Match(Id.ToString(), mConfig, cMaster);
+        Match = new Match(Id.ToString(), mConfig, cMaster);
         View = new ConnectedMatchView(Id, matchService);
-        _match.View = View;
+        Match.View = View;
 
-        _match.InitialSetup("../HexCore/core.lua");
+        Match.InitialSetup("../HexCore/core.lua");
         // TODO fix the order of the players
 
         _realPlayerCount = 0;
@@ -96,7 +96,7 @@ public class MatchProcess {
 
             var controller = await CreateRecordedPlayer(p.BotConfig.Name, new LuaPlayerController(BOT_TYPE_PATH_MAP[p.BotConfig.BotType]));
             var deck = await LoadDeck(p.BotConfig.StrDeck);
-            await _match.AddPlayer(p.BotConfig.Name, deck, controller);
+            await Match.AddPlayer(p.BotConfig.Name, deck, controller);
         }
         if (!CanAddConnection()) {
             Run();
@@ -120,7 +120,7 @@ public class MatchProcess {
 
         await AddPlayer(controller);
 
-        await TryRun();
+        TryRun();
     }
 
     public async Task AddTCPConnection() {
@@ -131,12 +131,12 @@ public class MatchProcess {
         }
         
         client.ReceiveTimeout = 1000;
-        var baseController = new TCPPlayerController(client, _match);
+        var baseController = new TCPPlayerController(client, Match);
 
         await AddPlayer(baseController);
         client.ReceiveTimeout = 0;
 
-        await TryRun();
+        TryRun();
     }
 
     private async Task AddPlayer(IOPlayerController baseController) {
@@ -162,7 +162,7 @@ public class MatchProcess {
         var deck = await LoadDeck(deckRaw);
 
         var controller = await CreateRecordedPlayer(name, baseController);
-        await _match.AddPlayer(name, deck, controller);
+        await Match.AddPlayer(name, deck, controller);
 
         --_realPlayerCount;
     }
@@ -171,7 +171,7 @@ public class MatchProcess {
         return Status != MatchStatus.WAITING_FOR_PLAYERS;
     }
 
-    private async Task TryRun() {
+    private void TryRun() {
         if (CanAddConnection()) return;
 
         Run();
@@ -182,9 +182,9 @@ public class MatchProcess {
         await SetStatus(MatchStatus.IN_PROGRESS);
         StartTime = DateTime.Now;
         try {
-            await _match.Start();
+            await Match.Start();
             await SetStatus(MatchStatus.FINISHED);
-            Record.WinnerName = _match.Winner!.Name;
+            Record.WinnerName = Match.Winner!.Name;
         } catch (Exception e) {
             await SetStatus(MatchStatus.CRASHED);
             Record.ExceptionMessage = e.Message;

@@ -26,7 +26,8 @@ public partial class MatchView : Control
 		#endregion
 	}
 
-	public async Task<bool> Connect(HubConnection connection, string matchId) {				
+	public async Task<bool> Connect(HubConnection connection, string matchId) {
+		connection.On<string>("Config", OnViewConfig);
 		connection.On<string>("Update", OnViewUpdate);
 		connection.On("ViewEnd", OnViewEnd);
 		connection.Closed += OnConnectionClosed;
@@ -53,8 +54,15 @@ public partial class MatchView : Control
 		return Task.CompletedTask;
 	}
 
-	private Task OnViewUpdate(string data) {
-		var state = JsonSerializer.Deserialize<BaseState>(data, Common.JSON_SERIALIZATION_OPTIONS);
+	private Task OnViewConfig(string message) {
+		var config = JsonSerializer.Deserialize<HexCore.GameMatch.States.MatchInfoState>(message, Common.JSON_SERIALIZATION_OPTIONS);
+		
+		// TODO
+		return Task.CompletedTask;
+	}
+
+	private Task OnViewUpdate(string message) {
+		var state = JsonSerializer.Deserialize<BaseState>(message, Common.JSON_SERIALIZATION_OPTIONS);
 		state.ApplyTo(MatchNode);
 		return Task.CompletedTask;
 	}

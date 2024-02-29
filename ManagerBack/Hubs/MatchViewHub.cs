@@ -17,6 +17,7 @@ public class MatchViewHub : Hub {
     public async Task Connect(string matchId) {
         await RemoveFromAll(Context.ConnectionId);
         await Groups.AddToGroupAsync(Context.ConnectionId, ToGroupName(matchId));
+        await _matchService.SendMatchInfo(matchId, Context.ConnectionId);
     }
 
     public async Task RemoveFromAll(string connectionId) {

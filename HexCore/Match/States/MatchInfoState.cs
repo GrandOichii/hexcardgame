@@ -9,13 +9,16 @@ namespace HexCore.GameMatch.States;
 /// </summary>
 public struct MatchInfoState {
     public string MatchId { get; set; }
-    public string MyID { get; set; }
-    public int MyI { get; set; }
+    public string? MyID { get; set; }
+    public int? MyI { get; set; }
     public int PlayerCount { get; set; }
 
-    public MatchInfoState(Player player, Match match) {
+    public MatchInfoState(Player player, Match match) : this(match) {
         MyID = player.ID;
         MyI = match.Players.IndexOf(player);
+    }
+
+    public MatchInfoState(Match match) {
         PlayerCount = match.Players.Count;
         MatchId = match.ID;
     }

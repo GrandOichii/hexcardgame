@@ -12,4 +12,5 @@ public interface IMatchService {
     public Task ServiceStatusUpdated(MatchProcess match);
     public Task UpdateView(string matchId, BaseMatchState state);
     public Task EndView(string matchId);
+    public Task SendMatchInfo(string matchId, string connectionId);
 }

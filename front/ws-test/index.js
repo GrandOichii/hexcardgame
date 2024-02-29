@@ -18,6 +18,10 @@ client.on('connect', connection => {
     connection.on('message', (message) => {
         if (message.type === 'utf8') {
             const data = message.utf8Data
+            if (data.startsWith('config-')) {
+                console.log('read config');
+                return
+            }
             if (data == 'playerwaiting') {
                 connection.send('accept')
                 return

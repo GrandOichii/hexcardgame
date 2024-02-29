@@ -19,8 +19,8 @@ public partial class ConnectedMatch : Control
 	
 	public IConnection Connection { get; private set; }
 
-	private HexCore.GameMatch.States.MatchInfoState _personalConfig;
-	public HexCore.GameMatch.States.MatchInfoState PersonalConfig { 
+	private HexStates.MatchInfoState _personalConfig;
+	public HexStates.MatchInfoState MatchInfo { 
 		get => _personalConfig;
 		private set {
 			_personalConfig = value;
@@ -43,27 +43,31 @@ public partial class ConnectedMatch : Control
 		Connection = connection;
 
 		// TODO load configuration
-		Connection.SubscribeToUpdate(OnMatchUpdate);
+		Connection.SubscribeToUpdate(message => {
+			CallDeferred("OnMatchUpdate", message);
+			return Task.CompletedTask;
+		});
 
 		await Connection.Write(name);
 
 		await Connection.Write(deck);
 	}
 
-	private static string CONFIG_PREFIX = "config-";
+	private static readonly string CONFIG_PREFIX = "config-";
 	private Task OnMatchUpdate(string message) {
 		if (message == "deck") return Task.CompletedTask;
 		if (message == "name") return Task.CompletedTask;
+
 		if (message.StartsWith(CONFIG_PREFIX)) {
 			message = message[CONFIG_PREFIX.Length..];
-			PersonalConfig = JsonSerializer.Deserialize<HexCore.GameMatch.States.MatchInfoState>(message, Common.JSON_SERIALIZATION_OPTIONS);
+			MatchInfo = JsonSerializer.Deserialize<HexStates.MatchInfoState>(message, Common.JSON_SERIALIZATION_OPTIONS);
+			MatchNode.LoadMatchInfo(MatchInfo);
 			
-			GD.Print("match id: " + PersonalConfig.MatchId);
 			return Task.CompletedTask;
 		}
 
 		var state = JsonSerializer.Deserialize<MatchState>(message, Common.JSON_SERIALIZATION_OPTIONS);
-		state.ApplyTo(MatchNode);
+		state.ApplyTo(MatchNode, MatchInfo);
 
 		return Task.CompletedTask;
 	}

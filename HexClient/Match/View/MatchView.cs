@@ -1,4 +1,5 @@
 using Godot;
+using HexCore.GameMatch.States;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Text.Json;
@@ -16,6 +17,7 @@ public partial class MatchView : Control
 	#endregion
 
 	public HubConnection Connection { get; private set; }
+	public MatchInfoState MatchInfo { get; private set; }
 	
 	public override void _Ready()
 	{
@@ -55,15 +57,14 @@ public partial class MatchView : Control
 	}
 
 	private Task OnViewConfig(string message) {
-		var config = JsonSerializer.Deserialize<HexCore.GameMatch.States.MatchInfoState>(message, Common.JSON_SERIALIZATION_OPTIONS);
-		
-		// TODO
+		MatchInfo = JsonSerializer.Deserialize<HexStates.MatchInfoState>(message, Common.JSON_SERIALIZATION_OPTIONS);
+		MatchNode.LoadMatchInfo(MatchInfo);
 		return Task.CompletedTask;
 	}
 
 	private Task OnViewUpdate(string message) {
 		var state = JsonSerializer.Deserialize<BaseState>(message, Common.JSON_SERIALIZATION_OPTIONS);
-		state.ApplyTo(MatchNode);
+		state.ApplyTo(MatchNode, MatchInfo);
 		return Task.CompletedTask;
 	}
 

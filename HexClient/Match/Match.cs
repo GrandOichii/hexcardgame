@@ -5,6 +5,11 @@ namespace HexClient.Match;
 
 public partial class Match : Control
 {
+	#region Packed scenes
+
+	private readonly static PackedScene PlayerInfoPS = ResourceLoader.Load<PackedScene>("res://Match/Player/PlayerInfo.tscn");
+
+	#endregion
 	#region Node
 	
 	public Window OptionsWindowNode { get; private set; }
@@ -32,6 +37,20 @@ public partial class Match : Control
 
 	private void SetOptionsWindowTitle(string title) {
 		OptionsWindowNode.Title = title;
+	}
+
+	public void LoadMatchInfo(HexStates.MatchInfoState info) {
+		// GD.Print("match id: " + info.MatchId);
+		
+		// create player info nodes
+		var pCount = info.PlayerCount;
+		for (int i = 0; i < pCount; i++) {
+			var child = PlayerInfoPS.Instantiate() as PlayerInfo;
+			PlayerContainerNode.CallDeferred("add_child", child);
+			// PlayerContainerNode.AddChild(child);
+			// child.Client = Client;
+			child.PlayerI = i;
+		}
 	}
 
 	#region Signal connections

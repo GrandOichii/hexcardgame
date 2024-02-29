@@ -30,6 +30,7 @@ text = "Options"
 [node name="PlayerContainer" type="VBoxContainer" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="Windows" type="Node" parent="."]
 

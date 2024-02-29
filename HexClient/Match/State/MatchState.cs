@@ -1,16 +1,15 @@
 using System.Collections.Generic;
 using HexCore.GameMatch;
-using HexCore.GameMatch.States;
 
 namespace HexClient.Match.State;
 
 public class MatchState : BaseState {
-    public MyDataState MyData { get; set; }
+	public HexStates.MyDataState MyData { get; set; }
 
-    public override void ApplyTo(Match match)
-    {
-        base.ApplyTo(match);
+	public override void ApplyTo(Match match, HexStates.MatchInfoState info)
+	{
+		base.ApplyTo(match, info);
 
-        // TODO
-    }
+		// TODO
+	}
 }

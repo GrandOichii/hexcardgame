@@ -1,5 +1,4 @@
 using Godot;
-using HexCore.GameMatch.States;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Text.Json;
@@ -17,7 +16,7 @@ public partial class MatchView : Control
 	#endregion
 
 	public HubConnection Connection { get; private set; }
-	public MatchInfoState MatchInfo { get; private set; }
+	public HexStates.MatchInfoState MatchInfo { get; private set; }
 	
 	public override void _Ready()
 	{
@@ -35,10 +34,8 @@ public partial class MatchView : Control
 		connection.Closed += OnConnectionClosed;
 
 		try {
-			GD.Print("Connecting...");
 			await connection.StartAsync();
 			await connection.SendAsync("Connect", matchId);
-			GD.Print("Connected!");
 		} catch (Exception e) {
 			// TODO
 			GD.Print("Failed to connect");

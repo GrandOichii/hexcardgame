@@ -43,10 +43,7 @@ public partial class ConnectedMatch : Control
 		Connection = connection;
 
 		// TODO load configuration
-		Connection.SubscribeToUpdate(message => {
-			CallDeferred("OnMatchUpdate", message);
-			return Task.CompletedTask;
-		});
+		Connection.SubscribeToUpdate(OnMatchUpdate);
 
 		await Connection.Write(name);
 
@@ -80,7 +77,13 @@ public partial class ConnectedMatch : Control
 		ActionEditNode.Text = "";
 		Connection.Write(action);
 	}
+
+	private void OnPassButtonPressed()
+	{
+		Connection.Write("pass");
+	}
 	
 	#endregion
 }
+
 

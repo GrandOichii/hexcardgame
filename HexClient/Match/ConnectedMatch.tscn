@@ -38,4 +38,9 @@ layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Enter action"
 
+[node name="PassButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Pass"
+
 [connection signal="pressed" from="VBoxContainer/ActionContainer/SendActionButton" to="." method="OnSendActionButtonPressed"]
+[connection signal="pressed" from="VBoxContainer/PassButton" to="." method="OnPassButtonPressed"]

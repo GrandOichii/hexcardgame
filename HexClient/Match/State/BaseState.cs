@@ -5,7 +5,7 @@ using HexCore.GameMatch;
 
 namespace HexClient.Match.State;
 
-public class BaseState {
+public partial class BaseState : Node {
 	public List<List<MatchLogEntryPart>> NewLogs { get; set; }
 	public string Request { get; set; }
 	public List<HexStates.PlayerState> Players { get; set; }
@@ -14,17 +14,26 @@ public class BaseState {
 	public List<string> Args { get; set; }
 
 	public virtual void ApplyTo(Match match, HexStates.MatchInfoState info) {
-		// TODO
+		CallDeferred("ApplyToPlayerInfo", match, new Wrapper<HexStates.MatchInfoState>(info));
+//		ApplyToPlayerInfo(match, info);
+	}
 
+	public void ApplyToPlayerInfo(Match match, Wrapper<HexStates.MatchInfoState> infoW) {
+		var info = infoW.Value;
+		
 		// apply player order fix
 		var container = match.PlayerContainerNode;
-		if (info.MyI is not null && (container.GetChild(0) as PlayerInfo).PlayerI != info.MyI) {
+		// if (info.MyI is not null && (container.GetChild(0) as PlayerInfo).PlayerI != ((info.MyI + 1) % info.PlayerCount)) {
+		if (info.MyI is not null && (container.GetChild(info.PlayerCount - 1) as PlayerInfo).PlayerI != info.MyI) {
 			GD.Print("applying fixes to player containers");
+			GD.Print("MyI: " + info.MyI);
+			GD.Print((container.GetChild(info.PlayerCount - 1) as PlayerInfo).PlayerI + " " + info.MyI);
 			var myI = info.MyI ?? default;
 			var pCount = info.PlayerCount;
 			for (int i = 0; i < pCount; i++) {
 				var pNode = container.GetChild(i) as PlayerInfo;
 				pNode.PlayerI = (i + myI + 1) % pCount;
+				GD.Print(pNode.PlayerI);
 			}
 		}
 

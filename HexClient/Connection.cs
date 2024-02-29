@@ -30,30 +30,52 @@ public class WebSocketConnection : IConnection
 	private event IConnection.CloseHandler? OnClose;
 	#nullable disable
 
-	public WebSocketConnection(ClientWebSocket client)
+	public WebSocketConnection(ClientWebSocket client, string name, string deck)
 	{
 		_client = client;
 
 		// TODO don't know if this is the best way of doing this
 		_ = Task.Run(async () =>
 		{
+			// * indeed a quite suspicious piece of code that will definately fail in the near future
+
+			await Read(); // should be name
+			await Write(name);
+			await Read(); // should be deck
+			await Write(deck);
+
+			string resp;
+			while (true) {
+				resp = await Read();
+				if (resp != "ping") {
+					break;
+				}
+				await Write("pong");
+			}
+			OnReceive?.Invoke(resp);
+
 			while (_client.State == WebSocketState.Open)
 			{
-				WebSocketReceiveResult result;
-				var buffer = new ArraySegment<byte>(new byte[1024]);
-				var message = new StringBuilder();
-				do
-				{
-					result = await _client.ReceiveAsync(buffer, CancellationToken.None);
-					string messagePart = Encoding.UTF8.GetString(buffer.Array, 0, result.Count);
-					message.Append(messagePart);
-				}
-				while (!result.EndOfMessage);
+				var message = await Read();
 				OnReceive?.Invoke(message.ToString());
 			}
 			OnClose?.Invoke();
 		});
 
+	}
+
+	private async Task<string> Read() {
+		WebSocketReceiveResult result;
+		var buffer = new ArraySegment<byte>(new byte[1024]);
+		var message = new StringBuilder();
+		do
+		{
+			result = await _client.ReceiveAsync(buffer, CancellationToken.None);
+			string messagePart = Encoding.UTF8.GetString(buffer.Array, 0, result.Count);
+			message.Append(messagePart);
+		}
+		while (!result.EndOfMessage);
+		return message.ToString();
 	}
 
 	public void SubscribeToUpdate(IConnection.MessageHandler func)
@@ -86,11 +108,16 @@ public class TcpConnection : IConnection
 	private event IConnection.CloseHandler? OnClose;
 	#nullable disable
 
-	public TcpConnection(TcpClient client) {
+	public TcpConnection(TcpClient client, string name, string deck) {
 		_client = client;
-		_client.ReceiveTimeout = 20;
 
-		_ = Task.Run(() => {
+		_ = Task.Run(async () => {
+			NetUtil.Read(client.GetStream()); // should be name
+			await Write(name);
+			NetUtil.Read(client.GetStream()); // should be deck
+			await Write(deck);
+
+			_client.ReceiveTimeout = 20;
 			while (_client.Connected) {
 				try {
 					var message = NetUtil.Read(_client.GetStream());
@@ -116,7 +143,6 @@ public class TcpConnection : IConnection
 	public Task Write(string message)
 	{
 		NetUtil.Write(_client.GetStream(), message);
-		GD.Print("writing " + message);
 		return Task.CompletedTask;
 	}
 

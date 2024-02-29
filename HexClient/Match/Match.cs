@@ -40,17 +40,20 @@ public partial class Match : Control
 	}
 
 	public void LoadMatchInfo(HexStates.MatchInfoState info) {
-		// GD.Print("match id: " + info.MatchId);
 		
 		// create player info nodes
 		var pCount = info.PlayerCount;
 		for (int i = 0; i < pCount; i++) {
-			var child = PlayerInfoPS.Instantiate() as PlayerInfo;
-			PlayerContainerNode.CallDeferred("add_child", child);
-			// PlayerContainerNode.AddChild(child);
-			// child.Client = Client;
-			child.PlayerI = i;
+			CallDeferred("CreatePlayerInfo", i);
 		}
+	}
+
+	private void CreatePlayerInfo(int playerI) {
+		var child = PlayerInfoPS.Instantiate() as PlayerInfo;
+		PlayerContainerNode.AddChild(child);
+		// PlayerContainerNode.AddChild(child);
+		// child.Client = Client;
+		child.PlayerI = playerI;
 	}
 
 	#region Signal connections

@@ -39,34 +39,41 @@ public partial class ConnectedMatch : Control
 		#endregion
 	}
 
-	public async Task LoadConnection(IConnection connection, string name, string deck) {
+	public async Task LoadConnection(IConnection connection) {
 		Connection = connection;
 
 		// TODO load configuration
 		Connection.SubscribeToUpdate(OnMatchUpdate);
 
-		await Connection.Write(name);
-
-		await Connection.Write(deck);
 	}
 
 	private static readonly string CONFIG_PREFIX = "config-";
-	private Task OnMatchUpdate(string message) {
-		if (message == "deck") return Task.CompletedTask;
-		if (message == "name") return Task.CompletedTask;
+	private async Task OnMatchUpdate(string message) {
+		// if (message == "deck") return;
+		// if (message == "name") return;
+		// if (message == "matchstart") {
+		// 	GD.Print("received matchstart");
+		// 	await Connection.Write("accept");
+		// 	return; 
+		// }
+		// if (message == "playerwaiting") {
+		// 	GD.Print("received playerwaiting");
+		// 	await Connection.Write("accept");
+		// 	return; 
+		// }
 
 		if (message.StartsWith(CONFIG_PREFIX)) {
 			message = message[CONFIG_PREFIX.Length..];
 			MatchInfo = JsonSerializer.Deserialize<HexStates.MatchInfoState>(message, Common.JSON_SERIALIZATION_OPTIONS);
 			MatchNode.LoadMatchInfo(MatchInfo);
 			
-			return Task.CompletedTask;
+			return;
 		}
 
 		var state = JsonSerializer.Deserialize<MatchState>(message, Common.JSON_SERIALIZATION_OPTIONS);
 		state.ApplyTo(MatchNode, MatchInfo);
 
-		return Task.CompletedTask;
+		return;
 	}
 	
 	#region Signal connections

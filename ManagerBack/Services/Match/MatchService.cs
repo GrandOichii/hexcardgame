@@ -81,15 +81,11 @@ public class MatchService : IMatchService
 
         while (!match.Started()) {
             await Task.Delay(200);
-            // await socket.Write("playerwaiting");
-            // resp = await socket.Read(); 
-            // if (resp != "accept") throw new WebSocketPlayerBadResponseException($"expected to receive \"accept\", received {resp}");
+            await socket.Write("ping");
+            resp = await socket.Read(); 
+            if (resp != "pong") throw new WebSocketPlayerBadResponseException($"expected to receive \"pong\", received {resp}");
         }
         
-        // await socket.Write("matchstart");
-        // resp = await socket.Read();
-        // if (resp != "accept") throw new WebSocketPlayerBadResponseException($"expected to receive \"accept\", received {resp}");
-
         await match.Finish(socket);
     }
 

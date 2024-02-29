@@ -70,39 +70,38 @@ public partial class Root : Control
 		OnBaseUrlEditTextChanged(GetNode<LineEdit>("%BaseUrlEdit").Text);
 	}
 
-	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match) {
+	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match, string name, string deck) {
 		var client = new ClientWebSocket();
 		// FIXME freezes
-		GD.Print(BaseUrl + "match/connect/" + match.Id.ToString());
 		// TODO ugly
 		await client.ConnectAsync(new Uri(BaseUrl.Replace("http", "ws") + "match/connect/" + match.Id.ToString()), CancellationToken.None);
 		GD.Print("connected!");
-		var result = new WebSocketConnection(client);
+		var result = new WebSocketConnection(client, name, deck);
 		return result;
 	}
 
-	private async Task<TcpConnection> CreateTcpConnection(MatchProcess match) {
+	private async Task<TcpConnection> CreateTcpConnection(MatchProcess match, string name, string deck) {
 		var client = new TcpClient();
 		await client.ConnectAsync(IPEndPoint.Parse(match.TcpAddress));
-		var result = new TcpConnection(client);
+		var result = new TcpConnection(client, name, deck);
 		return result;
 	}
 
 	private async Task ConnectTo(MatchProcess match) {
-		IConnection client =
-			WebSocketCheckNode.ButtonPressed
-			? await CreateWebSocketConnection(match)
-			: await CreateTcpConnection(match)
-		;
-		var window = ConnectedMatchWindowPS.Instantiate() as ConnectedMatchWindow;
-		WindowsNode.AddChild(window);
-
 		var name = PlayerNameEditNode.Text;
 
 		// TODO choose deck
 		var deck = "dev::Mana Drill#3|dev::Brute#3|dev::Mage Initiate#3|dev::Warrior Initiate#3|dev::Rogue Initiate#3|dev::Flame Eruption#3|dev::Urakshi Shaman#3|dev::Urakshi Raider#3|dev::Give Strength#3|dev::Blood for Knowledge#3|dev::Dragotha Mage#3|dev::Prophecy Scholar#3|dev::Trained Knight#3|dev::Cast Armor#3|dev::Druid Outcast#3|starters::Knowledge Tower#3|dev::Elven Idealist#3|dev::Elven Outcast#3|dev::Dub#3|dev::Barracks#3|dev::Shieldmate#3|dev::Healer Initiate#3|dev::Archdemon Priest#3|starters::Scorch the Earth#3|dev::Kobold Warrior#3|dev::Kobold Mage#3|dev::Kobold Rogue#3|starters::Dragotha Student#3|starters::Tutoring Sphinx#3|starters::Dragotha Battlemage#3|starters::Inspiration#3";
 
-		await window.Load(client, name, deck);
+		IConnection client =
+			WebSocketCheckNode.ButtonPressed
+			? await CreateWebSocketConnection(match, name, deck)
+			: await CreateTcpConnection(match, name, deck)
+		;
+		var window = ConnectedMatchWindowPS.Instantiate() as ConnectedMatchWindow;
+		WindowsNode.AddChild(window);
+
+		await window.Load(client);
 	}
 
 	#region Signal connection
@@ -121,7 +120,6 @@ public partial class Root : Control
 	{
 		string[] headers = new string[] { "Content-Type: application/json" };
 		var data = IsBotCheckNode.ButtonPressed ? File.ReadAllText("bot.json") : File.ReadAllText("real.json");
-		GD.Print(BaseUrl + "match/create");
 		CreateRequestNode.Request(BaseUrl + "match/create", headers, HttpClient.Method.Post, data);
 	}
 
@@ -139,14 +137,13 @@ public partial class Root : Control
 		}
 
 		var info = JsonSerializer.Deserialize<MatchProcess>(body, Common.JSON_SERIALIZATION_OPTIONS);
-		GD.Print(info.Id);
+		ConnectMatchIdEditNode.Text = info.Id.ToString();
 
 		_ = ConnectTo(info);
 	}
 
 	private void OnWatchButtonPressed()
 	{
-		GD.Print(BaseUrl + "match/watch");
 		var connection = new HubConnectionBuilder()
 			.WithUrl(BaseUrl + "match/watch")
 			.Build();

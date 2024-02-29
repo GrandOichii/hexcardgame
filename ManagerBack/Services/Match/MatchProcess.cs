@@ -145,13 +145,11 @@ public class MatchProcess {
         try {
             // TODO change to username extracted from jwt
             await baseController.Write("name");
-            System.Console.WriteLine("requested name");
             name = await baseController.Read();
             // var name = await baseController.Read();
 
             // TODO this allows any user to submit any deck, change this later to deckId
             await baseController.Write("deck");
-            System.Console.WriteLine("requested deck");
             deckRaw = await baseController.Read();
             // var deckRaw = await baseController.Read();
         } catch (Exception e) {

@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using HexCore.GameMatch.States;
 using ManagerBack.Hubs;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.AspNetCore.SignalR;
 using MongoDB.Bson;
 using Utility;
@@ -150,5 +151,12 @@ public class MatchService : IMatchService
         var info = new MatchInfoState(match.Match);
         var data = JsonSerializer.Serialize(info, Common.JSON_SERIALIZATION_OPTIONS);
         await _viewHubContext.Clients.Client(connectionId).SendAsync("Config", data);
+    }
+
+    public async Task SendMatchState(string matchId, string connectionId) {
+        var match = await ById(matchId);
+        var state = new BaseMatchState(match.Match);
+        var data = JsonSerializer.Serialize(state, Common.JSON_SERIALIZATION_OPTIONS);
+        await _viewHubContext.Clients.Client(connectionId).SendAsync("Update", data);
     }
 }

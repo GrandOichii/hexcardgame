@@ -18,9 +18,11 @@ public class MatchViewHub : Hub {
         await RemoveFromAll(Context.ConnectionId);
         await Groups.AddToGroupAsync(Context.ConnectionId, ToGroupName(matchId));
         await _matchService.SendMatchInfo(matchId, Context.ConnectionId);
+        await _matchService.SendMatchState(matchId, Context.ConnectionId);
     }
 
-    public async Task RemoveFromAll(string connectionId) {
+    // TODO is this method exposed
+    private async Task RemoveFromAll(string connectionId) {
         foreach (var match in await _matchService.All()) {
             var group = ToGroupName(match.Id.ToString());
             await Groups.RemoveFromGroupAsync(connectionId, group);

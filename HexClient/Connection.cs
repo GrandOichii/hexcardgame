@@ -93,9 +93,14 @@ public class WebSocketConnection : IConnection
 		OnClose += func;
 	}
 
-	public async Task Close()
+	public Task Close()
 	{
-		await _client.CloseAsync(WebSocketCloseStatus.NormalClosure, "ClientClose", CancellationToken.None);
+		try {
+			// TODO? not awaiting the call fixes the window not closing until the socket is closed
+			_ = _client.CloseAsync(WebSocketCloseStatus.NormalClosure, "ClientClose", CancellationToken.None);
+		} catch {}
+		
+		return Task.CompletedTask;
 	}
 }
 

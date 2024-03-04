@@ -13,7 +13,7 @@ using HexClient.Tables;
 
 namespace HexClient.Client;
 
-public partial class Root : Control
+public partial class MatchesTab : Control
 {
 	private readonly static PackedScene MatchViewWindowPS = ResourceLoader.Load<PackedScene>("res://Match/View/MatchViewWindow.tscn");
 	private readonly static PackedScene ConnectedMatchWindowPS = ResourceLoader.Load<PackedScene>("res://Match/ConnectedMatchWindow.tscn");

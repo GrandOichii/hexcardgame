@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://c38yxw6uhifrx"]
+[gd_scene load_steps=2 format=3 uid="uid://c38yxw6uhifrx"]
 
-[ext_resource type="Script" path="res://Client/Root.cs" id="1_8ihfd"]
-[ext_resource type="PackedScene" uid="uid://d20hdeknnjx41" path="res://Tables/MatchTable.tscn" id="2_lp0dd"]
+[ext_resource type="PackedScene" uid="uid://pa3msjtm5nlw" path="res://Client/Tabs/MatchesTab.tscn" id="1_qqjyb"]
 
 [node name="Root" type="Control"]
 layout_mode = 3
@@ -10,7 +9,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_8ihfd")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -24,130 +22,11 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="TabContainer" type="TabContainer" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="PlayerNameEdit" type="LineEdit" parent="MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "real-player"
-placeholder_text = "Enter your name"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="Matches" type="TabBar" parent="MarginContainer/TabContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Client type:"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="WebSocketCheck" type="CheckBox" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-button_pressed = true
-text = "WebSocket"
-
-[node name="TcpCheck" type="CheckBox" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Tcp"
-
-[node name="BaseUrlEdit" type="LineEdit" parent="MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "http://localhost:5239/api/v1/"
-placeholder_text = "Enter base url"
-
-[node name="HSeparator4" type="HSeparator" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="CreateContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="CreateMatchLabel" type="Label" parent="MarginContainer/VBoxContainer/CreateContainer"]
-layout_mode = 2
-text = "Create match"
-
-[node name="IsBotCheck" type="CheckBox" parent="MarginContainer/VBoxContainer/CreateContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-button_pressed = true
-text = "Versus bot"
-
-[node name="CreateMatchButton" type="Button" parent="MarginContainer/VBoxContainer/CreateContainer"]
-layout_mode = 2
-text = "Create"
-
-[node name="CreateRequest" type="HTTPRequest" parent="MarginContainer/VBoxContainer/CreateContainer"]
-unique_name_in_owner = true
-
-[node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="ConnectContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="ConnectToMatchLabel" type="Label" parent="MarginContainer/VBoxContainer/ConnectContainer"]
-layout_mode = 2
-text = "Connect to a match"
-
-[node name="ConnectMatchIdEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/ConnectContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-placeholder_text = "Enter match id"
-
-[node name="ConnectButton" type="Button" parent="MarginContainer/VBoxContainer/ConnectContainer"]
-layout_mode = 2
-text = "Connect"
-
-[node name="ConnectRequest" type="HTTPRequest" parent="MarginContainer/VBoxContainer/ConnectContainer"]
-unique_name_in_owner = true
-
-[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="WatchContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="WatchMatchLabel" type="Label" parent="MarginContainer/VBoxContainer/WatchContainer"]
-layout_mode = 2
-text = "Watch match"
-
-[node name="WatchMatchIdEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/WatchContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-placeholder_text = "Enter match id"
-
-[node name="WatchButton" type="Button" parent="MarginContainer/VBoxContainer/WatchContainer"]
-layout_mode = 2
-text = "Watch match"
-
-[node name="HSeparator5" type="HSeparator" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="LiveMatchesButton" type="Button" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Connect to live"
-
-[node name="MatchTable" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_lp0dd")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Windows" type="Node" parent="."]
-unique_name_in_owner = true
-
-[connection signal="toggled" from="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WebSocketCheck" to="." method="OnWebSocketCheckToggled"]
-[connection signal="toggled" from="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/TcpCheck" to="." method="OnTcpCheckToggled"]
-[connection signal="text_changed" from="MarginContainer/VBoxContainer/BaseUrlEdit" to="." method="OnBaseUrlEditTextChanged"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/CreateContainer/CreateMatchButton" to="." method="OnCreateMatchButtonPressed"]
-[connection signal="request_completed" from="MarginContainer/VBoxContainer/CreateContainer/CreateRequest" to="." method="OnCreateRequestRequestCompleted"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/ConnectContainer/ConnectButton" to="." method="OnConnectButtonPressed"]
-[connection signal="request_completed" from="MarginContainer/VBoxContainer/ConnectContainer/ConnectRequest" to="." method="OnConnectRequestRequestCompleted"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/WatchContainer/WatchButton" to="." method="OnWatchButtonPressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/LiveMatchesButton" to="." method="OnLiveMatchesButtonPressed"]
+[node name="MatchesTab" parent="MarginContainer/TabContainer/Matches" instance=ExtResource("1_qqjyb")]
+layout_mode = 1

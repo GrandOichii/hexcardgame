@@ -35,6 +35,8 @@ public class MatchProcess {
     private readonly MatchProcessConfig _config;
     private readonly IMatchService _matchService;
     private readonly IValidator<DeckTemplate> _deckValidator;
+
+    [JsonIgnore]
     public ConnectedMatchView View { get; }
 
     public DateTime? StartTime { get; set; }

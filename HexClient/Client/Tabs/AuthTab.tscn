@@ -1,0 +1,55 @@
+[gd_scene load_steps=2 format=3 uid="uid://djj04bh3s4r64"]
+
+[ext_resource type="Script" path="res://Client/Tabs/AuthTab.cs" id="1_i6no3"]
+
+[node name="AuthTab" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_i6no3")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="JwtTokenLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "JWT LABEL"
+
+[node name="LogoutButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Logout"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="UsernameEdit" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Enter username"
+
+[node name="PasswordEdit" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Enter password"
+secret = true
+
+[node name="LoginButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Login"
+
+[node name="Node" type="Node" parent="."]
+
+[node name="LoginRequest" type="HTTPRequest" parent="Node"]
+unique_name_in_owner = true
+
+[node name="RegisterRequest" type="HTTPRequest" parent="Node"]
+unique_name_in_owner = true
+
+[connection signal="pressed" from="VBoxContainer/LoginButton" to="." method="OnLoginButtonPressed"]

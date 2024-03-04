@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://c38yxw6uhifrx"]
+[gd_scene load_steps=3 format=3 uid="uid://c38yxw6uhifrx"]
 
+[ext_resource type="PackedScene" uid="uid://djj04bh3s4r64" path="res://Client/Tabs/AuthTab.tscn" id="1_8wqqx"]
 [ext_resource type="PackedScene" uid="uid://pa3msjtm5nlw" path="res://Client/Tabs/MatchesTab.tscn" id="1_qqjyb"]
 
 [node name="Root" type="Control"]
@@ -25,7 +26,19 @@ theme_override_constants/margin_bottom = 5
 [node name="TabContainer" type="TabContainer" parent="MarginContainer"]
 layout_mode = 2
 
+[node name="Auth" type="TabBar" parent="MarginContainer/TabContainer"]
+layout_mode = 2
+
+[node name="AuthTab" parent="MarginContainer/TabContainer/Auth" instance=ExtResource("1_8wqqx")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="Matches" type="TabBar" parent="MarginContainer/TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="MatchesTab" parent="MarginContainer/TabContainer/Matches" instance=ExtResource("1_qqjyb")]

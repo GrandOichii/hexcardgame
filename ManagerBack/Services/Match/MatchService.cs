@@ -124,7 +124,7 @@ public class MatchService : IMatchService
     // TODO? this updates only when changing status, perhaps add the ability to see the updated actions
     public async Task ServiceStatusUpdated(MatchProcess match)
     {
-        var data = JsonSerializer.Serialize(match);
+        var data = JsonSerializer.Serialize(match, Common.JSON_SERIALIZATION_OPTIONS);
         await _liveHubContext.Clients.All.SendAsync("Update", data);
     }
 

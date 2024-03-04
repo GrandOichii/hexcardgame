@@ -14,4 +14,6 @@ public class MatchProcess {
 	// public MatchRecord? Record { get; private set; } = null;
 	public string TcpAddress { get; set; }
 	public Guid Id { get; set; }
+	
+	// TODO add start and end time
 }

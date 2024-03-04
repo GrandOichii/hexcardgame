@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Net.Sockets;
 using System.Net;
+using HexClient.Tables;
 
 namespace HexClient.Client;
 
@@ -28,6 +29,7 @@ public partial class Root : Control
 	public CheckBox WebSocketCheckNode { get; private set; }
 	public CheckBox TcpCheckNode { get; private set; }
 	public LineEdit PlayerNameEditNode { get; private set; }
+	public MatchTable MatchTableNode { get; private set; }
 	
 	#endregion
 	
@@ -47,6 +49,7 @@ public partial class Root : Control
 		IsBotCheckNode = GetNode<CheckBox>("%IsBotCheck");
 		WebSocketCheckNode = GetNode<CheckBox>("%WebSocketCheck");
 		TcpCheckNode = GetNode<CheckBox>("%TcpCheck");
+		MatchTableNode = GetNode<MatchTable>("%MatchTable");
 
 		ConnectRequestNode = GetNode<HttpRequest>("%ConnectRequest");
 		CreateRequestNode = GetNode<HttpRequest>("%CreateRequest");
@@ -88,6 +91,7 @@ public partial class Root : Control
 		WindowsNode.AddChild(window);
 
 		await window.Load(client);
+		window.GrabFocus();
 	}
 
 	#region Signal connection
@@ -148,8 +152,14 @@ public partial class Root : Control
 	{
 		WebSocketCheckNode.ButtonPressed = !buttonPressed;
 	}
+
+	private void OnLiveMatchesButtonPressed()
+	{
+		_ = MatchTableNode.Connect(BaseUrl + "match/live");
+	}
 	
 	#endregion
 }
+
 
 

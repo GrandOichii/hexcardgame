@@ -4,6 +4,7 @@ using System;
 public partial class GlobalSettings : Node
 {
 	public string BaseUrl { get; set; }
+	public string JwtToken { get; set; }
 	
 	
 	// Called when the node enters the scene tree for the first time.

@@ -56,5 +56,6 @@ unique_name_in_owner = true
 [node name="RegisterRequest" type="HTTPRequest" parent="Node"]
 unique_name_in_owner = true
 
+[connection signal="pressed" from="VBoxContainer/LogoutButton" to="." method="OnLogoutButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/LoginButton" to="." method="OnLoginButtonPressed"]
 [connection signal="request_completed" from="Node/LoginRequest" to="." method="OnLoginRequestRequestCompleted"]

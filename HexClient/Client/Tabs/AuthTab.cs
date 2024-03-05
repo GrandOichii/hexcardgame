@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 public partial class AuthTab : Control
 {
@@ -16,9 +17,18 @@ public partial class AuthTab : Control
 	
 	#endregion
 	
-	private static string ToJwtLabelText(string jwt) => string.IsNullOrEmpty(jwt) ? "Not logged in" : $"Jwt: {jwt}";
+	private static string ToJwtLabelText(string jwt) => string.IsNullOrEmpty(jwt) ? "Not logged in" : "Jwt: " + Regex.Replace(jwt, "(?<=^.{100}).*", "...");
+
 	public string Username => UsernameEditNode.Text;
 	public string Password => PasswordEditNode.Text;
+
+	private string JwtToken {
+		get => GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
+		set {
+			GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken = value;
+			JwtTokenLabelNode.Text = ToJwtLabelText(value);
+		}
+	}
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -66,11 +76,19 @@ public partial class AuthTab : Control
 		// TODO check response code
 		
 		var jwt = Encoding.UTF8.GetString(body);
-		GD.Print(jwt);
+		JwtToken = jwt;
+		JwtTokenLabelNode.Text = ToJwtLabelText(jwt);
+	}
+
+	private void OnLogoutButtonPressed()
+	{
+		JwtToken = "";
+		JwtTokenLabelNode.Text = ToJwtLabelText(JwtToken);		
 	}
 	
 	#endregion
 
 }
+
 
 

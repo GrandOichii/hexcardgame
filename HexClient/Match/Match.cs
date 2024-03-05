@@ -7,10 +7,12 @@ public partial class Match : Control
 {
 	#region Packed scenes
 
-	private readonly static PackedScene PlayerInfoPS = ResourceLoader.Load<PackedScene>("res://Match/Player/PlayerInfo.tscn");
+	[Export]
+	private PackedScene PlayerInfoPS { get; set; }
 
 	#endregion
-	#region Node
+
+	#region Nodes
 	
 	public Window OptionsWindowNode { get; private set; }
 	public Control PlayerContainerNode { get; private set; }

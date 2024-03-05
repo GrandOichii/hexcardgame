@@ -15,8 +15,15 @@ namespace HexClient.Client;
 
 public partial class MatchesTab : Control
 {
-	private readonly static PackedScene MatchViewWindowPS = ResourceLoader.Load<PackedScene>("res://Match/View/MatchViewWindow.tscn");
-	private readonly static PackedScene ConnectedMatchWindowPS = ResourceLoader.Load<PackedScene>("res://Match/ConnectedMatchWindow.tscn");
+	#region Packed scenes
+
+	// TODO export
+	[Export]
+	private PackedScene MatchViewWindowPS { get; set; }
+	[Export]
+	private PackedScene ConnectedMatchWindowPS { get; set; }
+
+	#endregion
 
 	#region Nodes
 	

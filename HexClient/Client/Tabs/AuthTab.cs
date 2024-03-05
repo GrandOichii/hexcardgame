@@ -4,8 +4,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Utility;
 
 namespace HexClient.Client.Tabs;
+
+public class LoginResult {
+	public required string Token { get; set; }
+	public required bool IsAdmin { get; set; }
+}
 
 public partial class AuthTab : Control
 {
@@ -77,15 +83,20 @@ public partial class AuthTab : Control
 	{
 		// TODO check response code
 		
-		var jwt = Encoding.UTF8.GetString(body);
-		JwtToken = jwt;
-		JwtTokenLabelNode.Text = ToJwtLabelText(jwt);
+		var login = JsonSerializer.Deserialize<LoginResult>(body, Common.JSON_SERIALIZATION_OPTIONS);
+
+		JwtToken = login.Token;
+		JwtTokenLabelNode.Text = ToJwtLabelText(login.Token);
+
+		GetNode<GlobalSettings>("/root/GlobalSettings").IsAdmin = login.IsAdmin;
 	}
 
 	private void OnLogoutButtonPressed()
 	{
 		JwtToken = "";
-		JwtTokenLabelNode.Text = ToJwtLabelText(JwtToken);		
+		JwtTokenLabelNode.Text = ToJwtLabelText(JwtToken);
+
+		GetNode<GlobalSettings>("/root/GlobalSettings").IsAdmin = false;
 	}
 	
 	#endregion

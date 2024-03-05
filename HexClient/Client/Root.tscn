@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://djj04bh3s4r64" path="res://Client/Tabs/AuthTab.tscn" id="1_8wqqx"]
 [ext_resource type="PackedScene" uid="uid://pa3msjtm5nlw" path="res://Client/Tabs/MatchesTab.tscn" id="1_qqjyb"]
-[ext_resource type="PackedScene" uid="uid://o2p6llp0lur5" path="res://Client/Tabs/CardsTab.tscn" id="3_siv0a"]
+[ext_resource type="PackedScene" uid="uid://bnvjj3fxsrj82" path="res://Client/Tabs/CardsTab.tscn" id="3_siv0a"]
 
 [node name="Root" type="Control"]
 layout_mode = 3
@@ -39,6 +39,8 @@ layout_mode = 2
 
 [node name="MatchesTab" parent="MarginContainer/TabContainer/Matches" instance=ExtResource("1_qqjyb")]
 layout_mode = 1
+MatchViewWindowPS = null
+ConnectedMatchWindowPS = null
 
 [node name="Cards" type="TabBar" parent="MarginContainer/TabContainer"]
 visible = false

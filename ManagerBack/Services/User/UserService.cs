@@ -55,14 +55,17 @@ public class UserService : IUserService
         return _mapper.Map<GetUserDto>(result);
     }
 
-    public async Task<string> Login(PostUserDto user)
+    public async Task<LoginResult> Login(PostUserDto user)
     {
         var existing = await _userRepo.ByUsername(user.Username)
             ?? throw new InvalidLoginCredentialsException();
 
         if (!BCrypt.Net.BCrypt.Verify(user.Password, existing.PasswordHash)) throw new InvalidLoginCredentialsException();
 
-        return CreateToken(existing);
+        return new LoginResult {
+            Token = CreateToken(existing),
+            IsAdmin = existing.IsAdmin
+        };
     }
 
 

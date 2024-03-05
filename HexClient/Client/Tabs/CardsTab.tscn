@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://o2p6llp0lur5"]
+[gd_scene load_steps=3 format=3 uid="uid://bnvjj3fxsrj82"]
 
 [ext_resource type="Script" path="res://Client/Tabs/CardsTab.cs" id="1_th7ui"]
 [ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Cards/Card.tscn" id="2_3gbhf"]
@@ -34,17 +34,35 @@ size_flags_vertical = 3
 layout_mode = 2
 text = "Refresh"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer"]
+[node name="Control" type="Control" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 5.0
 
-[node name="CardsContainer" type="FlowContainer" parent="HBoxContainer/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/Control/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 5.0
+
+[node name="CardsContainer" type="FlowContainer" parent="HBoxContainer/Control/VBoxContainer/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 5.0
+
+[node name="CreateCardButton" type="Button" parent="HBoxContainer/Control/VBoxContainer" groups=["admin_ui"]]
+layout_mode = 2
+text = "Create"
 
 [node name="Requests" type="Node" parent="."]
 
@@ -56,5 +74,6 @@ unique_name_in_owner = true
 
 [connection signal="item_activated" from="HBoxContainer/VBoxContainer/ExpansionsList" to="." method="OnExpansionsListItemActivated"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/FetchExpansionsButton" to="." method="OnFetchExpansionsButtonPressed"]
+[connection signal="pressed" from="HBoxContainer/Control/VBoxContainer/CreateCardButton" to="." method="OnCreateCardButtonPressed"]
 [connection signal="request_completed" from="Requests/FetchExpansionsRequest" to="." method="OnFetchExpansionsRequestRequestCompleted"]
 [connection signal="request_completed" from="Requests/FetchExpansionCardsRequest" to="." method="OnFetchExpansionCardsRequestCompleted"]

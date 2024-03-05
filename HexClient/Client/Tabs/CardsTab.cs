@@ -103,8 +103,14 @@ public partial class CardsTab : Control
 			cardDisplay.Load(card);
 		}
 	}
+
+	private void OnCreateCardButtonPressed()
+	{
+		// TODO
+	}
 	
 	#endregion
 }
+
 
 

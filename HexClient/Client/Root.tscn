@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://c38yxw6uhifrx"]
+[gd_scene load_steps=4 format=3 uid="uid://c38yxw6uhifrx"]
 
 [ext_resource type="PackedScene" uid="uid://djj04bh3s4r64" path="res://Client/Tabs/AuthTab.tscn" id="1_8wqqx"]
 [ext_resource type="PackedScene" uid="uid://pa3msjtm5nlw" path="res://Client/Tabs/MatchesTab.tscn" id="1_qqjyb"]
+[ext_resource type="PackedScene" uid="uid://o2p6llp0lur5" path="res://Client/Tabs/CardsTab.tscn" id="3_siv0a"]
 
 [node name="Root" type="Control"]
 layout_mode = 3
@@ -31,15 +32,17 @@ layout_mode = 2
 
 [node name="AuthTab" parent="MarginContainer/TabContainer/Auth" instance=ExtResource("1_8wqqx")]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="Matches" type="TabBar" parent="MarginContainer/TabContainer"]
 visible = false
 layout_mode = 2
 
 [node name="MatchesTab" parent="MarginContainer/TabContainer/Matches" instance=ExtResource("1_qqjyb")]
+layout_mode = 1
+
+[node name="Cards" type="TabBar" parent="MarginContainer/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="CardsTab" parent="MarginContainer/TabContainer/Cards" instance=ExtResource("3_siv0a")]
 layout_mode = 1

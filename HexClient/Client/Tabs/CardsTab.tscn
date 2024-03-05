@@ -1,0 +1,60 @@
+[gd_scene load_steps=3 format=3 uid="uid://o2p6llp0lur5"]
+
+[ext_resource type="Script" path="res://Client/Tabs/CardsTab.cs" id="1_th7ui"]
+[ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Cards/Card.tscn" id="2_3gbhf"]
+
+[node name="CardsTab" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_th7ui")
+CardDisplayPS = ExtResource("2_3gbhf")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ExpansionsList" type="ItemList" parent="HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FetchExpansionsButton" type="Button" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Refresh"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 5.0
+
+[node name="CardsContainer" type="FlowContainer" parent="HBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 5.0
+
+[node name="Requests" type="Node" parent="."]
+
+[node name="FetchExpansionsRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
+[node name="FetchExpansionCardsRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
+[connection signal="item_activated" from="HBoxContainer/VBoxContainer/ExpansionsList" to="." method="OnExpansionsListItemActivated"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/FetchExpansionsButton" to="." method="OnFetchExpansionsButtonPressed"]
+[connection signal="request_completed" from="Requests/FetchExpansionsRequest" to="." method="OnFetchExpansionsRequestRequestCompleted"]
+[connection signal="request_completed" from="Requests/FetchExpansionCardsRequest" to="." method="OnFetchExpansionCardsRequestCompleted"]

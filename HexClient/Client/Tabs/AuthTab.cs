@@ -5,6 +5,8 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
+namespace HexClient.Client.Tabs;
+
 public partial class AuthTab : Control
 {
 	#region Nodes

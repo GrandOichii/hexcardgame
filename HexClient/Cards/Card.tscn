@@ -175,4 +175,4 @@ theme_override_colors/font_color = Color(0.25098, 0.25098, 0.25098, 1)
 theme_override_font_sizes/font_size = 24
 text = "+1"
 
-[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="gui_input" from="." to="." method="OnGuiInput"]

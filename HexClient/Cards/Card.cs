@@ -1,9 +1,10 @@
 using Godot;
+using HexCore.Cards;
 using System;
 
 namespace HexClient.Cards;
 
-public partial class Card : Control
+public partial class Card : Control, ICardDisplay
 {
 
 	#region Nodes
@@ -46,7 +47,7 @@ public partial class Card : Control
 		#endregion
 		
 		// don't know if this is correct, don't see any other way
-		BgNode.Set("theme_override_styles/panel", _bgStyle.Duplicate());
+		BgNode.Set("theme_override_styles/panel", BgStyle.Duplicate());
 
 		_defaultBgColor = BgColor;
 	}
@@ -72,15 +73,20 @@ public partial class Card : Control
 		DefenceLabelNode.Text = "";
 		TextLabelNode.Text = card.Text;
 	}
-	
+
+	public void Load(ExpansionCard card)
+	{
+		Load(card as HexCore.Cards.Card);
+	}
+
 	public Color BgColor {
-		get => _bgStyle.BgColor;
+		get => BgStyle.BgColor;
 		set {
-			_bgStyle.BgColor = value;
+			BgStyle.BgColor = value;
 		}
 	}
 
-	private StyleBoxFlat _bgStyle => BgNode.Get("theme_override_styles/panel").As<StyleBoxFlat>();
+	private StyleBoxFlat BgStyle => BgNode.Get("theme_override_styles/panel").As<StyleBoxFlat>();
 
 	// public void Unfocus() {
 	// 	CreateTween().TweenProperty(this, "BgColor", _defaultBgColor, .1f);	
@@ -89,4 +95,14 @@ public partial class Card : Control
 	// public void Focus() {
 	// 	CreateTween().TweenProperty(this, "BgColor", FocusColor, .1f);
 	// }
+	
+	#region Signal connections
+	
+	private void OnGuiInput(InputEvent @event)
+	{
+		// Replace with function body.
+	}
+	
+	#endregion
 }
+

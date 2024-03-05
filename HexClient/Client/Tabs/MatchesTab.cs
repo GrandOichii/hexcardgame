@@ -11,7 +11,7 @@ using System.Net.Sockets;
 using System.Net;
 using HexClient.Tables;
 
-namespace HexClient.Client;
+namespace HexClient.Client.Tabs;
 
 public partial class MatchesTab : Control
 {

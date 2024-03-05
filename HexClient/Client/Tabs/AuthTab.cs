@@ -93,6 +93,8 @@ public partial class AuthTab : Control
 
 	private void OnLogoutButtonPressed()
 	{
+		// TODO confirm
+		
 		JwtToken = "";
 		JwtTokenLabelNode.Text = ToJwtLabelText(JwtToken);
 

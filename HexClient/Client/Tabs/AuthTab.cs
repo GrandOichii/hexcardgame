@@ -1,6 +1,8 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Text.Json;
 
 public partial class AuthTab : Control
 {
@@ -9,8 +11,8 @@ public partial class AuthTab : Control
 	public Label JwtTokenLabelNode { get; private set; }
 	public LineEdit UsernameEditNode { get; private set; }
 	public LineEdit PasswordEditNode { get; private set; }
-	public HttpRequest LoginRequest { get; private set; }
-	public HttpRequest RegisterRequest { get; private set; }
+	public HttpRequest LoginRequestNode { get; private set; }
+	public HttpRequest RegisterRequestNode { get; private set; }
 	
 	#endregion
 	
@@ -25,10 +27,11 @@ public partial class AuthTab : Control
 		
 		JwtTokenLabelNode = GetNode<Label>("%JwtTokenLabel");
 		UsernameEditNode = GetNode<LineEdit>("%UsernameEdit");
-
-
 		PasswordEditNode = GetNode<LineEdit>("%PasswordEdit");
 		
+		LoginRequestNode = GetNode<HttpRequest>("%LoginRequest");
+		RegisterRequestNode = GetNode<HttpRequest>("%RegisterRequest");
+
 		#endregion
 		
 		JwtTokenLabelNode.Text = ToJwtLabelText("");
@@ -53,9 +56,21 @@ public partial class AuthTab : Control
 		};
 
 		// TODO send request
+		string[] headers = new string[] { "Content-Type: application/json" };
+		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		LoginRequestNode.Request(baseUrl + "auth/login", headers, HttpClient.Method.Post, JsonSerializer.Serialize(data));
+	}
+
+	private void OnLoginRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
+	{
+		// TODO check response code
+		
+		var jwt = Encoding.UTF8.GetString(body);
+		GD.Print(jwt);
 	}
 	
 	#endregion
 
 }
+
 

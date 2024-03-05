@@ -49,18 +49,6 @@ public partial class ConnectedMatch : Control
 
 	private static readonly string CONFIG_PREFIX = "config-";
 	private async Task OnMatchUpdate(string message) {
-		// if (message == "deck") return;
-		// if (message == "name") return;
-		// if (message == "matchstart") {
-		// 	GD.Print("received matchstart");
-		// 	await Connection.Write("accept");
-		// 	return; 
-		// }
-		// if (message == "playerwaiting") {
-		// 	GD.Print("received playerwaiting");
-		// 	await Connection.Write("accept");
-		// 	return; 
-		// }
 
 		if (message.StartsWith(CONFIG_PREFIX)) {
 			message = message[CONFIG_PREFIX.Length..];

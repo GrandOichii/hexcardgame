@@ -17,7 +17,6 @@ public partial class MatchesTab : Control
 {
 	#region Packed scenes
 
-	// TODO export
 	[Export]
 	private PackedScene MatchViewWindowPS { get; set; }
 	[Export]

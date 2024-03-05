@@ -1,0 +1,178 @@
+[gd_scene load_steps=5 format=3 uid="uid://dicpedvts17tf"]
+
+[ext_resource type="Script" path="res://Cards/Card.cs" id="1_ts64u"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v64c4"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hacd8"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x7vij"]
+bg_color = Color(0, 0.74902, 1, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[node name="Card" type="Control"]
+custom_minimum_size = Vector2(300, 420)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -852.0
+offset_bottom = -228.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ts64u")
+
+[node name="Bg" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_v64c4")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Fg" type="PanelContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hacd8")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Fg"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Fg/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="NameLabel" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Card name here"
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_x7vij")
+
+[node name="CostLabel" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0.611765, 1)
+theme_override_font_sizes/font_size = 24
+text = " 4 "
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Image" type="TextureRect" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(2.08165e-12, 170)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 5
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TypeLabel" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Card type here"
+
+[node name="HSeparator3" type="HSeparator" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TextLabel" type="RichTextLabel" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+bbcode_enabled = true
+text = "Card text here
+Card text here"
+
+[node name="Bottom" type="HBoxContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+
+[node name="PowerLabel" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/Bottom"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.52549, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "2"
+horizontal_alignment = 2
+
+[node name="PLSeparator" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/Bottom"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "/"
+
+[node name="LifeContainer" type="HBoxContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/Bottom"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="LifeLabel" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/Bottom/LifeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.34902, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "3"
+
+[node name="DefenceLabel" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/Bottom/LifeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.25098, 0.25098, 0.25098, 1)
+theme_override_font_sizes/font_size = 24
+text = "+1"
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]

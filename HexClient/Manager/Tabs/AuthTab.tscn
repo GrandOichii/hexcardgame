@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://djj04bh3s4r64"]
 
-[ext_resource type="Script" path="res://Client/Tabs/AuthTab.cs" id="1_i6no3"]
+[ext_resource type="Script" path="res://Manager/Tabs/AuthTab.cs" id="1_i6no3"]
 
 [node name="AuthTab" type="Control"]
 layout_mode = 3

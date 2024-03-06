@@ -6,6 +6,6 @@ global using HexClient.Cards;
 global using HexClient.Match.Player;
 global using HexClient.Match.State;
 global using HexClient.Match.View;
-global using HexClient.Client.Tabs;
+global using HexClient.Manager.Tabs;
 
 global using HexStates = HexCore.GameMatch.States;

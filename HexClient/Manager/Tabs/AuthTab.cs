@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Utility;
 
-namespace HexClient.Client.Tabs;
+namespace HexClient.Manager.Tabs;
 
 public class LoginResult {
 	public required string Token { get; set; }

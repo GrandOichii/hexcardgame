@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace HexClient.Client;
+namespace HexClient.Manager;
 
 public partial class DisplayCard : Control, ICardDisplay
 {

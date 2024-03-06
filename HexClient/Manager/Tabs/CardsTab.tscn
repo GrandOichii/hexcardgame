@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://bnvjj3fxsrj82"]
 
-[ext_resource type="Script" path="res://Client/Tabs/CardsTab.cs" id="1_th7ui"]
-[ext_resource type="PackedScene" uid="uid://dmnj0abgjpb5k" path="res://Client/DisplayCard.tscn" id="2_4305t"]
-[ext_resource type="PackedScene" uid="uid://cc6yudbgtuq86" path="res://Client/CardEdit.tscn" id="3_dmx6l"]
+[ext_resource type="Script" path="res://Manager/Tabs/CardsTab.cs" id="1_y82oe"]
+[ext_resource type="PackedScene" uid="uid://dmnj0abgjpb5k" path="res://Manager/DisplayCard.tscn" id="2_aunuw"]
+[ext_resource type="PackedScene" uid="uid://cc6yudbgtuq86" path="res://Manager/CardEdit.tscn" id="3_iywp5"]
 
 [node name="CardsTab" type="Control"]
 layout_mode = 3
@@ -11,8 +11,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_th7ui")
-CardDisplayPS = ExtResource("2_4305t")
+script = ExtResource("1_y82oe")
+CardDisplayPS = ExtResource("2_aunuw")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -103,7 +103,7 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="CardEdit" parent="Windows/CardEditWindow/MarginContainer" instance=ExtResource("3_dmx6l")]
+[node name="CardEdit" parent="Windows/CardEditWindow/MarginContainer" instance=ExtResource("3_iywp5")]
 unique_name_in_owner = true
 layout_mode = 2
 

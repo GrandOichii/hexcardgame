@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dmnj0abgjpb5k"]
 
-[ext_resource type="Script" path="res://Client/DisplayCard.cs" id="1_jqewc"]
+[ext_resource type="Script" path="res://Manager/DisplayCard.cs" id="1_jqewc"]
 [ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Cards/Card.tscn" id="2_71jkp"]
 
 [node name="DisplayCard" type="Control"]

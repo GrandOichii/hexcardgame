@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json;
 using Utility;
 
-namespace HexClient.Client.Tabs;
+namespace HexClient.Manager.Tabs;
 
 public struct Expansion {
 	public string Name { get; set; }

@@ -4,7 +4,7 @@ using System;
 
 namespace HexClient.Cards;
 
-public partial class Card : Control, ICardDisplay
+public partial class Card : Control
 {
 
 	#region Nodes
@@ -72,11 +72,6 @@ public partial class Card : Control, ICardDisplay
 		LifeLabelNode.Text = card.Life.ToString();
 		DefenceLabelNode.Text = "";
 		TextLabelNode.Text = card.Text;
-	}
-
-	public void Load(ExpansionCard card)
-	{
-		Load(card as HexCore.Cards.Card);
 	}
 
 	public Color BgColor {

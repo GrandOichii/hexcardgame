@@ -14,8 +14,10 @@ script = ExtResource("1_jqewc")
 
 [node name="Card" parent="." instance=ExtResource("2_71jkp")]
 unique_name_in_owner = true
+process_mode = 4
 layout_mode = 1
 offset_right = 0.0
 offset_bottom = 0.0
+mouse_filter = 2
 
 [connection signal="gui_input" from="." to="." method="OnGuiInput"]

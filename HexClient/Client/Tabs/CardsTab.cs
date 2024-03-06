@@ -15,6 +15,7 @@ public struct Expansion {
 
 public interface ICardDisplay {
 	public void Load(ExpansionCard card);
+	public void SubsribeToRightClick(Action<Wrapper<ExpansionCard>> a);
 }
 
 public partial class CardsTab : Control
@@ -39,6 +40,7 @@ public partial class CardsTab : Control
 	public HttpRequest FetchExpansionsRequestNode { get; private set; }
 	public HttpRequest FetchExpansionCardsRequestNode { get; private set; }
 	public HttpRequest CreateCardRequestNode { get; private set; }
+	public HttpRequest DeleteCardRequestNode { get; private set; }
 	
 	#endregion
 	
@@ -48,7 +50,7 @@ public partial class CardsTab : Control
 		
 		ExpansionsListNode = GetNode<ItemList>("%ExpansionsList");
 		CardsContainerNode = GetNode<FlowContainer>("%CardsContainer");
-		
+
 		CardContextMenuNode = GetNode<PopupMenu>("%CardContextMenu");
 
 		CardEditWindowNode = GetNode<Window>("%CardEditWindow");
@@ -57,6 +59,7 @@ public partial class CardsTab : Control
 		FetchExpansionsRequestNode = GetNode<HttpRequest>("%FetchExpansionsRequest");
 		FetchExpansionCardsRequestNode = GetNode<HttpRequest>("%FetchExpansionCardsRequest");
 		CreateCardRequestNode = GetNode<HttpRequest>("%CreateCardRequest");
+		DeleteCardRequestNode = GetNode<HttpRequest>("%DeleteCardRequest");
 		
 		#endregion
 
@@ -115,7 +118,15 @@ public partial class CardsTab : Control
 
 			var cardDisplay = child as ICardDisplay;
 			cardDisplay.Load(card);
+			cardDisplay.SubsribeToRightClick(OnCardRightClick);
 		}
+	}
+
+	private void OnCardRightClick(Wrapper<ExpansionCard> cardW) {
+		var mousePos = GetGlobalMousePosition();
+		CardContextMenuNode.PopupOnParent(new Rect2I((int)mousePos.X, (int)mousePos.Y, -1, -1));
+		CardContextMenuNode.Show();
+		CardContextMenuNode.SetMeta("Card", cardW);
 	}
 
 	private void OnCreateCardButtonPressed()
@@ -168,11 +179,16 @@ public partial class CardsTab : Control
 
 	private void OnCardContextMenuIndexPressed(int index)
 	{
+		var card = CardContextMenuNode.GetMeta("Card").As<Wrapper<ExpansionCard>>().Value;
+
 		switch (index) {
 		case 0:
+			GD.Print("editing " + card.Name);
 			// editing
 			break;
 		case 1:
+			DeleteCard(card);
+			GD.Print("deleting " + card.Name);
 			// deleting
 			break;
 		default:
@@ -180,6 +196,36 @@ public partial class CardsTab : Control
 		}
 		// Replace with function body.
 	}
+
+	private void OnDeleteCardRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
+	{
+		if (response_code != 200) {
+			// TODO alert that failed to delete card
+			GD.Print("Card deletion response code: " + response_code);
+			GD.Print(Encoding.UTF8.GetString(body));
+			return;
+		}
+
+		// TODO alert that successfully deleted card
+		
+		// * fetch the cards of the expansion of the deleted card
+		var card = CardContextMenuNode.GetMeta("Card").As<Wrapper<ExpansionCard>>().Value;
+		var expansion = card.Expansion;
+		CardContextMenuNode.RemoveMeta("Card");
+		
+		LoadExpansion(expansion);
+	}
 	
 	#endregion
+
+	private void DeleteCard(ExpansionCard card) {
+		// TODO confirm
+
+		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
+
+		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
+		DeleteCardRequestNode.Request(baseUrl + "card/" + card.GetCID(), headers, HttpClient.Method.Delete);
+	}
 }
+

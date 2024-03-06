@@ -33,6 +33,8 @@ public partial class CardsTab : Control
 
 	public Window CardEditWindowNode { get; private set; }
 	public CardEdit CardEditNode { get; private set; }
+	public PopupMenu CardContextMenuNode { get; private set; }
+
 
 	public HttpRequest FetchExpansionsRequestNode { get; private set; }
 	public HttpRequest FetchExpansionCardsRequestNode { get; private set; }
@@ -46,6 +48,8 @@ public partial class CardsTab : Control
 		
 		ExpansionsListNode = GetNode<ItemList>("%ExpansionsList");
 		CardsContainerNode = GetNode<FlowContainer>("%CardsContainer");
+		
+		CardContextMenuNode = GetNode<PopupMenu>("%CardContextMenu");
 
 		CardEditWindowNode = GetNode<Window>("%CardEditWindow");
 		CardEditNode = GetNode<CardEdit>("%CardEdit");
@@ -161,11 +165,21 @@ public partial class CardsTab : Control
 
 		LoadExpansion(card.Expansion);
 	}
+
+	private void OnCardContextMenuIndexPressed(int index)
+	{
+		switch (index) {
+		case 0:
+			// editing
+			break;
+		case 1:
+			// deleting
+			break;
+		default:
+			break;
+		}
+		// Replace with function body.
+	}
 	
 	#endregion
 }
-
-
-
-
-

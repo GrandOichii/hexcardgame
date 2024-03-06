@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bnvjj3fxsrj82"]
 
 [ext_resource type="Script" path="res://Client/Tabs/CardsTab.cs" id="1_th7ui"]
-[ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Cards/Card.tscn" id="2_3gbhf"]
+[ext_resource type="PackedScene" uid="uid://dmnj0abgjpb5k" path="res://Client/DisplayCard.tscn" id="2_4305t"]
 [ext_resource type="PackedScene" uid="uid://cc6yudbgtuq86" path="res://Client/CardEdit.tscn" id="3_dmx6l"]
 
 [node name="CardsTab" type="Control"]
@@ -12,7 +12,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_th7ui")
-CardDisplayPS = ExtResource("2_3gbhf")
+CardDisplayPS = ExtResource("2_4305t")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -101,6 +101,17 @@ theme_override_constants/margin_bottom = 5
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="ContextMenus" type="Node" parent="."]
+
+[node name="CardContextMenu" type="PopupMenu" parent="ContextMenus"]
+unique_name_in_owner = true
+visible = true
+item_count = 2
+item_0/text = "Edit"
+item_0/id = 0
+item_1/text = "Delete"
+item_1/id = 1
+
 [connection signal="item_activated" from="HBoxContainer/VBoxContainer/ExpansionsList" to="." method="OnExpansionsListItemActivated"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/FetchExpansionsButton" to="." method="OnFetchExpansionsButtonPressed"]
 [connection signal="pressed" from="HBoxContainer/Control/VBoxContainer/CreateCardButton" to="." method="OnCreateCardButtonPressed"]
@@ -110,3 +121,4 @@ layout_mode = 2
 [connection signal="close_requested" from="Windows/CardEditWindow" to="." method="OnCardEditWindowCloseRequested"]
 [connection signal="Closed" from="Windows/CardEditWindow/MarginContainer/CardEdit" to="." method="OnCardEditClosed"]
 [connection signal="Saved" from="Windows/CardEditWindow/MarginContainer/CardEdit" to="." method="OnCardEditSaved"]
+[connection signal="index_pressed" from="ContextMenus/CardContextMenu" to="." method="OnCardContextMenuIndexPressed"]

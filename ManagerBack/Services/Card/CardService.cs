@@ -40,7 +40,7 @@ public partial class CardService : ICardService
     {
         await _cidValidator.Validate(cid);
         var result = await _cardRepo.ByCID(cid) 
-            ?? throw new CardNotFoundException($"no card with CID {cid}");
+            ?? throw new CardNotFoundException($"no card with cid {cid}");
 
         return result;
     }
@@ -68,7 +68,7 @@ public partial class CardService : ICardService
     {
         var deletedCount = await _cardRepo.Delete(cid);
         if (deletedCount != 1) 
-            throw new CardNotFoundException(cid);
+            throw new CardNotFoundException("no card with cid " + cid);
     }
 
     public async Task Update(ExpansionCard card)

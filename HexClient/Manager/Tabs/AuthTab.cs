@@ -22,6 +22,9 @@ public partial class AuthTab : Control
 	public LineEdit PasswordEditNode { get; private set; }
 	public HttpRequest LoginRequestNode { get; private set; }
 	public HttpRequest RegisterRequestNode { get; private set; }
+
+	public AcceptDialog ErrorPopupNode { get; private set; }
+	public ConfirmationDialog LogoutConfirmationPopupNode { get; private set; }
 	
 	#endregion
 	
@@ -50,6 +53,9 @@ public partial class AuthTab : Control
 		LoginRequestNode = GetNode<HttpRequest>("%LoginRequest");
 		RegisterRequestNode = GetNode<HttpRequest>("%RegisterRequest");
 
+		ErrorPopupNode = GetNode<AcceptDialog>("%ErrorPopup");
+		LogoutConfirmationPopupNode = GetNode<ConfirmationDialog>("%LogoutConfirmationPopup");
+
 		#endregion
 		
 		JwtTokenLabelNode.Text = ToJwtLabelText("");
@@ -63,11 +69,13 @@ public partial class AuthTab : Control
 	private void OnLoginButtonPressed()
 	{
 		if (string.IsNullOrEmpty(Username)) {
-			// TODO alert
+			ErrorPopupNode.DialogText = "Enter username";
+			ErrorPopupNode.Show();
 			return;
 		}
 		if (string.IsNullOrEmpty(Password)) {
-			// TODO alert
+			ErrorPopupNode.DialogText = "Enter password";
+			ErrorPopupNode.Show();
 			return;
 		}
 
@@ -76,7 +84,6 @@ public partial class AuthTab : Control
 			{ "Password", Password },
 		};
 
-		// TODO send request
 		string[] headers = new string[] { "Content-Type: application/json" };
 		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
 		LoginRequestNode.Request(baseUrl + "auth/login", headers, HttpClient.Method.Post, JsonSerializer.Serialize(data));
@@ -84,7 +91,12 @@ public partial class AuthTab : Control
 
 	private void OnLoginRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
-		// TODO check response code
+		if (response_code != 200) {
+			var resp = Encoding.UTF8.GetString(body);
+			ErrorPopupNode.DialogText = $"Failed to login! (Response code: {response_code})\nResponse body:\n{resp}";
+			ErrorPopupNode.Show();
+			return;
+		}
 		
 		var login = JsonSerializer.Deserialize<LoginResult>(body, Common.JSON_SERIALIZATION_OPTIONS);
 
@@ -96,8 +108,13 @@ public partial class AuthTab : Control
 
 	private void OnLogoutButtonPressed()
 	{
-		// TODO confirm
-		
+		if (string.IsNullOrEmpty(GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken))
+			return;
+		LogoutConfirmationPopupNode.Show();		
+	}
+
+	private void OnLogoutConfirmationPopupConfirmed()
+	{
 		JwtToken = "";
 		JwtTokenLabelNode.Text = ToJwtLabelText(JwtToken);
 
@@ -105,8 +122,4 @@ public partial class AuthTab : Control
 	}
 	
 	#endregion
-
 }
-
-
-

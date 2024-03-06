@@ -78,7 +78,8 @@ public partial class CardEdit : Control
 	
 	private void OnSaveButtonPressed()
 	{
-		// TODO validate
+		// * validation is currently done server-side, the window will not close unless user receives 200
+		
 		var oldName = _edited is not null ? $"{_edited.Expansion}::{_edited.Name}" : "";
 
 		var result = new ExpansionCard {

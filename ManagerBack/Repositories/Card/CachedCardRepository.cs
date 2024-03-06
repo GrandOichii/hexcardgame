@@ -3,6 +3,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using Utility;
 
 namespace ManagerBack.Repositories;
 
@@ -25,12 +26,12 @@ public class CachedCardRepository : ICachedCardRepository
         var key = ToKey(cid);
         var data = await _cache.GetStringAsync(key);
         if (string.IsNullOrEmpty(data)) return null;
-        return JsonSerializer.Deserialize<CardModel>(data);
+        return JsonSerializer.Deserialize<CardModel>(data, Common.JSON_SERIALIZATION_OPTIONS);
     }
 
     public async Task Remember(CardModel card)
     {
         var key = ToKey(card.GetCID());
-        await _cache.SetStringAsync(key, card.ToJson());
+        await _cache.SetStringAsync(key, JsonSerializer.Serialize(card, Common.JSON_SERIALIZATION_OPTIONS));
     }
 }

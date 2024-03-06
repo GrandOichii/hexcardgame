@@ -31,8 +31,12 @@ public partial class CardsTab : Control
 	public ItemList ExpansionsListNode { get; private set; }
 	public FlowContainer CardsContainerNode { get; private set; }
 
+	public Window CardEditWindowNode { get; private set; }
+	public CardEdit CardEditNode { get; private set; }
+
 	public HttpRequest FetchExpansionsRequestNode { get; private set; }
 	public HttpRequest FetchExpansionCardsRequestNode { get; private set; }
+	public HttpRequest CreateCardRequestNode { get; private set; }
 	
 	#endregion
 	
@@ -43,10 +47,16 @@ public partial class CardsTab : Control
 		ExpansionsListNode = GetNode<ItemList>("%ExpansionsList");
 		CardsContainerNode = GetNode<FlowContainer>("%CardsContainer");
 
+		CardEditWindowNode = GetNode<Window>("%CardEditWindow");
+		CardEditNode = GetNode<CardEdit>("%CardEdit");
+
 		FetchExpansionsRequestNode = GetNode<HttpRequest>("%FetchExpansionsRequest");
 		FetchExpansionCardsRequestNode = GetNode<HttpRequest>("%FetchExpansionCardsRequest");
+		CreateCardRequestNode = GetNode<HttpRequest>("%CreateCardRequest");
 		
 		#endregion
+
+		CardEditWindowNode.Hide();
 	}
 
 	private void UpdateExpansion(Expansion expansion) {
@@ -56,12 +66,12 @@ public partial class CardsTab : Control
 		ExpansionsListNode.SetItemMetadata(itemI, new Wrapper<Expansion>(expansion));
 	}
 
-	private void LoadExpansion(Expansion expansion) {
+	private void LoadExpansion(string expansion) {
 		while (CardsContainerNode.GetChildCount() > 0)
 			CardsContainerNode.RemoveChild(CardsContainerNode.GetChild(0));
 
 		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
-		FetchExpansionCardsRequestNode.Request(baseUrl + "card/fromexpansion/" + expansion.Name);
+		FetchExpansionCardsRequestNode.Request(baseUrl + "card/fromexpansion/" + expansion);
 	}
 
 	#region Signal connections
@@ -71,7 +81,7 @@ public partial class CardsTab : Control
 		// TODO
 		var expansion = ExpansionsListNode.GetItemMetadata(index).As<Wrapper<Expansion>>().Value;
 
-		LoadExpansion(expansion);
+		LoadExpansion(expansion.Name);
 	}
 
 	private void OnFetchExpansionsButtonPressed()
@@ -106,11 +116,56 @@ public partial class CardsTab : Control
 
 	private void OnCreateCardButtonPressed()
 	{
+		CardEditNode.Load(null);
+		CardEditWindowNode.Show();
+	}
+
+	private void OnCardEditWindowCloseRequested()
+	{
+		CardEditWindowNode.Hide();
 		// TODO
+	}
+
+	private void OnCardEditClosed()
+	{
+		CardEditWindowNode.Hide();
+	}
+	
+	private void OnCardEditSaved(Wrapper<ExpansionCard> cardW, string oldName)
+	{
+		// TODO validate that the name is not taken
+
+		var card = cardW.Value;
+		
+		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
+		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		
+		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
+		CreateCardRequestNode.Request(baseUrl + "card", headers, HttpClient.Method.Post, JsonSerializer.Serialize(card, Common.JSON_SERIALIZATION_OPTIONS));
+
+	}
+	
+	private void OnCreateCardRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
+	{
+		if (response_code != 200) {
+			// TODO alert that failed to save card
+			GD.Print("Card creation response code: " + response_code);
+			GD.Print(Encoding.UTF8.GetString(body));
+			return;
+		}
+
+		CardEditWindowNode.Hide();
+		
+		// * this parses the card and requests to show all the cards from the specified expansion
+		var card = JsonSerializer.Deserialize<ExpansionCard>(body, Common.JSON_SERIALIZATION_OPTIONS);
+
+		LoadExpansion(card.Expansion);
 	}
 	
 	#endregion
 }
+
+
 
 
 

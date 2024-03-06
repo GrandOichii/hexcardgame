@@ -1,39 +1,59 @@
 using Godot;
 using HexCore.Cards;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System;
 
 public partial class CardEdit : Control
 {
-	#region Nodes
+	#region Signals
 	
-	public LineEdit NameEdit { get; private set; }
-	public SpinBox CostEdit { get; private set; }
-	public CheckBox DeckUsableCheck { get; private set; }
-	public LineEdit TypeEdit { get; private set; }
-	public TextEdit TextEdit { get; private set; }
-	public TextEdit ScriptEdit { get; private set; }
-	public SpinBox PowerEdit { get; private set; }
-	public SpinBox LifeEdit { get; private set; }
+	[Signal]
+	public delegate void ClosedEventHandler();
+	[Signal]
+	public delegate void SavedEventHandler(Wrapper<ExpansionCard> card, string oldName);
 	
 	#endregion
+	
+	#region Nodes
+	
+	public LineEdit NameEditNode { get; private set; }
+	public LineEdit ExpansionEditNode { get; private set; }
+	public SpinBox CostEditNode { get; private set; }
+	public CheckBox DeckUsableCheckNode { get; private set; }
+	public LineEdit TypeEditNode { get; private set; }
+	public TextEdit TextEditNode { get; private set; }
+	public TextEdit ScriptEditNode { get; private set; }
+	public SpinBox PowerEditNode { get; private set; }
+	public SpinBox LifeEditNode { get; private set; }
+	
+	#endregion
+
+	#nullable enable
+	private ExpansionCard? _edited;
+	#nullable disable
 	
 	public override void _Ready()
 	{
 		#region Node fetching
 
-		NameEdit = GetNode<LineEdit>("%NameEdit");
-		CostEdit = GetNode<SpinBox>("%CostEdit");
-		DeckUsableCheck = GetNode<CheckBox>("%DeckUsableCheck");
-		TypeEdit = GetNode<LineEdit>("%TypeEdit");
-		TextEdit = GetNode<TextEdit>("%TextEdit");
-		ScriptEdit = GetNode<TextEdit>("%ScriptEdit");
-		PowerEdit = GetNode<SpinBox>("%PowerEdit");
-		LifeEdit = GetNode<SpinBox>("%LifeEdit");
+		NameEditNode = GetNode<LineEdit>("%NameEdit");
+		ExpansionEditNode = GetNode<LineEdit>("%ExpansionEdit");
+		CostEditNode = GetNode<SpinBox>("%CostEdit");
+		DeckUsableCheckNode = GetNode<CheckBox>("%DeckUsableCheck");
+		TypeEditNode = GetNode<LineEdit>("%TypeEdit");
+		TextEditNode = GetNode<TextEdit>("%TextEdit");
+		ScriptEditNode = GetNode<TextEdit>("%ScriptEdit");
+		PowerEditNode = GetNode<SpinBox>("%PowerEdit");
+		LifeEditNode = GetNode<SpinBox>("%LifeEdit");
 		
 		#endregion
 	}
 
+	#nullable enable
 	public void Load(ExpansionCard? card) {
+	#nullable disable
+		_edited = card;
+
 		card ??= new() {
 			Name = "",
 			Cost = 1,
@@ -43,13 +63,45 @@ public partial class CardEdit : Control
 			Expansion = ""
 		};
 
-		NameEdit.Text = card.Name;
-		CostEdit.Value = card.Cost;
-		DeckUsableCheck.ButtonPressed = card.DeckUsable;
-		TypeEdit.Text = card.Type;
-		TextEdit.Text = card.Text;
-		ScriptEdit.Text = card.Script;
-		PowerEdit.Value = card.Power;
-		LifeEdit.Value = card.Life;
+		NameEditNode.Text = card.Name;
+		CostEditNode.Value = card.Cost;
+		DeckUsableCheckNode.ButtonPressed = card.DeckUsable;
+		TypeEditNode.Text = card.Type;
+		TextEditNode.Text = card.Text;
+		ScriptEditNode.Text = card.Script;
+		PowerEditNode.Value = card.Power;
+		LifeEditNode.Value = card.Life;
 	}
+	
+	#region Signal connections
+	
+	private void OnSaveButtonPressed()
+	{
+		// TODO validate
+		var oldName = _edited is not null ? $"{_edited.Expansion}::{_edited.Name}" : "";
+
+		var result = new ExpansionCard {
+			Name = NameEditNode.Text,
+			Power = (int)PowerEditNode.Value,
+			Life = (int)LifeEditNode.Value,
+			Cost = (int)CostEditNode.Value,
+			Type = TypeEditNode.Text,
+			Text = TextEditNode.Text,
+			Script = ScriptEditNode.Text,
+			Expansion = ExpansionEditNode.Text,
+		};
+
+		EmitSignal(SignalName.Saved, new Wrapper<ExpansionCard>(result), oldName);
+	}
+
+	private void OnCancelButtonPressed()
+	{
+		// TODO confirm if there are any changes
+
+		EmitSignal(SignalName.Closed);
+	}
+	
+	#endregion
 }
+
+

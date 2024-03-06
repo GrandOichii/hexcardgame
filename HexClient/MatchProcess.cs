@@ -29,7 +29,6 @@ public class MatchProcess {
 	public string TcpAddress { get; set; }
 	public Guid Id { get; set; }
 	
-	// TODO add start and end time
 	public DateTime? StartTime { get; set; }
 	public DateTime? EndTime { get; set; }
 }

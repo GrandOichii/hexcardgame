@@ -39,29 +39,30 @@ public partial class ConnectedMatch : Control
 		#endregion
 	}
 
-	public async Task LoadConnection(IConnection connection) {
+	public Task LoadConnection(IConnection connection) {
 		Connection = connection;
 
 		// TODO load configuration
 		Connection.SubscribeToUpdate(OnMatchUpdate);
+		return Task.CompletedTask;
 
 	}
 
 	private static readonly string CONFIG_PREFIX = "config-";
-	private async Task OnMatchUpdate(string message) {
+	private Task OnMatchUpdate(string message) {
 
 		if (message.StartsWith(CONFIG_PREFIX)) {
 			message = message[CONFIG_PREFIX.Length..];
 			MatchInfo = JsonSerializer.Deserialize<HexStates.MatchInfoState>(message, Common.JSON_SERIALIZATION_OPTIONS);
 			MatchNode.LoadMatchInfo(MatchInfo);
 			
-			return;
+			return Task.CompletedTask;
 		}
 
 		var state = JsonSerializer.Deserialize<MatchState>(message, Common.JSON_SERIALIZATION_OPTIONS);
 		state.ApplyTo(MatchNode, MatchInfo);
 
-		return;
+		return Task.CompletedTask;
 	}
 	
 	#region Signal connections

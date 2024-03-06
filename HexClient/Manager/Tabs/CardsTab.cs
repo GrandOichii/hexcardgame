@@ -15,7 +15,7 @@ public struct Expansion {
 
 public interface ICardDisplay {
 	public void Load(ExpansionCard card);
-	public void SubsribeToRightClick(Action<Wrapper<ExpansionCard>> a);
+	public void SubscribeToRightClick(Action<Wrapper<ExpansionCard>> a);
 }
 
 public partial class CardsTab : Control
@@ -35,6 +35,8 @@ public partial class CardsTab : Control
 	public Window CardEditWindowNode { get; private set; }
 	public CardEdit CardEditNode { get; private set; }
 	public PopupMenu CardContextMenuNode { get; private set; }
+
+	public AcceptDialog CardAlertPopupNode { get; private set; }
 
 
 	public HttpRequest FetchExpansionsRequestNode { get; private set; }
@@ -56,6 +58,8 @@ public partial class CardsTab : Control
 
 		CardEditWindowNode = GetNode<Window>("%CardEditWindow");
 		CardEditNode = GetNode<CardEdit>("%CardEdit");
+		
+		CardAlertPopupNode = GetNode<AcceptDialog>("%CardAlertPopup");
 
 		FetchExpansionsRequestNode = GetNode<HttpRequest>("%FetchExpansionsRequest");
 		FetchExpansionCardsRequestNode = GetNode<HttpRequest>("%FetchExpansionCardsRequest");
@@ -88,7 +92,6 @@ public partial class CardsTab : Control
 	
 	private void OnExpansionsListItemActivated(int index)
 	{
-		// TODO
 		var expansion = ExpansionsListNode.GetItemMetadata(index).As<Wrapper<Expansion>>().Value;
 
 		LoadExpansion(expansion.Name);
@@ -121,11 +124,14 @@ public partial class CardsTab : Control
 
 			var cardDisplay = child as ICardDisplay;
 			cardDisplay.Load(card);
-			cardDisplay.SubsribeToRightClick(OnCardRightClick);
+			cardDisplay.SubscribeToRightClick(OnCardRightClick);
 		}
 	}
 
 	private void OnCardRightClick(Wrapper<ExpansionCard> cardW) {
+		if (!GetNode<GlobalSettings>("/root/GlobalSettings").IsAdmin)
+			return;
+
 		var mousePos = GetGlobalMousePosition();
 		CardContextMenuNode.PopupOnParent(new Rect2I((int)mousePos.X, (int)mousePos.Y, -1, -1));
 		CardContextMenuNode.Show();
@@ -141,7 +147,6 @@ public partial class CardsTab : Control
 	private void OnCardEditWindowCloseRequested()
 	{
 		CardEditWindowNode.Hide();
-		// TODO
 	}
 
 	private void OnCardEditClosed()
@@ -173,9 +178,10 @@ public partial class CardsTab : Control
 	private void OnCreateCardRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
 		if (response_code != 200) {
-			// TODO alert that failed to save card
-			GD.Print("Card creation response code: " + response_code);
-			GD.Print(Encoding.UTF8.GetString(body));
+			var resp = Encoding.UTF8.GetString(body);
+
+			CardAlertPopupNode.DialogText = $"Failed to create card! (Response code: {response_code}\nResponse message:\n{resp}";
+			CardAlertPopupNode.Show();
 			return;
 		}
 
@@ -207,9 +213,10 @@ public partial class CardsTab : Control
 	private void OnDeleteCardRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
 		if (response_code != 200) {
-			// TODO alert that failed to delete card
-			GD.Print("Card deletion response code: " + response_code);
-			GD.Print(Encoding.UTF8.GetString(body));
+			var resp = Encoding.UTF8.GetString(body);
+
+			CardAlertPopupNode.DialogText = $"Failed to delete card! (Response code: {response_code}\nResponse message:\n{resp}";
+			CardAlertPopupNode.Show();
 			return;
 		}
 
@@ -226,9 +233,10 @@ public partial class CardsTab : Control
 	private void OnUpdateCardRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
 		if (response_code != 200) {
-			// TODO alert that failed to delete card
-			GD.Print("Card updating response code: " + response_code);
-			GD.Print(Encoding.UTF8.GetString(body));
+			var resp = Encoding.UTF8.GetString(body);
+
+			CardAlertPopupNode.DialogText = $"Failed to update card! (Response code: {response_code}\nResponse message:\n{resp}";
+			CardAlertPopupNode.Show();
 			return;
 		}
 

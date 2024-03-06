@@ -60,6 +60,8 @@ public class CardRepository : ICardRepository {
         string cid = card.GetCID();
         var found = await _collection.FindAsync(c => c.Expansion + "::" + c.Name == cid);
         var existing = await found.FirstOrDefaultAsync();
+        if (existing is null)
+            return 0;
         card.Id = existing.Id;
         var result = await _collection.ReplaceOneAsync(c => c.Expansion == card.Expansion && c.Name == card.Name, card);
         await _cachedCards.Remember(card);

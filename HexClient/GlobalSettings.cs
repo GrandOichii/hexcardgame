@@ -20,6 +20,6 @@ public partial class GlobalSettings : Node
 	
 	public override void _Ready()
 	{
-		IsAdmin = true;
+		IsAdmin = false;
 	}
 }

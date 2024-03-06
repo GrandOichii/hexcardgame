@@ -73,9 +73,11 @@ public partial class CardService : ICardService
 
     public async Task Update(ExpansionCard card)
     {
+        await _cardValidator.Validate(card);
+
         var count = await _cardRepo.Update(_mapper.Map<CardModel>(card));
         if (count == 0) 
-            throw new CardNotFoundException(card.GetCID());
+            throw new CardNotFoundException("no card with cid " + card.GetCID());
         
     }
 }

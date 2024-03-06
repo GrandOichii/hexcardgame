@@ -41,6 +41,7 @@ public partial class CardsTab : Control
 	public HttpRequest FetchExpansionCardsRequestNode { get; private set; }
 	public HttpRequest CreateCardRequestNode { get; private set; }
 	public HttpRequest DeleteCardRequestNode { get; private set; }
+	public HttpRequest UpdateCardRequestNode { get; private set; }
 	
 	#endregion
 	
@@ -60,10 +61,12 @@ public partial class CardsTab : Control
 		FetchExpansionCardsRequestNode = GetNode<HttpRequest>("%FetchExpansionCardsRequest");
 		CreateCardRequestNode = GetNode<HttpRequest>("%CreateCardRequest");
 		DeleteCardRequestNode = GetNode<HttpRequest>("%DeleteCardRequest");
+		UpdateCardRequestNode = GetNode<HttpRequest>("%UpdateCardRequest");
 		
 		#endregion
 
 		CardEditWindowNode.Hide();
+		OnFetchExpansionsButtonPressed();
 	}
 
 	private void UpdateExpansion(Expansion expansion) {
@@ -148,16 +151,23 @@ public partial class CardsTab : Control
 	
 	private void OnCardEditSaved(Wrapper<ExpansionCard> cardW, string oldName)
 	{
-		// TODO validate that the name is not taken
-
-		var card = cardW.Value;
-		
 		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
 		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
 		
 		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
-		CreateCardRequestNode.Request(baseUrl + "card", headers, HttpClient.Method.Post, JsonSerializer.Serialize(card, Common.JSON_SERIALIZATION_OPTIONS));
+		var card = cardW.Value;
 
+		if (string.IsNullOrEmpty(oldName)) {
+			// create card
+			// TODO validate that the name is not taken
+			
+			CreateCardRequestNode.Request(baseUrl + "card", headers, HttpClient.Method.Post, JsonSerializer.Serialize(card, Common.JSON_SERIALIZATION_OPTIONS));
+			return;
+		}
+
+		// update card
+		// TODO check if cid is same
+		UpdateCardRequestNode.Request(baseUrl + "card", headers, HttpClient.Method.Put, JsonSerializer.Serialize(card, Common.JSON_SERIALIZATION_OPTIONS));
 	}
 	
 	private void OnCreateCardRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
@@ -183,13 +193,10 @@ public partial class CardsTab : Control
 
 		switch (index) {
 		case 0:
-			GD.Print("editing " + card.Name);
-			// editing
+			EditCard(card);
 			break;
 		case 1:
 			DeleteCard(card);
-			GD.Print("deleting " + card.Name);
-			// deleting
 			break;
 		default:
 			break;
@@ -216,6 +223,24 @@ public partial class CardsTab : Control
 		LoadExpansion(expansion);
 	}
 	
+	private void OnUpdateCardRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
+	{
+		if (response_code != 200) {
+			// TODO alert that failed to delete card
+			GD.Print("Card updating response code: " + response_code);
+			GD.Print(Encoding.UTF8.GetString(body));
+			return;
+		}
+
+		CardEditWindowNode.Hide();
+
+		var card = CardContextMenuNode.GetMeta("Card").As<Wrapper<ExpansionCard>>().Value;
+		var expansion = card.Expansion;
+		CardContextMenuNode.RemoveMeta("Card");
+		
+		LoadExpansion(expansion);
+	}
+	
 	#endregion
 
 	private void DeleteCard(ExpansionCard card) {
@@ -227,5 +252,12 @@ public partial class CardsTab : Control
 		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
 		DeleteCardRequestNode.Request(baseUrl + "card/" + card.GetCID(), headers, HttpClient.Method.Delete);
 	}
+	
+	private void EditCard(ExpansionCard card) {
+		CardEditNode.Load(card);
+		CardEditWindowNode.Show();
+	}
 }
+
+
 

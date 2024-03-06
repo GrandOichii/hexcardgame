@@ -71,6 +71,7 @@ public partial class CardEdit : Control
 		ScriptEditNode.Text = card.Script;
 		PowerEditNode.Value = card.Power;
 		LifeEditNode.Value = card.Life;
+		ExpansionEditNode.Text = card.Expansion;
 	}
 	
 	#region Signal connections

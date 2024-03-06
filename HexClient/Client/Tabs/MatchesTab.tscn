@@ -53,7 +53,6 @@ text = "Tcp"
 [node name="BaseUrlEdit" type="LineEdit" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "http://localhost:5239/api/v1/"
 placeholder_text = "Enter base url"
 
 [node name="HSeparator4" type="HSeparator" parent="VBoxContainer"]
@@ -100,9 +99,6 @@ text = "Connect"
 
 [node name="ConnectRequest" type="HTTPRequest" parent="VBoxContainer/ConnectContainer"]
 unique_name_in_owner = true
-
-[node name="@Timer@54350" type="Timer" parent="VBoxContainer/ConnectContainer/ConnectRequest"]
-one_shot = true
 
 [node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
 layout_mode = 2

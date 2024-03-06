@@ -53,6 +53,9 @@ public partial class AuthTab : Control
 		#endregion
 		
 		JwtTokenLabelNode.Text = ToJwtLabelText("");
+		if (!string.IsNullOrEmpty(UsernameEditNode.Text)) {
+			OnLoginButtonPressed();
+		}
 	}
 	
 	#region Signal connections

@@ -79,6 +79,9 @@ unique_name_in_owner = true
 [node name="DeleteCardRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
+[node name="UpdateCardRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
 [node name="Windows" type="Node" parent="."]
 
 [node name="CardEditWindow" type="Window" parent="Windows"]
@@ -122,6 +125,7 @@ item_1/id = 1
 [connection signal="request_completed" from="Requests/FetchExpansionCardsRequest" to="." method="OnFetchExpansionCardsRequestCompleted"]
 [connection signal="request_completed" from="Requests/CreateCardRequest" to="." method="OnCreateCardRequestRequestCompleted"]
 [connection signal="request_completed" from="Requests/DeleteCardRequest" to="." method="OnDeleteCardRequestRequestCompleted"]
+[connection signal="request_completed" from="Requests/UpdateCardRequest" to="." method="OnUpdateCardRequestRequestCompleted"]
 [connection signal="close_requested" from="Windows/CardEditWindow" to="." method="OnCardEditWindowCloseRequested"]
 [connection signal="Closed" from="Windows/CardEditWindow/MarginContainer/CardEdit" to="." method="OnCardEditClosed"]
 [connection signal="Saved" from="Windows/CardEditWindow/MarginContainer/CardEdit" to="." method="OnCardEditSaved"]

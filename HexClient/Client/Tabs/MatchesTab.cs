@@ -62,7 +62,7 @@ public partial class MatchesTab : Control
 		
 		#endregion
 		
-		OnBaseUrlEditTextChanged(GetNode<LineEdit>("%BaseUrlEdit").Text);
+		OnBaseUrlEditTextChanged(BaseUrl);
 	}
 
 	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match, string name, string deck) {

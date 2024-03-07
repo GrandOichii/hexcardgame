@@ -34,6 +34,7 @@ offset_bottom = -228.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ts64u")
+FocusColor = Color(0.427451, 0.607843, 1, 1)
 
 [node name="Bg" type="PanelContainer" parent="."]
 unique_name_in_owner = true
@@ -131,6 +132,7 @@ layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 16
 bbcode_enabled = true
 text = "Card text here
 Card text here"

@@ -44,13 +44,24 @@ public partial class DisplayCard : Control, ICardDisplay
 			EmitSignal(SignalName.RightClick, new Wrapper<HexCore.Cards.ExpansionCard>(_card));
 	}
 
-    public void SubscribeToRightClick(Action<Wrapper<HexCore.Cards.ExpansionCard>> a)
-    {
+	public void SubscribeToRightClick(Action<Wrapper<HexCore.Cards.ExpansionCard>> a)
+	{
 		RightClick += a.Invoke;
-    }
+	}
 
-    #endregion
+	private void OnMouseEntered()
+	{
+		CardNode.Focus();
+	}
+
+	private void OnMouseExited()
+	{
+		CardNode.Unfocus();
+	}
+
+	#endregion
 }
+
 
 
 

@@ -6,6 +6,12 @@ namespace HexClient.Cards;
 
 public partial class Card : Control
 {
+	#region Exports
+	
+	[Export]
+	public Color FocusColor { get; set; }
+	
+	#endregion
 
 	#region Nodes
 	
@@ -83,19 +89,19 @@ public partial class Card : Control
 
 	private StyleBoxFlat BgStyle => BgNode.Get("theme_override_styles/panel").As<StyleBoxFlat>();
 
-	// public void Unfocus() {
-	// 	CreateTween().TweenProperty(this, "BgColor", _defaultBgColor, .1f);	
-	// }
+	public void Unfocus() {
+		CreateTween().TweenProperty(this, "BgColor", _defaultBgColor, .1f);
+	}
 
-	// public void Focus() {
-	// 	CreateTween().TweenProperty(this, "BgColor", FocusColor, .1f);
-	// }
+	public void Focus() {
+		CreateTween().TweenProperty(this, "BgColor", FocusColor, .1f);
+	}
 	
 	#region Signal connections
 	
-	private void OnGuiInput(InputEvent @event)
+	private void OnGuiInput(InputEvent e)
 	{
-		// Replace with function body.
+		// TODO
 	}
 	
 	#endregion

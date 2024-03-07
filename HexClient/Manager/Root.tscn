@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://c38yxw6uhifrx"]
+[gd_scene load_steps=5 format=3 uid="uid://c38yxw6uhifrx"]
 
 [ext_resource type="PackedScene" uid="uid://djj04bh3s4r64" path="res://Manager/Tabs/AuthTab.tscn" id="1_8wqqx"]
 [ext_resource type="PackedScene" uid="uid://pa3msjtm5nlw" path="res://Manager/Tabs/MatchesTab.tscn" id="1_qqjyb"]
 [ext_resource type="PackedScene" uid="uid://bnvjj3fxsrj82" path="res://Manager/Tabs/CardsTab.tscn" id="3_siv0a"]
+
+[sub_resource type="Theme" id="Theme_82j7t"]
+default_font_size = 24
 
 [node name="Root" type="Control"]
 layout_mode = 3
@@ -11,6 +14,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_82j7t")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1

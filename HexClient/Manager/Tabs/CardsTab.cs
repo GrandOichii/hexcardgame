@@ -81,9 +81,6 @@ public partial class CardsTab : Control
 	}
 
 	private void LoadExpansion(string expansion) {
-		while (CardsContainerNode.GetChildCount() > 0)
-			CardsContainerNode.RemoveChild(CardsContainerNode.GetChild(0));
-
 		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
 		FetchExpansionCardsRequestNode.Request(baseUrl + "card/fromexpansion/" + expansion);
 	}
@@ -116,6 +113,10 @@ public partial class CardsTab : Control
 	private void OnFetchExpansionCardsRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
 		// TODO check response code
+
+		while (CardsContainerNode.GetChildCount() > 0)
+			CardsContainerNode.RemoveChild(CardsContainerNode.GetChild(0));
+
 		
 		var cards = JsonSerializer.Deserialize<List<ExpansionCard>>(body, Common.JSON_SERIALIZATION_OPTIONS);
 		foreach (var card in cards) {

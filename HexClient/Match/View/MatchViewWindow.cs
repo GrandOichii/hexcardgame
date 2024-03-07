@@ -42,7 +42,14 @@ public partial class MatchViewWindow : Window
 		// TODO close connection
 		QueueFree();
 	}
+
+	private void OnMatchViewClosed()
+	{
+		// TODO alert user about match end
+		OnCloseRequested();
+	}
 		
 	#endregion
 }
+
 

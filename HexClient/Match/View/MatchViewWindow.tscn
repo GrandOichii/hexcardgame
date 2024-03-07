@@ -12,3 +12,4 @@ script = ExtResource("1_04yqy")
 unique_name_in_owner = true
 
 [connection signal="close_requested" from="." to="." method="OnCloseRequested"]
+[connection signal="Closed" from="MatchView" to="." method="OnMatchViewClosed"]

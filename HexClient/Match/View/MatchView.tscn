@@ -15,3 +15,19 @@ script = ExtResource("1_qyd6q")
 [node name="Match" parent="." instance=ExtResource("2_2o8vk")]
 unique_name_in_owner = true
 layout_mode = 1
+
+[node name="ForbiddenPopup" type="AcceptDialog" parent="."]
+unique_name_in_owner = true
+initial_position = 2
+size = Vector2i(292, 100)
+dialog_text = "Match creator disabled match view."
+
+[node name="EndPopup" type="AcceptDialog" parent="."]
+unique_name_in_owner = true
+initial_position = 2
+dialog_text = "Match ended."
+
+[connection signal="canceled" from="ForbiddenPopup" to="." method="OnForbiddenPopupCanceled"]
+[connection signal="confirmed" from="ForbiddenPopup" to="." method="OnForbiddenPopupConfirmed"]
+[connection signal="canceled" from="EndPopup" to="." method="OnEndPopupCanceled"]
+[connection signal="confirmed" from="EndPopup" to="." method="OnEndPopupConfirmed"]

@@ -9,9 +9,18 @@ namespace HexClient.Match.View;
 
 public partial class MatchView : Control
 {
+	#region Signals
+	
+	[Signal]
+	public delegate void ClosedEventHandler();
+	
+	#endregion
+	
 	#region Nodes
 	
 	public Match MatchNode { get; private set; }
+	public AcceptDialog ForbiddenPopupNode { get; private set; }
+	public AcceptDialog EndPopupNode { get; private set; }
 	
 	#endregion
 
@@ -23,6 +32,8 @@ public partial class MatchView : Control
 		#region Node fetching
 		
 		MatchNode = GetNode<Match>("%Match");
+		ForbiddenPopupNode = GetNode<AcceptDialog>("%ForbiddenPopup");
+		EndPopupNode = GetNode<AcceptDialog>("%EndPopup");
 		
 		#endregion
 	}
@@ -31,7 +42,7 @@ public partial class MatchView : Control
 		connection.On<string>("Config", OnViewConfig);
 		connection.On<string>("Update", OnViewUpdate);
 		connection.On("Forbidden", OnViewForbidden);
-		connection.On("ViewEnd", OnViewEnd);
+		connection.On("EndView", OnEndView);
 		connection.Closed += OnConnectionClosed;
 
 		try {
@@ -67,14 +78,38 @@ public partial class MatchView : Control
 	}
 
 	private Task OnViewForbidden() {
-		// TODO alert
-		GD.Print("View is forbidden!");
+		ForbiddenPopupNode.CallDeferred("show");
 		return Task.CompletedTask;
 	}
 
-	private Task OnViewEnd() {
-		// TODO
-		GD.Print("Ended view");
+	private Task OnEndView() {
+		// TODO set winner text/match status
+		EndPopupNode.CallDeferred("show");
+		
 		return Task.CompletedTask;
 	}
+	
+	#region Signal connections
+
+	private void OnForbiddenPopupConfirmed()
+	{
+		CallDeferred("emit_signal", SignalName.Closed);
+	}
+	
+	private void OnForbiddenPopupCanceled()
+	{
+		CallDeferred("emit_signal", SignalName.Closed);
+	}
+
+	private void OnEndPopupCanceled()
+	{
+		CallDeferred("emit_signal", SignalName.Closed);
+	}
+
+	private void OnEndPopupConfirmed()
+	{
+		CallDeferred("emit_signal", SignalName.Closed);
+	}
+	
+	#endregion
 }

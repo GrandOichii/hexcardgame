@@ -35,7 +35,7 @@ public class MatchProcess {
 
     [JsonIgnore]
     public MatchProcessConfig Config { get; }
-    
+
     private readonly IMatchService _matchService;
     private readonly IValidator<DeckTemplate> _deckValidator;
 
@@ -195,9 +195,11 @@ public class MatchProcess {
                 Record.InnerExceptionMessage = e.InnerException.Message;      
             System.Console.WriteLine(e.Message);      
             System.Console.WriteLine(e.StackTrace);
+            await Match.View.End();
         }
         EndTime = DateTime.Now; 
         TcpListener.Stop();
+
     }
     
     public async Task Finish(WebSocket socket) {

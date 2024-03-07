@@ -134,6 +134,7 @@ public partial class MatchesTab : Control
 
 		var info = JsonSerializer.Deserialize<MatchProcess>(body, Common.JSON_SERIALIZATION_OPTIONS);
 		ConnectMatchIdEditNode.Text = info.Id.ToString();
+		WatchMatchIdEditNode.Text = info.Id.ToString();
 
 		_ = ConnectTo(info);
 	}

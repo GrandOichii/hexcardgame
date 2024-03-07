@@ -28,14 +28,15 @@ public partial class MatchesTab : Control
 	
 	public LineEdit ConnectMatchIdEditNode { get; private set; }
 	public LineEdit WatchMatchIdEditNode { get; private set; }
-	public HttpRequest CreateRequestNode { get; private set; }
-	public HttpRequest ConnectRequestNode { get; private set; }
 	public CheckBox IsBotCheckNode { get; private set; }
 	public Node WindowsNode { get; private set; }
 	public CheckBox WebSocketCheckNode { get; private set; }
 	public CheckBox TcpCheckNode { get; private set; }
 	public LineEdit PlayerNameEditNode { get; private set; }
 	public MatchTable MatchTableNode { get; private set; }
+	
+	public HttpRequest CreateRequestNode { get; private set; }
+	public HttpRequest ConnectRequestNode { get; private set; }
 	
 	#endregion
 	
@@ -62,12 +63,12 @@ public partial class MatchesTab : Control
 		
 		#endregion
 		
-		OnBaseUrlEditTextChanged(BaseUrl);
+		GetNode<LineEdit>("%BaseUrlEdit").Text = BaseUrl;
+		// OnBaseUrlEditTextChanged(BaseUrl);
 	}
 
 	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match, string name, string deck) {
 		var client = new ClientWebSocket();
-		// FIXME freezes
 		// TODO ugly
 		await client.ConnectAsync(new Uri(BaseUrl.Replace("http", "ws") + "match/connect/" + match.Id.ToString()), CancellationToken.None);
 		GD.Print("connected!");

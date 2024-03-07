@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://djj04bh3s4r64"]
+[gd_scene load_steps=3 format=3 uid="uid://djj04bh3s4r64"]
 
 [ext_resource type="Script" path="res://Manager/Tabs/AuthTab.cs" id="1_i6no3"]
+[ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="2_kqh23"]
 
 [node name="AuthTab" type="Control"]
 layout_mode = 3
@@ -58,10 +59,12 @@ unique_name_in_owner = true
 
 [node name="ErrorPopup" type="AcceptDialog" parent="."]
 unique_name_in_owner = true
+theme = ExtResource("2_kqh23")
 
 [node name="LogoutConfirmationPopup" type="ConfirmationDialog" parent="."]
 unique_name_in_owner = true
 initial_position = 2
+theme = ExtResource("2_kqh23")
 dialog_text = "Are you sure to logout?"
 
 [connection signal="pressed" from="VBoxContainer/LogoutButton" to="." method="OnLogoutButtonPressed"]

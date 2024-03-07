@@ -28,7 +28,7 @@ public partial class AuthTab : Control
 	
 	#endregion
 	
-	private static string ToJwtLabelText(string jwt) => string.IsNullOrEmpty(jwt) ? "Not logged in" : "Jwt: " + Regex.Replace(jwt, "(?<=^.{100}).*", "...");
+	private static string ToJwtLabelText(string jwt) => string.IsNullOrEmpty(jwt) ? "Not logged in" : "Jwt: " + Regex.Replace(jwt, "(?<=^.{20}).*", "...");
 
 	public string Username => UsernameEditNode.Text;
 	public string Password => PasswordEditNode.Text;

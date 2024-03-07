@@ -1,15 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://rsvnq74xsoqi"]
+[gd_scene load_steps=4 format=3 uid="uid://rsvnq74xsoqi"]
 
 [ext_resource type="Script" path="res://Match/View/MatchViewWindow.cs" id="1_04yqy"]
 [ext_resource type="PackedScene" uid="uid://csc15os7h0o7g" path="res://Match/View/MatchView.tscn" id="1_6jev0"]
+[ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="3_6fol5"]
 
 [node name="MatchViewWindow" type="Window"]
 initial_position = 2
 size = Vector2i(800, 600)
+theme = ExtResource("3_6fol5")
 script = ExtResource("1_04yqy")
 
 [node name="MatchView" parent="." instance=ExtResource("1_6jev0")]
 unique_name_in_owner = true
+theme = ExtResource("3_6fol5")
 
 [connection signal="close_requested" from="." to="." method="OnCloseRequested"]
 [connection signal="Closed" from="MatchView" to="." method="OnMatchViewClosed"]

@@ -14,6 +14,7 @@ public partial class MatchTable : Control
 	#region Node
 
 	public Tree MatchTreeNode { get; private set; }
+	public AcceptDialog FailedLiveConnectPopupNode { get; private set; }
 
 	#endregion
 
@@ -24,6 +25,8 @@ public partial class MatchTable : Control
 		#region Node fetching
 
 		MatchTreeNode = GetNode<Tree>("%MatchTree");
+		
+		FailedLiveConnectPopupNode = GetNode<AcceptDialog>("%FailedLiveConnectPopup");
 
 		#endregion
 
@@ -37,7 +40,6 @@ public partial class MatchTable : Control
 		while (_root.GetChildCount() > 0)  {
 			_root.RemoveChild(_root.GetFirstChild());
 		}
-		// TODO clear all current items
 
 		var connection = new HubConnectionBuilder()
 			.WithUrl(url)
@@ -50,9 +52,7 @@ public partial class MatchTable : Control
 			await connection.StartAsync();
 			await connection.SendAsync("Get");
 		} catch (Exception e) {
-			// TODO
-			GD.Print("Failed to connect");
-			GD.Print(e.Message);
+			FailedLiveConnectPopupNode.Show();
 		}
 	}
 

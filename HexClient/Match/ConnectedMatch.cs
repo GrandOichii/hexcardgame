@@ -42,10 +42,8 @@ public partial class ConnectedMatch : Control
 	public Task LoadConnection(IConnection connection) {
 		Connection = connection;
 
-		// TODO load configuration
 		Connection.SubscribeToUpdate(OnMatchUpdate);
 		return Task.CompletedTask;
-
 	}
 
 	private static readonly string CONFIG_PREFIX = "config-";

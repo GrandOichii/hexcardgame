@@ -73,9 +73,7 @@ public partial class CardsTab : Control
 		OnFetchExpansionsButtonPressed();
 	}
 
-	private void UpdateExpansion(Expansion expansion) {
-		// TODO check existing
-
+	private void AddToExpansionList(Expansion expansion) {
 		var itemI = ExpansionsListNode.AddItem($"{expansion.Name} ({expansion.CardCount})");
 		ExpansionsListNode.SetItemMetadata(itemI, new Wrapper<Expansion>(expansion));
 	}
@@ -103,10 +101,12 @@ public partial class CardsTab : Control
 	private void OnFetchExpansionsRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
 		// TODO check response code
+		while (ExpansionsListNode.ItemCount > 0)
+			ExpansionsListNode.RemoveItem(0);
 
 		var expansions = JsonSerializer.Deserialize<List<Expansion>>(body, Common.JSON_SERIALIZATION_OPTIONS);
 		foreach (var expansion in expansions) {
-			UpdateExpansion(expansion);
+			AddToExpansionList(expansion);
 		}
 	}
 	
@@ -191,6 +191,7 @@ public partial class CardsTab : Control
 		// * this parses the card and requests to show all the cards from the specified expansion
 		var card = JsonSerializer.Deserialize<ExpansionCard>(body, Common.JSON_SERIALIZATION_OPTIONS);
 
+		OnFetchExpansionsButtonPressed();
 		LoadExpansion(card.Expansion);
 	}
 
@@ -228,6 +229,7 @@ public partial class CardsTab : Control
 		var expansion = card.Expansion;
 		CardContextMenuNode.RemoveMeta("Card");
 		
+		OnFetchExpansionsButtonPressed();
 		LoadExpansion(expansion);
 	}
 	
@@ -246,7 +248,8 @@ public partial class CardsTab : Control
 		var card = CardContextMenuNode.GetMeta("Card").As<Wrapper<ExpansionCard>>().Value;
 		var expansion = card.Expansion;
 		CardContextMenuNode.RemoveMeta("Card");
-		
+
+		OnFetchExpansionsButtonPressed();
 		LoadExpansion(expansion);
 	}
 	

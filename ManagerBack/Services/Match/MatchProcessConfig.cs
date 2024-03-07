@@ -22,6 +22,8 @@ public class MatchProcessConfig {
     [JsonPropertyName("mConfig")]
     public required string MatchConfigId { get; set; }
 
+    public required bool CanWatch { get; set; }
+
     public required PlayerConfig P1Config { get; set; }
     public required PlayerConfig P2Config { get; set; }
 }

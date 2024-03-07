@@ -20,5 +20,6 @@
 	},
 	"p2Config": {
 	  "botConfig": null
-	}
+	},
+	"canWatch": false
   }

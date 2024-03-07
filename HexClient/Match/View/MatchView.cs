@@ -30,6 +30,7 @@ public partial class MatchView : Control
 	public async Task<bool> Connect(HubConnection connection, string matchId) {
 		connection.On<string>("Config", OnViewConfig);
 		connection.On<string>("Update", OnViewUpdate);
+		connection.On("Forbidden", OnViewForbidden);
 		connection.On("ViewEnd", OnViewEnd);
 		connection.Closed += OnConnectionClosed;
 
@@ -62,6 +63,12 @@ public partial class MatchView : Control
 	private Task OnViewUpdate(string message) {
 		var state = JsonSerializer.Deserialize<BaseState>(message, Common.JSON_SERIALIZATION_OPTIONS);
 		state.ApplyTo(MatchNode, MatchInfo);
+		return Task.CompletedTask;
+	}
+
+	private Task OnViewForbidden() {
+		// TODO alert
+		GD.Print("View is forbidden!");
 		return Task.CompletedTask;
 	}
 

@@ -21,6 +21,7 @@ GlobalSettings="*res://GlobalSettings.cs"
 
 [display]
 
+window/size/viewport_height=1500
 window/subwindows/embed_subwindows=false
 
 [dotnet]

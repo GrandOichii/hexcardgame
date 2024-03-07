@@ -15,6 +15,11 @@ public class MatchViewHub : Hub {
     // TODO authorize
     // public async Task Connect(string matchId, string jwtToken) {
     public async Task Connect(string matchId) {
+        var match = await _matchService.ById(matchId);
+        if (!match.Config.CanWatch) {
+            await Clients.Caller.SendAsync("Forbidden");
+            return;
+        }
         await RemoveFromAll(Context.ConnectionId);
         await Groups.AddToGroupAsync(Context.ConnectionId, ToGroupName(matchId));
         await _matchService.SendMatchInfo(matchId, Context.ConnectionId);

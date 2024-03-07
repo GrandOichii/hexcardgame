@@ -32,7 +32,10 @@ public class MatchProcess {
         {BotType.RANDOM, "../bots/random.lua"},
         {BotType.SMART, "../bots/basic.lua"},
     };
-    private readonly MatchProcessConfig _config;
+
+    [JsonIgnore]
+    public MatchProcessConfig Config { get; }
+    
     private readonly IMatchService _matchService;
     private readonly IValidator<DeckTemplate> _deckValidator;
 
@@ -45,7 +48,7 @@ public class MatchProcess {
     public MatchProcess(IMatchService matchService, ICardMaster cMaster, MatchProcessConfig config, MatchConfig mConfig, IValidator<DeckTemplate> deckValidator)
     {
         _matchService = matchService;
-        _config = config;
+        Config = config;
         Id = Guid.NewGuid();
 
         TcpListener = new TcpListener(IPAddress.Loopback, 0);
@@ -90,7 +93,7 @@ public class MatchProcess {
     }
 
     public async Task AddBots() {
-        foreach (var p in new List<PlayerConfig> {_config.P1Config, _config.P2Config}) {
+        foreach (var p in new List<PlayerConfig> {Config.P1Config, Config.P2Config}) {
             if (p.BotConfig is null) {
                 ++_realPlayerCount;
                 continue;

@@ -70,11 +70,44 @@ layout_mode = 2
 layout_mode = 2
 text = "Create match"
 
-[node name="IsBotCheck" type="CheckBox" parent="VBoxContainer/CreateContainer"]
+[node name="IsBotCheck" type="CheckButton" parent="VBoxContainer/CreateContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-button_pressed = true
 text = "Versus bot"
+
+[node name="BotConfig" type="VBoxContainer" parent="VBoxContainer/CreateContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/CreateContainer/BotConfig"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/CreateContainer/BotConfig/HBoxContainer2"]
+layout_mode = 2
+text = "Name: "
+
+[node name="BotNameEdit" type="LineEdit" parent="VBoxContainer/CreateContainer/BotConfig/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "bot-player"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/CreateContainer/BotConfig"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/CreateContainer/BotConfig/HBoxContainer"]
+layout_mode = 2
+text = "Deck: "
+
+[node name="BotDeckEdit" type="LineEdit" parent="VBoxContainer/CreateContainer/BotConfig/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TODO set default"
+
+[node name="ChooseBotDeckButton" type="Button" parent="VBoxContainer/CreateContainer/BotConfig/HBoxContainer"]
+layout_mode = 2
+text = " ... "
 
 [node name="CreateMatchButton" type="Button" parent="VBoxContainer/CreateContainer"]
 layout_mode = 2
@@ -149,6 +182,7 @@ theme = ExtResource("5_5s7fd")
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/VBoxContainer/WebSocketCheck" to="." method="OnWebSocketCheckToggled"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/VBoxContainer/TcpCheck" to="." method="OnTcpCheckToggled"]
 [connection signal="text_changed" from="VBoxContainer/BaseUrlEdit" to="." method="OnBaseUrlEditTextChanged"]
+[connection signal="toggled" from="VBoxContainer/CreateContainer/IsBotCheck" to="." method="OnIsBotCheckToggled"]
 [connection signal="pressed" from="VBoxContainer/CreateContainer/CreateMatchButton" to="." method="OnCreateMatchButtonPressed"]
 [connection signal="request_completed" from="VBoxContainer/CreateContainer/CreateRequest" to="." method="OnCreateRequestRequestCompleted"]
 [connection signal="pressed" from="VBoxContainer/ConnectContainer/ConnectButton" to="." method="OnConnectButtonPressed"]

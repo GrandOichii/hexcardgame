@@ -29,12 +29,13 @@ public partial class MatchesTab : Control
 	
 	public LineEdit ConnectMatchIdEditNode { get; private set; }
 	public LineEdit WatchMatchIdEditNode { get; private set; }
-	public CheckBox IsBotCheckNode { get; private set; }
+	public CheckButton IsBotCheckNode { get; private set; }
 	public Node WindowsNode { get; private set; }
 	public CheckBox WebSocketCheckNode { get; private set; }
 	public CheckBox TcpCheckNode { get; private set; }
 	public LineEdit PlayerNameEditNode { get; private set; }
 	public MatchTable MatchTableNode { get; private set; }
+	public Control BotConfigNode { get; private set; }
 	
 	public HttpRequest CreateRequestNode { get; private set; }
 	public HttpRequest ConnectRequestNode { get; private set; }
@@ -56,10 +57,11 @@ public partial class MatchesTab : Control
 		WindowsNode = GetNode<Node>("%Windows");
 		ConnectMatchIdEditNode = GetNode<LineEdit>("%ConnectMatchIdEdit");
 		WatchMatchIdEditNode = GetNode<LineEdit>("%WatchMatchIdEdit");
-		IsBotCheckNode = GetNode<CheckBox>("%IsBotCheck");
+		IsBotCheckNode = GetNode<CheckButton>("%IsBotCheck");
 		WebSocketCheckNode = GetNode<CheckBox>("%WebSocketCheck");
 		TcpCheckNode = GetNode<CheckBox>("%TcpCheck");
 		MatchTableNode = GetNode<MatchTable>("%MatchTable");
+		BotConfigNode = GetNode<Control>("%BotConfig");
 
 		ConnectRequestNode = GetNode<HttpRequest>("%ConnectRequest");
 		CreateRequestNode = GetNode<HttpRequest>("%CreateRequest");
@@ -69,6 +71,7 @@ public partial class MatchesTab : Control
 		#endregion
 		
 		GetNode<LineEdit>("%BaseUrlEdit").Text = BaseUrl;
+		OnIsBotCheckToggled(IsBotCheckNode.ButtonPressed);
 	}
 
 	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match, string name, string deck) {
@@ -170,9 +173,17 @@ public partial class MatchesTab : Control
 	{
 		_ = MatchTableNode.Connect(BaseUrl + "match/live");
 	}
+
+	private void OnIsBotCheckToggled(bool buttonPressed)
+	{
+		// CreateTween().TweenProperty(BotConfigNode, "modulate", new Color(1, 1, 1, buttonPressed ? 1.0f : .5f), .1f);
+		// BotConfigNode.SetProcess(buttonPressed);
+		BotConfigNode.Visible = buttonPressed;
+	}
 	
 	#endregion
 }
+
 
 
 

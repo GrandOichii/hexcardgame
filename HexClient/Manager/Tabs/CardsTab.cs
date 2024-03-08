@@ -83,11 +83,11 @@ public partial class CardsTab : Control
 
 	private void LoadExpansion(string expansion) {
 		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		FetchExpansionCardsRequestNode.CancelRequest();
 		FetchExpansionCardsRequestNode.Request(baseUrl + "card/fromexpansion/" + expansion);
 	}
 
-	private void DeleteCard(ExpansionCard card) {
-		// TODO confirm
+	private void TryDeleteCard(ExpansionCard card) {
 		DeleteConfirmDialogNode.DialogText = $"Do you really want to delete card {card.GetCID()}?\nThis may force some user decks to be unusable";
 		DeleteConfirmDialogNode.SetMeta("Card", new Wrapper<ExpansionCard>(card));
 		DeleteConfirmDialogNode.Show();
@@ -110,6 +110,7 @@ public partial class CardsTab : Control
 	private void OnFetchExpansionsButtonPressed()
 	{
 		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		FetchExpansionsRequestNode.CancelRequest();
 		FetchExpansionsRequestNode.Request(baseUrl + "expansion");
 	}
 
@@ -198,8 +199,14 @@ public partial class CardsTab : Control
 		}
 
 		// update card
-		// TODO check if cid is same
-		UpdateCardRequestNode.Request(baseUrl + "card", headers, HttpClient.Method.Put, JsonSerializer.Serialize(card, Common.JSON_SERIALIZATION_OPTIONS));
+		if (card.GetCID() == oldName) {
+			UpdateCardRequestNode.Request(baseUrl + "card", headers, HttpClient.Method.Put, JsonSerializer.Serialize(card, Common.JSON_SERIALIZATION_OPTIONS));
+			return;
+		}
+
+		// delete card with the old name and create the new one
+		DeleteCardRequestNode.Request(baseUrl + "card/" + oldName, headers, HttpClient.Method.Delete);
+		CreateCardRequestNode.Request(baseUrl + "card", headers, HttpClient.Method.Post, JsonSerializer.Serialize(card, Common.JSON_SERIALIZATION_OPTIONS));
 	}
 	
 	private void OnCreateCardRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
@@ -230,12 +237,11 @@ public partial class CardsTab : Control
 			EditCard(card);
 			break;
 		case 1:
-			DeleteCard(card);
+			TryDeleteCard(card);
 			break;
 		default:
 			break;
 		}
-		// Replace with function body.
 	}
 
 	private void OnDeleteCardRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
@@ -247,8 +253,6 @@ public partial class CardsTab : Control
 			CardAlertPopupNode.Show();
 			return;
 		}
-
-		// TODO alert that successfully deleted card
 		
 		// * fetch the cards of the expansion of the deleted card
 		var card = CardContextMenuNode.GetMeta("Card").As<Wrapper<ExpansionCard>>().Value;
@@ -284,14 +288,17 @@ public partial class CardsTab : Control
 	private void OnDeleteConfirmDialogConfirmed()
 	{
 		var card = DeleteConfirmDialogNode.GetMeta("Card").As<Wrapper<ExpansionCard>>().Value;
-		
-		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
-		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
-
-		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
-		DeleteCardRequestNode.Request(baseUrl + "card/" + card.GetCID(), headers, HttpClient.Method.Delete);
+		DeleteCard(card.GetCID());
+		DeleteConfirmDialogNode.RemoveMeta("Card");
 	}
 	
 	#endregion
 
+	private void DeleteCard(string cid) {
+		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
+
+		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
+		DeleteCardRequestNode.Request(baseUrl + "card/" + cid, headers, HttpClient.Method.Delete);
+	}
 }

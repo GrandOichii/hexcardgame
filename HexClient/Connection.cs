@@ -44,6 +44,7 @@ public class WebSocketConnection : IConnection
 			await Read(); // should be deck
 			await Write(deck);
 
+			// !FIXME failed when creating match with two players
 			string resp;
 			while (true) {
 				resp = await Read();

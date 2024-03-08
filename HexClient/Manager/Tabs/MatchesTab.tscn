@@ -42,7 +42,7 @@ text = "Deck: "
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "res://decks/generated.deck"
+text = "decks/generated.deck"
 
 [node name="ChoosePlayerDeckButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
@@ -121,7 +121,7 @@ text = "Deck: "
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "res://decks/generated.deck"
+text = "decks/generated.deck"
 
 [node name="ChooseBotDeckButton" type="Button" parent="VBoxContainer/CreateContainer/BotConfig/HBoxContainer"]
 layout_mode = 2
@@ -205,6 +205,7 @@ size = Vector2i(800, 600)
 theme = ExtResource("5_5s7fd")
 ok_button_text = "Open"
 file_mode = 0
+access = 2
 filters = PackedStringArray("*.deck")
 
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/ChoosePlayerDeckButton" to="." method="OnChoosePlayerDeckButtonPressed"]

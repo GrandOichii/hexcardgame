@@ -38,6 +38,7 @@ public partial class MatchesTab : Control
 	public Control BotConfigNode { get; private set; }
 	public LineEdit PlayerDeckEditNode { get; private set; }
 	public LineEdit BotDeckEditNode { get; private set; }
+	public LineEdit BotNameEditNode { get; private set; }
 	
 	public HttpRequest CreateRequestNode { get; private set; }
 	public HttpRequest ConnectRequestNode { get; private set; }
@@ -67,7 +68,7 @@ public partial class MatchesTab : Control
 		BotConfigNode = GetNode<Control>("%BotConfig");
 		PlayerDeckEditNode = GetNode<LineEdit>("%PlayerDeckEdit");
 		BotDeckEditNode = GetNode<LineEdit>("%BotDeckEdit");
-		
+		BotNameEditNode = GetNode<LineEdit>("%BotNameEdit");
 
 		ConnectRequestNode = GetNode<HttpRequest>("%ConnectRequest");
 		CreateRequestNode = GetNode<HttpRequest>("%CreateRequest");
@@ -84,7 +85,7 @@ public partial class MatchesTab : Control
 	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match, string name, string deck) {
 		var client = new ClientWebSocket();
 		// TODO ugly
-		await client.ConnectAsync(new Uri(BaseUrl.Replace("http", "ws") + "match/connect/" + match.Id.ToString()), CancellationToken.None);
+		await client.ConnectAsync(new Uri(BaseUrl.Replace("http://", "ws://") + "match/connect/" + match.Id.ToString()), CancellationToken.None);
 		GD.Print("connected!");
 		var result = new WebSocketConnection(client, name, deck);
 		return result;
@@ -100,8 +101,8 @@ public partial class MatchesTab : Control
 	private async Task ConnectTo(MatchProcess match) {
 		var name = PlayerNameEditNode.Text;
 
-		// TODO choose deck
-		var deck = "dev::Mana Drill#3|dev::Brute#3|dev::Mage Initiate#3|dev::Warrior Initiate#3|dev::Rogue Initiate#3|dev::Flame Eruption#3|dev::Urakshi Shaman#3|dev::Urakshi Raider#3|dev::Give Strength#3|dev::Blood for Knowledge#3|dev::Dragotha Mage#3|dev::Prophecy Scholar#3|dev::Trained Knight#3|dev::Cast Armor#3|dev::Druid Outcast#3|starters::Knowledge Tower#3|dev::Elven Idealist#3|dev::Elven Outcast#3|dev::Dub#3|dev::Barracks#3|dev::Shieldmate#3|dev::Healer Initiate#3|dev::Archdemon Priest#3|starters::Scorch the Earth#3|dev::Kobold Warrior#3|dev::Kobold Mage#3|dev::Kobold Rogue#3|starters::Dragotha Student#3|starters::Tutoring Sphinx#3|starters::Dragotha Battlemage#3|starters::Inspiration#3";
+		// TODO validate deck file
+		var deck = File.ReadAllText(PlayerDeckEditNode.Text);
 
 		IConnection client =
 			WebSocketCheckNode.ButtonPressed
@@ -113,6 +114,40 @@ public partial class MatchesTab : Control
 
 		await window.Load(client);
 		window.GrabFocus();
+	}
+
+	private MatchProcessConfig BuildCreateMatchProcessConfig() {
+		// TODO allow to change WatchConfigId
+		// TODO allow to change CanWatch
+		// TODO allow to change bot type
+		// TODO validate bot name
+		// TODO validate bot deck file
+
+		var p1Config = new PlayerConfig {
+			BotConfig = null
+		};
+		var p2Config = new PlayerConfig {
+			BotConfig = null
+		};
+
+		if (IsBotCheckNode.ButtonPressed) {
+			var botConfig = new BotConfig {
+				BotType = BotType.RANDOM,
+				Name = BotNameEditNode.Text,
+				StrDeck = File.ReadAllText(BotDeckEditNode.Text)
+			};
+			p2Config.BotConfig = botConfig;
+		}
+		
+		var result = new MatchProcessConfig
+		{
+			MatchConfigId = "65d9ddfe768206fe1d2482ea",
+			CanWatch = true,
+			P1Config = p1Config,
+			P2Config = p2Config,
+		};
+
+		return result;
 	}
 
 	#region Signal connection
@@ -130,7 +165,9 @@ public partial class MatchesTab : Control
 	private void OnCreateMatchButtonPressed()
 	{
 		string[] headers = new string[] { "Content-Type: application/json" };
-		var data = IsBotCheckNode.ButtonPressed ? File.ReadAllText("bot.json") : File.ReadAllText("real.json");
+		var config = BuildCreateMatchProcessConfig();
+		var data = JsonSerializer.Serialize(config, Common.JSON_SERIALIZATION_OPTIONS);
+		// var data = IsBotCheckNode.ButtonPressed ? File.ReadAllText("bot.json") : File.ReadAllText("real.json");
 		CreateRequestNode.Request(BaseUrl + "match/create", headers, HttpClient.Method.Post, data);
 	}
 

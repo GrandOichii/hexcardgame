@@ -29,7 +29,15 @@ unique_name_in_owner = true
 initial_position = 2
 dialog_text = "Match ended."
 
+[node name="ConnectionFailedPopup" type="AcceptDialog" parent="."]
+unique_name_in_owner = true
+initial_position = 2
+theme = ExtResource("3_a2wkx")
+dialog_text = "Failed to connect to match!"
+
 [connection signal="canceled" from="ForbiddenPopup" to="." method="OnForbiddenPopupCanceled"]
 [connection signal="confirmed" from="ForbiddenPopup" to="." method="OnForbiddenPopupConfirmed"]
 [connection signal="canceled" from="EndPopup" to="." method="OnEndPopupCanceled"]
 [connection signal="confirmed" from="EndPopup" to="." method="OnEndPopupConfirmed"]
+[connection signal="canceled" from="ConnectionFailedPopup" to="." method="OnConnectionFailedPopupCanceled"]
+[connection signal="confirmed" from="ConnectionFailedPopup" to="." method="OnConnectionFailedPopupConfirmed"]

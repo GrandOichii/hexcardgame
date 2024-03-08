@@ -39,13 +39,13 @@ public partial class MatchViewWindow : Window
 
 	private void OnCloseRequested()
 	{
-		// TODO close connection
+		// ! freezes if called with .Wait()
+		_ = MatchViewNode.CloseConnection();
 		QueueFree();
 	}
 
 	private void OnMatchViewClosed()
 	{
-		// TODO alert user about match end
 		OnCloseRequested();
 	}
 		

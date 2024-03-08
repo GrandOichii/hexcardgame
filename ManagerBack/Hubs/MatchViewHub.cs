@@ -15,11 +15,18 @@ public class MatchViewHub : Hub {
     // TODO authorize
     // public async Task Connect(string matchId, string jwtToken) {
     public async Task Connect(string matchId) {
-        var match = await _matchService.ById(matchId);
-        if (!match.Config.CanWatch) {
-            await Clients.Caller.SendAsync("Forbidden");
-            return;
+        try {
+            var match = await _matchService.ById(matchId);
+            if (!match.Config.CanWatch) {
+                await Clients.Caller.SendAsync("Forbidden");
+                return;
+            }
+        } catch (InvalidMatchIdException e) {
+            await Clients.Caller.SendAsync("ConnectFail", e.Message);
+        } catch (MatchNotFoundException e) {
+            await Clients.Caller.SendAsync("ConnectFail", e.Message);
         }
+
         await RemoveFromAll(Context.ConnectionId);
         await Groups.AddToGroupAsync(Context.ConnectionId, ToGroupName(matchId));
         await _matchService.SendMatchInfo(matchId, Context.ConnectionId);

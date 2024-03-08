@@ -19,8 +19,10 @@ public partial class MatchView : Control
 	#region Nodes
 	
 	public Match MatchNode { get; private set; }
+	
 	public AcceptDialog ForbiddenPopupNode { get; private set; }
 	public AcceptDialog EndPopupNode { get; private set; }
+	public AcceptDialog ConnectionFailedPopupNode { get; private set; }
 	
 	#endregion
 
@@ -32,8 +34,10 @@ public partial class MatchView : Control
 		#region Node fetching
 		
 		MatchNode = GetNode<Match>("%Match");
+
 		ForbiddenPopupNode = GetNode<AcceptDialog>("%ForbiddenPopup");
 		EndPopupNode = GetNode<AcceptDialog>("%EndPopup");
+		ConnectionFailedPopupNode = GetNode<AcceptDialog>("%ConnectionFailedPopup");
 		
 		#endregion
 	}
@@ -41,6 +45,7 @@ public partial class MatchView : Control
 	public async Task<bool> Connect(HubConnection connection, string matchId) {
 		connection.On<string>("Config", OnViewConfig);
 		connection.On<string>("Update", OnViewUpdate);
+		connection.On<string>("ConnectFail", OnViewConnectFail);
 		connection.On("Forbidden", OnViewForbidden);
 		connection.On("EndView", OnEndView);
 		connection.Closed += OnConnectionClosed;
@@ -49,8 +54,8 @@ public partial class MatchView : Control
 			await connection.StartAsync();
 			await connection.SendAsync("Connect", matchId);
 		} catch (Exception e) {
-			// TODO
-			GD.Print("Failed to connect");
+			ConnectionFailedPopupNode.Show();
+			GD.Print("Failed to connect!");
 			GD.Print(e.Message);
 			return false;
 		}
@@ -77,6 +82,13 @@ public partial class MatchView : Control
 		return Task.CompletedTask;
 	}
 
+	private Task OnViewConnectFail(string message) {
+		// TODO utilize error message
+		ConnectionFailedPopupNode.CallDeferred("show");
+
+		return Task.CompletedTask;
+	}
+
 	private Task OnViewForbidden() {
 		ForbiddenPopupNode.CallDeferred("show");
 		return Task.CompletedTask;
@@ -87,6 +99,10 @@ public partial class MatchView : Control
 		EndPopupNode.CallDeferred("show");
 		
 		return Task.CompletedTask;
+	}
+
+	public async Task CloseConnection() {
+		await Connection.DisposeAsync();
 	}
 	
 	#region Signal connections
@@ -110,6 +126,17 @@ public partial class MatchView : Control
 	{
 		CallDeferred("emit_signal", SignalName.Closed);
 	}
+
+	private void OnConnectionFailedPopupCanceled()
+	{
+		CallDeferred("emit_signal", SignalName.Closed);
+	}
+
+	private void OnConnectionFailedPopupConfirmed()
+	{
+		CallDeferred("emit_signal", SignalName.Closed);
+	}
 	
 	#endregion
 }
+

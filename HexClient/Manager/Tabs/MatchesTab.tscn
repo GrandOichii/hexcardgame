@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://pa3msjtm5nlw"]
+[gd_scene load_steps=7 format=3 uid="uid://pa3msjtm5nlw"]
 
 [ext_resource type="Script" path="res://Manager/Tabs/MatchesTab.cs" id="1_efqvs"]
 [ext_resource type="PackedScene" uid="uid://rsvnq74xsoqi" path="res://Match/View/MatchViewWindow.tscn" id="2_6ly2s"]
 [ext_resource type="PackedScene" uid="uid://d20hdeknnjx41" path="res://Tables/MatchTable.tscn" id="2_tc0t2"]
 [ext_resource type="PackedScene" uid="uid://dqjostws3wlet" path="res://Match/ConnectedMatchWindow.tscn" id="3_p667x"]
+[ext_resource type="PackedScene" uid="uid://deejm2jhiio78" path="res://Manager/PlayerConfig.tscn" id="4_5dfgw"]
 [ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="5_5s7fd"]
 
 [node name="MatchesTab" type="Control"]
@@ -83,49 +84,28 @@ layout_mode = 2
 
 [node name="CreateContainer" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="CreateMatchLabel" type="Label" parent="VBoxContainer/CreateContainer"]
 layout_mode = 2
 text = "Create match"
 
-[node name="IsBotCheck" type="CheckButton" parent="VBoxContainer/CreateContainer"]
-unique_name_in_owner = true
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/CreateContainer"]
 layout_mode = 2
-text = "Versus bot"
+size_flags_vertical = 3
 
-[node name="BotConfig" type="VBoxContainer" parent="VBoxContainer/CreateContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/CreateContainer/BotConfig"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/CreateContainer/BotConfig/HBoxContainer2"]
-layout_mode = 2
-text = "Name: "
-
-[node name="BotNameEdit" type="LineEdit" parent="VBoxContainer/CreateContainer/BotConfig/HBoxContainer2"]
+[node name="PlayerConfig1" parent="VBoxContainer/CreateContainer/HBoxContainer" instance=ExtResource("4_5dfgw")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "bot-player"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/CreateContainer/BotConfig"]
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/CreateContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/CreateContainer/BotConfig/HBoxContainer"]
-layout_mode = 2
-text = "Deck: "
-
-[node name="BotDeckEdit" type="LineEdit" parent="VBoxContainer/CreateContainer/BotConfig/HBoxContainer"]
+[node name="PlayerConfig2" parent="VBoxContainer/CreateContainer/HBoxContainer" instance=ExtResource("4_5dfgw")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "decks/generated.deck"
-
-[node name="ChooseBotDeckButton" type="Button" parent="VBoxContainer/CreateContainer/BotConfig/HBoxContainer"]
-layout_mode = 2
-text = " ... "
 
 [node name="CreateMatchButton" type="Button" parent="VBoxContainer/CreateContainer"]
 layout_mode = 2
@@ -197,27 +177,13 @@ unique_name_in_owner = true
 initial_position = 2
 theme = ExtResource("5_5s7fd")
 
-[node name="ChooseDeckFileDialog" type="FileDialog" parent="Popups"]
-unique_name_in_owner = true
-title = "Choose deck file"
-initial_position = 2
-size = Vector2i(800, 600)
-theme = ExtResource("5_5s7fd")
-ok_button_text = "Open"
-file_mode = 0
-access = 2
-filters = PackedStringArray("*.deck")
-
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/ChoosePlayerDeckButton" to="." method="OnChoosePlayerDeckButtonPressed"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/VBoxContainer/WebSocketCheck" to="." method="OnWebSocketCheckToggled"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/VBoxContainer/TcpCheck" to="." method="OnTcpCheckToggled"]
 [connection signal="text_changed" from="VBoxContainer/BaseUrlEdit" to="." method="OnBaseUrlEditTextChanged"]
-[connection signal="toggled" from="VBoxContainer/CreateContainer/IsBotCheck" to="." method="OnIsBotCheckToggled"]
-[connection signal="pressed" from="VBoxContainer/CreateContainer/BotConfig/HBoxContainer/ChooseBotDeckButton" to="." method="OnChooseBotDeckButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/CreateContainer/CreateMatchButton" to="." method="OnCreateMatchButtonPressed"]
 [connection signal="request_completed" from="VBoxContainer/CreateContainer/CreateRequest" to="." method="OnCreateRequestRequestCompleted"]
 [connection signal="pressed" from="VBoxContainer/ConnectContainer/ConnectButton" to="." method="OnConnectButtonPressed"]
 [connection signal="request_completed" from="VBoxContainer/ConnectContainer/ConnectRequest" to="." method="OnConnectRequestRequestCompleted"]
 [connection signal="pressed" from="VBoxContainer/WatchContainer/WatchButton" to="." method="OnWatchButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/LiveMatchesButton" to="." method="OnLiveMatchesButtonPressed"]
-[connection signal="file_selected" from="Popups/ChooseDeckFileDialog" to="." method="OnChooseDeckFileDialogFileSelected"]

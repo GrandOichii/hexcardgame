@@ -29,22 +29,20 @@ public partial class MatchesTab : Control
 	
 	public LineEdit ConnectMatchIdEditNode { get; private set; }
 	public LineEdit WatchMatchIdEditNode { get; private set; }
-	public CheckButton IsBotCheckNode { get; private set; }
 	public Node WindowsNode { get; private set; }
 	public CheckBox WebSocketCheckNode { get; private set; }
 	public CheckBox TcpCheckNode { get; private set; }
 	public LineEdit PlayerNameEditNode { get; private set; }
 	public MatchTable MatchTableNode { get; private set; }
-	public Control BotConfigNode { get; private set; }
 	public LineEdit PlayerDeckEditNode { get; private set; }
-	public LineEdit BotDeckEditNode { get; private set; }
-	public LineEdit BotNameEditNode { get; private set; }
 	
 	public HttpRequest CreateRequestNode { get; private set; }
 	public HttpRequest ConnectRequestNode { get; private set; }
 
 	public AcceptDialog FailedToConnectPopupNode { get; private set; }
-	public FileDialog ChooseDeckFileDialogNode { get; private set; }
+
+	public PlayerConfig PlayerConfig1Node { get; private set; }
+	public PlayerConfig PlayerConfig2Node { get; private set; }
 	
 	#endregion
 	
@@ -61,25 +59,25 @@ public partial class MatchesTab : Control
 		WindowsNode = GetNode<Node>("%Windows");
 		ConnectMatchIdEditNode = GetNode<LineEdit>("%ConnectMatchIdEdit");
 		WatchMatchIdEditNode = GetNode<LineEdit>("%WatchMatchIdEdit");
-		IsBotCheckNode = GetNode<CheckButton>("%IsBotCheck");
 		WebSocketCheckNode = GetNode<CheckBox>("%WebSocketCheck");
 		TcpCheckNode = GetNode<CheckBox>("%TcpCheck");
 		MatchTableNode = GetNode<MatchTable>("%MatchTable");
-		BotConfigNode = GetNode<Control>("%BotConfig");
 		PlayerDeckEditNode = GetNode<LineEdit>("%PlayerDeckEdit");
-		BotDeckEditNode = GetNode<LineEdit>("%BotDeckEdit");
-		BotNameEditNode = GetNode<LineEdit>("%BotNameEdit");
 
 		ConnectRequestNode = GetNode<HttpRequest>("%ConnectRequest");
 		CreateRequestNode = GetNode<HttpRequest>("%CreateRequest");
 
 		FailedToConnectPopupNode = GetNode<AcceptDialog>("%FailedToConnectPopup");
-		ChooseDeckFileDialogNode = GetNode<FileDialog>("%ChooseDeckFileDialog");
+
+		PlayerConfig1Node = GetNode<PlayerConfig>("%PlayerConfig1");
+		PlayerConfig2Node = GetNode<PlayerConfig>("%PlayerConfig2");
 		
 		#endregion
 		
 		GetNode<LineEdit>("%BaseUrlEdit").Text = BaseUrl;
-		OnIsBotCheckToggled(IsBotCheckNode.ButtonPressed);
+
+		PlayerConfig1Node.BotNameEditNode.Text += "1";
+		PlayerConfig2Node.BotNameEditNode.Text += "2";
 	}
 
 	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match, string name, string deck) {
@@ -117,27 +115,11 @@ public partial class MatchesTab : Control
 	}
 
 	private MatchProcessConfig BuildCreateMatchProcessConfig() {
-		// TODO allow to change WatchConfigId
+		// TODO allow to change MatchConfigId
 		// TODO allow to change CanWatch
-		// TODO allow to change bot type
-		// TODO validate bot name
-		// TODO validate bot deck file
 
-		var p1Config = new PlayerConfig {
-			BotConfig = null
-		};
-		var p2Config = new PlayerConfig {
-			BotConfig = null
-		};
-
-		if (IsBotCheckNode.ButtonPressed) {
-			var botConfig = new BotConfig {
-				BotType = BotType.RANDOM,
-				Name = BotNameEditNode.Text,
-				StrDeck = File.ReadAllText(BotDeckEditNode.Text)
-			};
-			p2Config.BotConfig = botConfig;
-		}
+		var p1Config = PlayerConfig1Node.Baked;
+		var p2Config = PlayerConfig2Node.Baked;
 		
 		var result = new MatchProcessConfig
 		{
@@ -173,6 +155,10 @@ public partial class MatchesTab : Control
 
 	private void OnCreateRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
+		// * ugly
+		if (PlayerConfig1Node.IsBotCheckNode.ButtonPressed && PlayerConfig2Node.IsBotCheckNode.ButtonPressed)
+			return;
+
 		OnConnectRequestRequestCompleted(result, response_code, headers, body);
 	}
 
@@ -216,32 +202,6 @@ public partial class MatchesTab : Control
 	private void OnLiveMatchesButtonPressed()
 	{
 		_ = MatchTableNode.Connect(BaseUrl + "match/live");
-	}
-
-	private void OnIsBotCheckToggled(bool buttonPressed)
-	{
-		// CreateTween().TweenProperty(BotConfigNode, "modulate", new Color(1, 1, 1, buttonPressed ? 1.0f : .5f), .1f);
-		// BotConfigNode.SetProcess(buttonPressed);
-		BotConfigNode.Visible = buttonPressed;
-	}
-
-	private void OnChoosePlayerDeckButtonPressed()
-	{
-		ChooseDeckFileDialogNode.SetMeta("ForReal", true);
-		ChooseDeckFileDialogNode.Show();
-	}
-
-	private void OnChooseBotDeckButtonPressed()
-	{
-		ChooseDeckFileDialogNode.SetMeta("ForReal", false);
-		ChooseDeckFileDialogNode.Show();
-	}
-
-	private void OnChooseDeckFileDialogFileSelected(string path)
-	{
-		var forReal = ChooseDeckFileDialogNode.GetMeta("ForReal").AsBool();
-		var target = forReal ? PlayerDeckEditNode : BotDeckEditNode;
-		target.Text = path;
 	}
 	
 	#endregion

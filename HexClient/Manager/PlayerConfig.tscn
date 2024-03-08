@@ -1,0 +1,87 @@
+[gd_scene load_steps=3 format=3 uid="uid://deejm2jhiio78"]
+
+[ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="1_w6lp8"]
+[ext_resource type="Script" path="res://Manager/PlayerConfig.cs" id="1_x57mb"]
+
+[node name="PlayerConfig" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -772.0
+offset_bottom = -1072.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_x57mb")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="IsBotCheck" type="CheckButton" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Is bot"
+
+[node name="BotConfig" type="MarginContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VB" type="VBoxContainer" parent="VBoxContainer/BotConfig"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/BotConfig/VB"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/BotConfig/VB/HBoxContainer"]
+layout_mode = 2
+text = "Name: "
+
+[node name="BotNameEdit" type="LineEdit" parent="VBoxContainer/BotConfig/VB/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "bot-player"
+placeholder_text = "Enter bot name"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/BotConfig/VB"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/BotConfig/VB/HBoxContainer2"]
+layout_mode = 2
+text = "Deck path: "
+
+[node name="DeckPathEdit" type="LineEdit" parent="VBoxContainer/BotConfig/VB/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "decks/generated.deck"
+placeholder_text = "Enter deck path or click ..."
+
+[node name="ChooseDeckButton" type="Button" parent="VBoxContainer/BotConfig/VB/HBoxContainer2"]
+layout_mode = 2
+text = " ... "
+
+[node name="ChooseDeckFileDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+title = "Choose deck file"
+initial_position = 2
+size = Vector2i(800, 600)
+theme = ExtResource("1_w6lp8")
+ok_button_text = "Open"
+file_mode = 0
+filters = PackedStringArray("*.deck")
+
+[connection signal="toggled" from="VBoxContainer/IsBotCheck" to="." method="OnIsBotCheckToggled"]
+[connection signal="pressed" from="VBoxContainer/BotConfig/VB/HBoxContainer2/ChooseDeckButton" to="." method="OnChooseDeckButtonPressed"]
+[connection signal="file_selected" from="ChooseDeckFileDialog" to="." method="OnChooseDeckFileDialogFileSelected"]

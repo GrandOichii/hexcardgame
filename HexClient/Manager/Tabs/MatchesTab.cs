@@ -10,6 +10,7 @@ using System.Threading;
 using System.Net.Sockets;
 using System.Net;
 using HexClient.Tables;
+using System.Text;
 
 namespace HexClient.Manager.Tabs;
 
@@ -37,6 +38,8 @@ public partial class MatchesTab : Control
 	
 	public HttpRequest CreateRequestNode { get; private set; }
 	public HttpRequest ConnectRequestNode { get; private set; }
+
+	public AcceptDialog FailedToConnectPopupNode { get; private set; }
 	
 	#endregion
 	
@@ -60,11 +63,12 @@ public partial class MatchesTab : Control
 
 		ConnectRequestNode = GetNode<HttpRequest>("%ConnectRequest");
 		CreateRequestNode = GetNode<HttpRequest>("%CreateRequest");
+
+		FailedToConnectPopupNode = GetNode<AcceptDialog>("%FailedToConnectPopup");
 		
 		#endregion
 		
 		GetNode<LineEdit>("%BaseUrlEdit").Text = BaseUrl;
-		// OnBaseUrlEditTextChanged(BaseUrl);
 	}
 
 	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match, string name, string deck) {
@@ -128,8 +132,9 @@ public partial class MatchesTab : Control
 	private void OnConnectRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
 		if (response_code != 200) {
-			// TODO show message box
-			GD.Print("Error! Response code: " + response_code);
+			var resp = Encoding.UTF8.GetString(body);
+			FailedToConnectPopupNode.DialogText = $"Failed to connect to match! (code: {response_code})\n\n{resp}";
+			FailedToConnectPopupNode.Show();
 			return;
 		}
 

@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://pa3msjtm5nlw"]
+[gd_scene load_steps=6 format=3 uid="uid://pa3msjtm5nlw"]
 
 [ext_resource type="Script" path="res://Manager/Tabs/MatchesTab.cs" id="1_efqvs"]
 [ext_resource type="PackedScene" uid="uid://rsvnq74xsoqi" path="res://Match/View/MatchViewWindow.tscn" id="2_6ly2s"]
 [ext_resource type="PackedScene" uid="uid://d20hdeknnjx41" path="res://Tables/MatchTable.tscn" id="2_tc0t2"]
 [ext_resource type="PackedScene" uid="uid://dqjostws3wlet" path="res://Match/ConnectedMatchWindow.tscn" id="3_p667x"]
+[ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="5_5s7fd"]
 
 [node name="MatchesTab" type="Control"]
 layout_mode = 3
@@ -137,6 +138,13 @@ size_flags_vertical = 3
 
 [node name="Windows" type="Node" parent="."]
 unique_name_in_owner = true
+
+[node name="Popups" type="Node" parent="."]
+
+[node name="FailedToConnectPopup" type="AcceptDialog" parent="Popups"]
+unique_name_in_owner = true
+initial_position = 2
+theme = ExtResource("5_5s7fd")
 
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/VBoxContainer/WebSocketCheck" to="." method="OnWebSocketCheckToggled"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/VBoxContainer/TcpCheck" to="." method="OnTcpCheckToggled"]

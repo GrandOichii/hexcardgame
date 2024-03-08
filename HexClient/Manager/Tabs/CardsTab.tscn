@@ -121,6 +121,11 @@ title = "Error!"
 initial_position = 2
 theme = ExtResource("3_x3dqd")
 
+[node name="DeleteConfirmDialog" type="ConfirmationDialog" parent="Windows"]
+unique_name_in_owner = true
+initial_position = 2
+theme = ExtResource("3_x3dqd")
+
 [node name="ContextMenus" type="Node" parent="."]
 
 [node name="CardContextMenu" type="PopupMenu" parent="ContextMenus"]
@@ -143,4 +148,5 @@ item_1/id = 1
 [connection signal="close_requested" from="Windows/CardEditWindow" to="." method="OnCardEditWindowCloseRequested"]
 [connection signal="Closed" from="Windows/CardEditWindow/MarginContainer/CardEdit" to="." method="OnCardEditClosed"]
 [connection signal="Saved" from="Windows/CardEditWindow/MarginContainer/CardEdit" to="." method="OnCardEditSaved"]
+[connection signal="confirmed" from="Windows/DeleteConfirmDialog" to="." method="OnDeleteConfirmDialogConfirmed"]
 [connection signal="index_pressed" from="ContextMenus/CardContextMenu" to="." method="OnCardContextMenuIndexPressed"]

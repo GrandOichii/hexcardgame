@@ -38,7 +38,7 @@ public partial class CardsTab : Control
 
 	public AcceptDialog CardAlertPopupNode { get; private set; }
 	public AcceptDialog FetchErrorPopupNode { get; private set; }
-
+	public ConfirmationDialog DeleteConfirmDialogNode { get; private set; }
 
 	public HttpRequest FetchExpansionsRequestNode { get; private set; }
 	public HttpRequest FetchExpansionCardsRequestNode { get; private set; }
@@ -62,6 +62,7 @@ public partial class CardsTab : Control
 		
 		CardAlertPopupNode = GetNode<AcceptDialog>("%CardAlertPopup");
 		FetchErrorPopupNode = GetNode<AcceptDialog>("%FetchErrorPopup");
+		DeleteConfirmDialogNode = GetNode<ConfirmationDialog>("%DeleteConfirmDialog");
 
 		FetchExpansionsRequestNode = GetNode<HttpRequest>("%FetchExpansionsRequest");
 		FetchExpansionCardsRequestNode = GetNode<HttpRequest>("%FetchExpansionCardsRequest");
@@ -83,6 +84,18 @@ public partial class CardsTab : Control
 	private void LoadExpansion(string expansion) {
 		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
 		FetchExpansionCardsRequestNode.Request(baseUrl + "card/fromexpansion/" + expansion);
+	}
+
+	private void DeleteCard(ExpansionCard card) {
+		// TODO confirm
+		DeleteConfirmDialogNode.DialogText = $"Do you really want to delete card {card.GetCID()}?\nThis may force some user decks to be unusable";
+		DeleteConfirmDialogNode.SetMeta("Card", new Wrapper<ExpansionCard>(card));
+		DeleteConfirmDialogNode.Show();
+	}
+	
+	private void EditCard(ExpansionCard card) {
+		CardEditNode.Load(card);
+		CardEditWindowNode.Show();
 	}
 
 	#region Signal connections
@@ -267,12 +280,11 @@ public partial class CardsTab : Control
 		OnFetchExpansionsButtonPressed();
 		LoadExpansion(expansion);
 	}
-	
-	#endregion
 
-	private void DeleteCard(ExpansionCard card) {
-		// TODO confirm
-
+	private void OnDeleteConfirmDialogConfirmed()
+	{
+		var card = DeleteConfirmDialogNode.GetMeta("Card").As<Wrapper<ExpansionCard>>().Value;
+		
 		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
 		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
 
@@ -280,11 +292,8 @@ public partial class CardsTab : Control
 		DeleteCardRequestNode.Request(baseUrl + "card/" + card.GetCID(), headers, HttpClient.Method.Delete);
 	}
 	
-	private void EditCard(ExpansionCard card) {
-		CardEditNode.Load(card);
-		CardEditWindowNode.Show();
-	}
-}
+	#endregion
 
+}
 
 

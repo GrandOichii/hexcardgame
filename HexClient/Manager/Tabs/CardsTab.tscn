@@ -115,6 +115,12 @@ unique_name_in_owner = true
 initial_position = 2
 theme = ExtResource("3_x3dqd")
 
+[node name="FetchErrorPopup" type="AcceptDialog" parent="Windows"]
+unique_name_in_owner = true
+title = "Error!"
+initial_position = 2
+theme = ExtResource("3_x3dqd")
+
 [node name="ContextMenus" type="Node" parent="."]
 
 [node name="CardContextMenu" type="PopupMenu" parent="ContextMenus"]

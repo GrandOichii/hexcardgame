@@ -59,6 +59,7 @@ unique_name_in_owner = true
 
 [node name="ErrorPopup" type="AcceptDialog" parent="."]
 unique_name_in_owner = true
+initial_position = 2
 theme = ExtResource("2_kqh23")
 
 [node name="LogoutConfirmationPopup" type="ConfirmationDialog" parent="."]

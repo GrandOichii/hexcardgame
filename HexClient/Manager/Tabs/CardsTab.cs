@@ -37,6 +37,7 @@ public partial class CardsTab : Control
 	public PopupMenu CardContextMenuNode { get; private set; }
 
 	public AcceptDialog CardAlertPopupNode { get; private set; }
+	public AcceptDialog FetchErrorPopupNode { get; private set; }
 
 
 	public HttpRequest FetchExpansionsRequestNode { get; private set; }
@@ -60,6 +61,7 @@ public partial class CardsTab : Control
 		CardEditNode = GetNode<CardEdit>("%CardEdit");
 		
 		CardAlertPopupNode = GetNode<AcceptDialog>("%CardAlertPopup");
+		FetchErrorPopupNode = GetNode<AcceptDialog>("%FetchErrorPopup");
 
 		FetchExpansionsRequestNode = GetNode<HttpRequest>("%FetchExpansionsRequest");
 		FetchExpansionCardsRequestNode = GetNode<HttpRequest>("%FetchExpansionCardsRequest");
@@ -100,7 +102,13 @@ public partial class CardsTab : Control
 
 	private void OnFetchExpansionsRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
-		// TODO check response code
+		if (response_code != 200) {
+			var resp = Encoding.UTF8.GetString(body);
+			FetchErrorPopupNode.DialogText = $"Failed to fetch expansions list (code: {response_code})\n\n{resp}";
+			FetchErrorPopupNode.Show();
+			return;
+		}
+
 		while (ExpansionsListNode.ItemCount > 0)
 			ExpansionsListNode.RemoveItem(0);
 
@@ -112,7 +120,12 @@ public partial class CardsTab : Control
 	
 	private void OnFetchExpansionCardsRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
-		// TODO check response code
+		if (response_code != 200) {
+			var resp = Encoding.UTF8.GetString(body);
+			FetchErrorPopupNode.DialogText = $"Failed to fetch expansion cards (code: {response_code})\n\n{resp}";
+			FetchErrorPopupNode.Show();
+			return;
+		}
 
 		while (CardsContainerNode.GetChildCount() > 0)
 			CardsContainerNode.RemoveChild(CardsContainerNode.GetChild(0));
@@ -239,6 +252,8 @@ public partial class CardsTab : Control
 			var resp = Encoding.UTF8.GetString(body);
 
 			CardAlertPopupNode.DialogText = $"Failed to update card! (Response code: {response_code}\nResponse message:\n{resp}";
+			
+			// ! causes error if two or more accept dialogs are forced to be showed at the same time, doesn't seem to affect the program itself
 			CardAlertPopupNode.Show();
 			return;
 		}

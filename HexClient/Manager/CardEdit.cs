@@ -2,6 +2,7 @@ using Godot;
 using HexCore.Cards;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System;
+using System.Text.Json;
 
 public partial class CardEdit : Control
 {
@@ -63,6 +64,10 @@ public partial class CardEdit : Control
 			Expansion = ""
 		};
 
+		SetData(card);
+	}
+
+	private void SetData(ExpansionCard card) {
 		NameEditNode.Text = card.Name;
 		CostEditNode.Value = card.Cost;
 		DeckUsableCheckNode.ButtonPressed = card.DeckUsable;
@@ -74,15 +79,9 @@ public partial class CardEdit : Control
 		ExpansionEditNode.Text = card.Expansion;
 	}
 	
-	#region Signal connections
-	
-	private void OnSaveButtonPressed()
-	{
-		// * validation is currently done server-side, the window will not close unless user receives 200
-		
-		var oldName = _edited is not null ? $"{_edited.Expansion}::{_edited.Name}" : "";
-
-		var result = new ExpansionCard {
+	public ExpansionCard Baked {
+		get => new()
+		{
 			Name = NameEditNode.Text,
 			Power = (int)PowerEditNode.Value,
 			Life = (int)LifeEditNode.Value,
@@ -92,6 +91,17 @@ public partial class CardEdit : Control
 			Script = ScriptEditNode.Text,
 			Expansion = ExpansionEditNode.Text,
 		};
+	}
+	
+	#region Signal connections
+	
+	private void OnSaveButtonPressed()
+	{
+		// * validation is currently done server-side, the window will not close unless user receives 200
+		
+		var oldName = _edited is not null ? $"{_edited.Expansion}::{_edited.Name}" : "";
+
+		var result = Baked;
 
 		EmitSignal(SignalName.Saved, new Wrapper<ExpansionCard>(result), oldName);
 	}
@@ -102,8 +112,27 @@ public partial class CardEdit : Control
 
 		EmitSignal(SignalName.Closed);
 	}
+
+	private void OnCopyToBufferButtonPressed()
+	{
+		var card = Baked;
+		var data = JsonSerializer.Serialize(card);
+		DisplayServer.ClipboardSet(data);
+	}
+
+	private void OnLoadFromBufferButtonPressed()
+	{
+		var data = DisplayServer.ClipboardGet();
+		try {
+			var card = JsonSerializer.Deserialize<ExpansionCard>(data);
+			
+			SetData(card);
+		} catch {}
+	}
 	
 	#endregion
 }
+
+
 
 

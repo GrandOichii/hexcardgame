@@ -7,8 +7,8 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -444.0
-offset_bottom = -250.0
+offset_right = -349.0
+offset_bottom = -957.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_1w45p")
@@ -20,6 +20,22 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="CopyToBufferButton" type="Button" parent="VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Copy to clipboard"
+
+[node name="LoadFromBufferButton" type="Button" parent="VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Load from clipboard"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -105,5 +121,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Cancel"
 
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/CopyToBufferButton" to="." method="OnCopyToBufferButtonPressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer3/LoadFromBufferButton" to="." method="OnLoadFromBufferButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/SaveButton" to="." method="OnSaveButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/CancelButton" to="." method="OnCancelButtonPressed"]

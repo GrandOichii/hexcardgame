@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cc6yudbgtuq86"]
+[gd_scene load_steps=3 format=3 uid="uid://cc6yudbgtuq86"]
 
 [ext_resource type="Script" path="res://Manager/CardEdit.cs" id="1_1w45p"]
+[ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="2_6wik1"]
 
 [node name="CardEdit" type="Control"]
 layout_mode = 3
@@ -121,7 +122,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Cancel"
 
+[node name="ConfirmDiscardPopup" type="ConfirmationDialog" parent="."]
+unique_name_in_owner = true
+initial_position = 2
+theme = ExtResource("2_6wik1")
+dialog_text = "Discard changes?"
+
 [connection signal="pressed" from="VBoxContainer/HBoxContainer3/CopyToBufferButton" to="." method="OnCopyToBufferButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer3/LoadFromBufferButton" to="." method="OnLoadFromBufferButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/SaveButton" to="." method="OnSaveButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/CancelButton" to="." method="OnCancelButtonPressed"]
+[connection signal="confirmed" from="ConfirmDiscardPopup" to="." method="OnConfirmDiscardPopupConfirmed"]

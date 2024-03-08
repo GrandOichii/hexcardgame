@@ -26,6 +26,8 @@ public partial class CardEdit : Control
 	public TextEdit ScriptEditNode { get; private set; }
 	public SpinBox PowerEditNode { get; private set; }
 	public SpinBox LifeEditNode { get; private set; }
+
+	public ConfirmationDialog ConfirmDiscardPopupNode { get; private set; }
 	
 	#endregion
 
@@ -46,6 +48,8 @@ public partial class CardEdit : Control
 		ScriptEditNode = GetNode<TextEdit>("%ScriptEdit");
 		PowerEditNode = GetNode<SpinBox>("%PowerEdit");
 		LifeEditNode = GetNode<SpinBox>("%LifeEdit");
+
+		ConfirmDiscardPopupNode = GetNode<ConfirmationDialog>("%ConfirmDiscardPopup");
 		
 		#endregion
 	}
@@ -92,6 +96,24 @@ public partial class CardEdit : Control
 			Expansion = ExpansionEditNode.Text,
 		};
 	}
+
+	private bool Compare() {
+		var card = Baked;
+		ExpansionCard oldCard = _edited;
+
+		if (card.Name != oldCard.Name) return true;
+		if (card.Cost != oldCard.Cost) return true;
+		if (card.Expansion != oldCard.Expansion) return true;
+		if (card.Expansion != oldCard.Expansion) return true;
+		if (card.Type != oldCard.Type) return true;
+		if (card.Text != oldCard.Text) return true;
+		if (card.Power != oldCard.Power) return true;
+		if (card.Life != oldCard.Life) return true;
+		if (card.DeckUsable != oldCard.DeckUsable) return true;
+		if (card.Script != oldCard.Script) return true;
+
+		return false;
+	}
 	
 	#region Signal connections
 	
@@ -108,7 +130,13 @@ public partial class CardEdit : Control
 
 	private void OnCancelButtonPressed()
 	{
-		// TODO confirm if there are any changes
+		var changesPresent = true;
+		if (_edited is not null)
+			changesPresent = Compare();
+		if (changesPresent) {
+			ConfirmDiscardPopupNode.Show();
+			return;
+		}
 
 		EmitSignal(SignalName.Closed);
 	}
@@ -129,9 +157,15 @@ public partial class CardEdit : Control
 			SetData(card);
 		} catch {}
 	}
+
+	private void OnConfirmDiscardPopupConfirmed()
+	{
+		EmitSignal(SignalName.Closed);
+	}
 	
 	#endregion
 }
+
 
 
 

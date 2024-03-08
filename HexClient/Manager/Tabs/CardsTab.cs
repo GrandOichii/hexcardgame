@@ -84,7 +84,7 @@ public partial class CardsTab : Control
 	private void LoadExpansion(string expansion) {
 		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
 		FetchExpansionCardsRequestNode.CancelRequest();
-		FetchExpansionCardsRequestNode.Request(baseUrl + "card/fromexpansion/" + expansion);
+		FetchExpansionCardsRequestNode.Request(baseUrl + "card/fromexpansion/" + Uri.EscapeDataString(expansion));
 	}
 
 	private void TryDeleteCard(ExpansionCard card) {
@@ -182,8 +182,10 @@ public partial class CardsTab : Control
 		CardEditWindowNode.Hide();
 	}
 	
-	private void OnCardEditSaved(Wrapper<ExpansionCard> cardW, string oldName)
+	private async void OnCardEditSaved(Wrapper<ExpansionCard> cardW, string oldName)
 	{
+		// ! pretty sus code, might break
+
 		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
 		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
 		
@@ -192,8 +194,7 @@ public partial class CardsTab : Control
 
 		if (string.IsNullOrEmpty(oldName)) {
 			// create card
-			// TODO validate that the name is not taken
-			
+
 			CreateCardRequestNode.Request(baseUrl + "card", headers, HttpClient.Method.Post, JsonSerializer.Serialize(card, Common.JSON_SERIALIZATION_OPTIONS));
 			return;
 		}
@@ -205,8 +206,13 @@ public partial class CardsTab : Control
 		}
 
 		// delete card with the old name and create the new one
-		DeleteCardRequestNode.Request(baseUrl + "card/" + oldName, headers, HttpClient.Method.Delete);
 		CreateCardRequestNode.Request(baseUrl + "card", headers, HttpClient.Method.Post, JsonSerializer.Serialize(card, Common.JSON_SERIALIZATION_OPTIONS));
+		var createResult = await ToSignal(CreateCardRequestNode, "request_completed");
+		var respCode = createResult[1].As<long>();
+		if (respCode != 200) {
+			return;
+		}
+		DeleteCard(oldName);
 	}
 	
 	private void OnCreateCardRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
@@ -249,7 +255,8 @@ public partial class CardsTab : Control
 		if (response_code != 200) {
 			var resp = Encoding.UTF8.GetString(body);
 
-			CardAlertPopupNode.DialogText = $"Failed to delete card! (Response code: {response_code}\nResponse message:\n{resp}";
+			CardAlertPopupNode.DialogText = $"Failed to delete card! (Response code: {response_code})\n\n{resp}";
+			GD.Print(resp);
 			CardAlertPopupNode.Show();
 			return;
 		}
@@ -299,6 +306,6 @@ public partial class CardsTab : Control
 		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
 
 		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
-		DeleteCardRequestNode.Request(baseUrl + "card/" + cid, headers, HttpClient.Method.Delete);
+		DeleteCardRequestNode.Request(baseUrl + "card/" + Uri.EscapeDataString(cid), headers, HttpClient.Method.Delete);
 	}
 }

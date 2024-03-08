@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace ManagerBack.Services;
+namespace HexClient.Manager;
 
 public enum BotType {
     RANDOM,
@@ -14,7 +14,9 @@ public class BotConfig {
 }
 
 public class PlayerConfig {
+    #nullable enable
     public required BotConfig? BotConfig { get; set; }
+    #nullable disable
 }
 
 public class MatchProcessConfig {

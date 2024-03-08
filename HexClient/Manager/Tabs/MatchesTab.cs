@@ -36,11 +36,14 @@ public partial class MatchesTab : Control
 	public LineEdit PlayerNameEditNode { get; private set; }
 	public MatchTable MatchTableNode { get; private set; }
 	public Control BotConfigNode { get; private set; }
+	public LineEdit PlayerDeckEditNode { get; private set; }
+	public LineEdit BotDeckEditNode { get; private set; }
 	
 	public HttpRequest CreateRequestNode { get; private set; }
 	public HttpRequest ConnectRequestNode { get; private set; }
 
 	public AcceptDialog FailedToConnectPopupNode { get; private set; }
+	public FileDialog ChooseDeckFileDialogNode { get; private set; }
 	
 	#endregion
 	
@@ -62,11 +65,15 @@ public partial class MatchesTab : Control
 		TcpCheckNode = GetNode<CheckBox>("%TcpCheck");
 		MatchTableNode = GetNode<MatchTable>("%MatchTable");
 		BotConfigNode = GetNode<Control>("%BotConfig");
+		PlayerDeckEditNode = GetNode<LineEdit>("%PlayerDeckEdit");
+		BotDeckEditNode = GetNode<LineEdit>("%BotDeckEdit");
+		
 
 		ConnectRequestNode = GetNode<HttpRequest>("%ConnectRequest");
 		CreateRequestNode = GetNode<HttpRequest>("%CreateRequest");
 
 		FailedToConnectPopupNode = GetNode<AcceptDialog>("%FailedToConnectPopup");
+		ChooseDeckFileDialogNode = GetNode<FileDialog>("%ChooseDeckFileDialog");
 		
 		#endregion
 		
@@ -180,9 +187,29 @@ public partial class MatchesTab : Control
 		// BotConfigNode.SetProcess(buttonPressed);
 		BotConfigNode.Visible = buttonPressed;
 	}
+
+	private void OnChoosePlayerDeckButtonPressed()
+	{
+		ChooseDeckFileDialogNode.SetMeta("ForReal", true);
+		ChooseDeckFileDialogNode.Show();
+	}
+
+	private void OnChooseBotDeckButtonPressed()
+	{
+		ChooseDeckFileDialogNode.SetMeta("ForReal", false);
+		ChooseDeckFileDialogNode.Show();
+	}
+
+	private void OnChooseDeckFileDialogFileSelected(string path)
+	{
+		var forReal = ChooseDeckFileDialogNode.GetMeta("ForReal").AsBool();
+		var target = forReal ? PlayerDeckEditNode : BotDeckEditNode;
+		target.Text = path;
+	}
 	
 	#endregion
 }
+
 
 
 

@@ -31,6 +31,24 @@ layout_mode = 2
 text = "real-player"
 placeholder_text = "Enter your name"
 
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Deck: "
+
+[node name="PlayerDeckEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "res://decks/generated.deck"
+
+[node name="ChoosePlayerDeckButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = " ... "
+
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
@@ -103,7 +121,7 @@ text = "Deck: "
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "TODO set default"
+text = "res://decks/generated.deck"
 
 [node name="ChooseBotDeckButton" type="Button" parent="VBoxContainer/CreateContainer/BotConfig/HBoxContainer"]
 layout_mode = 2
@@ -179,13 +197,26 @@ unique_name_in_owner = true
 initial_position = 2
 theme = ExtResource("5_5s7fd")
 
+[node name="ChooseDeckFileDialog" type="FileDialog" parent="Popups"]
+unique_name_in_owner = true
+title = "Choose deck file"
+initial_position = 2
+size = Vector2i(800, 600)
+theme = ExtResource("5_5s7fd")
+ok_button_text = "Open"
+file_mode = 0
+filters = PackedStringArray("*.deck")
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/ChoosePlayerDeckButton" to="." method="OnChoosePlayerDeckButtonPressed"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/VBoxContainer/WebSocketCheck" to="." method="OnWebSocketCheckToggled"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/VBoxContainer/TcpCheck" to="." method="OnTcpCheckToggled"]
 [connection signal="text_changed" from="VBoxContainer/BaseUrlEdit" to="." method="OnBaseUrlEditTextChanged"]
 [connection signal="toggled" from="VBoxContainer/CreateContainer/IsBotCheck" to="." method="OnIsBotCheckToggled"]
+[connection signal="pressed" from="VBoxContainer/CreateContainer/BotConfig/HBoxContainer/ChooseBotDeckButton" to="." method="OnChooseBotDeckButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/CreateContainer/CreateMatchButton" to="." method="OnCreateMatchButtonPressed"]
 [connection signal="request_completed" from="VBoxContainer/CreateContainer/CreateRequest" to="." method="OnCreateRequestRequestCompleted"]
 [connection signal="pressed" from="VBoxContainer/ConnectContainer/ConnectButton" to="." method="OnConnectButtonPressed"]
 [connection signal="request_completed" from="VBoxContainer/ConnectContainer/ConnectRequest" to="." method="OnConnectRequestRequestCompleted"]
 [connection signal="pressed" from="VBoxContainer/WatchContainer/WatchButton" to="." method="OnWatchButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/LiveMatchesButton" to="." method="OnLiveMatchesButtonPressed"]
+[connection signal="file_selected" from="Popups/ChooseDeckFileDialog" to="." method="OnChooseDeckFileDialogFileSelected"]

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cc6yudbgtuq86"]
+[gd_scene load_steps=4 format=3 uid="uid://cc6yudbgtuq86"]
 
 [ext_resource type="Script" path="res://Manager/CardEdit.cs" id="1_1w45p"]
 [ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="2_6wik1"]
+[ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Cards/Card.tscn" id="3_621v2"]
 
 [node name="CardEdit" type="Control"]
 layout_mode = 3
@@ -21,6 +22,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="OpenPreviewButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Open preview"
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -128,8 +133,47 @@ initial_position = 2
 theme = ExtResource("2_6wik1")
 dialog_text = "Discard changes?"
 
+[node name="Windows" type="Node" parent="."]
+
+[node name="PreviewWindow" type="Window" parent="Windows"]
+unique_name_in_owner = true
+title = "Card preview"
+initial_position = 2
+size = Vector2i(300, 420)
+visible = false
+always_on_top = true
+theme = ExtResource("2_6wik1")
+
+[node name="MarginContainer" type="MarginContainer" parent="Windows/PreviewWindow"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="PreviewCard" parent="Windows/PreviewWindow/MarginContainer" instance=ExtResource("3_621v2")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[connection signal="Closed" from="." to="." method="OnClosed"]
+[connection signal="Saved" from="." to="." method="OnSaved"]
+[connection signal="pressed" from="VBoxContainer/OpenPreviewButton" to="." method="OnOpenPreviewButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer3/CopyToBufferButton" to="." method="OnCopyToBufferButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer3/LoadFromBufferButton" to="." method="OnLoadFromBufferButtonPressed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/NameEdit" to="." method="OnNameEditTextChanged"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/VBoxContainer/ExpansionEdit" to="." method="OnExpansionEditTextChanged"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/VBoxContainer/CostEdit" to="." method="OnCostEditValueChanged"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/PowerEdit" to="." method="OnPowerEditValueChanged"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/LifeEdit" to="." method="OnLifeEditValueChanged"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer/VBoxContainer/DeckUsableCheck" to="." method="OnDeckUsableCheckToggled"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/VBoxContainer/TypeEdit" to="." method="OnTypeEditTextChanged"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/VBoxContainer/TextEdit" to="." method="OnTextEditTextChanged"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/VBoxContainer2/ScriptEdit" to="." method="OnScriptEditTextChanged"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/SaveButton" to="." method="OnSaveButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/CancelButton" to="." method="OnCancelButtonPressed"]
 [connection signal="confirmed" from="ConfirmDiscardPopup" to="." method="OnConfirmDiscardPopupConfirmed"]
+[connection signal="close_requested" from="Windows/PreviewWindow" to="." method="OnPreviewWindowCloseRequested"]

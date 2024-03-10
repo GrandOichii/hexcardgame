@@ -1,5 +1,5 @@
 using Godot;
-using HexCore.Cards;
+// using HexCore.Cards;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System;
 using System.Text.Json;
@@ -11,7 +11,7 @@ public partial class CardEdit : Control
 	[Signal]
 	public delegate void ClosedEventHandler();
 	[Signal]
-	public delegate void SavedEventHandler(Wrapper<ExpansionCard> card, string oldName);
+	public delegate void SavedEventHandler(Wrapper<HexCore.Cards.ExpansionCard> card, string oldName);
 	
 	#endregion
 	
@@ -26,13 +26,15 @@ public partial class CardEdit : Control
 	public TextEdit ScriptEditNode { get; private set; }
 	public SpinBox PowerEditNode { get; private set; }
 	public SpinBox LifeEditNode { get; private set; }
+	public Card PreviewCardNode { get; private set; }
 
 	public ConfirmationDialog ConfirmDiscardPopupNode { get; private set; }
+	public Window PreviewWindowNode { get; private set; }
 	
 	#endregion
 
 	#nullable enable
-	private ExpansionCard? _edited;
+	private HexCore.Cards.ExpansionCard? _edited;
 	#nullable disable
 	
 	public override void _Ready()
@@ -48,14 +50,16 @@ public partial class CardEdit : Control
 		ScriptEditNode = GetNode<TextEdit>("%ScriptEdit");
 		PowerEditNode = GetNode<SpinBox>("%PowerEdit");
 		LifeEditNode = GetNode<SpinBox>("%LifeEdit");
+		PreviewCardNode = GetNode<Card>("%PreviewCard");
 
 		ConfirmDiscardPopupNode = GetNode<ConfirmationDialog>("%ConfirmDiscardPopup");
+		PreviewWindowNode = GetNode<Window>("%PreviewWindow");
 		
 		#endregion
 	}
 
 	#nullable enable
-	public void Load(ExpansionCard? card) {
+	public void Load(HexCore.Cards.ExpansionCard? card) {
 	#nullable disable
 		_edited = card;
 
@@ -71,7 +75,7 @@ public partial class CardEdit : Control
 		SetData(card);
 	}
 
-	private void SetData(ExpansionCard card) {
+	private void SetData(HexCore.Cards.ExpansionCard card) {
 		NameEditNode.Text = card.Name;
 		CostEditNode.Value = card.Cost;
 		DeckUsableCheckNode.ButtonPressed = card.DeckUsable;
@@ -81,9 +85,11 @@ public partial class CardEdit : Control
 		PowerEditNode.Value = card.Power;
 		LifeEditNode.Value = card.Life;
 		ExpansionEditNode.Text = card.Expansion;
+
+		PreviewCardNode.Load(card);
 	}
 	
-	public ExpansionCard Baked {
+	public HexCore.Cards.ExpansionCard Baked {
 		get => new()
 		{
 			Name = NameEditNode.Text,
@@ -99,7 +105,7 @@ public partial class CardEdit : Control
 
 	private bool Compare() {
 		var card = Baked;
-		ExpansionCard oldCard = _edited;
+		HexCore.Cards.ExpansionCard oldCard = _edited;
 
 		if (card.Name != oldCard.Name) return true;
 		if (card.Cost != oldCard.Cost) return true;
@@ -114,6 +120,18 @@ public partial class CardEdit : Control
 
 		return false;
 	}
+
+	public void TryClose() {
+		var changesPresent = true;
+		if (_edited is not null)
+			changesPresent = Compare();
+		if (changesPresent) {
+			ConfirmDiscardPopupNode.Show();
+			return;
+		}
+
+		EmitSignal(SignalName.Closed);
+	}
 	
 	#region Signal connections
 	
@@ -125,20 +143,12 @@ public partial class CardEdit : Control
 
 		var result = Baked;
 
-		EmitSignal(SignalName.Saved, new Wrapper<ExpansionCard>(result), oldName);
+		EmitSignal(SignalName.Saved, new Wrapper<HexCore.Cards.ExpansionCard>(result), oldName);
 	}
 
 	private void OnCancelButtonPressed()
 	{
-		var changesPresent = true;
-		if (_edited is not null)
-			changesPresent = Compare();
-		if (changesPresent) {
-			ConfirmDiscardPopupNode.Show();
-			return;
-		}
-
-		EmitSignal(SignalName.Closed);
+		TryClose();
 	}
 
 	private void OnCopyToBufferButtonPressed()
@@ -152,7 +162,7 @@ public partial class CardEdit : Control
 	{
 		var data = DisplayServer.ClipboardGet();
 		try {
-			var card = JsonSerializer.Deserialize<ExpansionCard>(data);
+			var card = JsonSerializer.Deserialize<HexCore.Cards.ExpansionCard>(data);
 			
 			SetData(card);
 		} catch {}
@@ -162,11 +172,72 @@ public partial class CardEdit : Control
 	{
 		EmitSignal(SignalName.Closed);
 	}
+
+	private void OnOpenPreviewButtonPressed()
+	{
+		PreviewWindowNode.Show();
+	}
+
+	private void OnPreviewWindowCloseRequested()
+	{
+		PreviewWindowNode.Hide();
+	}
+
+	private void OnClosed()
+	{
+		PreviewWindowNode.Hide();
+	}
+
+	private void OnNameEditTextChanged(string new_text)
+	{
+		PreviewCardNode.Load(Baked);
+	}
+
+	private void OnExpansionEditTextChanged(string new_text)
+	{
+		PreviewCardNode.Load(Baked);
+	}
+
+	private void OnCostEditValueChanged(double value)
+	{
+		PreviewCardNode.Load(Baked);
+	}
+
+	private void OnPowerEditValueChanged(double value)
+	{
+		PreviewCardNode.Load(Baked);
+	}
+
+	private void OnLifeEditValueChanged(double value)
+	{
+		PreviewCardNode.Load(Baked);
+	}
+
+	private void OnDeckUsableCheckToggled(bool button_pressed)
+	{
+		PreviewCardNode.Load(Baked);
+	}
+
+	private void OnTypeEditTextChanged(string new_text)
+	{
+		PreviewCardNode.Load(Baked);
+	}
+
+	private void OnTextEditTextChanged()
+	{
+		PreviewCardNode.Load(Baked);
+	}
+
+	private void OnScriptEditTextChanged()
+	{
+		PreviewCardNode.Load(Baked);
+	}
+
+	private void OnSaved(Node card, string oldName)
+	{
+		PreviewWindowNode.Hide();
+	}
 	
 	#endregion
 }
-
-
-
-
 

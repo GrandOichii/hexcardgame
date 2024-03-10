@@ -174,7 +174,7 @@ public partial class CardsTab : Control
 
 	private void OnCardEditWindowCloseRequested()
 	{
-		CardEditWindowNode.Hide();
+		CardEditNode.TryClose();
 	}
 
 	private void OnCardEditClosed()

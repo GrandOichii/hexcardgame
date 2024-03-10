@@ -23,7 +23,8 @@ public partial class BaseState : Node {
 		
 		// apply player order fix
 		var container = match.PlayerContainerNode;
-		if (info.MyI is not null && (container.GetChild(info.PlayerCount - 1) as PlayerInfo).PlayerI != info.MyI) {
+		// if (info.MyI is not null && (container.GetChild(info.PlayerCount - 1) as PlayerInfo).PlayerI != info.MyI) {
+		if (info.MyI is not null && (container.GetChild(0) as PlayerInfo).PlayerI != info.MyI) {
 			var myI = info.MyI ?? default;
 			var pCount = info.PlayerCount;
 			for (int i = 0; i < pCount; i++) {

@@ -42,6 +42,13 @@ public class MatchConfigController : ControllerBase {
         }
     }
 
+    [HttpGet("basic")]
+    public async Task<IActionResult> Basic() {
+        var result = await _configService.Basic();
+        return Ok(result.Id);
+    }
+
+
     // [Authorize(Roles = "Admin")]
     // [HttpPut]
     // public async Task<IActionResult> Update([FromBody] ExpansionCard card) {

@@ -35,9 +35,11 @@ public partial class MatchesTab : Control
 	public LineEdit PlayerNameEditNode { get; private set; }
 	public MatchTable MatchTableNode { get; private set; }
 	public LineEdit PlayerDeckEditNode { get; private set; }
+	public LineEdit MatchConfigIdEditNode { get; private set; }
 	
 	public HttpRequest CreateRequestNode { get; private set; }
 	public HttpRequest ConnectRequestNode { get; private set; }
+	public HttpRequest FetchBasicConfigRequestNode { get; private set; }
 
 	public AcceptDialog FailedToConnectPopupNode { get; private set; }
 
@@ -63,9 +65,11 @@ public partial class MatchesTab : Control
 		TcpCheckNode = GetNode<CheckBox>("%TcpCheck");
 		MatchTableNode = GetNode<MatchTable>("%MatchTable");
 		PlayerDeckEditNode = GetNode<LineEdit>("%PlayerDeckEdit");
+		MatchConfigIdEditNode = GetNode<LineEdit>("%MatchConfigIdEdit");
 
 		ConnectRequestNode = GetNode<HttpRequest>("%ConnectRequest");
 		CreateRequestNode = GetNode<HttpRequest>("%CreateRequest");
+		FetchBasicConfigRequestNode = GetNode<HttpRequest>("%FetchBasicConfigRequest");
 
 		FailedToConnectPopupNode = GetNode<AcceptDialog>("%FailedToConnectPopup");
 
@@ -78,6 +82,9 @@ public partial class MatchesTab : Control
 
 		PlayerConfig1Node.BotNameEditNode.Text += "1";
 		PlayerConfig2Node.BotNameEditNode.Text += "2";
+		
+		FetchBasicConfigRequestNode.Request(BaseUrl + "config/basic");
+		OnLiveMatchesButtonPressed();
 	}
 
 	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match, string name, string deck) {
@@ -123,7 +130,7 @@ public partial class MatchesTab : Control
 		
 		var result = new MatchProcessConfig
 		{
-			MatchConfigId = "65d9ddfe768206fe1d2482ea",
+			MatchConfigId = MatchConfigIdEditNode.Text,
 			CanWatch = true,
 			P1Config = p1Config,
 			P2Config = p2Config,
@@ -155,6 +162,8 @@ public partial class MatchesTab : Control
 
 	private void OnCreateRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
+		// TODO check response code
+
 		// * ugly
 		if (PlayerConfig1Node.IsBotCheckNode.ButtonPressed && PlayerConfig2Node.IsBotCheckNode.ButtonPressed)
 			return;
@@ -203,9 +212,18 @@ public partial class MatchesTab : Control
 	{
 		_ = MatchTableNode.Connect(BaseUrl + "match/live");
 	}
+
+	private void OnFetchBasicConfigRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
+	{
+		// TODO check response code
+		
+		var configId = Encoding.UTF8.GetString(body);
+		MatchConfigIdEditNode.Text = configId;
+	}
 	
 	#endregion
 }
+
 
 
 

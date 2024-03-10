@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -41,5 +42,10 @@ public class MatchConfigRepository : IMatchConfigRepository {
         var found = await _collection.FindAsync(c => c.Id == id);
         var result = await found.FirstOrDefaultAsync();
         return result;
+    }
+
+    public async Task<IEnumerable<MatchConfigModel>> Filter(Expression<Func<MatchConfigModel, bool>> filter)
+    {
+        return (await _collection.FindAsync(filter)).ToList();
     }
 }

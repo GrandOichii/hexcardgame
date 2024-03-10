@@ -10,6 +10,12 @@ public class MatchConfigNotFoundException : System.Exception
     public MatchConfigNotFoundException(string message) : base(message) { }
 }
 
+[System.Serializable]
+public class NoBasicMatchConfigException : System.Exception
+{
+    public NoBasicMatchConfigException() : base("basic match config not found") { }
+}
+
 public class MatchConfigService : IMatchConfigService
 {
     private readonly IMatchConfigRepository _configRepo;
@@ -28,6 +34,15 @@ public class MatchConfigService : IMatchConfigService
         return await _configRepo.All();
     }
 
+    public async Task<MatchConfigModel> Basic()
+    {
+        var found = await _configRepo.Filter(c => c.Name == "basic");
+        var result = found.FirstOrDefault()
+            ?? throw new NoBasicMatchConfigException()
+        ;
+        return result;
+    }
+
     public async Task<MatchConfigModel> ById(string id)
     {
         var result = await _configRepo.ById(id)
@@ -39,7 +54,6 @@ public class MatchConfigService : IMatchConfigService
 
     public async Task<MatchConfigModel> Create(MatchConfig config)
     {
-        // TODO validate
         await _configValidator.Validate(config);
         
         var newConfig = _mapper.Map<MatchConfigModel>(config);

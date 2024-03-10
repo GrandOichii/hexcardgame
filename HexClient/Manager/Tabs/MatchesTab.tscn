@@ -102,6 +102,10 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="FetchBasicConfigButton" type="Button" parent="VBoxContainer/CreateContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Basic"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/CreateContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -198,6 +202,7 @@ unique_name_in_owner = true
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/VBoxContainer/WebSocketCheck" to="." method="OnWebSocketCheckToggled"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/VBoxContainer/TcpCheck" to="." method="OnTcpCheckToggled"]
 [connection signal="text_changed" from="VBoxContainer/BaseUrlEdit" to="." method="OnBaseUrlEditTextChanged"]
+[connection signal="pressed" from="VBoxContainer/CreateContainer/HBoxContainer2/FetchBasicConfigButton" to="." method="OnFetchBasicConfigButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/CreateContainer/CreateMatchButton" to="." method="OnCreateMatchButtonPressed"]
 [connection signal="request_completed" from="VBoxContainer/CreateContainer/CreateRequest" to="." method="OnCreateRequestRequestCompleted"]
 [connection signal="pressed" from="VBoxContainer/ConnectContainer/ConnectButton" to="." method="OnConnectButtonPressed"]

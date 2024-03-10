@@ -83,8 +83,8 @@ public partial class MatchesTab : Control
 		PlayerConfig1Node.BotNameEditNode.Text += "1";
 		PlayerConfig2Node.BotNameEditNode.Text += "2";
 		
-		FetchBasicConfigRequestNode.Request(BaseUrl + "config/basic");
 		OnLiveMatchesButtonPressed();
+		OnFetchBasicConfigButtonPressed();
 	}
 
 	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match, string name, string deck) {
@@ -220,9 +220,16 @@ public partial class MatchesTab : Control
 		var configId = Encoding.UTF8.GetString(body);
 		MatchConfigIdEditNode.Text = configId;
 	}
-	
+
+	private void OnFetchBasicConfigButtonPressed()
+	{
+		FetchBasicConfigRequestNode.Request(BaseUrl + "config/basic");
+	}
+
 	#endregion
 }
+
+
 
 
 

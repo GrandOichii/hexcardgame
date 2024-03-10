@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace ManagerBack.Repositories;
@@ -39,9 +40,14 @@ public class MatchConfigRepository : IMatchConfigRepository {
             return cached;
         }
 
-        var found = await _collection.FindAsync(c => c.Id == id);
-        var result = await found.FirstOrDefaultAsync();
-        return result;
+        // TODO this doesn't tell the user that the id is invalid
+        try {
+            var found = await _collection.FindAsync(c => c.Id == id);
+            var result = await found.FirstOrDefaultAsync();
+            return result;
+        } catch (FormatException) {
+            return null;
+        }
     }
 
     public async Task<IEnumerable<MatchConfigModel>> Filter(Expression<Func<MatchConfigModel, bool>> filter)

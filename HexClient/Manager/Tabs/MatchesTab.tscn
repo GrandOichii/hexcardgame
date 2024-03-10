@@ -106,6 +106,11 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "Basic"
 
+[node name="CanWatchCheck" type="CheckBox" parent="VBoxContainer/CreateContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Allow players to watch match"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/CreateContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -189,6 +194,11 @@ unique_name_in_owner = true
 [node name="Popups" type="Node" parent="."]
 
 [node name="FailedToConnectPopup" type="AcceptDialog" parent="Popups"]
+unique_name_in_owner = true
+initial_position = 2
+theme = ExtResource("5_5s7fd")
+
+[node name="FailedToCreatePopup" type="AcceptDialog" parent="Popups"]
 unique_name_in_owner = true
 initial_position = 2
 theme = ExtResource("5_5s7fd")

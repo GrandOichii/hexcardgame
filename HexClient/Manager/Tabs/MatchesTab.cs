@@ -36,12 +36,14 @@ public partial class MatchesTab : Control
 	public MatchTable MatchTableNode { get; private set; }
 	public LineEdit PlayerDeckEditNode { get; private set; }
 	public LineEdit MatchConfigIdEditNode { get; private set; }
+	public CheckBox CanWatchCheckNode { get; private set; }
 	
 	public HttpRequest CreateRequestNode { get; private set; }
 	public HttpRequest ConnectRequestNode { get; private set; }
 	public HttpRequest FetchBasicConfigRequestNode { get; private set; }
 
 	public AcceptDialog FailedToConnectPopupNode { get; private set; }
+	public AcceptDialog FailedToCreatePopupNode { get; private set; }
 
 	public PlayerConfig PlayerConfig1Node { get; private set; }
 	public PlayerConfig PlayerConfig2Node { get; private set; }
@@ -66,12 +68,14 @@ public partial class MatchesTab : Control
 		MatchTableNode = GetNode<MatchTable>("%MatchTable");
 		PlayerDeckEditNode = GetNode<LineEdit>("%PlayerDeckEdit");
 		MatchConfigIdEditNode = GetNode<LineEdit>("%MatchConfigIdEdit");
+		CanWatchCheckNode = GetNode<CheckBox>("%CanWatchCheck");
 
 		ConnectRequestNode = GetNode<HttpRequest>("%ConnectRequest");
 		CreateRequestNode = GetNode<HttpRequest>("%CreateRequest");
 		FetchBasicConfigRequestNode = GetNode<HttpRequest>("%FetchBasicConfigRequest");
 
 		FailedToConnectPopupNode = GetNode<AcceptDialog>("%FailedToConnectPopup");
+		FailedToCreatePopupNode = GetNode<AcceptDialog>("%FailedToCreatePopup");
 
 		PlayerConfig1Node = GetNode<PlayerConfig>("%PlayerConfig1");
 		PlayerConfig2Node = GetNode<PlayerConfig>("%PlayerConfig2");
@@ -122,16 +126,13 @@ public partial class MatchesTab : Control
 	}
 
 	private MatchProcessConfig BuildCreateMatchProcessConfig() {
-		// TODO allow to change MatchConfigId
-		// TODO allow to change CanWatch
-
 		var p1Config = PlayerConfig1Node.Baked;
 		var p2Config = PlayerConfig2Node.Baked;
 		
 		var result = new MatchProcessConfig
 		{
 			MatchConfigId = MatchConfigIdEditNode.Text,
-			CanWatch = true,
+			CanWatch = CanWatchCheckNode.ButtonPressed,
 			P1Config = p1Config,
 			P2Config = p2Config,
 		};
@@ -163,6 +164,14 @@ public partial class MatchesTab : Control
 	private void OnCreateRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
 		// TODO check response code
+		if (response_code != 200) {
+			var resp = Encoding.UTF8.GetString(body);
+			FailedToCreatePopupNode.DialogText = $"Failed to create match! (code: {response_code})\n\n{resp}";
+			FailedToCreatePopupNode.Show();
+
+			return;
+		}
+
 
 		// * ugly
 		if (PlayerConfig1Node.IsBotCheckNode.ButtonPressed && PlayerConfig2Node.IsBotCheckNode.ButtonPressed)

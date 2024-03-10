@@ -1,11 +1,18 @@
 using Godot;
 using HexCore.Cards;
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace HexClient.Cards;
 
 public partial class Card : Control
 {
+	private readonly Dictionary<string, string> KEYWORD_COLOR_MAPPING = new() {
+		{ "Fast", "plum" },
+		{ "Vile", "darkred" },
+		{ "Virtuous", "lightskyblue" },
+	};
 	#region Exports
 	
 	[Export]
@@ -32,7 +39,9 @@ public partial class Card : Control
 	private Color _defaultBgColor;
 	public HexStates.MatchCardState State { get; private set; }
 	public HexCore.Cards.Card CardState { get; private set; }
-	// public MatchConnection Client { get; set; }
+
+	// TODO
+	public bool ShowMID { get; set; } = false;
 
 	public override void _Ready()
 	{
@@ -60,13 +69,15 @@ public partial class Card : Control
 
 	public void Load(HexStates.MatchCardState cardState) {
 		State = cardState;
-		NameLabelNode.Text = cardState.Name + " [" + cardState.MID + "]";
+		NameLabelNode.Text = cardState.Name;
+		if (ShowMID)
+			NameLabelNode.Text += " [" + cardState.MID + "]";
 		CostLabelNode.Text = " " + cardState.Cost.ToString() + " ";
 		TypeLabelNode.Text = cardState.Type;
 		PowerLabelNode.Text = cardState.Power.ToString();
 		LifeLabelNode.Text = cardState.Life.ToString();
 		DefenceLabelNode.Text = cardState.Defence.ToString();
-		TextLabelNode.Text = cardState.Text;
+		SetText(cardState.Name, cardState.Text);
 	}
 
 	public void Load(HexCore.Cards.Card card) {
@@ -77,7 +88,18 @@ public partial class Card : Control
 		PowerLabelNode.Text = card.Power.ToString();
 		LifeLabelNode.Text = card.Life.ToString();
 		DefenceLabelNode.Text = "";
-		TextLabelNode.Text = card.Text;
+		SetText(card.Name, card.Text);
+	}
+
+	private void SetText(string name, string text) {
+		foreach (var pair in KEYWORD_COLOR_MAPPING) {
+			var keyword = pair.Key;
+			var color = pair.Value;
+			text = Regex.Replace(text, @"\{" + keyword + @"\}", $"[color={color}]{keyword}[/color]");
+		}
+		text = Regex.Replace(text, @"\[CARDNAME\]", $"[color=orange]{name}[/color]");
+		TextLabelNode.Text = text;
+
 	}
 
 	public Color BgColor {

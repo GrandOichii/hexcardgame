@@ -106,6 +106,12 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "Basic"
 
+[node name="AutoConnectCheck" type="CheckBox" parent="VBoxContainer/CreateContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Auto connect to match"
+
 [node name="CanWatchCheck" type="CheckBox" parent="VBoxContainer/CreateContainer"]
 unique_name_in_owner = true
 layout_mode = 2

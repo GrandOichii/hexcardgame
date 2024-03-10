@@ -38,6 +38,7 @@ public partial class MatchesTab : Control
 	public LineEdit PlayerDeckEditNode { get; private set; }
 	public LineEdit MatchConfigIdEditNode { get; private set; }
 	public CheckBox CanWatchCheckNode { get; private set; }
+	public CheckBox AutoConnectCheckNode { get; private set; }
 	
 	public HttpRequest CreateRequestNode { get; private set; }
 	public HttpRequest ConnectRequestNode { get; private set; }
@@ -71,6 +72,7 @@ public partial class MatchesTab : Control
 		PlayerDeckEditNode = GetNode<LineEdit>("%PlayerDeckEdit");
 		MatchConfigIdEditNode = GetNode<LineEdit>("%MatchConfigIdEdit");
 		CanWatchCheckNode = GetNode<CheckBox>("%CanWatchCheck");
+		AutoConnectCheckNode = GetNode<CheckBox>("%AutoConnectCheck");
 
 		ConnectRequestNode = GetNode<HttpRequest>("%ConnectRequest");
 		CreateRequestNode = GetNode<HttpRequest>("%CreateRequest");
@@ -208,10 +210,17 @@ public partial class MatchesTab : Control
 			return;
 		}
 
+		var info = JsonSerializer.Deserialize<MatchProcess>(body, Common.JSON_SERIALIZATION_OPTIONS);
+		ConnectMatchIdEditNode.Text = info.Id.ToString();
+		WatchMatchIdEditNode.Text = info.Id.ToString();
 
-		// * ugly
-		if (PlayerConfig1Node.IsBotCheckNode.ButtonPressed && PlayerConfig2Node.IsBotCheckNode.ButtonPressed)
-			return;
+		if (
+			 
+			PlayerConfig1Node.IsBotCheckNode.ButtonPressed && 
+			PlayerConfig2Node.IsBotCheckNode.ButtonPressed
+		) return;
+			
+		if (!AutoConnectCheckNode.ButtonPressed) return;
 
 		OnConnectRequestRequestCompleted(result, response_code, headers, body);
 	}
@@ -226,8 +235,6 @@ public partial class MatchesTab : Control
 		}
 
 		var info = JsonSerializer.Deserialize<MatchProcess>(body, Common.JSON_SERIALIZATION_OPTIONS);
-		ConnectMatchIdEditNode.Text = info.Id.ToString();
-		WatchMatchIdEditNode.Text = info.Id.ToString();
 
 		_ = ConnectTo(info);
 	}

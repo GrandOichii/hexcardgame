@@ -33,7 +33,7 @@ public partial class PlayerConfig : Control
 
 		foreach (BotType botType in Enum.GetValues(typeof(BotType))) {
 			// TODO make more user friendly
-			BotTypeOptionNode.AddItem(botType.ToString());
+			BotTypeOptionNode.AddItem(botType.ToFriendlyString());
 			BotTypeOptionNode.SetItemMetadata(BotTypeOptionNode.ItemCount - 1, new Wrapper<BotType>(botType));
 		}
 
@@ -43,8 +43,6 @@ public partial class PlayerConfig : Control
 	}
 	
 	public MatchPlayerConfig Baked {
-		// TODO validate deck
-
 		get {
 			var data = File.ReadAllText(DeckPathEditNode.Text);
 			_ = DeckTemplate.FromText(data);

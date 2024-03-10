@@ -98,12 +98,9 @@ public partial class Card : Control
 	}
 	
 	#region Signal connections
+
 	
-	private void OnGuiInput(InputEvent e)
-	{
-		// TODO
-	}
-	
+
 	#endregion
 }
 

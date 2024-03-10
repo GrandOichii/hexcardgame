@@ -79,7 +79,7 @@ public partial class MatchTable : Control
 
 	private static void SetMatchData(TreeItem item, MatchProcess match) {
 		item.SetText(0, match.Id.ToString());
-		item.SetText(1, match.Status.ToString());
+		item.SetText(1, match.Status.ToFriendlyString());
 		item.SetText(2, match.TcpAddress);
 	}
 }

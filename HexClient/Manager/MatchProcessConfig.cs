@@ -7,6 +7,18 @@ public enum BotType {
 	SMART
 }
 
+
+public static class BotTypeExtensions {
+	public static string ToFriendlyString(this BotType status) {
+        return status switch
+        {
+            BotType.RANDOM => "Random",
+            BotType.SMART => "Smart",
+            _ => "unknown bot type",
+        };
+    }
+}
+
 public class BotConfig {
 	public required string StrDeck { get; set; }
 	public required string Name { get; set; }

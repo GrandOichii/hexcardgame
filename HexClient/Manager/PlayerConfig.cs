@@ -32,7 +32,6 @@ public partial class PlayerConfig : Control
 		#endregion
 
 		foreach (BotType botType in Enum.GetValues(typeof(BotType))) {
-			// TODO make more user friendly
 			BotTypeOptionNode.AddItem(botType.ToFriendlyString());
 			BotTypeOptionNode.SetItemMetadata(BotTypeOptionNode.ItemCount - 1, new Wrapper<BotType>(botType));
 		}

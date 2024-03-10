@@ -83,7 +83,7 @@ public partial class MatchView : Control
 	}
 
 	private Task OnViewConnectFail(string message) {
-		// TODO utilize error message
+		ConnectionFailedPopupNode.CallDeferred("set_text", $"Failed to connect to match!\n\n{message}");
 		ConnectionFailedPopupNode.CallDeferred("show");
 
 		return Task.CompletedTask;

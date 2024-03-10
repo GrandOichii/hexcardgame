@@ -33,7 +33,8 @@ public partial class MatchTable : Control
 		_root = MatchTreeNode.CreateItem();
 		_root.SetText(0, "ID");
 		_root.SetText(1, "Status");
-		_root.SetText(2, "Tcp");
+		_root.SetText(2, "Winner");
+		_root.SetText(3, "Tcp");
 	}
 	
 	public async Task Connect(string url) {
@@ -51,7 +52,7 @@ public partial class MatchTable : Control
 		try {
 			await connection.StartAsync();
 			await connection.SendAsync("Get");
-		} catch (Exception e) {
+		} catch (Exception) {
 			FailedLiveConnectPopupNode.Show();
 		}
 	}
@@ -80,6 +81,7 @@ public partial class MatchTable : Control
 	private static void SetMatchData(TreeItem item, MatchProcess match) {
 		item.SetText(0, match.Id.ToString());
 		item.SetText(1, match.Status.ToFriendlyString());
-		item.SetText(2, match.TcpAddress);
+		item.SetText(2, match.Record.WinnerName ?? "");
+		item.SetText(3, match.TcpAddress);
 	}
 }

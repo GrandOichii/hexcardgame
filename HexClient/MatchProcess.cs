@@ -1,6 +1,7 @@
 namespace HexClient;
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 public enum MatchStatus {
@@ -23,9 +24,29 @@ public static class MatchStatusExtensions {
     }
 }
 
+public class PlayerRecord {
+    public required string Name { get; set; }
+    public List<string> Actions { get; set; } = new();
+}
+
+public class MatchRecord {
+    public string ExceptionMessage { get; set; } = "";
+    public string InnerExceptionMessage { get; set; } = "";
+
+    #nullable enable
+    public string? WinnerName { get; set; }
+    
+    #nullable disable
+    public List<PlayerRecord> Players { get; set; } = new();
+}
+
 public class MatchProcess {
 	public MatchStatus Status { get; set; }
-	// public MatchRecord? Record { get; private set; } = null;
+
+    #nullable enable
+	public MatchRecord? Record { get; set; }
+    #nullable disable
+
 	public string TcpAddress { get; set; }
 	public Guid Id { get; set; }
 	

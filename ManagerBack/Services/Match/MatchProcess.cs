@@ -151,15 +151,13 @@ public class MatchProcess {
             // TODO change to username extracted from jwt
             await baseController.Write("name");
             name = await baseController.Read();
-            // var name = await baseController.Read();
 
             // TODO this allows any user to submit any deck, change this later to deckId
             await baseController.Write("deck");
             deckRaw = await baseController.Read();
-            // var deckRaw = await baseController.Read();
         } catch (Exception e) {
-            System.Console.WriteLine(e.Message);
-            System.Console.WriteLine("Failed to connect");
+            Console.WriteLine(e.Message);
+            Console.WriteLine("Failed to connect");
             return;
         }
         var deck = await LoadDeck(deckRaw);

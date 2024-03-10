@@ -13,6 +13,7 @@ public partial class PlayerConfig : Control
 	public LineEdit BotNameEditNode { get; private set; }
 	public LineEdit DeckPathEditNode { get; private set; }
 	public FileDialog ChooseDeckFileDialogNode { get; private set; }
+	public OptionButton BotTypeOptionNode { get; private set; }
 	
 	#endregion
 	
@@ -25,8 +26,17 @@ public partial class PlayerConfig : Control
 		BotNameEditNode = GetNode<LineEdit>("%BotNameEdit");
 		DeckPathEditNode = GetNode<LineEdit>("%DeckPathEdit");
 		ChooseDeckFileDialogNode = GetNode<FileDialog>("%ChooseDeckFileDialog");
+		BotTypeOptionNode = GetNode<OptionButton>("%BotTypeOption");
 		
 		#endregion
+
+		foreach (BotType botType in Enum.GetValues(typeof(BotType))) {
+			// TODO make more user friendly
+			BotTypeOptionNode.AddItem(botType.ToString());
+			BotTypeOptionNode.SetItemMetadata(BotTypeOptionNode.ItemCount - 1, new Wrapper<BotType>(botType));
+		}
+
+		BotTypeOptionNode.Select(0);
 
 		OnIsBotCheckToggled(IsBotCheckNode.ButtonPressed);
 	}
@@ -40,7 +50,7 @@ public partial class PlayerConfig : Control
 			BotConfig = IsBotCheckNode.ButtonPressed ? new() {
 				Name = BotNameEditNode.Text,
 				StrDeck = File.ReadAllText(DeckPathEditNode.Text),
-				BotType = HexClient.Manager.BotType.RANDOM
+				BotType = BotTypeOptionNode.GetSelectedMetadata().As<Wrapper<BotType>>().Value
 			} : null
 		};
 	}

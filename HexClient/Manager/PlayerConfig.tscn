@@ -72,9 +72,21 @@ placeholder_text = "Enter deck path or click ..."
 layout_mode = 2
 text = " ... "
 
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/BotConfig/VB"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/BotConfig/VB/HBoxContainer3"]
+layout_mode = 2
+text = "Bot type: "
+
+[node name="BotTypeOption" type="OptionButton" parent="VBoxContainer/BotConfig/VB/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="ChooseDeckFileDialog" type="FileDialog" parent="."]
 unique_name_in_owner = true
-title = "Choose deck file"
+title = "Open a File"
 initial_position = 2
 size = Vector2i(800, 600)
 theme = ExtResource("1_w6lp8")

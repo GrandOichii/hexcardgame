@@ -53,7 +53,6 @@ public partial class Match : Control
 	private void CreatePlayerInfo(int playerI) {
 		var child = PlayerInfoPS.Instantiate() as PlayerInfo;
 		PlayerContainerNode.AddChild(child);
-		// PlayerContainerNode.AddChild(child);
 		// child.Client = Client;
 		child.PlayerI = playerI;
 	}

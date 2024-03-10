@@ -11,6 +11,7 @@ using System.Net.Sockets;
 using System.Net;
 using HexClient.Tables;
 using System.Text;
+using HexCore.Decks;
 
 namespace HexClient.Manager.Tabs;
 
@@ -44,6 +45,7 @@ public partial class MatchesTab : Control
 
 	public AcceptDialog FailedToConnectPopupNode { get; private set; }
 	public AcceptDialog FailedToCreatePopupNode { get; private set; }
+	public AcceptDialog DeckErrorPopupNode { get; private set; }
 
 	public PlayerConfig PlayerConfig1Node { get; private set; }
 	public PlayerConfig PlayerConfig2Node { get; private set; }
@@ -76,6 +78,7 @@ public partial class MatchesTab : Control
 
 		FailedToConnectPopupNode = GetNode<AcceptDialog>("%FailedToConnectPopup");
 		FailedToCreatePopupNode = GetNode<AcceptDialog>("%FailedToCreatePopup");
+		DeckErrorPopupNode = GetNode<AcceptDialog>("%DeckErrorPopup");
 
 		PlayerConfig1Node = GetNode<PlayerConfig>("%PlayerConfig1");
 		PlayerConfig2Node = GetNode<PlayerConfig>("%PlayerConfig2");
@@ -110,8 +113,24 @@ public partial class MatchesTab : Control
 	private async Task ConnectTo(MatchProcess match) {
 		var name = PlayerNameEditNode.Text;
 
-		// TODO validate deck file
-		var deck = File.ReadAllText(PlayerDeckEditNode.Text);
+		string deck;
+		try {
+			deck = File.ReadAllText(PlayerDeckEditNode.Text);
+			_ = DeckTemplate.FromText(deck);
+		} catch (DeckParseException e) {
+			// TODO more detailed message
+			DeckErrorPopupNode.DialogText = $"Failed to connect to match!\n\n{e.Message}";
+			DeckErrorPopupNode.Show();
+			
+			return;
+		} catch (FileNotFoundException e) {
+			// TODO more detailed message
+			DeckErrorPopupNode.DialogText = $"Failed to connect to match!\n\n{e.Message}";
+			DeckErrorPopupNode.Show();
+
+			return;
+		}
+
 
 		IConnection client =
 			WebSocketCheckNode.ButtonPressed
@@ -126,6 +145,7 @@ public partial class MatchesTab : Control
 	}
 
 	private MatchProcessConfig BuildCreateMatchProcessConfig() {
+
 		var p1Config = PlayerConfig1Node.Baked;
 		var p2Config = PlayerConfig2Node.Baked;
 		
@@ -154,10 +174,26 @@ public partial class MatchesTab : Control
 
 	private void OnCreateMatchButtonPressed()
 	{
+		
+		MatchProcessConfig config;
+		try {
+			config = BuildCreateMatchProcessConfig();
+		} catch (DeckParseException e) {
+			// TODO more detailed message
+			DeckErrorPopupNode.DialogText = $"Failed to create match!\n\n{e.Message}";
+			DeckErrorPopupNode.Show();
+
+			return;
+		} catch (FileNotFoundException e) {
+			// TODO more detailed message
+			DeckErrorPopupNode.DialogText = $"Failed to create match!\n\n{e.Message}";
+			DeckErrorPopupNode.Show();
+
+			return;
+		}
+
 		string[] headers = new string[] { "Content-Type: application/json" };
-		var config = BuildCreateMatchProcessConfig();
 		var data = JsonSerializer.Serialize(config, Common.JSON_SERIALIZATION_OPTIONS);
-		// var data = IsBotCheckNode.ButtonPressed ? File.ReadAllText("bot.json") : File.ReadAllText("real.json");
 		CreateRequestNode.Request(BaseUrl + "match/create", headers, HttpClient.Method.Post, data);
 	}
 

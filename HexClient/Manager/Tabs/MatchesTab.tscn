@@ -203,6 +203,12 @@ unique_name_in_owner = true
 initial_position = 2
 theme = ExtResource("5_5s7fd")
 
+[node name="DeckErrorPopup" type="AcceptDialog" parent="Popups"]
+unique_name_in_owner = true
+title = "Deck error!"
+initial_position = 2
+theme = ExtResource("5_5s7fd")
+
 [node name="Requests" type="Node" parent="."]
 
 [node name="FetchBasicConfigRequest" type="HTTPRequest" parent="Requests"]

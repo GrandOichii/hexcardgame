@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.IO;
+using HexCore.Decks;
 
 namespace HexClient.Manager;
 
@@ -43,16 +44,20 @@ public partial class PlayerConfig : Control
 	
 	public MatchPlayerConfig Baked {
 		// TODO validate deck
-		// TODO add bot type choosing
 
-		get => new()
-		{
-			BotConfig = IsBotCheckNode.ButtonPressed ? new() {
-				Name = BotNameEditNode.Text,
-				StrDeck = File.ReadAllText(DeckPathEditNode.Text),
-				BotType = BotTypeOptionNode.GetSelectedMetadata().As<Wrapper<BotType>>().Value
-			} : null
-		};
+		get {
+			var data = File.ReadAllText(DeckPathEditNode.Text);
+			_ = DeckTemplate.FromText(data);
+
+			return new()
+			{
+				BotConfig = IsBotCheckNode.ButtonPressed ? new() {
+					Name = BotNameEditNode.Text,
+					StrDeck = data,
+					BotType = BotTypeOptionNode.GetSelectedMetadata().As<Wrapper<BotType>>().Value
+				} : null
+			};
+		}
 	}
 
 	#region Signal connections

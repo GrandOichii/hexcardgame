@@ -47,6 +47,7 @@ public partial class MatchesTab : Control
 	public AcceptDialog FailedToConnectPopupNode { get; private set; }
 	public AcceptDialog FailedToCreatePopupNode { get; private set; }
 	public AcceptDialog DeckErrorPopupNode { get; private set; }
+	public AcceptDialog FailedToFetchBasicConfigPopupNode { get; private set; }
 
 	public PlayerConfig PlayerConfig1Node { get; private set; }
 	public PlayerConfig PlayerConfig2Node { get; private set; }
@@ -81,6 +82,7 @@ public partial class MatchesTab : Control
 		FailedToConnectPopupNode = GetNode<AcceptDialog>("%FailedToConnectPopup");
 		FailedToCreatePopupNode = GetNode<AcceptDialog>("%FailedToCreatePopup");
 		DeckErrorPopupNode = GetNode<AcceptDialog>("%DeckErrorPopup");
+		FailedToFetchBasicConfigPopupNode = GetNode<AcceptDialog>("%FailedToFetchBasicConfigPopup");
 
 		PlayerConfig1Node = GetNode<PlayerConfig>("%PlayerConfig1");
 		PlayerConfig2Node = GetNode<PlayerConfig>("%PlayerConfig2");
@@ -120,14 +122,12 @@ public partial class MatchesTab : Control
 			deck = File.ReadAllText(PlayerDeckEditNode.Text);
 			_ = DeckTemplate.FromText(deck);
 		} catch (DeckParseException e) {
-			// TODO more detailed message
-			DeckErrorPopupNode.DialogText = $"Failed to connect to match!\n\n{e.Message}";
+			DeckErrorPopupNode.DialogText = $"Failed to load deck file!\n\n{e.Message}";
 			DeckErrorPopupNode.Show();
 			
 			return;
 		} catch (FileNotFoundException e) {
-			// TODO more detailed message
-			DeckErrorPopupNode.DialogText = $"Failed to connect to match!\n\n{e.Message}";
+			DeckErrorPopupNode.DialogText = $"Failed to load deck file!\n\n{e.Message}";
 			DeckErrorPopupNode.Show();
 
 			return;
@@ -181,14 +181,12 @@ public partial class MatchesTab : Control
 		try {
 			config = BuildCreateMatchProcessConfig();
 		} catch (DeckParseException e) {
-			// TODO more detailed message
-			DeckErrorPopupNode.DialogText = $"Failed to create match!\n\n{e.Message}";
+			DeckErrorPopupNode.DialogText = $"Failed to load deck file!\n\n{e.Message}";
 			DeckErrorPopupNode.Show();
 
 			return;
 		} catch (FileNotFoundException e) {
-			// TODO more detailed message
-			DeckErrorPopupNode.DialogText = $"Failed to create match!\n\n{e.Message}";
+			DeckErrorPopupNode.DialogText = $"Failed to load deck file!\n\n{e.Message}";
 			DeckErrorPopupNode.Show();
 
 			return;
@@ -201,7 +199,6 @@ public partial class MatchesTab : Control
 
 	private void OnCreateRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
-		// TODO check response code
 		if (response_code != 200) {
 			var resp = Encoding.UTF8.GetString(body);
 			FailedToCreatePopupNode.DialogText = $"Failed to create match! (code: {response_code})\n\n{resp}";
@@ -267,7 +264,13 @@ public partial class MatchesTab : Control
 
 	private void OnFetchBasicConfigRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
-		// TODO check response code
+		if (response_code != 200) {
+			var resp = Encoding.UTF8.GetString(body);
+			FailedToFetchBasicConfigPopupNode.DialogText = $"Failed to fetch basic match config! (code: {response_code})\n\n{resp}";
+			FailedToFetchBasicConfigPopupNode.Show();
+
+			return;
+		}
 		
 		var configId = Encoding.UTF8.GetString(body);
 		MatchConfigIdEditNode.Text = configId;

@@ -32,7 +32,6 @@ public class TCPPlayerController : IOPlayerController
 
     public override Task CleanUp()
     {
-        // TODO
         _handler.Close();
         return Task.CompletedTask;
     }

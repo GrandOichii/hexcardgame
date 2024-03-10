@@ -57,7 +57,6 @@ public interface IPlayerController {
     /// <returns></returns>
     public async Task<string> PickTile(List<int[]> choices, Player player, Match match) {
         var result = await DoPickTile(choices, player, match);
-        // TODO record
         // TODO? check for correctness
         return result;
     }
@@ -70,7 +69,6 @@ public interface IPlayerController {
     /// <returns>Action of the player</returns>
     public async Task<string> PromptAction(Player player, Match match) {
         var result = await DoPromptAction(player, match);
-        // TODO
         return result;
     }
 }

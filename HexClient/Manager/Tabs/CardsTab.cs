@@ -1,5 +1,6 @@
 using Godot;
 using HexCore.Cards;
+using HexCore.GameMatch.States;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,7 +16,9 @@ public struct Expansion {
 
 public interface ICardDisplay {
 	public void Load(ExpansionCard card);
+	public void Load(MatchCardState card);
 	public void SubscribeToRightClick(Action<Wrapper<ExpansionCard>> a);
+	public void SetShowCardIds(bool value);
 }
 
 public partial class CardsTab : Control
@@ -153,6 +156,7 @@ public partial class CardsTab : Control
 			var cardDisplay = child as ICardDisplay;
 			cardDisplay.Load(card);
 			cardDisplay.SubscribeToRightClick(OnCardRightClick);
+			// cardDisplay.
 		}
 	}
 

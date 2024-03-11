@@ -58,9 +58,13 @@ public partial class ConnectedMatch : Control
 		}
 
 		var state = JsonSerializer.Deserialize<MatchState>(message, Common.JSON_SERIALIZATION_OPTIONS);
-		state.ApplyTo(MatchNode, MatchInfo);
+		CallDeferred("LoadState", state);
 
 		return Task.CompletedTask;
+	}
+
+	private void LoadState(MatchState state) {
+		state.ApplyTo(MatchNode, MatchInfo);
 	}
 	
 	#region Signal connections

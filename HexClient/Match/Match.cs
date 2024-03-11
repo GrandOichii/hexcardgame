@@ -5,17 +5,28 @@ namespace HexClient.Match;
 
 public partial class Match : Control
 {
+	#region Signals
+
+	[Signal]
+	public delegate void ShowCardIdsToggledEventHandler(bool value);
+
+	#endregion
+
 	#region Packed scenes
 
 	[Export]
 	private PackedScene PlayerInfoPS { get; set; }
+	[Export]
+	public PackedScene HandCardPS { get; set; }
 
 	#endregion
 
 	#region Nodes
 	
-	public Window OptionsWindowNode { get; private set; }
 	public Control PlayerContainerNode { get; private set; }
+	public Container HandContainerNode { get; private set; }
+	
+	public Window OptionsWindowNode { get; private set; }
 	
 	#endregion
 
@@ -31,6 +42,7 @@ public partial class Match : Control
 		
 		OptionsWindowNode = GetNode<Window>("%OptionsWindow");
 		PlayerContainerNode = GetNode<Control>("%PlayerContainer");
+		HandContainerNode = GetNode<Container>("%HandContainer");	
 		
 		#endregion
 		
@@ -61,7 +73,7 @@ public partial class Match : Control
 
 	private void OnShowCardIdsToggleToggled(bool buttonPressed)
 	{
-		// TODO
+		EmitSignal(SignalName.ShowCardIdsToggled, buttonPressed);
 	}
 
 	private void OnShowOptionsButtonPressed()
@@ -78,7 +90,6 @@ public partial class Match : Control
 	#endregion
 
 }
-
 
 
 

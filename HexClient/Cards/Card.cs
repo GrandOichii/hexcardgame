@@ -37,11 +37,11 @@ public partial class Card : Control
 	#endregion
 
 	private Color _defaultBgColor;
-	public HexStates.MatchCardState State { get; private set; }
+	public HexStates.MatchCardState? State { get; private set; }
 	public HexCore.Cards.Card CardState { get; private set; }
 
 	// TODO
-	public bool ShowMID { get; set; } = false;
+	public bool ShowMID { get; private set; } = false;
 
 	public override void _Ready()
 	{
@@ -69,6 +69,8 @@ public partial class Card : Control
 
 	public void Load(HexStates.MatchCardState cardState) {
 		State = cardState;
+		CardState = null;
+
 		NameLabelNode.Text = cardState.Name;
 		if (ShowMID)
 			NameLabelNode.Text += " [" + cardState.MID + "]";
@@ -82,6 +84,8 @@ public partial class Card : Control
 
 	public void Load(HexCore.Cards.Card card) {
 		CardState = card;
+		State = null;
+
 		NameLabelNode.Text = card.Name;
 		CostLabelNode.Text = " " + card.Cost.ToString() + " ";
 		TypeLabelNode.Text = card.Type;
@@ -119,9 +123,18 @@ public partial class Card : Control
 		CreateTween().TweenProperty(this, "BgColor", FocusColor, .1f);
 	}
 	
+	public void SetShowMID(bool value) {
+		ShowMID = value;
+
+		if (State is null)
+			return;
+		
+		// TODO ugly
+		Load((HexStates.MatchCardState)State);
+	}
+	
 	#region Signal connections
 
-	
 
 	#endregion
 }

@@ -1,4 +1,5 @@
 using Godot;
+using HexCore.GameMatch.States;
 using System;
 
 namespace HexClient.Manager;
@@ -36,6 +37,13 @@ public partial class DisplayCard : Control, ICardDisplay
 		CardNode.Load(card);
 	}
 
+	public void Load(MatchCardState card)
+    {
+		_card = null;
+        CardNode.Load(card);
+    }
+
+
 	#region Signal connections
 
 	private void OnGuiInput(InputEvent e)
@@ -59,7 +67,12 @@ public partial class DisplayCard : Control, ICardDisplay
 		CardNode.Unfocus();
 	}
 
-	#endregion
+    public void SetShowCardIds(bool value)
+    {
+		CardNode.SetShowMID(value);
+    }
+
+    #endregion
 }
 
 

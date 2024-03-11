@@ -137,8 +137,11 @@ public class MatchService : IMatchService
 
     public async Task EndView(string matchId)
     {
+        var match = await ById(matchId);
         var group = MatchViewHub.ToGroupName(matchId);
-        await _viewHubContext.Clients.Group(group).SendAsync("EndView");
+        System.Console.WriteLine("END SENT");
+
+        await _viewHubContext.Clients.Group(group).SendAsync("EndView", match.Status, match.Match.Winner);
     }
 
     public async Task SendMatchInfo(string matchId, string connectionId)

@@ -47,7 +47,7 @@ public partial class MatchView : Control
 		connection.On<string>("Update", OnViewUpdate);
 		connection.On<string>("ConnectFail", OnViewConnectFail);
 		connection.On("Forbidden", OnViewForbidden);
-		connection.On("EndView", OnEndView);
+		connection.On<MatchStatus, string>("EndView", OnEndView);
 		connection.Closed += OnConnectionClosed;
 
 		try {
@@ -94,8 +94,10 @@ public partial class MatchView : Control
 		return Task.CompletedTask;
 	}
 
-	private Task OnEndView() {
+	private Task OnEndView(MatchStatus status, string winnerName) {
 		// TODO set winner text/match status
+
+		EndPopupNode.CallDeferred("set_text", status == MatchStatus.CRASHED ? "Match crashed." : $"Match ended!\nWinner: {winnerName}");
 		EndPopupNode.CallDeferred("show");
 		
 		return Task.CompletedTask;

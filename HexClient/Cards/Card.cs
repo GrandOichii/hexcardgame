@@ -126,11 +126,9 @@ public partial class Card : Control
 	public void SetShowMID(bool value) {
 		ShowMID = value;
 
-		if (State is null)
-			return;
-		
-		// TODO ugly
-		Load((HexStates.MatchCardState)State);
+		if (State is {} state)
+			Load(state);
+			return;		
 	}
 	
 	#region Signal connections

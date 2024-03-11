@@ -67,6 +67,7 @@ public partial class MatchTable : Control
 	private Task OnConnectionClosed(Exception e) {
 		// TODO
 		GD.Print("connection closed");
+		GD.Print(e.Message);
 		return Task.CompletedTask;
 	}
 

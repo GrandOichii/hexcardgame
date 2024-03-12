@@ -86,6 +86,11 @@ layout_mode = 2
 layout_mode = 2
 text = "Show card IDs"
 
+[node name="ShowPlayerIdsToggle" type="CheckButton" parent="Windows/OptionsWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Show player IDs"
+
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/ShowOptionsButton" to="." method="OnShowOptionsButtonPressed"]
 [connection signal="close_requested" from="Windows/OptionsWindow" to="." method="OnOptionsWindowCloseRequested"]
 [connection signal="toggled" from="Windows/OptionsWindow/MarginContainer/VBoxContainer/ShowCardIdsToggle" to="." method="OnShowCardIdsToggleToggled"]
+[connection signal="toggled" from="Windows/OptionsWindow/MarginContainer/VBoxContainer/ShowPlayerIdsToggle" to="." method="OnShowPlayerIdsToggleToggled"]

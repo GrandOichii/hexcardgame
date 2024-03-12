@@ -101,8 +101,10 @@ public partial class MatchesTab : Control
 	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match, string name, string deck) {
 		var client = new ClientWebSocket();
 
-		// TODO ugly
-		await client.ConnectAsync(new Uri(BaseUrl.Replace("http", "ws") + "match/connect/" + match.Id.ToString()), CancellationToken.None);
+		await client.ConnectAsync(new Uri(BaseUrl
+			.Replace("http://", "ws://")
+			.Replace("https://", "wss://")
+		+ "match/connect/" + match.Id.ToString()), CancellationToken.None);
 		GD.Print("connected!");
 		var result = new WebSocketConnection(client, name, deck);
 		return result;

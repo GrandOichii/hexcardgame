@@ -40,7 +40,6 @@ public partial class Card : Control
 	public HexStates.MatchCardState? State { get; private set; }
 	public HexCore.Cards.Card CardState { get; private set; }
 
-	// TODO
 	public bool ShowMID { get; private set; } = false;
 
 	public override void _Ready()

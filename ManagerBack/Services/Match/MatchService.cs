@@ -139,7 +139,6 @@ public class MatchService : IMatchService
     {
         var match = await ById(matchId);
         var group = MatchViewHub.ToGroupName(matchId);
-        System.Console.WriteLine("END SENT");
 
         await _viewHubContext.Clients.Group(group).SendAsync("EndView", match.Status, match.Match.Winner);
     }

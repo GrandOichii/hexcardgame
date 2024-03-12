@@ -1,14 +1,10 @@
 using Godot;
+using HexCore.GameMatch.States;
 using System;
 
 namespace HexClient.Match.Player;
 
-public interface IPlayerInfo {
-	public void LoadState(BaseState state);
-}
-
-// TODO add more descriptors
-public partial class PlayerInfo : Control, IPlayerInfo
+public partial class PlayerInfo : Control, IPlayerDisplay
 {
 	#region Nodes
 
@@ -17,6 +13,8 @@ public partial class PlayerInfo : Control, IPlayerInfo
 	public PanelContainer BgNode { get; private set; }
 
 	#endregion
+
+	private bool _showId = false;
 
 	#region Exports
 
@@ -37,6 +35,7 @@ public partial class PlayerInfo : Control, IPlayerInfo
 	}
 
 	private Color _defaultBgColor;
+	private PlayerState _state;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -59,11 +58,27 @@ public partial class PlayerInfo : Control, IPlayerInfo
 
 	public void LoadState(BaseState state)
 	{
-		var pState = state.Players[PlayerI];
+		_state = state.Players[PlayerI];
 
-		NameLabelNode.Text = pState.Name;
-		EnergyLabelNode.Text = ToEnergyText(pState.Energy);
-		BgColor = state.CurPlayerID == pState.ID ? CurrentPlayerColor : _defaultBgColor;
+		SetName(_state);
+		EnergyLabelNode.Text = ToEnergyText(_state.Energy);
+		BgColor = state.CurPlayerID == _state.ID ? CurrentPlayerColor : _defaultBgColor;
 	}
 
+	private void SetName(PlayerState state) {
+		NameLabelNode.Text = state.Name;
+		if (_showId)
+			NameLabelNode.Text += " [" + state.ID + "]";
+	}
+
+	public void SetPlayerI(int playerI)
+	{
+		PlayerI = playerI;
+	}
+
+	public void OnShowPlayerIdsToggled(bool v)
+	{
+		_showId = v;
+		SetName(_state);
+	}
 }

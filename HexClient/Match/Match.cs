@@ -3,12 +3,19 @@ using System;
 
 namespace HexClient.Match;
 
+public interface IPlayerDisplay {
+	public void SetPlayerI(int playerI);
+	public void OnShowPlayerIdsToggled(bool v);
+}
+
 public partial class Match : Control
 {
 	#region Signals
 
 	[Signal]
-	public delegate void ShowCardIdsToggledEventHandler(bool value);
+	public delegate void ShowCardIdsToggledEventHandler(bool v);
+	[Signal]
+	public delegate void ShowPlayerIdsToggledEventHandler(bool v);
 
 	#endregion
 
@@ -63,10 +70,12 @@ public partial class Match : Control
 	}
 
 	private void CreatePlayerInfo(int playerI) {
-		var child = PlayerInfoPS.Instantiate() as PlayerInfo;
+		var child = PlayerInfoPS.Instantiate();
 		PlayerContainerNode.AddChild(child);
-		// child.Client = Client;
-		child.PlayerI = playerI;
+
+		var playerDisplay = child as IPlayerDisplay;
+		playerDisplay.SetPlayerI(playerI);
+		ShowPlayerIdsToggled += playerDisplay.OnShowPlayerIdsToggled;
 	}
 
 	#region Signal connections
@@ -86,10 +95,11 @@ public partial class Match : Control
 	{
 		OptionsWindowNode.Hide();
 	}
+
+	private void OnShowPlayerIdsToggleToggled(bool buttonPressed)
+	{
+		EmitSignal(SignalName.ShowPlayerIdsToggled, buttonPressed);
+	}
 	
 	#endregion
-
 }
-
-
-

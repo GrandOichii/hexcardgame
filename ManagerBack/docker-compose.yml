@@ -12,6 +12,7 @@ services:
       - hex-dbdata:/data/db
 
   redis:
+    container_name: hex-redis
     image: redis:latest
     restart: always
     ports:

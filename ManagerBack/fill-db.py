@@ -44,6 +44,7 @@ def fill_configs():
                 'SetupScript': config['setupScript'],
                 'Map': config['map'],
                 'AddonPaths': config['addonPaths'],
+                'Name': path.splitext(config_path)[0]
             }
             configs += [config]
         except:

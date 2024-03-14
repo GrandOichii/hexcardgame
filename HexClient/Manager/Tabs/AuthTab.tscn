@@ -35,7 +35,7 @@ layout_mode = 2
 [node name="UsernameEdit" type="LineEdit" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "admin"
+text = "user"
 placeholder_text = "Enter username"
 
 [node name="PasswordEdit" type="LineEdit" parent="VBoxContainer"]

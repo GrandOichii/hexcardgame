@@ -1,0 +1,42 @@
+[gd_scene load_steps=3 format=3 uid="uid://bdnthckvsd4e0"]
+
+[ext_resource type="Script" path="res://Manager/DeckCardDisplay.cs" id="1_cm6wh"]
+[ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Cards/Card.tscn" id="2_4fn75"]
+
+[node name="DeckCardDisplay" type="Container"]
+custom_minimum_size = Vector2(310, 480)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -1.0
+offset_right = -1690.0
+offset_bottom = -1021.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cm6wh")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="CIDLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "CARD CID HERE"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(300, 420)
+layout_mode = 2
+
+[node name="Card" parent="VBoxContainer/Control" instance=ExtResource("2_4fn75")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+offset_right = 0.0
+offset_bottom = 0.0
+
+[node name="AmountLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "AMOUNT IN DECK HERE	"
+horizontal_alignment = 1

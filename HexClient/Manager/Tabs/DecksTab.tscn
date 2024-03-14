@@ -1,0 +1,109 @@
+[gd_scene load_steps=4 format=3 uid="uid://cyi6aqcx7ggx6"]
+
+[ext_resource type="Script" path="res://Manager/Tabs/DecksTab.cs" id="1_5vkvv"]
+[ext_resource type="PackedScene" uid="uid://bdnthckvsd4e0" path="res://Manager/DeckCardDisplay.tscn" id="2_d1hta"]
+[ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="2_x2rqf"]
+
+[node name="DecksTab" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5vkvv")
+DeckCardDisplayPS = ExtResource("2_d1hta")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FetchDecksButton" type="Button" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Refresh"
+
+[node name="DeckList" type="ItemList" parent="HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CreateButton" type="Button" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Create"
+
+[node name="DeleteButton" type="Button" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Delete	 "
+
+[node name="Control" type="Control" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 5.0
+
+[node name="Right" type="VBoxContainer" parent="HBoxContainer/Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/Control/Right"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 5.0
+horizontal_scroll_mode = 0
+
+[node name="CardsContainer" type="FlowContainer" parent="HBoxContainer/Control/Right/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 5.0
+
+[node name="HSeparator" type="HSeparator" parent="HBoxContainer/Control/Right"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Control/Right"]
+layout_mode = 2
+text = "Description:	"
+
+[node name="DescriptionText" type="TextEdit" parent="HBoxContainer/Control/Right"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+editable = false
+
+[node name="EditButton" type="Button" parent="HBoxContainer/Control/Right"]
+layout_mode = 2
+text = "Edit	"
+
+[node name="Requests" type="Node" parent="."]
+
+[node name="FetchDecksRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
+[node name="Popups" type="Node" parent="."]
+
+[node name="FetchDecksErrorPopup" type="AcceptDialog" parent="Popups"]
+unique_name_in_owner = true
+initial_position = 2
+theme = ExtResource("2_x2rqf")
+dialog_text = "
+"
+
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/FetchDecksButton" to="." method="OnFetchDecksButtonPressed"]
+[connection signal="item_activated" from="HBoxContainer/VBoxContainer/DeckList" to="." method="OnDeckListItemActivated"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/CreateButton" to="." method="OnCreateButtonPressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/DeleteButton" to="." method="OnDeleteButtonPressed"]
+[connection signal="pressed" from="HBoxContainer/Control/Right/EditButton" to="." method="OnEditButtonPressed"]
+[connection signal="request_completed" from="Requests/FetchDecksRequest" to="." method="OnFetchDecksRequestRequestCompleted"]

@@ -107,7 +107,7 @@ public class MatchProcess {
             Run();
             return;
         }
-        Task.Run(ConnectTcpPlayers);
+        ConnectTcpPlayers();
     }
 
     private async Task<DeckTemplate> LoadDeck(string deck) {
@@ -186,6 +186,7 @@ public class MatchProcess {
             await Match.Start();
             await SetStatus(MatchStatus.FINISHED);
             Record.WinnerName = Match.Winner!.Name;
+            await _matchService.ServiceStatusUpdated(this);
         } catch (Exception e) {
             await SetStatus(MatchStatus.CRASHED);
             Record.ExceptionMessage = e.Message;

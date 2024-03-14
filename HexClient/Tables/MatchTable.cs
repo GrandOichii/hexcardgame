@@ -72,7 +72,7 @@ public partial class MatchTable : Control
 	}
 
 	private void ProcessMatchData(Wrapper<MatchProcess> matchW) {
-		var existing = _root.GetChildren().FirstOrDefault(c => c.GetText(0) == matchW.Value.Id.ToString());
+		var existing = _root.GetChildren().FirstOrDefault(c => c.GetText(0)[..3] == matchW.Value.Id.ToString()[..3]);
 		
 		var target = existing ?? _root.CreateChild();
 
@@ -80,8 +80,9 @@ public partial class MatchTable : Control
 	}
 
 	private static void SetMatchData(TreeItem item, MatchProcess match) {
-		item.SetText(0, match.Id.ToString());
+		item.SetText(0, match.Id.ToString()[..3]);
 		item.SetText(1, match.Status.ToFriendlyString());
+		GD.Print(match.Record.WinnerName);
 		item.SetText(2, match.Record.WinnerName ?? "");
 		item.SetText(3, match.TcpAddress);
 	}

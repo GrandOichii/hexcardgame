@@ -97,9 +97,9 @@ public class MatchService : IMatchService
         ;
         
         var result = new MatchProcess(this, _cardMaster, config, mConfig, _deckValidator);
-        await result.AddBots();
         _matches.Add(result.Id, result);
         await ServiceStatusUpdated(result);
+        _ = result.AddBots();
         return result;
     }
 

@@ -60,12 +60,12 @@ public class Match
         ScriptMaster = new(this);
         Players = new();
         Config = config;
-        Rnd = new Random(config.Seed);
+        
+        Rnd = config.Seed is {} seed ? new Random(seed) : new Random();
 
         Map = Map.FromConfig(this, config);
 
         SystemLogger = NullLogger.Instance;
-        
     }
 
     public void InitialSetup(string coreFilePath) {
@@ -263,7 +263,7 @@ public class Match
                 if (!en.IsPlaceable) continue;
                 if (en.Life > 0) continue;
                 if (en.Name == "Castle") {
-                    
+                    System.Console.WriteLine(en.Life);
                     var loserID = en.Owner.ID;
                     foreach (var player in Players) {
                         if (player.ID != loserID) {

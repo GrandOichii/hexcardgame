@@ -177,27 +177,29 @@ public partial class MatchesTab : Control
 		BaseUrl = newText;
 	}
 
-	private void OnCreateMatchButtonPressed()
+	private async void OnCreateMatchButtonPressed()
 	{
-		
-		MatchProcessConfig config;
-		try {
-			config = BuildCreateMatchProcessConfig();
-		} catch (DeckParseException e) {
-			DeckErrorPopupNode.DialogText = $"Failed to load deck file!\n\n{e.Message}";
-			DeckErrorPopupNode.Show();
+		for (int i = 0; i < 1; i++) {
+			MatchProcessConfig config;
+			try {
+				config = BuildCreateMatchProcessConfig();
+			} catch (DeckParseException e) {
+				DeckErrorPopupNode.DialogText = $"Failed to load deck file!\n\n{e.Message}";
+				DeckErrorPopupNode.Show();
 
-			return;
-		} catch (FileNotFoundException e) {
-			DeckErrorPopupNode.DialogText = $"Failed to load deck file!\n\n{e.Message}";
-			DeckErrorPopupNode.Show();
+				return;
+			} catch (FileNotFoundException e) {
+				DeckErrorPopupNode.DialogText = $"Failed to load deck file!\n\n{e.Message}";
+				DeckErrorPopupNode.Show();
 
-			return;
+				return;
+			}
+
+			string[] headers = new string[] { "Content-Type: application/json" };
+			var data = JsonSerializer.Serialize(config, Common.JSON_SERIALIZATION_OPTIONS);
+			CreateRequestNode.Request(BaseUrl + "match/create", headers, HttpClient.Method.Post, data);
+			await ToSignal(CreateRequestNode, "request_completed");
 		}
-
-		string[] headers = new string[] { "Content-Type: application/json" };
-		var data = JsonSerializer.Serialize(config, Common.JSON_SERIALIZATION_OPTIONS);
-		CreateRequestNode.Request(BaseUrl + "match/create", headers, HttpClient.Method.Post, data);
 	}
 
 	private void OnCreateRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)

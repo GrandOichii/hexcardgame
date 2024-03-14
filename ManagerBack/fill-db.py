@@ -16,7 +16,7 @@ def fill_cards():
         card = json.loads(open(path.join(CARDS_DIR, card_path), 'r').read())
         result = {
             'Power': card['power'] if 'power' in card else -1,
-            'Life': card['power'] if 'power' in card else -1,
+            'Life': card['life'] if 'life' in card else -1,
             'DeckUsable': card['deckUsable'] if 'deckUsable' in card else True,
             'Name': card['name'],
             'Cost': card['cost'],
@@ -51,6 +51,6 @@ def fill_configs():
             continue
     client['hex']['configs'].insert_many(configs)
 
-# fill_cards()
-fill_configs()
+fill_cards()
+# fill_configs()
 

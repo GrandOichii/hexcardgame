@@ -12,7 +12,8 @@ public class DBCardMaster : ICardMaster
 
     public async Task<ExpansionCard> Get(string cid)
     {
-        return (await _cardRepo.ByCID(cid))!;
+        var result = await _cardRepo.ByCID(cid);
+        return result!;
     }
 
     public async Task<IEnumerable<ExpansionCard>> GetAll()

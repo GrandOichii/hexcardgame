@@ -34,8 +34,10 @@ public partial class DecksTab : Control
 	public TextEdit DescriptionTextNode { get; private set; }
 	public AcceptDialog FetchDecksErrorPopupNode { get; private set; }
 	public FlowContainer CardsContainerNode { get; private set; }
+	public ConfirmationDialog DeleteDeckConfirmationPopupNode { get; private set; }
 	
 	public HttpRequest FetchDecksRequestNode { get; private set; }
+	public HttpRequest DeleteDeckRequestNode { get; private set; }
 	
 	#endregion
 	
@@ -48,8 +50,10 @@ public partial class DecksTab : Control
 		DescriptionTextNode = GetNode<TextEdit>("%DescriptionText");
 		FetchDecksErrorPopupNode = GetNode<AcceptDialog>("%FetchDecksErrorPopup");
 		CardsContainerNode = GetNode<FlowContainer>("%CardsContainer");
+		DeleteDeckConfirmationPopupNode = GetNode<ConfirmationDialog>("%DeleteDeckConfirmationPopup");
 		
 		FetchDecksRequestNode = GetNode<HttpRequest>("%FetchDecksRequest");
+		DeleteDeckRequestNode = GetNode<HttpRequest>("%DeleteDeckRequest");
 		
 		#endregion
 		
@@ -130,15 +134,55 @@ public partial class DecksTab : Control
 
 	private void OnDeleteButtonPressed()
 	{
-		// TODO
+		var selected = DeckListNode.GetSelectedItems();
+		if (selected.Length != 1) {
+			// TODO show popup
+
+			return;
+		}
+		var deckW = DeckListNode.GetItemMetadata(selected[0]).As<Wrapper<Deck>>();
+
+		DeleteDeckConfirmationPopupNode.DialogText = $"Are you sure you want to delete {deckW.Value.Name}?";
+		DeleteDeckConfirmationPopupNode.SetMeta("Deck", deckW);
+		DeleteDeckConfirmationPopupNode.Show();
 	}
 	
 	private void OnEditButtonPressed()
 	{
 		// TODO
 	}
+
+	private void OnDeleteDeckConfirmationPopupConfirmed()
+	{
+		// Replace with function body.
+		var deck = DeleteDeckConfirmationPopupNode.GetMeta("Deck").As<Wrapper<Deck>>().Value;
+
+		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
+		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		
+		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
+
+		DeleteDeckRequestNode.Request(baseUrl + "deck/" + Uri.EscapeDataString(deck.Id), headers, HttpClient.Method.Delete);
+
+	}
+
+	private void OnDeleteDeckRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
+	{
+		if (response_code != 200) {
+			// TODO check response code
+			GD.Print("failed to delete deck " + response_code);
+			return;
+		}
+
+		// TODO if successfully deleted, show user another popup
+		RightNode.Hide();
+		OnFetchDecksButtonPressed();
+	}
 	
 	#endregion
 }
+
+
+
 
 

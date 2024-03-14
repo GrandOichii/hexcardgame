@@ -92,9 +92,19 @@ text = "Edit	"
 [node name="FetchDecksRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
+[node name="DeleteDeckRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
 [node name="Popups" type="Node" parent="."]
 
 [node name="FetchDecksErrorPopup" type="AcceptDialog" parent="Popups"]
+unique_name_in_owner = true
+initial_position = 2
+theme = ExtResource("2_x2rqf")
+dialog_text = "
+"
+
+[node name="DeleteDeckConfirmationPopup" type="ConfirmationDialog" parent="Popups"]
 unique_name_in_owner = true
 initial_position = 2
 theme = ExtResource("2_x2rqf")
@@ -107,3 +117,5 @@ dialog_text = "
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/DeleteButton" to="." method="OnDeleteButtonPressed"]
 [connection signal="pressed" from="HBoxContainer/Control/Right/EditButton" to="." method="OnEditButtonPressed"]
 [connection signal="request_completed" from="Requests/FetchDecksRequest" to="." method="OnFetchDecksRequestRequestCompleted"]
+[connection signal="request_completed" from="Requests/DeleteDeckRequest" to="." method="OnDeleteDeckRequestRequestCompleted"]
+[connection signal="confirmed" from="Popups/DeleteDeckConfirmationPopup" to="." method="OnDeleteDeckConfirmationPopupConfirmed"]

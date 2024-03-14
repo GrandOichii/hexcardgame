@@ -63,7 +63,7 @@ public partial class DecksTab : Control
 		RightNode.Hide();
 
 		// delete existing
-		while (DeckListNode.GetChildCount() > 0)
+		while (DeckListNode.ItemCount > 0)
 			DeckListNode.RemoveItem(0);
 
 		// set data

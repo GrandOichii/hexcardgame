@@ -20,6 +20,7 @@ layout_mode = 2
 
 [node name="CIDLabel" type="Label" parent="VBoxContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 text = "CARD CID HERE"
 horizontal_alignment = 1
@@ -40,3 +41,8 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "AMOUNT IN DECK HERE	"
 horizontal_alignment = 1
+
+[node name="FetchCardRequest" type="HTTPRequest" parent="."]
+unique_name_in_owner = true
+
+[connection signal="request_completed" from="FetchCardRequest" to="." method="OnFetchCardRequestRequestCompleted"]

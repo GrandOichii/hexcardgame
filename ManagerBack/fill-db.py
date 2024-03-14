@@ -52,5 +52,5 @@ def fill_configs():
     client['hex']['configs'].insert_many(configs)
 
 fill_cards()
-# fill_configs()
+fill_configs()
 

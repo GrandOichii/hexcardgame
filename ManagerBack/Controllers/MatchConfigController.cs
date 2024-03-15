@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 
 namespace ManagerBack.Controllers;
 
@@ -44,8 +45,12 @@ public class MatchConfigController : ControllerBase {
 
     [HttpGet("basic")]
     public async Task<IActionResult> Basic() {
-        var result = await _configService.Basic();
-        return Ok(result.Id);
+        try {
+            var result = await _configService.Basic();
+            return Ok(result.Id);
+        } catch (NoBasicMatchConfigException) {
+            throw;
+        }
     }
 
 

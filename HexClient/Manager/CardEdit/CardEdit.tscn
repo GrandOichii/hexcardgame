@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://cc6yudbgtuq86"]
 
-[ext_resource type="Script" path="res://Manager/CardEdit.cs" id="1_1w45p"]
-[ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="2_6wik1"]
-[ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Cards/Card.tscn" id="3_621v2"]
+[ext_resource type="Script" path="res://Manager/CardEdit/CardEdit.cs" id="1_rrdbl"]
+[ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="2_jub4g"]
+[ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Cards/Card.tscn" id="3_xcdor"]
 
 [node name="CardEdit" type="Control"]
 layout_mode = 3
@@ -13,7 +13,7 @@ offset_right = -349.0
 offset_bottom = -957.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_1w45p")
+script = ExtResource("1_rrdbl")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -117,20 +117,20 @@ placeholder_text = "Enter card script"
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="SaveButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Save"
-
 [node name="CancelButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Cancel"
 
+[node name="SaveButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Save"
+
 [node name="ConfirmDiscardPopup" type="ConfirmationDialog" parent="."]
 unique_name_in_owner = true
 initial_position = 2
-theme = ExtResource("2_6wik1")
+theme = ExtResource("2_jub4g")
 dialog_text = "Discard changes?"
 
 [node name="Windows" type="Node" parent="."]
@@ -142,7 +142,7 @@ initial_position = 2
 size = Vector2i(300, 420)
 visible = false
 always_on_top = true
-theme = ExtResource("2_6wik1")
+theme = ExtResource("2_jub4g")
 
 [node name="MarginContainer" type="MarginContainer" parent="Windows/PreviewWindow"]
 anchors_preset = 15
@@ -155,7 +155,7 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="PreviewCard" parent="Windows/PreviewWindow/MarginContainer" instance=ExtResource("3_621v2")]
+[node name="PreviewCard" parent="Windows/PreviewWindow/MarginContainer" instance=ExtResource("3_xcdor")]
 unique_name_in_owner = true
 layout_mode = 2
 
@@ -173,7 +173,7 @@ layout_mode = 2
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer/VBoxContainer/TypeEdit" to="." method="OnTypeEditTextChanged"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer/VBoxContainer/TextEdit" to="." method="OnTextEditTextChanged"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer/VBoxContainer2/ScriptEdit" to="." method="OnScriptEditTextChanged"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer2/SaveButton" to="." method="OnSaveButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/CancelButton" to="." method="OnCancelButtonPressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/SaveButton" to="." method="OnSaveButtonPressed"]
 [connection signal="confirmed" from="ConfirmDiscardPopup" to="." method="OnConfirmDiscardPopupConfirmed"]
 [connection signal="close_requested" from="Windows/PreviewWindow" to="." method="OnPreviewWindowCloseRequested"]

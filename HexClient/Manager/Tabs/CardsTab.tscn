@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Manager/Tabs/CardsTab.cs" id="1_y82oe"]
 [ext_resource type="PackedScene" uid="uid://dmnj0abgjpb5k" path="res://Manager/DisplayCard.tscn" id="2_aunuw"]
-[ext_resource type="PackedScene" uid="uid://cc6yudbgtuq86" path="res://Manager/CardEdit.tscn" id="3_iywp5"]
+[ext_resource type="PackedScene" uid="uid://cc6yudbgtuq86" path="res://Manager/CardEdit/CardEdit.tscn" id="3_iywp5"]
 [ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="3_x3dqd"]
 
 [node name="CardsTab" type="Control"]

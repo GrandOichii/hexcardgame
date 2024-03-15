@@ -7,13 +7,6 @@ using Utility;
 
 namespace HexClient.Manager.Tabs;
 
-public struct Deck {
-	public required string Id { get; set; }
-	public required string Name { get; set; }
-	public required string Description { get; set; }
-	public required Dictionary<string, int> Index { get; set; }
-}
-
 public interface IDeckCardDisplay {
 	public void Load(string cid, int amount);
 }
@@ -35,6 +28,9 @@ public partial class DecksTab : Control
 	public AcceptDialog FetchDecksErrorPopupNode { get; private set; }
 	public FlowContainer CardsContainerNode { get; private set; }
 	public ConfirmationDialog DeleteDeckConfirmationPopupNode { get; private set; }
+	public DeckEdit DeckEditNode { get; private set; }
+	
+	public Window DeckEditWindowNode { get; private set; }
 	
 	public HttpRequest FetchDecksRequestNode { get; private set; }
 	public HttpRequest DeleteDeckRequestNode { get; private set; }
@@ -51,6 +47,9 @@ public partial class DecksTab : Control
 		FetchDecksErrorPopupNode = GetNode<AcceptDialog>("%FetchDecksErrorPopup");
 		CardsContainerNode = GetNode<FlowContainer>("%CardsContainer");
 		DeleteDeckConfirmationPopupNode = GetNode<ConfirmationDialog>("%DeleteDeckConfirmationPopup");
+		DeckEditNode = GetNode<DeckEdit>("%DeckEdit");
+		
+		DeckEditWindowNode = GetNode<Window>("%DeckEditWindow");
 		
 		FetchDecksRequestNode = GetNode<HttpRequest>("%FetchDecksRequest");
 		DeleteDeckRequestNode = GetNode<HttpRequest>("%DeleteDeckRequest");
@@ -58,7 +57,6 @@ public partial class DecksTab : Control
 		#endregion
 		
 		RightNode.Hide();
-		//OnFetchDecksButtonPressed();
 	}
 	
 	private string BaseUrl => GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
@@ -149,7 +147,16 @@ public partial class DecksTab : Control
 	
 	private void OnEditButtonPressed()
 	{
-		// TODO
+		var selected = DeckListNode.GetSelectedItems();
+		if (selected.Length != 1) {
+			// TODO show popup
+
+			return;
+		}
+		var deck = DeckListNode.GetItemMetadata(selected[0]).As<Wrapper<Deck>>().Value;
+
+		DeckEditNode.Load(deck);
+		DeckEditWindowNode.Show();
 	}
 
 	private void OnDeleteDeckConfirmationPopupConfirmed()
@@ -178,11 +185,15 @@ public partial class DecksTab : Control
 		RightNode.Hide();
 		OnFetchDecksButtonPressed();
 	}
+
+	private void OnDeckEditWindowCloseRequested()
+	{
+		DeckEditNode.TryClose();
+	}
+	private void OnDeckEditClosed()
+	{
+		DeckEditWindowNode.Hide();
+	}
 	
 	#endregion
 }
-
-
-
-
-

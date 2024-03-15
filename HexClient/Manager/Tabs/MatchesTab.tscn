@@ -18,7 +18,7 @@ script = ExtResource("1_efqvs")
 MatchViewWindowPS = ExtResource("2_6ly2s")
 ConnectedMatchWindowPS = ExtResource("3_p667x")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HSplitContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

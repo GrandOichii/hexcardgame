@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cyi6aqcx7ggx6"]
+[gd_scene load_steps=5 format=3 uid="uid://cyi6aqcx7ggx6"]
 
 [ext_resource type="Script" path="res://Manager/Tabs/DecksTab.cs" id="1_5vkvv"]
 [ext_resource type="PackedScene" uid="uid://bdnthckvsd4e0" path="res://Manager/DeckCardDisplay.tscn" id="2_d1hta"]
 [ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="2_x2rqf"]
+[ext_resource type="PackedScene" uid="uid://k7044lgvfqiv" path="res://Manager/DeckEdit/DeckEdit.tscn" id="4_4qrlj"]
 
 [node name="DecksTab" type="Control"]
 layout_mode = 3
@@ -111,6 +112,21 @@ theme = ExtResource("2_x2rqf")
 dialog_text = "
 "
 
+[node name="Windows" type="Node" parent="."]
+
+[node name="DeckEditWindow" type="Window" parent="Windows"]
+unique_name_in_owner = true
+title = "Deck edit"
+initial_position = 2
+size = Vector2i(1600, 1000)
+visible = false
+transient = true
+exclusive = true
+theme = ExtResource("2_x2rqf")
+
+[node name="DeckEdit" parent="Windows/DeckEditWindow" instance=ExtResource("4_4qrlj")]
+unique_name_in_owner = true
+
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/FetchDecksButton" to="." method="OnFetchDecksButtonPressed"]
 [connection signal="item_activated" from="HBoxContainer/VBoxContainer/DeckList" to="." method="OnDeckListItemActivated"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/CreateButton" to="." method="OnCreateButtonPressed"]
@@ -119,3 +135,5 @@ dialog_text = "
 [connection signal="request_completed" from="Requests/FetchDecksRequest" to="." method="OnFetchDecksRequestRequestCompleted"]
 [connection signal="request_completed" from="Requests/DeleteDeckRequest" to="." method="OnDeleteDeckRequestRequestCompleted"]
 [connection signal="confirmed" from="Popups/DeleteDeckConfirmationPopup" to="." method="OnDeleteDeckConfirmationPopupConfirmed"]
+[connection signal="close_requested" from="Windows/DeckEditWindow" to="." method="OnDeckEditWindowCloseRequested"]
+[connection signal="Closed" from="Windows/DeckEditWindow/DeckEdit" to="." method="OnDeckEditClosed"]

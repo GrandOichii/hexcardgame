@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://dkca2em6443gc"]
+
+[ext_resource type="Script" path="res://Manager/DeckEdit/DeckEditCardDisplay.cs" id="1_4dabu"]
+[ext_resource type="PackedScene" uid="uid://bdnthckvsd4e0" path="res://Manager/DeckCardDisplay.tscn" id="2_2nsq1"]
+
+[node name="DeckEditCardDisplay" type="AspectRatioContainer"]
+script = ExtResource("1_4dabu")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="CardDisplay" parent="VBoxContainer" instance=ExtResource("2_2nsq1")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="RemoveButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "-
+"
+
+[node name="AddButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "+"
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/RemoveButton" to="." method="OnRemoveButtonPressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/AddButton" to="." method="OnAddButtonPressed"]

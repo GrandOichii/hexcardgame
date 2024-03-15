@@ -38,10 +38,10 @@ public partial class DisplayCard : Control, ICardDisplay
 	}
 
 	public void Load(MatchCardState card)
-    {
+	{
 		_card = null;
-        CardNode.Load(card);
-    }
+		CardNode.Load(card);
+	}
 
 
 	#region Signal connections
@@ -67,12 +67,12 @@ public partial class DisplayCard : Control, ICardDisplay
 		CardNode.Unfocus();
 	}
 
-    public void SetShowCardIds(bool value)
-    {
+	public void SetShowCardIds(bool value)
+	{
 		CardNode.SetShowMID(value);
-    }
+	}
 
-    #endregion
+	#endregion
 }
 
 

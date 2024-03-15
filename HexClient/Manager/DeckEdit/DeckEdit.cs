@@ -1,11 +1,14 @@
 using Godot;
+using HexCore.Decks;
 using System;
+using System.Collections.Generic;
 
 namespace HexClient.Manager;
 
 public interface IDeckEditCardDisplay {
 	public void Load(string cid, int amount);
-	// TODO
+	public string GetCID();
+	public int GetAmount();
 }
 
 public partial class DeckEdit : Control
@@ -84,17 +87,47 @@ public partial class DeckEdit : Control
 
 		EmitSignal(SignalName.Closed);
 	}
+	
+	private Deck Baked {
+		get {
+			var index = new Dictionary<string, int>();
+			foreach (var child in CardsContainerNode.GetChildren()) {
+				if (child is not IDeckEditCardDisplay display) continue;
+
+				var cid = display.GetCID();
+				var amount = display.GetAmount();
+
+				index.Add(cid, amount);
+			}
+
+			return new Deck {
+				Id = "",
+				Name = NameEditNode.Text,
+				Description = DescriptionEditNode.Text,
+				Index = index,
+			};
+		}
+	}
 
 	#region Signal connections
 
 	private void OnCopyToBufferButtonPressed()
 	{
-		// TODO
+		var deck = Baked.ToDeckTemplate();
+		var data = deck.ToText();
+
+		GD.Print(data);
+		DisplayServer.ClipboardSet(data);
 	}
 
 	private void OnPasteFromBufferPressed()
 	{
-		// TODO
+		var data = DisplayServer.ClipboardGet();
+		try {
+			var dt = DeckTemplate.FromText(data);
+			var deck = Deck.FromDeckTemplate(dt);
+			SetData(deck);
+		} catch {}
 	}
 
 	private void OnCancelButtonPressed()

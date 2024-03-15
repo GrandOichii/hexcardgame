@@ -14,7 +14,7 @@ public class DeckTemplate {
     private static readonly string LINE_SPLITTER = "|";
     private static readonly string AMOUNT_SPLITTER = "#";
     private static readonly string DESCRIPTORS_SPLITTER = ";";
-    private static readonly string DESCRIPTOR_PARTS_SPLITTER = ",";
+    private static readonly string DESCRIPTOR_PARTS_SPLITTER = "|";
 
     public Dictionary<string, int> Index { get; set; } = new();
     public Dictionary<string, string> Descriptors { get; set; } = new();
@@ -28,7 +28,7 @@ public class DeckTemplate {
     /// <param name="text">Text of the deck</param>
     /// <returns>The deck template</returns>
     static public DeckTemplate FromText(string text) {
-        // dev::Test Card 1#5|dev::Test Card 2#2;name=deck1,description=Amogus Amogus Amogus
+        // dev::Test Card 1#5|dev::Test Card 2#2;name=deck1,description=this is the deck's description
         
         var result = new DeckTemplate();
         var gLines = text.Split(DESCRIPTORS_SPLITTER);
@@ -38,7 +38,10 @@ public class DeckTemplate {
             var descriptors = gLines[1].Split(DESCRIPTOR_PARTS_SPLITTER);
             foreach (var dLine in descriptors) {
                 var s = dLine.Split("=");
+                if (s.Length != 2)
+                    throw new Exception("SSS " + dLine);
                 result.Descriptors.Add(s[0], s[1]);
+                // dev::Dub#3|dev::Urakshi Raider#3|dev::Elven Outcast#3;name=deck1,description=This is a simple deck, used for testing.
             }
         }
 
@@ -66,7 +69,16 @@ public class DeckTemplate {
             var line = pair.Key + AMOUNT_SPLITTER + pair.Value;
             lines.Add(line);
         }
-        return string.Join(LINE_SPLITTER, lines);
+        var result = string.Join(LINE_SPLITTER, lines);
+        if (Descriptors.Count > 0) {
+            result += DESCRIPTORS_SPLITTER;
+            lines.Clear();
+            foreach (var pair in Descriptors) {
+                lines.Add($"{pair.Key}={pair.Value}");
+            }
+            result += string.Join(DESCRIPTOR_PARTS_SPLITTER, lines);
+        }
+        return result;
     }
 
     /// <summary>

@@ -35,6 +35,7 @@ public partial class DeckCardDisplay : Control, IDeckCardDisplay
 		AmountLabelNode.Text = amount.ToString();
 		
 		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		FetchCardRequestNode.CancelRequest();
 		FetchCardRequestNode.Request(baseUrl + "card/" + Uri.EscapeDataString(cid));
 	}
 	

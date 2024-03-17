@@ -41,9 +41,9 @@ public partial class DeckEditCardDisplay : Control, IDeckEditCardDisplay
 		CardDisplayNode.Load(_cid, ++_amount);
 	}
 
-    public string GetCID() => _cid;
-    public int GetAmount() => _amount;
+	public string GetCID() => _cid;
+	public int GetAmount() => _amount;
 
-    #endregion
+	#endregion
 }
 

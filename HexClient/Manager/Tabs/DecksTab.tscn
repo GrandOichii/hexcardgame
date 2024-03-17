@@ -96,6 +96,9 @@ unique_name_in_owner = true
 [node name="DeleteDeckRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
+[node name="CreateDeckRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
 [node name="Popups" type="Node" parent="."]
 
 [node name="FetchDecksErrorPopup" type="AcceptDialog" parent="Popups"]
@@ -134,6 +137,8 @@ unique_name_in_owner = true
 [connection signal="pressed" from="HBoxContainer/Control/Right/EditButton" to="." method="OnEditButtonPressed"]
 [connection signal="request_completed" from="Requests/FetchDecksRequest" to="." method="OnFetchDecksRequestRequestCompleted"]
 [connection signal="request_completed" from="Requests/DeleteDeckRequest" to="." method="OnDeleteDeckRequestRequestCompleted"]
+[connection signal="request_completed" from="Requests/CreateDeckRequest" to="." method="OnCreateDeckRequestRequestCompleted"]
 [connection signal="confirmed" from="Popups/DeleteDeckConfirmationPopup" to="." method="OnDeleteDeckConfirmationPopupConfirmed"]
 [connection signal="close_requested" from="Windows/DeckEditWindow" to="." method="OnDeckEditWindowCloseRequested"]
 [connection signal="Closed" from="Windows/DeckEditWindow/DeckEdit" to="." method="OnDeckEditClosed"]
+[connection signal="Saved" from="Windows/DeckEditWindow/DeckEdit" to="." method="OnDeckEditSaved"]

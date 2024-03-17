@@ -34,6 +34,7 @@ public partial class DecksTab : Control
 	
 	public HttpRequest FetchDecksRequestNode { get; private set; }
 	public HttpRequest DeleteDeckRequestNode { get; private set; }
+	public HttpRequest CreateDeckRequestNode { get; private set; }
 	
 	#endregion
 	
@@ -53,6 +54,7 @@ public partial class DecksTab : Control
 		
 		FetchDecksRequestNode = GetNode<HttpRequest>("%FetchDecksRequest");
 		DeleteDeckRequestNode = GetNode<HttpRequest>("%DeleteDeckRequest");
+		CreateDeckRequestNode = GetNode<HttpRequest>("%CreateDeckRequest");
 		
 		#endregion
 		
@@ -79,8 +81,8 @@ public partial class DecksTab : Control
 	
 	private void OnCreateButtonPressed()
 	{
-		// TODO
-		
+		DeckEditNode.Load(null);
+		DeckEditWindowNode.Show();
 	}
 
 	private void OnButtonPressed()
@@ -93,6 +95,9 @@ public partial class DecksTab : Control
 	{
 		var deck = DeckListNode.GetItemMetadata(index).As<Wrapper<Deck>>().Value;
 		DescriptionTextNode.Text = deck.Description;
+
+		while (CardsContainerNode.GetChildCount() > 0)
+			CardsContainerNode.RemoveChild(CardsContainerNode.GetChild(0));
 
 		foreach (var pair in deck.Index) {
 			var cid = pair.Key;
@@ -190,10 +195,37 @@ public partial class DecksTab : Control
 	{
 		DeckEditNode.TryClose();
 	}
+	
 	private void OnDeckEditClosed()
 	{
 		DeckEditWindowNode.Hide();
 	}
 	
+	private void OnDeckEditSaved(Wrapper<Deck> deckW, string oldId)
+	{
+		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
+		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		
+		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
+		var deck = deckW.Value;
+
+		// TODO add updating
+		CreateDeckRequestNode.Request(baseUrl + "deck", headers, HttpClient.Method.Post, JsonSerializer.Serialize(deck, Common.JSON_SERIALIZATION_OPTIONS));
+	}
+	
+	private void OnCreateDeckRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
+	{
+		// TODO check response code
+
+		DeckEditWindowNode.Hide();
+
+		RightNode.Hide();
+		OnFetchDecksButtonPressed();
+	}
+
 	#endregion
 }
+
+
+
+

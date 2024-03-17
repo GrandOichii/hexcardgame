@@ -17,6 +17,8 @@ public partial class DeckEdit : Control
 	
 	[Export]
 	private PackedScene DeckEditCardDisplayPS { get; set; }
+	[Signal]
+	public delegate void SavedEventHandler(Wrapper<Deck> card, string oldId);
 	
 	#endregion
 	
@@ -137,7 +139,12 @@ public partial class DeckEdit : Control
 
 	private void OnSaveButtonPressed()
 	{
-		// TODO
+		var oldId = _edited is not null ? _edited.Value.Id : ""; 
+
+		var result = Baked;
+		// TODO validate
+
+		EmitSignal(SignalName.Saved, new Wrapper<Deck>(result), oldId);
 	}
 	
 	#endregion

@@ -9,6 +9,8 @@ public interface IDeckEditCardDisplay {
 	public void Load(string cid, int amount);
 	public string GetCID();
 	public int GetAmount();
+	public bool IsCardValid();
+	public void SubcribeToAmountChanged(Action<int> action);
 }
 
 public partial class DeckEdit : Control
@@ -34,10 +36,14 @@ public partial class DeckEdit : Control
 	public LineEdit NameEditNode { get; private set; }
 	public TextEdit DescriptionEditNode { get; private set; }
 	public FlowContainer CardsContainerNode { get; private set; }
+
+	public AcceptDialog SaveErrorPopupNode { get; private set; }
+	public AcceptDialog DiscardChangesPopupNode { get; private set; }
 	
 	#endregion
 
 	private Deck? _edited;
+	private bool _dataChanged = false;
 	
 	public override void _Ready()
 	{
@@ -46,12 +52,16 @@ public partial class DeckEdit : Control
 		NameEditNode = GetNode<LineEdit>("%NameEdit");
 		DescriptionEditNode = GetNode<TextEdit>("%DescriptionEdit");
 		CardsContainerNode = GetNode<FlowContainer>("%CardsContainer");
+
+		SaveErrorPopupNode = GetNode<AcceptDialog>("%SaveErrorPopup");
+		DiscardChangesPopupNode = GetNode<AcceptDialog>("%DiscardChangesPopup");
 		
 		#endregion
 	}
 
 	public void Load(Deck? deck) {
 		_edited = deck;
+		_dataChanged = false;
 
 		var data = deck ?? new() {
 			Id = "",
@@ -79,13 +89,17 @@ public partial class DeckEdit : Control
 
 			var display = child as IDeckEditCardDisplay;
 			display.Load(cid, amount);
+			display.SubcribeToAmountChanged((_) => _dataChanged = true);
 			
 			// TODO connect signals
 		}
 	}
 
 	public void TryClose() {
-		// TODO
+		if (_dataChanged) {
+			DiscardChangesPopupNode.Show();
+			return;
+		}
 
 		EmitSignal(SignalName.Closed);
 	}
@@ -97,7 +111,10 @@ public partial class DeckEdit : Control
 				if (child is not IDeckEditCardDisplay display) continue;
 
 				var cid = display.GetCID();
+				if (!display.IsCardValid()) throw new Exception($"Card {cid} does not exist");
+
 				var amount = display.GetAmount();
+				if (amount <= 0) throw new Exception($"Card {cid} can't have amount {amount}");
 
 				index.Add(cid, amount);
 			}
@@ -118,7 +135,6 @@ public partial class DeckEdit : Control
 		var deck = Baked.ToDeckTemplate();
 		var data = deck.ToText();
 
-		GD.Print(data);
 		DisplayServer.ClipboardSet(data);
 	}
 
@@ -139,13 +155,40 @@ public partial class DeckEdit : Control
 
 	private void OnSaveButtonPressed()
 	{
-		var oldId = _edited is not null ? _edited.Value.Id : ""; 
+		var oldId = _edited is not null ? _edited.Value.Id : "";
 
-		var result = Baked;
-		// TODO validate
+		Deck result;
+		try {
+			result = Baked;
+		} catch (Exception e) {
+			// TODO? is catching general exceptions bad
+			// TODO show popup
+
+			SaveErrorPopupNode.DialogText = e.Message;
+			SaveErrorPopupNode.Show();
+
+			return;
+		}
 
 		EmitSignal(SignalName.Saved, new Wrapper<Deck>(result), oldId);
+	}
+
+	private void OnDescriptionEditTextChanged()
+	{
+		_dataChanged = true;
+	}
+
+	private void OnNameEditTextChanged(string newText)
+	{
+		_dataChanged = true;
+	}
+
+	private void OnDiscardChangesPopupConfirmed()
+	{
+		EmitSignal(SignalName.Closed);
 	}
 	
 	#endregion
 }
+
+

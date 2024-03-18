@@ -12,8 +12,13 @@ public partial class DeckCardDisplay : Control, IDeckCardDisplay
 	public Label CIDLabelNode { get; private set; }
 	public Label AmountLabelNode { get; private set; }
 	public HttpRequest FetchCardRequestNode { get; private set; }
+	public Control ErrorOverlayNode { get; private set; }
+	public Label ErrorLabelNode { get; private set; }
 
 	#endregion
+
+	public string CID { get; private set; }
+	public bool Valid { get; private set; } = false;
 
 	public override void _Ready()
 	{
@@ -23,14 +28,20 @@ public partial class DeckCardDisplay : Control, IDeckCardDisplay
 		CIDLabelNode = GetNode<Label>("%CIDLabel");
 		AmountLabelNode = GetNode<Label>("%AmountLabel");
 		FetchCardRequestNode = GetNode<HttpRequest>("%FetchCardRequest");
+		ErrorOverlayNode = GetNode<Control>("%ErrorOverlay");
+		ErrorLabelNode = GetNode<Label>("%ErrorLabel");
 
 		#endregion
 
+		ErrorOverlayNode.Hide();
 		CardNode.Hide();
 	}
 
 	public void Load(string cid, int amount)
 	{
+		CID = cid;
+		ErrorOverlayNode.Hide();
+
 		CIDLabelNode.Text = cid;
 		AmountLabelNode.Text = amount.ToString();
 		
@@ -43,10 +54,21 @@ public partial class DeckCardDisplay : Control, IDeckCardDisplay
 	
 	private void OnFetchCardRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
-		// TODO check response code
+		if (response_code != 200) {
+			
+			if (response_code == 404) {
+				// card not found
+				Valid = false;
+				ErrorLabelNode.Text = $"Inexistant card\n{CID}";
+				ErrorOverlayNode.Show();
+				return;
+			}
+			return;
+		}
 		var card = JsonSerializer.Deserialize<HexCore.Cards.ExpansionCard>(body);
 		CardNode.Load(card);
 		CardNode.Show();
+		Valid = true;
 	}
 	
 	#endregion

@@ -145,8 +145,20 @@ transient = true
 exclusive = true
 theme = ExtResource("2_x2rqf")
 
-[node name="DeckEdit" parent="Windows/DeckEditWindow" instance=ExtResource("4_4qrlj")]
+[node name="MarginContainer" type="MarginContainer" parent="Windows/DeckEditWindow"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="DeckEdit" parent="Windows/DeckEditWindow/MarginContainer" instance=ExtResource("4_4qrlj")]
 unique_name_in_owner = true
+layout_mode = 2
 
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/FetchDecksButton" to="." method="OnFetchDecksButtonPressed"]
 [connection signal="item_activated" from="HBoxContainer/VBoxContainer/DeckList" to="." method="OnDeckListItemActivated"]
@@ -159,5 +171,5 @@ unique_name_in_owner = true
 [connection signal="request_completed" from="Requests/UpdateCardRequest" to="." method="OnUpdateCardRequestRequestCompleted"]
 [connection signal="confirmed" from="Popups/DeleteDeckConfirmationPopup" to="." method="OnDeleteDeckConfirmationPopupConfirmed"]
 [connection signal="close_requested" from="Windows/DeckEditWindow" to="." method="OnDeckEditWindowCloseRequested"]
-[connection signal="Closed" from="Windows/DeckEditWindow/DeckEdit" to="." method="OnDeckEditClosed"]
-[connection signal="Saved" from="Windows/DeckEditWindow/DeckEdit" to="." method="OnDeckEditSaved"]
+[connection signal="Closed" from="Windows/DeckEditWindow/MarginContainer/DeckEdit" to="." method="OnDeckEditClosed"]
+[connection signal="Saved" from="Windows/DeckEditWindow/MarginContainer/DeckEdit" to="." method="OnDeckEditSaved"]

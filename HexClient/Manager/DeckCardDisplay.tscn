@@ -3,14 +3,12 @@
 [ext_resource type="Script" path="res://Manager/DeckCardDisplay.cs" id="1_cm6wh"]
 [ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Cards/Card.tscn" id="2_4fn75"]
 
-[node name="DeckCardDisplay" type="Container"]
-custom_minimum_size = Vector2(310, 480)
+[node name="DeckCardDisplay" type="AspectRatioContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -1.0
-offset_right = -1690.0
-offset_bottom = -1021.0
+offset_right = -1700.0
+offset_bottom = -1053.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_cm6wh")
@@ -44,5 +42,26 @@ horizontal_alignment = 1
 
 [node name="FetchCardRequest" type="HTTPRequest" parent="."]
 unique_name_in_owner = true
+
+[node name="ErrorOverlay" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="ErrorOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ErrorLabel" type="Label" parent="ErrorOverlay/CenterContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.847059, 0, 0, 1)
+theme_override_font_sizes/font_size = 36
+horizontal_alignment = 1
 
 [connection signal="request_completed" from="FetchCardRequest" to="." method="OnFetchCardRequestRequestCompleted"]

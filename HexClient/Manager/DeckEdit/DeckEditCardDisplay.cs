@@ -5,13 +5,19 @@ namespace HexClient.Manager;
 
 public partial class DeckEditCardDisplay : Control, IDeckEditCardDisplay
 {
+	#region Signals
+
+	[Signal]
+	public delegate void AmountChangedEventHandler(int amount);
+
+	#endregion
+
 	#region Nodes
 	
 	public DeckCardDisplay CardDisplayNode { get; private set; }
 	
 	#endregion
 	
-	private string _cid;
 	private int _amount;
 	
 	public override void _Ready()
@@ -24,25 +30,35 @@ public partial class DeckEditCardDisplay : Control, IDeckEditCardDisplay
 	}
 	
 	public void Load(string cid, int amount) {
-		_cid = cid;
 		_amount = amount;
-		CardDisplayNode.Load(_cid, _amount);
+		CardDisplayNode.Load(cid, _amount);
 	}
 
 	#region Signal connections
 	
 	private void OnRemoveButtonPressed()
 	{
-		CardDisplayNode.Load(_cid, --_amount);
+		if (_amount == 0) return;
+
+		CardDisplayNode.Load(CardDisplayNode.CID, --_amount);
+		EmitSignal(SignalName.AmountChanged, _amount);
 	}
 
 	private void OnAddButtonPressed()
 	{
-		CardDisplayNode.Load(_cid, ++_amount);
+		CardDisplayNode.Load(CardDisplayNode.CID, ++_amount);
+		EmitSignal(SignalName.AmountChanged, _amount);
 	}
 
-	public string GetCID() => _cid;
+	public string GetCID() => CardDisplayNode.CID;
 	public int GetAmount() => _amount;
+
+	public bool IsCardValid() => CardDisplayNode.Valid;
+
+	public void SubcribeToAmountChanged(Action<int> action)
+	{
+		AmountChanged += action.Invoke;
+	}
 
 	#endregion
 }

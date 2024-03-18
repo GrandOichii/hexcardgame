@@ -12,7 +12,7 @@ public partial class PlayerConfig : Control
 	public CheckButton IsBotCheckNode { get; private set; }
 	public Control BotConfigNode { get; private set; }
 	public LineEdit BotNameEditNode { get; private set; }
-	public LineEdit DeckPathEditNode { get; private set; }
+	public LineEdit DeckEdit { get; private set; }
 	public FileDialog ChooseDeckFileDialogNode { get; private set; }
 	public OptionButton BotTypeOptionNode { get; private set; }
 	
@@ -25,7 +25,7 @@ public partial class PlayerConfig : Control
 		IsBotCheckNode = GetNode<CheckButton>("%IsBotCheck");
 		BotConfigNode = GetNode<Control>("%BotConfig");
 		BotNameEditNode = GetNode<LineEdit>("%BotNameEdit");
-		DeckPathEditNode = GetNode<LineEdit>("%DeckPathEdit");
+		DeckEdit = GetNode<LineEdit>("%DeckEdit");
 		ChooseDeckFileDialogNode = GetNode<FileDialog>("%ChooseDeckFileDialog");
 		BotTypeOptionNode = GetNode<OptionButton>("%BotTypeOption");
 		
@@ -43,7 +43,7 @@ public partial class PlayerConfig : Control
 	
 	public MatchPlayerConfig Baked {
 		get {
-			var data = File.ReadAllText(DeckPathEditNode.Text);
+			var data = DeckEdit.Text;
 			_ = DeckTemplate.FromText(data);
 
 			return new()
@@ -71,7 +71,7 @@ public partial class PlayerConfig : Control
 
 	private void OnChooseDeckFileDialogFileSelected(string path)
 	{
-		DeckPathEditNode.Text = path;
+		DeckEdit.Text = File.ReadAllText(path);
 	}
 	
 	#endregion

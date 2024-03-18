@@ -48,6 +48,7 @@ public partial class MatchesTab : Control
 	public AcceptDialog FailedToCreatePopupNode { get; private set; }
 	public AcceptDialog DeckErrorPopupNode { get; private set; }
 	public AcceptDialog FailedToFetchBasicConfigPopupNode { get; private set; }
+	public FileDialog ChooseDeckFileDialogNode { get; private set; }
 
 	public PlayerConfig PlayerConfig1Node { get; private set; }
 	public PlayerConfig PlayerConfig2Node { get; private set; }
@@ -83,6 +84,7 @@ public partial class MatchesTab : Control
 		FailedToCreatePopupNode = GetNode<AcceptDialog>("%FailedToCreatePopup");
 		DeckErrorPopupNode = GetNode<AcceptDialog>("%DeckErrorPopup");
 		FailedToFetchBasicConfigPopupNode = GetNode<AcceptDialog>("%FailedToFetchBasicConfigPopup");
+		ChooseDeckFileDialogNode = GetNode<FileDialog>("%ChooseDeckFileDialog");
 
 		PlayerConfig1Node = GetNode<PlayerConfig>("%PlayerConfig1");
 		PlayerConfig2Node = GetNode<PlayerConfig>("%PlayerConfig2");
@@ -105,7 +107,7 @@ public partial class MatchesTab : Control
 			.Replace("http://", "ws://")
 			.Replace("https://", "wss://")
 		+ "match/connect/" + match.Id.ToString()), CancellationToken.None);
-		GD.Print("connected!");
+
 		var result = new WebSocketConnection(client, name, deck);
 		return result;
 	}
@@ -122,7 +124,7 @@ public partial class MatchesTab : Control
 
 		string deck;
 		try {
-			deck = File.ReadAllText(PlayerDeckEditNode.Text);
+			deck = PlayerDeckEditNode.Text;
 			_ = DeckTemplate.FromText(deck);
 		} catch (DeckParseException e) {
 			DeckErrorPopupNode.DialogText = $"Failed to load deck file!\n\n{e.Message}";
@@ -135,7 +137,6 @@ public partial class MatchesTab : Control
 
 			return;
 		}
-
 
 		IConnection client =
 			WebSocketCheckNode.ButtonPressed
@@ -286,13 +287,16 @@ public partial class MatchesTab : Control
 		FetchBasicConfigRequestNode.Request(BaseUrl + "config/basic");
 	}
 
+	private void OnChoosePlayerDeckButtonPressed()
+	{
+		ChooseDeckFileDialogNode.Show();
+	}
+
+	private void OnChooseDeckFileDialogFileSelected(string path)
+	{
+		PlayerDeckEditNode.Text = File.ReadAllText(path);
+	}
+
 	#endregion
 }
-
-
-
-
-
-
-
 

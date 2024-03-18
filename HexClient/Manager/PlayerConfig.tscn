@@ -61,11 +61,11 @@ layout_mode = 2
 layout_mode = 2
 text = "Deck path: "
 
-[node name="DeckPathEdit" type="LineEdit" parent="VBoxContainer/BotConfig/VB/HBoxContainer2"]
+[node name="DeckEdit" type="LineEdit" parent="VBoxContainer/BotConfig/VB/HBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "decks/generated.deck"
+text = "dev::Mana Drill#3|dev::Brute#3|dev::Mage Initiate#3|dev::Warrior Initiate#3|dev::Rogue Initiate#3|dev::Urakshi Shaman#3|dev::Urakshi Raider#3|dev::Give Strength#3|dev::Blood for Knowledge#3|dev::Dragotha Mage#3|dev::Prophecy Scholar#3|dev::Trained Knight#3|dev::Cast Armor#3|dev::Druid Outcast#3|starters::Knowledge Tower#3|dev::Elven Idealist#3|dev::Elven Outcast#3|dev::Barracks#3|dev::Shieldmate#3|dev::Healer Initiate#3|dev::Archdemon Priest#3|dev::Kobold Warrior#3|dev::Kobold Mage#3|dev::Kobold Rogue#3|starters::Dragotha Student#3|starters::Tutoring Sphinx#3|starters::Dragotha Battlemage#3|starters::Inspiration#3"
 placeholder_text = "Enter deck path or click ..."
 
 [node name="ChooseDeckButton" type="Button" parent="VBoxContainer/BotConfig/VB/HBoxContainer2"]
@@ -92,6 +92,7 @@ size = Vector2i(800, 600)
 theme = ExtResource("1_w6lp8")
 ok_button_text = "Open"
 file_mode = 0
+access = 2
 filters = PackedStringArray("*.deck")
 
 [connection signal="toggled" from="VBoxContainer/IsBotCheck" to="." method="OnIsBotCheckToggled"]

@@ -47,7 +47,7 @@ text = "Deck: "
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "decks/generated.deck"
+text = "dev::Mana Drill#3|dev::Brute#3|dev::Mage Initiate#3|dev::Warrior Initiate#3|dev::Rogue Initiate#3|dev::Urakshi Shaman#3|dev::Urakshi Raider#3|dev::Give Strength#3|dev::Blood for Knowledge#3|dev::Dragotha Mage#3|dev::Prophecy Scholar#3|dev::Trained Knight#3|dev::Cast Armor#3|dev::Druid Outcast#3|starters::Knowledge Tower#3|dev::Elven Idealist#3|dev::Elven Outcast#3|dev::Barracks#3|dev::Shieldmate#3|dev::Healer Initiate#3|dev::Archdemon Priest#3|dev::Kobold Warrior#3|dev::Kobold Mage#3|dev::Kobold Rogue#3|starters::Dragotha Student#3|starters::Tutoring Sphinx#3|starters::Dragotha Battlemage#3|starters::Inspiration#3"
 
 [node name="ChoosePlayerDeckButton" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
@@ -226,6 +226,17 @@ title = "Match config error!"
 initial_position = 2
 theme = ExtResource("5_5s7fd")
 
+[node name="ChooseDeckFileDialog" type="FileDialog" parent="Popups"]
+unique_name_in_owner = true
+title = "Open a File"
+initial_position = 2
+size = Vector2i(800, 600)
+theme = ExtResource("5_5s7fd")
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.deck")
+
 [node name="Requests" type="Node" parent="."]
 
 [node name="FetchBasicConfigRequest" type="HTTPRequest" parent="Requests"]
@@ -242,4 +253,5 @@ unique_name_in_owner = true
 [connection signal="request_completed" from="HBoxContainer/VBoxContainer/ConnectContainer/ConnectRequest" to="." method="OnConnectRequestRequestCompleted"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/WatchContainer/WatchButton" to="." method="OnWatchButtonPressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer2/LiveMatchesButton" to="." method="OnLiveMatchesButtonPressed"]
+[connection signal="file_selected" from="Popups/ChooseDeckFileDialog" to="." method="OnChooseDeckFileDialogFileSelected"]
 [connection signal="request_completed" from="Requests/FetchBasicConfigRequest" to="." method="OnFetchBasicConfigRequestRequestCompleted"]

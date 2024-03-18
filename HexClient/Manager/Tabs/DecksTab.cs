@@ -32,6 +32,8 @@ public partial class DecksTab : Control
 	public ConfirmationDialog DeleteDeckConfirmationPopupNode { get; private set; }
 	public Window DeckEditWindowNode { get; private set; }
 	public AcceptDialog DeleteDeckErrorPopupNode { get; private set; }
+	public AcceptDialog DeletedPopupNode { get; private set; }
+	public AcceptDialog UpdateDeckErrorPopupNode { get; private set; }
 	
 	public HttpRequest FetchDecksRequestNode { get; private set; }
 	public HttpRequest DeleteDeckRequestNode { get; private set; }
@@ -56,6 +58,8 @@ public partial class DecksTab : Control
 		DeleteDeckConfirmationPopupNode = GetNode<ConfirmationDialog>("%DeleteDeckConfirmationPopup");
 		DeckEditWindowNode = GetNode<Window>("%DeckEditWindow");
 		DeleteDeckErrorPopupNode = GetNode<AcceptDialog>("%DeleteDeckErrorPopup");
+		DeletedPopupNode = GetNode<AcceptDialog>("%DeletedPopup");
+		UpdateDeckErrorPopupNode = GetNode<AcceptDialog>("%UpdateDeckErrorPopup");
 		
 		FetchDecksRequestNode = GetNode<HttpRequest>("%FetchDecksRequest");
 		DeleteDeckRequestNode = GetNode<HttpRequest>("%DeleteDeckRequest");
@@ -185,7 +189,11 @@ public partial class DecksTab : Control
 			return;
 		}
 
-		// TODO if successfully deleted, show user another popup
+		var deckName = DeleteDeckConfirmationPopupNode.GetMeta("Deck").As<Wrapper<Deck>>().Value.Name;
+		DeleteDeckConfirmationPopupNode.RemoveMeta("Deck");
+		DeletedPopupNode.DialogText = $"Succesfully deleted deck {deckName}";
+		DeletedPopupNode.Show();
+
 		RightNode.Hide();
 		OnFetchDecksButtonPressed();
 	}
@@ -234,8 +242,9 @@ public partial class DecksTab : Control
 	private void OnUpdateCardRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
 		if (response_code != 200) {
-			// TODO show popup
-
+			var resp = Encoding.UTF8.GetString(body);
+			UpdateDeckErrorPopupNode.DialogText = $"Failed to delete deck! (code: {response_code})\n\n{resp}";
+			UpdateDeckErrorPopupNode.Show();
 
 			return;
 		}
@@ -246,6 +255,7 @@ public partial class DecksTab : Control
 		OnFetchDecksButtonPressed();
 
 		// TODO annoying, after saving the edits closes the edit window and doesn't show the updates in the main window
+
 	}
 
 	#endregion

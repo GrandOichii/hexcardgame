@@ -17,27 +17,36 @@ script = ExtResource("1_qyd6q")
 unique_name_in_owner = true
 layout_mode = 1
 
-[node name="ForbiddenPopup" type="AcceptDialog" parent="."]
+[node name="Popups" type="Node" parent="."]
+
+[node name="ForbiddenPopup" type="AcceptDialog" parent="Popups"]
 unique_name_in_owner = true
 initial_position = 2
 size = Vector2i(292, 100)
 theme = ExtResource("3_a2wkx")
 dialog_text = "Match creator disabled match view."
 
-[node name="EndPopup" type="AcceptDialog" parent="."]
+[node name="EndPopup" type="AcceptDialog" parent="Popups"]
 unique_name_in_owner = true
 initial_position = 2
+theme = ExtResource("3_a2wkx")
 dialog_text = "Match ended."
 
-[node name="ConnectionFailedPopup" type="AcceptDialog" parent="."]
+[node name="ConnectionFailedPopup" type="AcceptDialog" parent="Popups"]
 unique_name_in_owner = true
 initial_position = 2
 theme = ExtResource("3_a2wkx")
 dialog_text = "Failed to connect to match!"
 
-[connection signal="canceled" from="ForbiddenPopup" to="." method="OnForbiddenPopupCanceled"]
-[connection signal="confirmed" from="ForbiddenPopup" to="." method="OnForbiddenPopupConfirmed"]
-[connection signal="canceled" from="EndPopup" to="." method="OnEndPopupCanceled"]
-[connection signal="confirmed" from="EndPopup" to="." method="OnEndPopupConfirmed"]
-[connection signal="canceled" from="ConnectionFailedPopup" to="." method="OnConnectionFailedPopupCanceled"]
-[connection signal="confirmed" from="ConnectionFailedPopup" to="." method="OnConnectionFailedPopupConfirmed"]
+[node name="DisconnectedPopup" type="AcceptDialog" parent="Popups"]
+unique_name_in_owner = true
+initial_position = 2
+theme = ExtResource("3_a2wkx")
+
+[connection signal="canceled" from="Popups/ForbiddenPopup" to="." method="OnForbiddenPopupCanceled"]
+[connection signal="confirmed" from="Popups/ForbiddenPopup" to="." method="OnForbiddenPopupConfirmed"]
+[connection signal="canceled" from="Popups/EndPopup" to="." method="OnEndPopupCanceled"]
+[connection signal="confirmed" from="Popups/EndPopup" to="." method="OnEndPopupConfirmed"]
+[connection signal="canceled" from="Popups/ConnectionFailedPopup" to="." method="OnConnectionFailedPopupCanceled"]
+[connection signal="confirmed" from="Popups/ConnectionFailedPopup" to="." method="OnConnectionFailedPopupConfirmed"]
+[connection signal="confirmed" from="Popups/DisconnectedPopup" to="." method="OnDisconnectedPopupConfirmed"]

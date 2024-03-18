@@ -100,6 +100,7 @@ public class MatchProcess {
             }
 
             var controller = await CreateRecordedPlayer(p.BotConfig.Name, new LuaPlayerController(BOT_TYPE_PATH_MAP[p.BotConfig.BotType]));
+            // TODO add exception handling
             var deck = await LoadDeck(p.BotConfig.StrDeck);
             await Match.AddPlayer(p.BotConfig.Name, deck, controller);
         }
@@ -160,6 +161,7 @@ public class MatchProcess {
             Console.WriteLine("Failed to connect");
             return;
         }
+        // TODO add exception handling
         var deck = await LoadDeck(deckRaw);
 
         var controller = await CreateRecordedPlayer(name, baseController);

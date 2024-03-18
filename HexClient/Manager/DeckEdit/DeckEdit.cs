@@ -90,8 +90,6 @@ public partial class DeckEdit : Control
 			var display = child as IDeckEditCardDisplay;
 			display.Load(cid, amount);
 			display.SubcribeToAmountChanged((_) => _dataChanged = true);
-			
-			// TODO connect signals
 		}
 	}
 
@@ -162,7 +160,6 @@ public partial class DeckEdit : Control
 			result = Baked;
 		} catch (Exception e) {
 			// TODO? is catching general exceptions bad
-			// TODO show popup
 
 			SaveErrorPopupNode.DialogText = e.Message;
 			SaveErrorPopupNode.Show();

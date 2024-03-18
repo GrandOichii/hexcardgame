@@ -22,8 +22,16 @@ grow_horizontal = 2
 grow_vertical = 2
 columns = 4
 
-[node name="FailedLiveConnectPopup" type="AcceptDialog" parent="."]
+[node name="Popups" type="Node" parent="."]
+
+[node name="FailedLiveConnectPopup" type="AcceptDialog" parent="Popups"]
 unique_name_in_owner = true
 initial_position = 2
 theme = ExtResource("2_guucc")
 dialog_text = "Failed to connect to live matches!"
+
+[node name="DisconnectedPopup" type="AcceptDialog" parent="Popups"]
+unique_name_in_owner = true
+initial_position = 2
+theme = ExtResource("2_guucc")
+dialog_text = "Disconnected from live matches!"

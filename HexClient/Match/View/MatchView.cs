@@ -23,6 +23,7 @@ public partial class MatchView : Control
 	public AcceptDialog ForbiddenPopupNode { get; private set; }
 	public AcceptDialog EndPopupNode { get; private set; }
 	public AcceptDialog ConnectionFailedPopupNode { get; private set; }
+	public AcceptDialog DisconnectedPopupNode { get; private set; }
 	
 	#endregion
 
@@ -38,6 +39,7 @@ public partial class MatchView : Control
 		ForbiddenPopupNode = GetNode<AcceptDialog>("%ForbiddenPopup");
 		EndPopupNode = GetNode<AcceptDialog>("%EndPopup");
 		ConnectionFailedPopupNode = GetNode<AcceptDialog>("%ConnectionFailedPopup");
+		DisconnectedPopupNode = GetNode<AcceptDialog>("%DisconnectedPopup");
 		
 		#endregion
 	}
@@ -54,9 +56,8 @@ public partial class MatchView : Control
 			await connection.StartAsync();
 			await connection.SendAsync("Connect", matchId);
 		} catch (Exception e) {
+			ConnectionFailedPopupNode.DialogText = $"Failed to connect to match!\n\n{e.Message}";
 			ConnectionFailedPopupNode.Show();
-			GD.Print("Failed to connect!");
-			GD.Print(e.Message);
 			return false;
 		}
 
@@ -65,8 +66,9 @@ public partial class MatchView : Control
 	}
 
 	private Task OnConnectionClosed(Exception e) {
-		// TODO
-		GD.Print("Connection closed");
+		DisconnectedPopupNode.CallDeferred("set_text", $"Connection closed!\n\n{e.Message}");
+		DisconnectedPopupNode.CallDeferred("show");
+
 		return Task.CompletedTask;
 	}
 
@@ -95,8 +97,6 @@ public partial class MatchView : Control
 	}
 
 	private Task OnEndView(MatchStatus status, string winnerName) {
-		// TODO set winner text/match status
-
 		EndPopupNode.CallDeferred("set_text", status == MatchStatus.CRASHED ? "Match crashed." : $"Match ended!\nWinner: {winnerName}");
 		EndPopupNode.CallDeferred("show");
 		
@@ -135,6 +135,11 @@ public partial class MatchView : Control
 	}
 
 	private void OnConnectionFailedPopupConfirmed()
+	{
+		CallDeferred("emit_signal", SignalName.Closed);
+	}
+
+	private void OnDisconnectedPopupConfirmed()
 	{
 		CallDeferred("emit_signal", SignalName.Closed);
 	}

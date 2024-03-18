@@ -15,6 +15,7 @@ public partial class MatchTable : Control
 
 	public Tree MatchTreeNode { get; private set; }
 	public AcceptDialog FailedLiveConnectPopupNode { get; private set; }
+	public AcceptDialog DisconnectedPopupNode { get; private set; }
 
 	#endregion
 
@@ -27,6 +28,7 @@ public partial class MatchTable : Control
 		MatchTreeNode = GetNode<Tree>("%MatchTree");
 		
 		FailedLiveConnectPopupNode = GetNode<AcceptDialog>("%FailedLiveConnectPopup");
+		DisconnectedPopupNode = GetNode<AcceptDialog>("%DisconnectedPopup");
 
 		#endregion
 
@@ -65,9 +67,9 @@ public partial class MatchTable : Control
 	}
 
 	private Task OnConnectionClosed(Exception e) {
-		// TODO
-		GD.Print("connection closed");
-		GD.Print(e.Message);
+		DisconnectedPopupNode.DialogText = $"Disconnected from live matches!\n\n{e.Message}";
+		DisconnectedPopupNode.Show();
+
 		return Task.CompletedTask;
 	}
 

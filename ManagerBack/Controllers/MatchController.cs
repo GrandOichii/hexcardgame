@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ManagerBack.Controllers;
@@ -84,5 +85,12 @@ public class MatchController : ControllerBase {
         } catch (MatchRefusedConnectionException e) {
             return BadRequest(e.Message);
         }
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("crashed")]
+    public async Task<IActionResult> RemoveCrashed() {
+        await _matchService.Remove(m => m.Status == MatchStatus.CRASHED);
+        return await All();
     }
 }

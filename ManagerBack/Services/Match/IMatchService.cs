@@ -14,5 +14,6 @@ public interface IMatchService {
     public Task EndView(string matchId);
     public Task SendMatchInfo(string matchId, string connectionId);
     public Task SendMatchState(string matchId, string connectionId);
+    public Task Remove(Func<MatchProcess, bool> filter);
 
 }

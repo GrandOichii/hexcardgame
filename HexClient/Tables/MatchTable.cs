@@ -49,6 +49,7 @@ public partial class MatchTable : Control
 			.Build();
 
 		connection.On<string>("Update", OnUpdate);
+		connection.On<string>("UpdateAll", OnUpdateAll);
 		connection.Closed += OnConnectionClosed;
 
 		try {
@@ -64,6 +65,28 @@ public partial class MatchTable : Control
 
 		CallDeferred("ProcessMatchData", new Wrapper<MatchProcess>(match));
 		return Task.CompletedTask;
+	}
+
+	private Task OnUpdateAll(string message) {
+		GD.Print(message);
+		var matches = JsonSerializer.Deserialize<List<MatchProcess>>(message, Common.JSON_SERIALIZATION_OPTIONS);
+		GD.Print("slay");
+		
+		CallDeferred("SetData", new Wrapper<List<MatchProcess>>(matches));
+		return Task.CompletedTask;
+	}
+
+	private void SetData(Wrapper<List<MatchProcess>> matches) {
+		// remove existing
+		GD.Print(_root.GetChildCount());
+		while (_root.GetChildCount() > 0) {
+			GD.Print("remove");
+			_root.RemoveChild(_root.GetFirstChild());
+		}
+
+		foreach (var m in matches.Value) {
+			ProcessMatchData(new Wrapper<MatchProcess>(m));
+		}
 	}
 
 	private Task OnConnectionClosed(Exception e) {
@@ -84,7 +107,6 @@ public partial class MatchTable : Control
 	private static void SetMatchData(TreeItem item, MatchProcess match) {
 		item.SetText(0, match.Id.ToString()[..3]);
 		item.SetText(1, match.Status.ToFriendlyString());
-		GD.Print(match.Record.WinnerName);
 		item.SetText(2, match.Record.WinnerName ?? "");
 		item.SetText(3, match.TcpAddress);
 	}

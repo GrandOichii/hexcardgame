@@ -110,6 +110,14 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "Basic"
 
+[node name="BatchEdit" type="SpinBox" parent="HBoxContainer/VBoxContainer/CreateContainer" groups=["admin_ui"]]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 20.0
+value = 1.0
+prefix = "Number of batches: "
+
 [node name="AutoConnectCheck" type="CheckBox" parent="HBoxContainer/VBoxContainer/CreateContainer"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -199,6 +207,11 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
+[node name="RemoveCrashedButton" type="Button" parent="HBoxContainer/VBoxContainer2" groups=["admin_ui"]]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Remove crashed matches"
+
 [node name="Windows" type="Node" parent="."]
 unique_name_in_owner = true
 
@@ -242,6 +255,9 @@ filters = PackedStringArray("*.deck")
 [node name="FetchBasicConfigRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
+[node name="RemoveCrashedRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer2/ChoosePlayerDeckButton" to="." method="OnChoosePlayerDeckButtonPressed"]
 [connection signal="toggled" from="HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/WebSocketCheck" to="." method="OnWebSocketCheckToggled"]
 [connection signal="toggled" from="HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/TcpCheck" to="." method="OnTcpCheckToggled"]
@@ -253,5 +269,7 @@ unique_name_in_owner = true
 [connection signal="request_completed" from="HBoxContainer/VBoxContainer/ConnectContainer/ConnectRequest" to="." method="OnConnectRequestRequestCompleted"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/WatchContainer/WatchButton" to="." method="OnWatchButtonPressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer2/LiveMatchesButton" to="." method="OnLiveMatchesButtonPressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer2/RemoveCrashedButton" to="." method="OnRemoveCrashedButtonPressed"]
 [connection signal="file_selected" from="Popups/ChooseDeckFileDialog" to="." method="OnChooseDeckFileDialogFileSelected"]
 [connection signal="request_completed" from="Requests/FetchBasicConfigRequest" to="." method="OnFetchBasicConfigRequestRequestCompleted"]
+[connection signal="request_completed" from="Requests/RemoveCrashedRequest" to="." method="OnRemoveCrashedRequestRequestCompleted"]

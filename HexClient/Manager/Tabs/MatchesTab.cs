@@ -39,10 +39,13 @@ public partial class MatchesTab : Control
 	public LineEdit MatchConfigIdEditNode { get; private set; }
 	public CheckBox CanWatchCheckNode { get; private set; }
 	public CheckBox AutoConnectCheckNode { get; private set; }
+	public SpinBox BatchEditNode { get; private set; }
+	public Button RemoveCrashedButtonNode { get; private set; }
 	
 	public HttpRequest CreateRequestNode { get; private set; }
 	public HttpRequest ConnectRequestNode { get; private set; }
 	public HttpRequest FetchBasicConfigRequestNode { get; private set; }
+	public HttpRequest RemoveCrashedRequestNode { get; private set; }
 
 	public AcceptDialog FailedToConnectPopupNode { get; private set; }
 	public AcceptDialog FailedToCreatePopupNode { get; private set; }
@@ -75,10 +78,13 @@ public partial class MatchesTab : Control
 		MatchConfigIdEditNode = GetNode<LineEdit>("%MatchConfigIdEdit");
 		CanWatchCheckNode = GetNode<CheckBox>("%CanWatchCheck");
 		AutoConnectCheckNode = GetNode<CheckBox>("%AutoConnectCheck");
+		BatchEditNode = GetNode<SpinBox>("%BatchEdit");
+		RemoveCrashedButtonNode = GetNode<Button>("%RemoveCrashedButton");
 
 		ConnectRequestNode = GetNode<HttpRequest>("%ConnectRequest");
 		CreateRequestNode = GetNode<HttpRequest>("%CreateRequest");
 		FetchBasicConfigRequestNode = GetNode<HttpRequest>("%FetchBasicConfigRequest");
+		RemoveCrashedRequestNode = GetNode<HttpRequest>("%RemoveCrashedRequest");
 
 		FailedToConnectPopupNode = GetNode<AcceptDialog>("%FailedToConnectPopup");
 		FailedToCreatePopupNode = GetNode<AcceptDialog>("%FailedToCreatePopup");
@@ -180,7 +186,7 @@ public partial class MatchesTab : Control
 
 	private async void OnCreateMatchButtonPressed()
 	{
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < BatchEditNode.Value; i++) {
 			MatchProcessConfig config;
 			try {
 				config = BuildCreateMatchProcessConfig();
@@ -297,6 +303,23 @@ public partial class MatchesTab : Control
 		PlayerDeckEditNode.Text = File.ReadAllText(path);
 	}
 
+	private void OnRemoveCrashedButtonPressed()
+	{
+		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
+		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
+
+		RemoveCrashedRequestNode.Request(BaseUrl + "match/crashed", headers, HttpClient.Method.Delete);
+	}
+
+	private void OnRemoveCrashedRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
+	{
+		GD.Print(response_code);
+		// Replace with function body.
+	}
+
 	#endregion
 }
+
+
+
 

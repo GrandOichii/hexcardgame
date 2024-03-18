@@ -44,7 +44,7 @@ public class MatchService : IMatchService
 {
     private readonly ICardMaster _cardMaster;
     private readonly IMatchConfigRepository _configRepo;
-    private readonly Dictionary<Guid, MatchProcess> _matches = new();
+    private Dictionary<Guid, MatchProcess> _matches = new();
     private readonly IHubContext<MatchLiveHub> _liveHubContext;
     private readonly IHubContext<MatchViewHub> _viewHubContext;
     private readonly IValidator<DeckTemplate> _deckValidator;
@@ -156,5 +156,20 @@ public class MatchService : IMatchService
         var state = new BaseMatchState(match.Match);
         var data = JsonSerializer.Serialize(state, Common.JSON_SERIALIZATION_OPTIONS);
         await _viewHubContext.Clients.Client(connectionId).SendAsync("Update", data);
+    }
+
+    public async Task Remove(Func<MatchProcess, bool> filter)
+    {
+        var newMatches = new Dictionary<Guid, MatchProcess>();
+        foreach (var pair in _matches) {
+            var m = pair.Value;
+            if (filter.Invoke(m)) continue;
+
+            newMatches.Add(pair.Key, m);
+        }
+        _matches = newMatches;
+
+        var data = JsonSerializer.Serialize(_matches.Values, Common.JSON_SERIALIZATION_OPTIONS);
+        await _liveHubContext.Clients.All.SendAsync("UpdateAll", data);        
     }
 }

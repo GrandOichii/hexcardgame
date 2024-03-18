@@ -35,6 +35,7 @@ public partial class DecksTab : Control
 	public HttpRequest FetchDecksRequestNode { get; private set; }
 	public HttpRequest DeleteDeckRequestNode { get; private set; }
 	public HttpRequest CreateDeckRequestNode { get; private set; }
+	public HttpRequest UpdateCardRequestNode { get; private set; }
 	
 	#endregion
 	
@@ -55,6 +56,7 @@ public partial class DecksTab : Control
 		FetchDecksRequestNode = GetNode<HttpRequest>("%FetchDecksRequest");
 		DeleteDeckRequestNode = GetNode<HttpRequest>("%DeleteDeckRequest");
 		CreateDeckRequestNode = GetNode<HttpRequest>("%CreateDeckRequest");
+		UpdateCardRequestNode = GetNode<HttpRequest>("%UpdateCardRequest");
 		
 		#endregion
 		
@@ -83,12 +85,6 @@ public partial class DecksTab : Control
 	{
 		DeckEditNode.Load(null);
 		DeckEditWindowNode.Show();
-	}
-
-	private void OnButtonPressed()
-	{
-		// TODO
-		
 	}
 
 	private void OnDeckListItemActivated(int index)
@@ -209,6 +205,13 @@ public partial class DecksTab : Control
 		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
 		var deck = deckW.Value;
 
+		if (!string.IsNullOrEmpty(oldId)) {
+
+			GD.Print(baseUrl + "deck/" + Uri.EscapeDataString(deck.Id));
+			UpdateCardRequestNode.Request(baseUrl + "deck/" + Uri.EscapeDataString(deck.Id), headers, HttpClient.Method.Put, JsonSerializer.Serialize(deck, Common.JSON_SERIALIZATION_OPTIONS));
+			return;
+		}
+
 		// TODO add updating
 		CreateDeckRequestNode.Request(baseUrl + "deck", headers, HttpClient.Method.Post, JsonSerializer.Serialize(deck, Common.JSON_SERIALIZATION_OPTIONS));
 	}
@@ -223,9 +226,18 @@ public partial class DecksTab : Control
 		OnFetchDecksButtonPressed();
 	}
 
+	private void OnUpdateCardRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
+	{
+		// TODO check response code
+		GD.Print(response_code);
+
+		DeckEditWindowNode.Hide();
+
+		RightNode.Hide();
+		OnFetchDecksButtonPressed();
+
+		// TODO annoying, after saving the edits closes the edit window and doesn't show the updates in the main window
+	}
+
 	#endregion
 }
-
-
-
-

@@ -103,7 +103,7 @@ public partial class DeckEdit : Control
 			}
 
 			return new Deck {
-				Id = "",
+				Id = _edited is not null ? _edited.Value.Id : "",
 				Name = NameEditNode.Text,
 				Description = DescriptionEditNode.Text,
 				Index = index,

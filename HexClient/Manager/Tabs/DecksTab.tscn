@@ -99,6 +99,9 @@ unique_name_in_owner = true
 [node name="CreateDeckRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
+[node name="UpdateCardRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
 [node name="Popups" type="Node" parent="."]
 
 [node name="FetchDecksErrorPopup" type="AcceptDialog" parent="Popups"]
@@ -138,6 +141,7 @@ unique_name_in_owner = true
 [connection signal="request_completed" from="Requests/FetchDecksRequest" to="." method="OnFetchDecksRequestRequestCompleted"]
 [connection signal="request_completed" from="Requests/DeleteDeckRequest" to="." method="OnDeleteDeckRequestRequestCompleted"]
 [connection signal="request_completed" from="Requests/CreateDeckRequest" to="." method="OnCreateDeckRequestRequestCompleted"]
+[connection signal="request_completed" from="Requests/UpdateCardRequest" to="." method="OnUpdateCardRequestRequestCompleted"]
 [connection signal="confirmed" from="Popups/DeleteDeckConfirmationPopup" to="." method="OnDeleteDeckConfirmationPopupConfirmed"]
 [connection signal="close_requested" from="Windows/DeckEditWindow" to="." method="OnDeckEditWindowCloseRequested"]
 [connection signal="Closed" from="Windows/DeckEditWindow/DeckEdit" to="." method="OnDeckEditClosed"]

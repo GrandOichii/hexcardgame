@@ -96,7 +96,9 @@ public partial class DeckService : IDeckService
         if (existing.OwnerId != userId)
             throw new UnmatchedUserIdException();
 
-        var newDeck = _mapper.Map<DeckModel>(deck);;
+        var newDeck = _mapper.Map<DeckModel>(deck);
+        newDeck.Id = deckId;
+        newDeck.OwnerId = userId;
         var count = await _deckRepo.Update(deckId, newDeck);
         if (count == 0)
             // * shouldn't happen

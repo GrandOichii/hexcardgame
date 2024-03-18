@@ -118,6 +118,11 @@ theme = ExtResource("2_x2rqf")
 dialog_text = "
 "
 
+[node name="DeleteDeckErrorPopup" type="AcceptDialog" parent="Popups"]
+unique_name_in_owner = true
+initial_position = 2
+theme = ExtResource("2_x2rqf")
+
 [node name="Windows" type="Node" parent="."]
 
 [node name="DeckEditWindow" type="Window" parent="Windows"]

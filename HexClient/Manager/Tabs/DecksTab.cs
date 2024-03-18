@@ -25,12 +25,13 @@ public partial class DecksTab : Control
 	public ItemList DeckListNode { get; private set; }
 	public Control RightNode { get; private set; } 
 	public TextEdit DescriptionTextNode { get; private set; }
+	public DeckEdit DeckEditNode { get; private set; }
+	
 	public AcceptDialog FetchDecksErrorPopupNode { get; private set; }
 	public FlowContainer CardsContainerNode { get; private set; }
 	public ConfirmationDialog DeleteDeckConfirmationPopupNode { get; private set; }
-	public DeckEdit DeckEditNode { get; private set; }
-	
 	public Window DeckEditWindowNode { get; private set; }
+	public AcceptDialog DeleteDeckErrorPopupNode { get; private set; }
 	
 	public HttpRequest FetchDecksRequestNode { get; private set; }
 	public HttpRequest DeleteDeckRequestNode { get; private set; }
@@ -39,6 +40,8 @@ public partial class DecksTab : Control
 	
 	#endregion
 	
+	private Deck? _current = null;
+
 	public override void _Ready()
 	{
 		#region Node fetching
@@ -46,12 +49,13 @@ public partial class DecksTab : Control
 		DeckListNode = GetNode<ItemList>("%DeckList");
 		RightNode = GetNode<Control>("%Right");
 		DescriptionTextNode = GetNode<TextEdit>("%DescriptionText");
-		FetchDecksErrorPopupNode = GetNode<AcceptDialog>("%FetchDecksErrorPopup");
 		CardsContainerNode = GetNode<FlowContainer>("%CardsContainer");
-		DeleteDeckConfirmationPopupNode = GetNode<ConfirmationDialog>("%DeleteDeckConfirmationPopup");
 		DeckEditNode = GetNode<DeckEdit>("%DeckEdit");
 		
+		FetchDecksErrorPopupNode = GetNode<AcceptDialog>("%FetchDecksErrorPopup");
+		DeleteDeckConfirmationPopupNode = GetNode<ConfirmationDialog>("%DeleteDeckConfirmationPopup");
 		DeckEditWindowNode = GetNode<Window>("%DeckEditWindow");
+		DeleteDeckErrorPopupNode = GetNode<AcceptDialog>("%DeleteDeckErrorPopup");
 		
 		FetchDecksRequestNode = GetNode<HttpRequest>("%FetchDecksRequest");
 		DeleteDeckRequestNode = GetNode<HttpRequest>("%DeleteDeckRequest");
@@ -89,13 +93,13 @@ public partial class DecksTab : Control
 
 	private void OnDeckListItemActivated(int index)
 	{
-		var deck = DeckListNode.GetItemMetadata(index).As<Wrapper<Deck>>().Value;
-		DescriptionTextNode.Text = deck.Description;
+		_current = DeckListNode.GetItemMetadata(index).As<Wrapper<Deck>>().Value;
+		DescriptionTextNode.Text = _current.Value.Description;
 
 		while (CardsContainerNode.GetChildCount() > 0)
 			CardsContainerNode.RemoveChild(CardsContainerNode.GetChild(0));
 
-		foreach (var pair in deck.Index) {
+		foreach (var pair in _current.Value.Index) {
 			var cid = pair.Key;
 			var amount = pair.Value;
 
@@ -135,7 +139,8 @@ public partial class DecksTab : Control
 	{
 		var selected = DeckListNode.GetSelectedItems();
 		if (selected.Length != 1) {
-			// TODO show popup
+			DeleteDeckErrorPopupNode.DialogText = "Select a deck to delete";
+			DeleteDeckErrorPopupNode.Show();
 
 			return;
 		}
@@ -148,15 +153,12 @@ public partial class DecksTab : Control
 	
 	private void OnEditButtonPressed()
 	{
-		var selected = DeckListNode.GetSelectedItems();
-		if (selected.Length != 1) {
-			// TODO show popup
-
+		if (_current is null) {
+			// * shouldn't even happen
 			return;
 		}
-		var deck = DeckListNode.GetItemMetadata(selected[0]).As<Wrapper<Deck>>().Value;
 
-		DeckEditNode.Load(deck);
+		DeckEditNode.Load(_current);
 		DeckEditWindowNode.Show();
 	}
 
@@ -177,8 +179,9 @@ public partial class DecksTab : Control
 	private void OnDeleteDeckRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
 		if (response_code != 200) {
-			// TODO check response code
-			GD.Print("failed to delete deck " + response_code);
+			var resp = Encoding.UTF8.GetString(body);
+			DeleteDeckErrorPopupNode.DialogText = $"Failed to delete deck! (code: {response_code})\n\n{resp}";
+			DeleteDeckErrorPopupNode.Show();
 			return;
 		}
 
@@ -212,13 +215,15 @@ public partial class DecksTab : Control
 			return;
 		}
 
-		// TODO add updating
 		CreateDeckRequestNode.Request(baseUrl + "deck", headers, HttpClient.Method.Post, JsonSerializer.Serialize(deck, Common.JSON_SERIALIZATION_OPTIONS));
 	}
 	
 	private void OnCreateDeckRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
-		// TODO check response code
+		if (response_code != 200) {
+
+			return;
+		}
 
 		DeckEditWindowNode.Hide();
 
@@ -228,8 +233,12 @@ public partial class DecksTab : Control
 
 	private void OnUpdateCardRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
-		// TODO check response code
-		GD.Print(response_code);
+		if (response_code != 200) {
+			// TODO show popup
+
+
+			return;
+		}
 
 		DeckEditWindowNode.Hide();
 

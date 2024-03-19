@@ -2,6 +2,7 @@ using Godot;
 using HexCore.Decks;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HexClient.Manager;
 
@@ -224,9 +225,22 @@ public partial class DeckEdit : Control
 	{
 		TryAddCard();
 	}
+
+	private void OnCardFilterEditTextChanged(string filter)
+	{
+		foreach (var child in CardsContainerNode.GetChildren().Cast<Control>()) {
+			switch (child) {
+				case IDeckEditCardDisplay display:
+					child.Visible = display.GetCID().Contains(filter);
+					break;
+				default: continue;
+			}
+		}
+	}
 	
 	#endregion
 }
+
 
 
 

@@ -137,12 +137,15 @@ bbcode_enabled = true
 text = "Card text here
 Card text here"
 
-[node name="Bottom" type="HBoxContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Bottom" type="HBoxContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/CenterContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 
-[node name="PowerLabel" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/Bottom"]
+[node name="PowerLabel" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/CenterContainer/Bottom"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -151,26 +154,27 @@ theme_override_font_sizes/font_size = 24
 text = "2"
 horizontal_alignment = 2
 
-[node name="PLSeparator" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/Bottom"]
+[node name="PLSeparator" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/CenterContainer/Bottom"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 24
 text = "/"
 
-[node name="LifeContainer" type="HBoxContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/Bottom"]
+[node name="LifeContainer" type="HBoxContainer" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/CenterContainer/Bottom"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[node name="LifeLabel" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/Bottom/LifeContainer"]
+[node name="LifeLabel" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/CenterContainer/Bottom/LifeContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0.34902, 0, 1)
 theme_override_font_sizes/font_size = 24
 text = "3"
 
-[node name="DefenceLabel" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/Bottom/LifeContainer"]
+[node name="DefenceLabel" type="Label" parent="MarginContainer/Fg/MarginContainer/VBoxContainer/CenterContainer/Bottom/LifeContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.25098, 0.25098, 0.25098, 1)

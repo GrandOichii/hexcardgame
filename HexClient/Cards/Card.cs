@@ -28,11 +28,12 @@ public partial class Card : Control
 	public Label CostLabelNode { get; private set; }
 	public TextureRect ImageNode { get; private set; }
 	public Label TypeLabelNode { get; private set; }
-	public Control BottomNodeNode { get; private set; }
+	public Control BottomNode { get; private set; }
 	public Label PowerLabelNode { get; private set; }
 	public Label LifeLabelNode { get; private set; }
 	public Label DefenceLabelNode { get; private set; }
 	public RichTextLabel TextLabelNode { get; private set; }
+	public Control PLSeparatorNode { get; private set; }
 	
 	#endregion
 
@@ -52,11 +53,12 @@ public partial class Card : Control
 		CostLabelNode = GetNode<Label>("%CostLabel");
 		ImageNode = GetNode<TextureRect>("%Image");
 		TypeLabelNode = GetNode<Label>("%TypeLabel");
-		BottomNodeNode = GetNode<Control>("%Bottom");
+		BottomNode = GetNode<Control>("%Bottom");
 		PowerLabelNode = GetNode<Label>("%PowerLabel");
 		LifeLabelNode = GetNode<Label>("%LifeLabel");
 		DefenceLabelNode = GetNode<Label>("%DefenceLabel");
 		TextLabelNode = GetNode<RichTextLabel>("%TextLabel");
+		PLSeparatorNode = GetNode<Control>("%PLSeparator");
 
 		#endregion
 		
@@ -66,32 +68,53 @@ public partial class Card : Control
 		_defaultBgColor = BgColor;
 	}
 
+	private void PreLoad() {
+		BottomNode.Show();
+		PLSeparatorNode.Show();
+		PowerLabelNode.Show();
+	}
+
+	private void SetType(string type) {
+		TypeLabelNode.Text = type;
+
+		if (type.StartsWith("Spell"))
+			BottomNode.Hide();
+		if (type.StartsWith("Structure")) {
+			PLSeparatorNode.Hide();
+			PowerLabelNode.Hide();
+		}
+	}
+
 	public void Load(HexStates.MatchCardState cardState) {
 		State = cardState;
 		CardState = null;
+
+		PreLoad();
 
 		NameLabelNode.Text = cardState.Name;
 		if (ShowMID)
 			NameLabelNode.Text += " [" + cardState.MID + "]";
 		CostLabelNode.Text = " " + cardState.Cost.ToString() + " ";
-		TypeLabelNode.Text = cardState.Type;
 		PowerLabelNode.Text = cardState.Power.ToString();
 		LifeLabelNode.Text = cardState.Life.ToString();
 		DefenceLabelNode.Text = cardState.Defence.ToString();
 		SetText(cardState.Name, cardState.Text);
+		SetType(cardState.Type);
 	}
 
 	public void Load(HexCore.Cards.Card card) {
 		CardState = card;
 		State = null;
 
+		PreLoad();
+
 		NameLabelNode.Text = card.Name;
 		CostLabelNode.Text = " " + card.Cost.ToString() + " ";
-		TypeLabelNode.Text = card.Type;
 		PowerLabelNode.Text = card.Power.ToString();
 		LifeLabelNode.Text = card.Life.ToString();
 		DefenceLabelNode.Text = "";
 		SetText(card.Name, card.Text);
+		SetType(card.Type);
 	}
 
 	private void SetText(string name, string text) {

@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://djkpxvklrhloa"]
+
+[ext_resource type="Script" path="res://Manager/AddCard/AddCard.cs" id="1_4fjws"]
+[ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="2_ao2yl"]
+
+[node name="AddCard" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4fjws")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CIDEdit" type="LineEdit" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter card CID"
+
+[node name="AddButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = " Add "
+
+[node name="Requests" type="Node" parent="."]
+
+[node name="FetchCardRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
+[node name="Popups" type="Node" parent="."]
+
+[node name="CardNotFoundPopup" type="AcceptDialog" parent="Popups"]
+unique_name_in_owner = true
+initial_position = 2
+theme = ExtResource("2_ao2yl")
+
+[connection signal="pressed" from="HBoxContainer/AddButton" to="." method="OnAddButtonPressed"]
+[connection signal="request_completed" from="Requests/FetchCardRequest" to="." method="OnFetchCardRequestRequestCompleted"]

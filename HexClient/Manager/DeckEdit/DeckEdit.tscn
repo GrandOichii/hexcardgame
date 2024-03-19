@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://k7044lgvfqiv"]
+[gd_scene load_steps=5 format=3 uid="uid://k7044lgvfqiv"]
 
 [ext_resource type="Script" path="res://Manager/DeckEdit/DeckEdit.cs" id="1_6p5tj"]
 [ext_resource type="PackedScene" uid="uid://dkca2em6443gc" path="res://Manager/DeckEdit/DeckEditCardDisplay.tscn" id="2_1ac88"]
 [ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="3_1grxx"]
+[ext_resource type="PackedScene" uid="uid://djkpxvklrhloa" path="res://Manager/AddCard/AddCard.tscn" id="4_ebk27"]
 
 [node name="DeckEdit" type="Control"]
 layout_mode = 3
@@ -78,6 +79,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="AddCardButton" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Add card"
+
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
@@ -104,10 +109,39 @@ initial_position = 2
 theme = ExtResource("3_1grxx")
 dialog_text = "Are you sure you want to discard deck changes?"
 
+[node name="Windows" type="Node" parent="."]
+
+[node name="AddCardWindow" type="Window" parent="Windows"]
+unique_name_in_owner = true
+title = "Add card"
+initial_position = 2
+size = Vector2i(600, 70)
+visible = false
+transient = true
+exclusive = true
+theme = ExtResource("3_1grxx")
+
+[node name="MarginContainer" type="MarginContainer" parent="Windows/AddCardWindow"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="AddCard" parent="Windows/AddCardWindow/MarginContainer" instance=ExtResource("4_ebk27")]
+layout_mode = 2
+
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/CopyToBufferButton" to="." method="OnCopyToBufferButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/PasteFromBuffer" to="." method="OnPasteFromBufferPressed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer/VBoxContainer/NameEdit" to="." method="OnNameEditTextChanged"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer/VBoxContainer/DescriptionEdit" to="." method="OnDescriptionEditTextChanged"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer2/AddCardButton" to="." method="OnAddCardButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer3/CancelButton" to="." method="OnCancelButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer3/SaveButton" to="." method="OnSaveButtonPressed"]
 [connection signal="confirmed" from="Popups/DiscardChangesPopup" to="." method="OnDiscardChangesPopupConfirmed"]
+[connection signal="close_requested" from="Windows/AddCardWindow" to="." method="OnAddCardWindowCloseRequested"]
+[connection signal="Added" from="Windows/AddCardWindow/MarginContainer/AddCard" to="." method="OnAddCardAdded"]

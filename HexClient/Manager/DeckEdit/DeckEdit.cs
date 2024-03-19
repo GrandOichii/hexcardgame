@@ -9,6 +9,7 @@ public interface IDeckEditCardDisplay {
 	public void Load(string cid, int amount);
 	public string GetCID();
 	public int GetAmount();
+	public void SetAmount(int amount);
 	public bool IsCardValid();
 	public void SubcribeToAmountChanged(Action<int> action);
 }
@@ -19,13 +20,13 @@ public partial class DeckEdit : Control
 	
 	[Export]
 	private PackedScene DeckEditCardDisplayPS { get; set; }
-	[Signal]
-	public delegate void SavedEventHandler(Wrapper<Deck> card, string oldId);
 	
 	#endregion
 	
 	#region Signals
 
+	[Signal]
+	public delegate void SavedEventHandler(Wrapper<Deck> card, string oldId);
 	[Signal]
 	public delegate void ClosedEventHandler();
 
@@ -36,6 +37,8 @@ public partial class DeckEdit : Control
 	public LineEdit NameEditNode { get; private set; }
 	public TextEdit DescriptionEditNode { get; private set; }
 	public FlowContainer CardsContainerNode { get; private set; }
+	
+	public Window AddCardWindowNode { get; private set; }
 
 	public AcceptDialog SaveErrorPopupNode { get; private set; }
 	public AcceptDialog DiscardChangesPopupNode { get; private set; }
@@ -52,6 +55,8 @@ public partial class DeckEdit : Control
 		NameEditNode = GetNode<LineEdit>("%NameEdit");
 		DescriptionEditNode = GetNode<TextEdit>("%DescriptionEdit");
 		CardsContainerNode = GetNode<FlowContainer>("%CardsContainer");
+		
+		AddCardWindowNode = GetNode<Window>("%AddCardWindow");
 
 		SaveErrorPopupNode = GetNode<AcceptDialog>("%SaveErrorPopup");
 		DiscardChangesPopupNode = GetNode<AcceptDialog>("%DiscardChangesPopup");
@@ -81,16 +86,18 @@ public partial class DeckEdit : Control
 			CardsContainerNode.RemoveChild(CardsContainerNode.GetChild(0));
 		
 		foreach (var pair in deck.Index) {
-			var cid = pair.Key;
-			var amount = pair.Value;
-
-			var child = DeckEditCardDisplayPS.Instantiate();
-			CardsContainerNode.AddChild(child);
-
-			var display = child as IDeckEditCardDisplay;
-			display.Load(cid, amount);
-			display.SubcribeToAmountChanged((_) => _dataChanged = true);
+			AddDeckCard(pair.Key, pair.Value);
 		}
+	}
+
+	private void AddDeckCard(string cid, int amount) {
+		var child = DeckEditCardDisplayPS.Instantiate();
+		CardsContainerNode.AddChild(child);
+
+		var display = child as IDeckEditCardDisplay;
+		display.Load(cid, amount);
+		display.SubcribeToAmountChanged((_) => _dataChanged = true);
+
 	}
 
 	public void TryClose() {
@@ -124,6 +131,10 @@ public partial class DeckEdit : Control
 				Index = index,
 			};
 		}
+	}
+	
+	private void TryAddCard() {
+		AddCardWindowNode.Show();
 	}
 
 	#region Signal connections
@@ -184,8 +195,40 @@ public partial class DeckEdit : Control
 	{
 		EmitSignal(SignalName.Closed);
 	}
+
+	private void OnAddCardWindowCloseRequested()
+	{
+		AddCardWindowNode.Hide();
+	}
+
+	private void OnAddCardAdded(string cid)
+	{
+		AddCardWindowNode.Hide();
+		
+		// TODO check if card is already added
+		foreach (var child in CardsContainerNode.GetChildren()) {
+			switch (child) {
+				case IDeckEditCardDisplay display:
+					if (display.GetCID() != cid) continue;
+					display.SetAmount(display.GetAmount() + 1);
+					return;
+				default: continue;
+			}
+		}
+
+		_dataChanged = true;
+		AddDeckCard(cid, 1);
+	}
+
+	private void OnAddCardButtonPressed()
+	{
+		TryAddCard();
+	}
 	
 	#endregion
 }
+
+
+
 
 

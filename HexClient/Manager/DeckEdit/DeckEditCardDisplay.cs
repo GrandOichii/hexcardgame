@@ -60,6 +60,12 @@ public partial class DeckEditCardDisplay : Control, IDeckEditCardDisplay
 		AmountChanged += action.Invoke;
 	}
 
-	#endregion
+    public void SetAmount(int amount)
+    {
+		_amount = amount;
+		CardDisplayNode.AmountLabelNode.Text = _amount.ToString();
+    }
+
+    #endregion
 }
 

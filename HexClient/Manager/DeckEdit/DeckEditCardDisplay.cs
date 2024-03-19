@@ -16,43 +16,48 @@ public partial class DeckEditCardDisplay : Control, IDeckEditCardDisplay
 	
 	public DeckCardDisplay CardDisplayNode { get; private set; }
 	
+	public ConfirmationDialog DeleteCardPopupNode { get; private set; }
+	
 	#endregion
-	
-	private int _amount;
-	
+		
 	public override void _Ready()
 	{
 		#region Node fetching
 		
 		CardDisplayNode = GetNode<DeckCardDisplay>("%CardDisplay");
 		
+		DeleteCardPopupNode = GetNode<ConfirmationDialog>("%DeleteCardPopup");
+		
 		#endregion
 	}
 	
 	public void Load(string cid, int amount) {
-		_amount = amount;
-		CardDisplayNode.Load(cid, _amount);
+		CardDisplayNode.Load(cid, amount);
 	}
 
 	#region Signal connections
 	
 	private void OnRemoveButtonPressed()
 	{
-		if (_amount == 0) return;
+		if (CardDisplayNode.Amount == 0) {
+			DeleteCardPopupNode.DialogText = $"Are you sure you want to remove {GetCID()} from the deck?";
+			DeleteCardPopupNode.Show();
+			return;
+		}
 
-		CardDisplayNode.Load(CardDisplayNode.CID, --_amount);
-		EmitSignal(SignalName.AmountChanged, _amount);
+		--CardDisplayNode.Amount;
+
+		EmitSignal(SignalName.AmountChanged, CardDisplayNode.Amount);
 	}
 
 	private void OnAddButtonPressed()
 	{
-		CardDisplayNode.Load(CardDisplayNode.CID, ++_amount);
-		EmitSignal(SignalName.AmountChanged, _amount);
+		++CardDisplayNode.Amount;
+		EmitSignal(SignalName.AmountChanged, CardDisplayNode.Amount);
 	}
 
 	public string GetCID() => CardDisplayNode.CID;
-	public int GetAmount() => _amount;
-
+	public int GetAmount() => CardDisplayNode.Amount;
 	public bool IsCardValid() => CardDisplayNode.Valid;
 
 	public void SubcribeToAmountChanged(Action<int> action)
@@ -60,12 +65,20 @@ public partial class DeckEditCardDisplay : Control, IDeckEditCardDisplay
 		AmountChanged += action.Invoke;
 	}
 
-    public void SetAmount(int amount)
-    {
-		_amount = amount;
-		CardDisplayNode.AmountLabelNode.Text = _amount.ToString();
-    }
+	public void SetAmount(int amount)
+	{
+		CardDisplayNode.Amount = amount;
 
-    #endregion
+		EmitSignal(SignalName.AmountChanged, CardDisplayNode.Amount);
+	}
+
+	private void OnDeleteCardPopupConfirmed()
+	{
+		QueueFree();
+		EmitSignal(SignalName.AmountChanged, -1);
+	}
+
+	#endregion
 }
+
 

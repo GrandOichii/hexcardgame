@@ -20,6 +20,11 @@ public partial class DeckCardDisplay : Control, IDeckCardDisplay
 	public string CID { get; private set; }
 	public bool Valid { get; private set; } = false;
 
+	public int Amount {
+		get => int.Parse(AmountLabelNode.Text);
+		set => AmountLabelNode.Text = value.ToString();
+	}
+
 	public override void _Ready()
 	{
 		#region Node fetching
@@ -43,7 +48,7 @@ public partial class DeckCardDisplay : Control, IDeckCardDisplay
 		ErrorOverlayNode.Hide();
 
 		CIDLabelNode.Text = cid;
-		AmountLabelNode.Text = amount.ToString();
+		Amount = amount;
 		
 		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
 		FetchCardRequestNode.CancelRequest();

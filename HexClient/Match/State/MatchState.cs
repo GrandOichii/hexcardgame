@@ -3,6 +3,8 @@ using HexCore.GameMatch;
 
 namespace HexClient.Match.State;
 
+// TODO! sometimes when starting match doesn't show the initial setup, requires to send an action to show the actual match
+
 public partial class MatchState : BaseState {
 	public HexStates.MyDataState MyData { get; set; }
 

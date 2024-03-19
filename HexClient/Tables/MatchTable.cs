@@ -68,9 +68,7 @@ public partial class MatchTable : Control
 	}
 
 	private Task OnUpdateAll(string message) {
-		GD.Print(message);
 		var matches = JsonSerializer.Deserialize<List<MatchProcess>>(message, Common.JSON_SERIALIZATION_OPTIONS);
-		GD.Print("slay");
 		
 		CallDeferred("SetData", new Wrapper<List<MatchProcess>>(matches));
 		return Task.CompletedTask;
@@ -78,9 +76,7 @@ public partial class MatchTable : Control
 
 	private void SetData(Wrapper<List<MatchProcess>> matches) {
 		// remove existing
-		GD.Print(_root.GetChildCount());
 		while (_root.GetChildCount() > 0) {
-			GD.Print("remove");
 			_root.RemoveChild(_root.GetFirstChild());
 		}
 
@@ -90,8 +86,14 @@ public partial class MatchTable : Control
 	}
 
 	private Task OnConnectionClosed(Exception e) {
-		DisconnectedPopupNode.DialogText = $"Disconnected from live matches!\n\n{e.Message}";
-		DisconnectedPopupNode.Show();
+		DisconnectedPopupNode.CallDeferred("set_text", $"Disconnected from live matches!\n\n{e.Message}");
+		DisconnectedPopupNode.CallDeferred("show");
+		
+		GD.Print(e.Message);
+		GD.Print(e.StackTrace);
+		GD.Print("=====");
+		GD.Print(e.InnerException.Message);
+		GD.Print(e.InnerException.StackTrace);
 
 		return Task.CompletedTask;
 	}

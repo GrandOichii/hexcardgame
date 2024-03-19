@@ -36,6 +36,9 @@ layout_mode = 2
 text = "real-player"
 placeholder_text = "Enter your name"
 
+[node name="HSeparator" type="HSeparator" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
@@ -53,6 +56,30 @@ text = "dev::Mana Drill#3|dev::Brute#3|dev::Mage Initiate#3|dev::Warrior Initiat
 unique_name_in_owner = true
 layout_mode = 2
 text = " ... "
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Use saved deck:"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RefreshDecksButton" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Refresh"
+
+[node name="SavedDecksOption" type="OptionButton" parent="HBoxContainer/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PasteFromDeckButton" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Paste"
+
+[node name="HSeparator5" type="HSeparator" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
@@ -258,7 +285,12 @@ unique_name_in_owner = true
 [node name="RemoveCrashedRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
+[node name="FetchDecksRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer2/ChoosePlayerDeckButton" to="." method="OnChoosePlayerDeckButtonPressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer3/RefreshDecksButton" to="." method="OnRefreshDecksButtonPressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer3/PasteFromDeckButton" to="." method="OnPasteFromDeckButtonPressed"]
 [connection signal="toggled" from="HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/WebSocketCheck" to="." method="OnWebSocketCheckToggled"]
 [connection signal="toggled" from="HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/TcpCheck" to="." method="OnTcpCheckToggled"]
 [connection signal="text_changed" from="HBoxContainer/VBoxContainer/BaseUrlEdit" to="." method="OnBaseUrlEditTextChanged"]
@@ -273,3 +305,4 @@ unique_name_in_owner = true
 [connection signal="file_selected" from="Popups/ChooseDeckFileDialog" to="." method="OnChooseDeckFileDialogFileSelected"]
 [connection signal="request_completed" from="Requests/FetchBasicConfigRequest" to="." method="OnFetchBasicConfigRequestRequestCompleted"]
 [connection signal="request_completed" from="Requests/RemoveCrashedRequest" to="." method="OnRemoveCrashedRequestRequestCompleted"]
+[connection signal="request_completed" from="Requests/FetchDecksRequest" to="." method="OnFetchDecksRequestRequestCompleted"]

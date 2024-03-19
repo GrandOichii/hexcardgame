@@ -12,6 +12,7 @@ using System.Net;
 using HexClient.Tables;
 using System.Text;
 using HexCore.Decks;
+using System.Collections.Generic;
 
 namespace HexClient.Manager.Tabs;
 
@@ -41,11 +42,13 @@ public partial class MatchesTab : Control
 	public CheckBox AutoConnectCheckNode { get; private set; }
 	public SpinBox BatchEditNode { get; private set; }
 	public Button RemoveCrashedButtonNode { get; private set; }
+	public OptionButton SavedDecksOptionNode { get; private set; }
 	
 	public HttpRequest CreateRequestNode { get; private set; }
 	public HttpRequest ConnectRequestNode { get; private set; }
 	public HttpRequest FetchBasicConfigRequestNode { get; private set; }
 	public HttpRequest RemoveCrashedRequestNode { get; private set; }
+	public HttpRequest FetchDecksRequestNode { get; private set; }
 
 	public AcceptDialog FailedToConnectPopupNode { get; private set; }
 	public AcceptDialog FailedToCreatePopupNode { get; private set; }
@@ -80,11 +83,13 @@ public partial class MatchesTab : Control
 		AutoConnectCheckNode = GetNode<CheckBox>("%AutoConnectCheck");
 		BatchEditNode = GetNode<SpinBox>("%BatchEdit");
 		RemoveCrashedButtonNode = GetNode<Button>("%RemoveCrashedButton");
+		SavedDecksOptionNode = GetNode<OptionButton>("%SavedDecksOption");
 
 		ConnectRequestNode = GetNode<HttpRequest>("%ConnectRequest");
 		CreateRequestNode = GetNode<HttpRequest>("%CreateRequest");
 		FetchBasicConfigRequestNode = GetNode<HttpRequest>("%FetchBasicConfigRequest");
 		RemoveCrashedRequestNode = GetNode<HttpRequest>("%RemoveCrashedRequest");
+		FetchDecksRequestNode = GetNode<HttpRequest>("%FetchDecksRequest");
 
 		FailedToConnectPopupNode = GetNode<AcceptDialog>("%FailedToConnectPopup");
 		FailedToCreatePopupNode = GetNode<AcceptDialog>("%FailedToCreatePopup");
@@ -315,12 +320,62 @@ public partial class MatchesTab : Control
 
 	private void OnRemoveCrashedRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
+		if (response_code == 200) return;
+
+		// TODO show popup
 		GD.Print(response_code);
-		// Replace with function body.
+	}
+
+	private void OnFetchDecksRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
+	{
+		if (response_code != 200) {
+			// TODO show popup
+			var resp = Encoding.UTF8.GetString(body);
+			GD.Print(response_code);
+			GD.Print(resp);
+			return;
+		}
+
+		var decks = JsonSerializer.Deserialize<List<Deck>>(body, Common.JSON_SERIALIZATION_OPTIONS);
+
+		while (SavedDecksOptionNode.ItemCount > 0)
+			SavedDecksOptionNode.RemoveItem(0);
+
+		foreach (var deck in decks) {
+			SavedDecksOptionNode.AddItem($"{deck.Name} ({deck.Id[..3]})");
+			SavedDecksOptionNode.SetItemMetadata(SavedDecksOptionNode.ItemCount - 1, new Wrapper<Deck>(deck));
+		}
+
+	}
+
+	private void OnRefreshDecksButtonPressed()
+	{
+		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
+		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
+
+		FetchDecksRequestNode.Request(BaseUrl + "deck", headers);
+	}
+
+	private void OnPasteFromDeckButtonPressed()
+	{
+		if (SavedDecksOptionNode.Selected == -1) {
+			// TODO show popup
+			return;
+		}
+		// TODO catch exceptions
+		var deck = SavedDecksOptionNode
+			.GetItemMetadata(SavedDecksOptionNode.Selected)
+			.As<Wrapper<Deck>>()
+			.Value;
+		var text = deck.ToDeckTemplate().ToText();
+		PlayerDeckEditNode.Text = text;
 	}
 
 	#endregion
 }
+
+
+
 
 
 

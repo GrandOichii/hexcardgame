@@ -190,18 +190,20 @@ public class MatchProcess {
             await SetStatus(MatchStatus.FINISHED);
             Record.WinnerName = Match.Winner!.Name;
             await _matchService.ServiceStatusUpdated(this);
+            System.Console.WriteLine("Match ended");
         } catch (Exception e) {
             await SetStatus(MatchStatus.CRASHED);
             Record.ExceptionMessage = e.Message;
             if (e.InnerException is not null)
                 Record.InnerExceptionMessage = e.InnerException.Message;      
-            System.Console.WriteLine(e.Message);      
-            System.Console.WriteLine(e.StackTrace);
+            // System.Console.WriteLine(e.Message);      
+            // System.Console.WriteLine(e.StackTrace);
+            // System.Console.WriteLine("Match crashed");
             await Match.View.End();
         }
+
         EndTime = DateTime.Now; 
         TcpListener.Stop();
-
     }
     
     public async Task Finish(WebSocket socket) {

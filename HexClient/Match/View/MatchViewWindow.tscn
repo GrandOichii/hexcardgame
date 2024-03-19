@@ -6,7 +6,7 @@
 
 [node name="MatchViewWindow" type="Window"]
 initial_position = 2
-size = Vector2i(800, 600)
+size = Vector2i(1600, 1200)
 theme = ExtResource("3_6fol5")
 script = ExtResource("1_04yqy")
 

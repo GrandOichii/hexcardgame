@@ -13,13 +13,16 @@ public class LuaPlayerController : IPlayerController {
     static private readonly string CLEANUP_FNAME = "_Cleanup";
 
     private readonly string _sPath;
+    private readonly int _actionDelay;
+
     private readonly Lua LState;
 
     private readonly LuaFunction _setupF;
     private readonly LuaFunction _promptActionF;
     private readonly LuaFunction _updateF;
     private readonly LuaFunction _cleaupF;
-    public LuaPlayerController(string sPath) {
+    public LuaPlayerController(string sPath, int actionDelay) {
+        _actionDelay = actionDelay;
         _sPath = sPath;
 
         LState = new();
@@ -30,10 +33,11 @@ public class LuaPlayerController : IPlayerController {
         _cleaupF = LuaUtility.GetGlobalF(LState, CLEANUP_FNAME);
     }   
 
-    public Task<string> DoPromptAction(Player player, Match match)
+    public async Task<string> DoPromptAction(Player player, Match match)
     {        
+        await Task.Delay(_actionDelay);
         var result = _promptActionF.Call(new MatchState(match, player, "action").ToJson());
-        return Task.FromResult(LuaUtility.GetReturnAs<string>(result));
+        return LuaUtility.GetReturnAs<string>(result);
     }
 
     public Task Setup(Player player, Match match)
@@ -53,10 +57,11 @@ public class LuaPlayerController : IPlayerController {
         return Task.CompletedTask;
     }
 
-    public Task<string> DoPickTile(List<int[]> choices, Player player, Match match)
+    public async Task<string> DoPickTile(List<int[]> choices, Player player, Match match)
     {
         // TODO
-        return Task.FromResult("" + choices[0][0] + "." + choices[1][0]);
+        await Task.Delay(_actionDelay);
+        return "" + choices[0][0] + "." + choices[1][0];
     }
 
     public Task SendCard(Match match, Player player, ExpansionCard card)

@@ -99,7 +99,8 @@ public class MatchProcess {
                 continue;
             }
 
-            var controller = await CreateRecordedPlayer(p.BotConfig.Name, new LuaPlayerController(BOT_TYPE_PATH_MAP[p.BotConfig.BotType]));
+            var baseController = new LuaPlayerController(BOT_TYPE_PATH_MAP[p.BotConfig.BotType], p.BotConfig.ActionDelay);
+            var controller = await CreateRecordedPlayer(p.BotConfig.Name, baseController);
             // TODO add exception handling
             var deck = await LoadDeck(p.BotConfig.StrDeck);
             await Match.AddPlayer(p.BotConfig.Name, deck, controller);

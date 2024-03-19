@@ -11,6 +11,7 @@ public class BotConfig {
     public required string StrDeck { get; set; }
     public required string Name { get; set; }
     public required BotType BotType { get; set; }
+    public int ActionDelay { get; set; } = 0;
 }
 
 public class PlayerConfig {

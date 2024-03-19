@@ -32,22 +32,42 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Options"
 
-[node name="HBoxContainer2" type="HSplitContainer" parent="VBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="PlayerContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2"]
+[node name="PlayerContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 2
 
-[node name="Map" type="Control" parent="VBoxContainer/HBoxContainer2"]
+[node name="HBoxContainer2" type="HSplitContainer" parent="VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 5.0
+
+[node name="Map" type="Control" parent="VBoxContainer/HBoxContainer3/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer3/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Logs" type="Control" parent="VBoxContainer/HBoxContainer2"]
-layout_mode = 2
+[node name="Logs" type="RichTextLabel" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 layout_mode = 2

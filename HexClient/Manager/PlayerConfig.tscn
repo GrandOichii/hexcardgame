@@ -84,6 +84,13 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="ActionDelaySpin" type="SpinBox" parent="VBoxContainer/BotConfig/VB" groups=["admin_ui"]]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 5000.0
+prefix = "Action delay: "
+suffix = "(ms)"
+
 [node name="ChooseDeckFileDialog" type="FileDialog" parent="."]
 unique_name_in_owner = true
 title = "Open a File"

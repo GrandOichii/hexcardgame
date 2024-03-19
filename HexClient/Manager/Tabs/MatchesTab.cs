@@ -159,7 +159,10 @@ public partial class MatchesTab : Control
 	private MatchProcessConfig BuildCreateMatchProcessConfig() {
 
 		var p1Config = PlayerConfig1Node.Baked;
+		PlayerConfig1Node.ActionDelaySpinNode.Value = 0;
+
 		var p2Config = PlayerConfig2Node.Baked;
+		PlayerConfig2Node.ActionDelaySpinNode.Value = 0;
 		
 		var result = new MatchProcessConfig
 		{
@@ -224,7 +227,6 @@ public partial class MatchesTab : Control
 		WatchMatchIdEditNode.Text = info.Id.ToString();
 
 		if (
-			 
 			PlayerConfig1Node.IsBotCheckNode.ButtonPressed && 
 			PlayerConfig2Node.IsBotCheckNode.ButtonPressed
 		) return;

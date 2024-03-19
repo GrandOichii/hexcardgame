@@ -15,6 +15,7 @@ public partial class PlayerConfig : Control
 	public LineEdit DeckEdit { get; private set; }
 	public FileDialog ChooseDeckFileDialogNode { get; private set; }
 	public OptionButton BotTypeOptionNode { get; private set; }
+	public SpinBox ActionDelaySpinNode { get; private set; }
 	
 	#endregion
 	
@@ -28,6 +29,7 @@ public partial class PlayerConfig : Control
 		DeckEdit = GetNode<LineEdit>("%DeckEdit");
 		ChooseDeckFileDialogNode = GetNode<FileDialog>("%ChooseDeckFileDialog");
 		BotTypeOptionNode = GetNode<OptionButton>("%BotTypeOption");
+		ActionDelaySpinNode = GetNode<SpinBox>("%ActionDelaySpin");
 		
 		#endregion
 
@@ -51,7 +53,8 @@ public partial class PlayerConfig : Control
 				BotConfig = IsBotCheckNode.ButtonPressed ? new() {
 					Name = BotNameEditNode.Text,
 					StrDeck = data,
-					BotType = BotTypeOptionNode.GetSelectedMetadata().As<Wrapper<BotType>>().Value
+					BotType = BotTypeOptionNode.GetSelectedMetadata().As<Wrapper<BotType>>().Value,
+					ActionDelay = (int)ActionDelaySpinNode.Value
 				} : null
 			};
 		}

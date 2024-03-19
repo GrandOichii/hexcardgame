@@ -32,6 +32,7 @@ public partial class Match : Control
 	
 	public Control PlayerContainerNode { get; private set; }
 	public Container HandContainerNode { get; private set; }
+	public RichTextLabel LogsNode { get; private set; }
 	
 	public Window OptionsWindowNode { get; private set; }
 	
@@ -39,7 +40,6 @@ public partial class Match : Control
 
 	public string MatchId {
 		set {
-			// CallDeferred("SetOptionsWindowTitle", $"Match {value} options");
 		}
 	}
 
@@ -49,7 +49,8 @@ public partial class Match : Control
 		
 		OptionsWindowNode = GetNode<Window>("%OptionsWindow");
 		PlayerContainerNode = GetNode<Control>("%PlayerContainer");
-		HandContainerNode = GetNode<Container>("%HandContainer");	
+		HandContainerNode = GetNode<Container>("%HandContainer");
+		LogsNode = GetNode<RichTextLabel>("%Logs");
 		
 		#endregion
 		

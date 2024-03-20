@@ -23,7 +23,7 @@ public partial class CardEdit : Control
 	public CheckBox DeckUsableCheckNode { get; private set; }
 	public LineEdit TypeEditNode { get; private set; }
 	public TextEdit TextEditNode { get; private set; }
-	public TextEdit ScriptEditNode { get; private set; }
+	public CodeEdit ScriptEditNode { get; private set; }
 	public SpinBox PowerEditNode { get; private set; }
 	public SpinBox LifeEditNode { get; private set; }
 	public Card PreviewCardNode { get; private set; }
@@ -47,7 +47,7 @@ public partial class CardEdit : Control
 		DeckUsableCheckNode = GetNode<CheckBox>("%DeckUsableCheck");
 		TypeEditNode = GetNode<LineEdit>("%TypeEdit");
 		TextEditNode = GetNode<TextEdit>("%TextEdit");
-		ScriptEditNode = GetNode<TextEdit>("%ScriptEdit");
+		ScriptEditNode = GetNode<CodeEdit>("%ScriptEdit");
 		PowerEditNode = GetNode<SpinBox>("%PowerEdit");
 		LifeEditNode = GetNode<SpinBox>("%LifeEdit");
 		PreviewCardNode = GetNode<Card>("%PreviewCard");

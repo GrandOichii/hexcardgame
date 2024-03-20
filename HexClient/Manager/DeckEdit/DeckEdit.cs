@@ -231,7 +231,7 @@ public partial class DeckEdit : Control
 		foreach (var child in CardsContainerNode.GetChildren().Cast<Control>()) {
 			switch (child) {
 				case IDeckEditCardDisplay display:
-					child.Visible = display.GetCID().Contains(filter);
+					child.Visible = display.GetCID().ToLower().Contains(filter);
 					break;
 				default: continue;
 			}

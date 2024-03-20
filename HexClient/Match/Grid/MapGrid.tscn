@@ -1,0 +1,34 @@
+[gd_scene load_steps=3 format=3 uid="uid://b0hq0akjd1k87"]
+
+[ext_resource type="Script" path="res://Match/Grid/MapGrid.cs" id="1_gid4o"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jgxaa"]
+
+[node name="MapGrid" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_gid4o")
+XMinOffset = 100.0
+YMinOffset = 100.0
+
+[node name="Bg" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_jgxaa")
+
+[node name="Tiles" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Entities" type="Node2D" parent="."]
+unique_name_in_owner = true

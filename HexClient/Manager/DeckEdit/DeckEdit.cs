@@ -205,8 +205,8 @@ public partial class DeckEdit : Control
 	private void OnAddCardAdded(string cid)
 	{
 		AddCardWindowNode.Hide();
+		_dataChanged = true;
 		
-		// TODO check if card is already added
 		foreach (var child in CardsContainerNode.GetChildren()) {
 			switch (child) {
 				case IDeckEditCardDisplay display:
@@ -217,7 +217,6 @@ public partial class DeckEdit : Control
 			}
 		}
 
-		_dataChanged = true;
 		AddDeckCard(cid, 1);
 	}
 

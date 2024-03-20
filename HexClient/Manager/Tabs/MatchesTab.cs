@@ -362,13 +362,17 @@ public partial class MatchesTab : Control
 			// TODO show popup
 			return;
 		}
-		// TODO catch exceptions
-		var deck = SavedDecksOptionNode
-			.GetItemMetadata(SavedDecksOptionNode.Selected)
-			.As<Wrapper<Deck>>()
-			.Value;
-		var text = deck.ToDeckTemplate().ToText();
-		PlayerDeckEditNode.Text = text;
+		try {
+			var deck = SavedDecksOptionNode
+				.GetItemMetadata(SavedDecksOptionNode.Selected)
+				.As<Wrapper<Deck>>()
+				.Value;
+			var text = deck.ToDeckTemplate().ToText();
+			PlayerDeckEditNode.Text = text;
+		} catch (Exception e) {
+			// TODO show popup
+			GD.Print(e.Message);
+		}
 	}
 
 	#endregion

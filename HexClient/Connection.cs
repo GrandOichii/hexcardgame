@@ -20,6 +20,8 @@ public interface IConnection {
 	public Task Close();
 }
 
+// !FIXME crashes the backend sometimes :)
+
 public class WebSocketConnection : IConnection
 {
 	private readonly ClientWebSocket _client;
@@ -34,14 +36,11 @@ public class WebSocketConnection : IConnection
 	{
 		_client = client;
 
-		// TODO don't know if this is the best way of doing this
 		_ = Task.Run(async () =>
 		{
-			// * indeed a quite suspicious piece of code that will definately fail in the near future
-
-			await Read(); // should be name
+			await Read(); // should be "name"
 			await Write(name);
-			await Read(); // should be deck
+			await Read(); // should be "deck"
 			await Write(deck);
 
 			// !FIXME failed when creating match with two players

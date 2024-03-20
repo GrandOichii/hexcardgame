@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=3 uid="uid://twf3h2yoou5b"]
+
+[ext_resource type="Script" path="res://Match/Grid/Tile.cs" id="1_3nahc"]
+
+[node name="Tile" type="Node2D"]
+script = ExtResource("1_3nahc")
+HighlightColor = Color(0, 0, 0.894118, 1)
+
+[node name="Collision" type="Area2D" parent="."]
+unique_name_in_owner = true
+
+[node name="CollisionPoly" type="CollisionPolygon2D" parent="Collision"]
+unique_name_in_owner = true
+polygon = PackedVector2Array(-72, 9.53674e-06, -40, -64, 40, -64, 72, 9.53674e-06, 40, 64, -40, 64)
+
+[node name="Bg" type="Polygon2D" parent="."]
+unique_name_in_owner = true
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(-40, -64, 40, -64, 72, 0, 40, 64, -40, 64, -72, 0)
+
+[node name="Fg" type="Polygon2D" parent="."]
+unique_name_in_owner = true
+scale = Vector2(0.9, 0.9)
+polygon = PackedVector2Array(-40, -64, 40, -64, 72, 0, 40, 64, -40, 64, -72, 0)
+
+[node name="BBox" type="Control" parent="."]
+unique_name_in_owner = true
+process_mode = 4
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_left = -72.0
+offset_top = -64.0
+offset_right = 72.0
+offset_bottom = 64.0
+mouse_filter = 2

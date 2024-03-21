@@ -6,6 +6,13 @@ using System.Linq;
 
 namespace HexClient.Match.Grid;
 
+public interface IEntity {
+	public void Load(MatchCardState entity);
+	public void TweenPosition(Vector2 newPos, double duration);
+	public void SetPosition(Vector2 pos);
+	public void SetPlayerColors(Dictionary<string, Color> colors);
+}
+
 public partial class Tile : Node2D, ITile
 {
 	#region Exports
@@ -30,7 +37,7 @@ public partial class Tile : Node2D, ITile
 	private Color _defaultBgColor;
 	public Vector2 Size => BBoxNode.Size;
 	public Vector2 Coords { get; set; }
-	public Entity Entity { get; set; }
+	public IEntity Entity { get; set; }
 	// public MatchConnection Client { get; set; }
 
 	private Dictionary<string, Color> _playerColors = new();
@@ -56,7 +63,7 @@ public partial class Tile : Node2D, ITile
 		// 	Recheck();
 	}
 
-	public string CoordsStr => Coords.Y + "." + Coords.X;
+	public string CoordsStr => Coords.X + "." + Coords.Y;
 
 	private string _playerID;
 	public string PlayerID {
@@ -103,12 +110,12 @@ public partial class Tile : Node2D, ITile
 		PlayerID = _playerID;
 	}
 
-	public void SetEntity(Entity e)
+	public void SetEntity(IEntity e)
 	{
 		Entity = e;
 	}
 
-	public Entity GetEntity() => Entity;
+	public IEntity GetEntity() => Entity;
 	public Vector2 GetPosition() => Position;
 	public void SetPosition(Vector2 pos) {
 		Position = pos;

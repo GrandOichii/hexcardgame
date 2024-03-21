@@ -5,12 +5,11 @@ using System.Collections.Generic;
 
 namespace HexClient.Match.Grid;
 
-
 public interface ITile : IGamePart {
 	public void SetPlayerColors(Dictionary<string, Color> colors);
 	public void Load(TileState? state);
-	public void SetEntity(Entity e);
-	public Entity GetEntity();
+	public void SetEntity(IEntity e);
+	public IEntity GetEntity();
 	public Vector2 GetPosition();
 	public void SetPosition(Vector2 pos);
 	public Vector2 GetSize();
@@ -58,6 +57,21 @@ public partial class MapGrid : Control, IMapGrid
 	// 	}
 	// }
 
+	private Dictionary<string, Color> _playerColors = new Dictionary<string, Color>() {
+		{ "1", new Color(1, 0, 0) },
+		{ "2", new Color(1, 1, 0) },
+	};
+	public void SetPlayerColors(Dictionary<string, Color> colors) {
+		_playerColors = colors;
+		// TODO tiles and entities
+
+		foreach (var line in _tiles) {
+			foreach (var tile in line) {
+				tile.SetPlayerColors(colors);
+				tile.GetEntity()?.SetPlayerColors(colors);
+			}
+		}
+	}
 
 	public override void _Ready()
 	{
@@ -118,14 +132,17 @@ public partial class MapGrid : Control, IMapGrid
 		foreach (var pair in addedEntities) {
 			var mid = pair.Key;
 			var entity = pair.Value;
-			var eNode = EntityPS.Instantiate() as Entity;
-			EntitiesNode.AddChild(eNode);
-			// eNode.Client = Client;
+			var child = EntityPS.Instantiate() as Entity;
+
+			EntitiesNode.AddChild(child);
+
+			var eNode = child as IEntity;
+			eNode.SetPlayerColors(_playerColors);
 			eNode.Load(entity);
 
 			var loc = newPos[mid];
 			var t = _tiles[loc[0]][loc[1]];
-			eNode.Position = new(t.GetPosition().X, t.GetPosition().Y);
+			eNode.SetPosition(new(t.GetPosition().X, t.GetPosition().Y));
 			t.SetEntity(eNode);
 		}
 
@@ -139,7 +156,8 @@ public partial class MapGrid : Control, IMapGrid
 				t.SetEntity(null);
 				var newT = _tiles[newP[0]][newP[1]];
 				newT.SetEntity(e);
-				e.CreateTween().TweenProperty(e, "position", newT.GetPosition(), .1);
+
+				e.TweenPosition(newT.GetPosition(), .1);
 			}
 			e.Load(newEn[mid]);
 		}
@@ -156,13 +174,10 @@ public partial class MapGrid : Control, IMapGrid
 			for (int j = 0; j < state.Tiles[i].Count; j++) {
 				var child = TilePS.Instantiate() as Tile;
 				TilesNode.AddChild(child);
-				// tile.Client = Client;
 
-				var tile = child as ITile;
-				tile.SetPlayerColors(new() {
-					{ "1", new Color(1, 0, 0) },
-					{ "2", new Color(1, 1, 0) },
-				});
+				var tile = child as ITile;				
+				tile.SetPlayerColors(_playerColors);
+				
 				a.Add(tile);
 			}
 			_tiles.Add(a);
@@ -225,8 +240,7 @@ public partial class MapGrid : Control, IMapGrid
 				var x = tile.GetPosition().X + xDiff;
 				var y = tile.GetPosition().Y + yDiff;
 				tile.SetPosition(new(x, y));
-				if (tile.GetEntity() is not null) tile.GetEntity().Position = new(x, y);
-				
+				tile.GetEntity()?.SetPosition(new(x, y));
 			}
 		}
 	}

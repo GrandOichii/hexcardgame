@@ -1,11 +1,12 @@
 using Godot;
 using HexCore.GameMatch.States;
 using System;
-using System.Reflection;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HexClient.Match.Grid;
 
-public partial class Tile : Node2D, IGamePart
+public partial class Tile : Node2D, ITile
 {
 	#region Exports
 	
@@ -21,6 +22,7 @@ public partial class Tile : Node2D, IGamePart
 	public Control BBoxNode { get; private set; }
 	
 	public CollisionPolygon2D CollisionPolyNode { get; private set; }
+	public Label CoordsLabelNode { get; private set; }
 	
 	#endregion
 	public TileState? State { get; private set; }
@@ -30,6 +32,8 @@ public partial class Tile : Node2D, IGamePart
 	public Vector2 Coords { get; set; }
 	public Entity Entity { get; set; }
 	// public MatchConnection Client { get; set; }
+
+	private Dictionary<string, Color> _playerColors = new();
 	
 	public override void _Ready()
 	{
@@ -39,6 +43,7 @@ public partial class Tile : Node2D, IGamePart
 		FgNode = GetNode<Polygon2D>("%Fg");
 		BBoxNode = GetNode<Control>("%BBox");
 		CollisionPolyNode = GetNode<CollisionPolygon2D>("%CollisionPoly");
+		CoordsLabelNode = GetNode<Label>("%CoordsLabel");
 		
 		#endregion
 		
@@ -58,8 +63,10 @@ public partial class Tile : Node2D, IGamePart
 		get => _playerID;
 		set {
 			_playerID = value;
-			// var color = Client.PlayerColors[value];
-			// FgNode.Color = color;
+			if (string.IsNullOrEmpty(_playerID) || !_playerColors.ContainsKey(value)) return;
+
+			var color = _playerColors[value];
+			FgNode.Color = color;
 		}
 	}
 	
@@ -89,7 +96,33 @@ public partial class Tile : Node2D, IGamePart
 	private void Unfocus() {
 		BgNode.Color = _defaultBgColor;
 	}
-	
+
+	public void SetPlayerColors(Dictionary<string, Color> colors)
+	{
+		_playerColors = colors;
+		PlayerID = _playerID;
+	}
+
+	public void SetEntity(Entity e)
+	{
+		Entity = e;
+	}
+
+	public Entity GetEntity() => Entity;
+	public Vector2 GetPosition() => Position;
+	public void SetPosition(Vector2 pos) {
+		Position = pos;
+	}
+	public Vector2 GetSize() => Size;
+	public void SetCoords(Vector2 coords)
+	{
+		Coords = coords;
+		CoordsLabelNode.Text = CoordsStr;
+	}
+	public void SetShowId(bool v) {
+		CoordsLabelNode.Visible = v;
+	}
+
 	#region Signal connections
 
 	// private void _on_collision_mouse_entered()
@@ -131,7 +164,7 @@ public partial class Tile : Node2D, IGamePart
 	// 	if (e.IsActionPressed("add-to-action"))
 	// 		_pressed();
 	// }
-	
+
 	#endregion
 }
 

@@ -5,7 +5,20 @@ using System.Collections.Generic;
 
 namespace HexClient.Match.Grid;
 
-public partial class MapGrid : Control
+
+public interface ITile : IGamePart {
+	public void SetPlayerColors(Dictionary<string, Color> colors);
+	public void Load(TileState? state);
+	public void SetEntity(Entity e);
+	public Entity GetEntity();
+	public Vector2 GetPosition();
+	public void SetPosition(Vector2 pos);
+	public Vector2 GetSize();
+	public void SetCoords(Vector2 coords);
+	public void SetShowId(bool v);
+}
+
+public partial class MapGrid : Control, IMapGrid
 {
 	#region Packed scenes
 
@@ -32,7 +45,7 @@ public partial class MapGrid : Control
 	
 	#endregion
 
-	private List<List<Tile>> _tiles = null;
+	private List<List<ITile>> _tiles = null;
 	private BaseState _state;
 	private Dictionary<string, MatchCardState> _entities = new();
 	private Dictionary<string, int[]> _enPositions = new();
@@ -95,7 +108,7 @@ public partial class MapGrid : Control
 
 			var pos = _enPositions[mid];
 			var t = _tiles[pos[0]][pos[1]];
-			t.Entity = null;
+			t.SetEntity(null);
 
 			EntitiesNode.RemoveChild(child);
 			child.Free();
@@ -112,8 +125,8 @@ public partial class MapGrid : Control
 
 			var loc = newPos[mid];
 			var t = _tiles[loc[0]][loc[1]];
-			eNode.Position = new(t.Position.X, t.Position.Y);
-			t.Entity = eNode;
+			eNode.Position = new(t.GetPosition().X, t.GetPosition().Y);
+			t.SetEntity(eNode);
 		}
 
 		// move existing entities
@@ -121,12 +134,12 @@ public partial class MapGrid : Control
 			var newP = newPos[mid];
 			var oldP = _enPositions[mid];
 			var t = _tiles[oldP[0]][oldP[1]];
-			var e = t.Entity;
+			var e = t.GetEntity();
 			if (!(newP[0] == oldP[0] && newP[1] == oldP[1])) {
-				t.Entity = null;
+				t.SetEntity(null);
 				var newT = _tiles[newP[0]][newP[1]];
-				newT.Entity = e;
-				e.CreateTween().TweenProperty(e, "position", newT.Position, .1);
+				newT.SetEntity(e);
+				e.CreateTween().TweenProperty(e, "position", newT.GetPosition(), .1);
 			}
 			e.Load(newEn[mid]);
 		}
@@ -139,12 +152,17 @@ public partial class MapGrid : Control
 		var state = _state.Map;
 		_tiles = new();
 		for (int i = 0; i < state.Tiles.Count; i++) {
-			var a = new List<Tile>();
+			var a = new List<ITile>();
 			for (int j = 0; j < state.Tiles[i].Count; j++) {
-				var tile = TilePS.Instantiate() as Tile;
-				TilesNode.AddChild(tile);
+				var child = TilePS.Instantiate() as Tile;
+				TilesNode.AddChild(child);
 				// tile.Client = Client;
-				
+
+				var tile = child as ITile;
+				tile.SetPlayerColors(new() {
+					{ "1", new Color(1, 0, 0) },
+					{ "2", new Color(1, 1, 0) },
+				});
 				a.Add(tile);
 			}
 			_tiles.Add(a);
@@ -185,15 +203,15 @@ public partial class MapGrid : Control
 			for (int j = 0; j < row.Count; j++) {
 				var tile = _tiles[i][j];
 				if (tileHeight == 0) {
-					var size = tile.Size;
+					var size = tile.GetSize();
 					tileHeight = size.Y;
 					tileWidth = size.X;
 				}
 				var y = (tileHeight) * .5f * i;
 				var b = (tileWidth+3) * 3 / 4;
 				var x = b * 2 * j + (1 - i % 2) * b;
-				tile.Position = new(x, y);
-				tile.Coords = new(j, i);
+				tile.SetPosition(new(x, y));
+				tile.SetCoords(new(i, j));
 			
 				if (y > maxY) maxY = y;
 				if (x > maxX) maxX = x;
@@ -204,14 +222,22 @@ public partial class MapGrid : Control
 		var yDiff = (Size.Y - maxY) / 2;
 		foreach (var row in _tiles) {
 			foreach (var tile in row) {
-				var x = tile.Position.X + xDiff;
-				var y = tile.Position.Y + yDiff;
-				tile.Position = new(x, y);
-				if (tile.Entity is not null) tile.Entity.Position = new(x, y);
+				var x = tile.GetPosition().X + xDiff;
+				var y = tile.GetPosition().Y + yDiff;
+				tile.SetPosition(new(x, y));
+				if (tile.GetEntity() is not null) tile.GetEntity().Position = new(x, y);
 				
 			}
 		}
 	}
 	
+	private void OnMatchShowTileIdsToggled(bool v) {
+		foreach (var line in _tiles) {
+			foreach (var tile in line) {
+				tile.SetShowId(v);
+			}
+		}
+	}
+
 	#endregion
 }

@@ -9,6 +9,10 @@ public interface IPlayerDisplay {
 	public void OnShowPlayerIdsToggled(bool v);
 }
 
+public interface IMapGrid {
+	public void Load(BaseState state);
+}
+
 public partial class Match : Control
 {
 	#region Signals
@@ -17,6 +21,8 @@ public partial class Match : Control
 	public delegate void ShowCardIdsToggledEventHandler(bool v);
 	[Signal]
 	public delegate void ShowPlayerIdsToggledEventHandler(bool v);
+	[Signal]
+	public delegate void ShowTileIdsToggledEventHandler(bool b);
 
 	#endregion
 
@@ -34,7 +40,7 @@ public partial class Match : Control
 	public Control PlayerContainerNode { get; private set; }
 	public Container HandContainerNode { get; private set; }
 	public RichTextLabel LogsNode { get; private set; }
-	public MapGrid MapGridNode { get; private set; }
+	public IMapGrid MapGridNode { get; private set; }
 	
 	public Window OptionsWindowNode { get; private set; }
 	
@@ -53,7 +59,7 @@ public partial class Match : Control
 		PlayerContainerNode = GetNode<Control>("%PlayerContainer");
 		HandContainerNode = GetNode<Container>("%HandContainer");
 		LogsNode = GetNode<RichTextLabel>("%Logs");
-		MapGridNode = GetNode<MapGrid>("%MapGrid");
+		MapGridNode = GetNode<IMapGrid>("%MapGrid");
 		
 		#endregion
 		
@@ -104,6 +110,12 @@ public partial class Match : Control
 	{
 		EmitSignal(SignalName.ShowPlayerIdsToggled, buttonPressed);
 	}
+
+	private void OnShowTileIdsToggleToggled(bool buttonPressed)
+	{
+		EmitSignal(SignalName.ShowTileIdsToggled, buttonPressed);
+	}
 	
 	#endregion
 }
+

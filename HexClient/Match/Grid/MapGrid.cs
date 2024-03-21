@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace HexClient.Match.Grid;
 
-public partial class MapGrid : Node2D
+public partial class MapGrid : Control
 {
 	#region Packed scenes
 
@@ -33,7 +33,7 @@ public partial class MapGrid : Node2D
 	#endregion
 
 	private List<List<Tile>> _tiles = null;
-	private HexStates.MatchState _state;
+	private BaseState _state;
 	private Dictionary<string, MatchCardState> _entities = new();
 	private Dictionary<string, int[]> _enPositions = new();
 	// private MatchConnection _client;
@@ -56,7 +56,7 @@ public partial class MapGrid : Node2D
 		#endregion
 	}
 	
-	public void Load(HexStates.MatchState state) {
+	public void Load(BaseState state) {
 		_state = state;
 		if (_tiles is null) {
 			PopulateTiles();
@@ -175,42 +175,42 @@ public partial class MapGrid : Node2D
 	
 	private void OnResized()
 	{
-		// float maxY = 0;
-		// float maxX = 0;
-		// float tileHeight = 0;
-		// float tileWidth = 0;
-		// if (_tiles is null) return;
-		// for (int i = 0; i < _tiles.Count; i++) {
-		// 	var row = _tiles[i];
-		// 	for (int j = 0; j < row.Count; j++) {
-		// 		var tile = _tiles[i][j];
-		// 		if (tileHeight == 0) {
-		// 			var size = tile.Size;
-		// 			tileHeight = size.Y;
-		// 			tileWidth = size.X;
-		// 		}
-		// 		var y = (tileHeight) * .5f * i;
-		// 		var b = (tileWidth+3) * 3 / 4;
-		// 		var x = b * 2 * j + (1 - i % 2) * b;
-		// 		tile.Position = new(x, y);
-		// 		tile.Coords = new(j, i);
+		float maxY = 0;
+		float maxX = 0;
+		float tileHeight = 0;
+		float tileWidth = 0;
+		if (_tiles is null) return;
+		for (int i = 0; i < _tiles.Count; i++) {
+			var row = _tiles[i];
+			for (int j = 0; j < row.Count; j++) {
+				var tile = _tiles[i][j];
+				if (tileHeight == 0) {
+					var size = tile.Size;
+					tileHeight = size.Y;
+					tileWidth = size.X;
+				}
+				var y = (tileHeight) * .5f * i;
+				var b = (tileWidth+3) * 3 / 4;
+				var x = b * 2 * j + (1 - i % 2) * b;
+				tile.Position = new(x, y);
+				tile.Coords = new(j, i);
 			
-		// 		if (y > maxY) maxY = y;
-		// 		if (x > maxX) maxX = x;
-		// 	}
-		// }
-		// CustomMinimumSize = new(maxX + 2 * XMinOffset, maxY + 2 * YMinOffset);
-		// var xDiff = (Size.X - maxX) / 2;
-		// var yDiff = (Size.Y - maxY) / 2;
-		// foreach (var row in _tiles) {
-		// 	foreach (var tile in row) {
-		// 		var x = tile.Position.X + xDiff;
-		// 		var y = tile.Position.Y + yDiff;
-		// 		tile.Position = new(x, y);
-		// 		if (tile.Entity is not null) tile.Entity.Position = new(x, y);
+				if (y > maxY) maxY = y;
+				if (x > maxX) maxX = x;
+			}
+		}
+		CustomMinimumSize = new(maxX + 2 * XMinOffset, maxY + 2 * YMinOffset);
+		var xDiff = (Size.X - maxX) / 2;
+		var yDiff = (Size.Y - maxY) / 2;
+		foreach (var row in _tiles) {
+			foreach (var tile in row) {
+				var x = tile.Position.X + xDiff;
+				var y = tile.Position.Y + yDiff;
+				tile.Position = new(x, y);
+				if (tile.Entity is not null) tile.Entity.Position = new(x, y);
 				
-		// 	}
-		// }
+			}
+		}
 	}
 	
 	#endregion

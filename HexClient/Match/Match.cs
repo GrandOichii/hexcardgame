@@ -1,4 +1,5 @@
 using Godot;
+using HexClient.Match.Grid;
 using System;
 
 namespace HexClient.Match;
@@ -33,6 +34,7 @@ public partial class Match : Control
 	public Control PlayerContainerNode { get; private set; }
 	public Container HandContainerNode { get; private set; }
 	public RichTextLabel LogsNode { get; private set; }
+	public MapGrid MapGridNode { get; private set; }
 	
 	public Window OptionsWindowNode { get; private set; }
 	
@@ -51,6 +53,7 @@ public partial class Match : Control
 		PlayerContainerNode = GetNode<Control>("%PlayerContainer");
 		HandContainerNode = GetNode<Container>("%HandContainer");
 		LogsNode = GetNode<RichTextLabel>("%Logs");
+		MapGridNode = GetNode<MapGrid>("%MapGrid");
 		
 		#endregion
 		

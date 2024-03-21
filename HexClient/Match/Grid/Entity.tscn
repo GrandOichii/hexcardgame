@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://vna6s8nxxs4f"]
 
 [ext_resource type="Script" path="res://Match/Grid/Entity.cs" id="1_q6adu"]
-[ext_resource type="PackedScene" uid="uid://cxt5w7w57he3k" path="res://Match/Grid/Tile.tscn" id="2_6vv2f"]
+[ext_resource type="PackedScene" uid="uid://twf3h2yoou5b" path="res://Match/Grid/Tile.tscn" id="2_6vv2f"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qo5yt"]
 bg_color = Color(0, 0, 0.964706, 1)

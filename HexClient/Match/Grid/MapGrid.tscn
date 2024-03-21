@@ -1,6 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://b0hq0akjd1k87"]
+[gd_scene load_steps=5 format=3 uid="uid://b0hq0akjd1k87"]
 
 [ext_resource type="Script" path="res://Match/Grid/MapGrid.cs" id="1_gid4o"]
+[ext_resource type="PackedScene" uid="uid://twf3h2yoou5b" path="res://Match/Grid/Tile.tscn" id="2_3h12o"]
+[ext_resource type="PackedScene" uid="uid://vna6s8nxxs4f" path="res://Match/Grid/Entity.tscn" id="3_5ddny"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jgxaa"]
 
@@ -13,6 +15,8 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_gid4o")
+TilePS = ExtResource("2_3h12o")
+EntityPS = ExtResource("3_5ddny")
 XMinOffset = 100.0
 YMinOffset = 100.0
 
@@ -32,3 +36,5 @@ unique_name_in_owner = true
 
 [node name="Entities" type="Node2D" parent="."]
 unique_name_in_owner = true
+
+[connection signal="resized" from="." to="." method="OnResized"]

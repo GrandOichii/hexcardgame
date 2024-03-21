@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://bdi8qkiqq33ej"]
+[gd_scene load_steps=6 format=3 uid="uid://bdi8qkiqq33ej"]
 
 [ext_resource type="Script" path="res://Match/Match.cs" id="1_upmmj"]
 [ext_resource type="PackedScene" uid="uid://br1un240i4414" path="res://Match/Player/PlayerInfo.tscn" id="2_dopeg"]
 [ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="3_mcapw"]
 [ext_resource type="PackedScene" uid="uid://dmnj0abgjpb5k" path="res://Manager/DisplayCard.tscn" id="3_rj57f"]
+[ext_resource type="PackedScene" uid="uid://b0hq0akjd1k87" path="res://Match/Grid/MapGrid.tscn" id="4_smbi3"]
 
 [node name="Match" type="Control"]
 layout_mode = 3
@@ -52,6 +53,20 @@ size_flags_stretch_ratio = 5.0
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 4.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/Map"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MapGrid" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/Map/ScrollContainer" instance=ExtResource("4_smbi3")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="Control" type="Control" parent="VBoxContainer/HBoxContainer3/HBoxContainer2"]
 layout_mode = 2

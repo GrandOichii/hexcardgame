@@ -16,6 +16,7 @@ public partial class BaseState : Node {
 	public virtual void ApplyTo(Match match, HexStates.MatchInfoState info) {
 		CallDeferred("ApplyToPlayerInfo", match, new Wrapper<HexStates.MatchInfoState>(info));
 		CallDeferred("ApplyToLogs", match);
+		CallDeferred("ApplyToMap", match);
 	}
 
 	public void ApplyToPlayerInfo(Match match, Wrapper<HexStates.MatchInfoState> infoW) {
@@ -62,5 +63,9 @@ public partial class BaseState : Node {
 		}
 
 		match.LogsNode.ScrollToLine(match.LogsNode.GetLineCount() - 1);
+	}
+
+	public void ApplyToMap(Match match) {
+		match.MapGridNode.Load(this);
 	}
 }

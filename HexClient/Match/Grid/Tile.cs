@@ -11,6 +11,7 @@ public interface IEntity {
 	public void TweenPosition(Vector2 newPos, double duration);
 	public void SetPosition(Vector2 pos);
 	public void SetPlayerColors(Dictionary<string, Color> colors);
+	public void SetShowId(bool v);
 }
 
 public partial class Tile : Node2D, ITile

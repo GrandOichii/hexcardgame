@@ -23,6 +23,8 @@ public partial class Match : Control
 	public delegate void ShowPlayerIdsToggledEventHandler(bool v);
 	[Signal]
 	public delegate void ShowTileIdsToggledEventHandler(bool b);
+	[Signal]
+	public delegate void ShowEntityIdsToggledEventHandler(bool b);
 
 	#endregion
 
@@ -50,6 +52,8 @@ public partial class Match : Control
 		set {
 		}
 	}
+
+	public bool ShowCardIds { get; private set; }
 
 	public override void _Ready()
 	{
@@ -92,6 +96,7 @@ public partial class Match : Control
 
 	private void OnShowCardIdsToggleToggled(bool buttonPressed)
 	{
+		ShowCardIds = buttonPressed;
 		EmitSignal(SignalName.ShowCardIdsToggled, buttonPressed);
 	}
 
@@ -115,7 +120,13 @@ public partial class Match : Control
 	{
 		EmitSignal(SignalName.ShowTileIdsToggled, buttonPressed);
 	}
+
+	private void OnShowEntityIdsToggleToggled(bool buttonPressed)
+	{
+		EmitSignal(SignalName.ShowEntityIdsToggled, buttonPressed);
+	}
 	
 	#endregion
 }
+
 

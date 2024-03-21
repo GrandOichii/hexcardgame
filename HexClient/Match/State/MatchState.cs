@@ -21,7 +21,9 @@ public partial class MatchState : BaseState {
 			for (int i = 0; i < nCount - cCount; i++) {
 				var child = match.HandCardPS.Instantiate();
 				match.HandContainerNode.AddChild(child);
+
 				var cd = child as ICardDisplay;
+				cd.SetShowCardIds(match.ShowCardIds);
 				match.ShowCardIdsToggled += cd.SetShowCardIds;
 			}
 		}

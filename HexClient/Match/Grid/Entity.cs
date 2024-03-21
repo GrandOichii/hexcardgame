@@ -54,7 +54,7 @@ public partial class Entity : Node2D, IEntity
 
 		OwnerId = state.OwnerID;
 
-		IDLabelNode.Text = state.ID;
+		IDLabelNode.Text = state.MID;
 
 		PowerLabelNode.Text = state.Power.ToString();
 		LifeLabelNode.Text = state.Life.ToString();
@@ -89,4 +89,9 @@ public partial class Entity : Node2D, IEntity
 		_playerColors = colors;
 		OwnerId = _ownerId;
 	}
+
+	public void SetShowId(bool v) {
+		IDLabelNode.Visible = v;
+	}
+	
 }

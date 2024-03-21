@@ -57,6 +57,8 @@ public partial class MapGrid : Control, IMapGrid
 	// 	}
 	// }
 
+	private bool _showEntityIds = false;
+
 	private Dictionary<string, Color> _playerColors = new Dictionary<string, Color>() {
 		{ "1", new Color(1, 0, 0) },
 		{ "2", new Color(1, 1, 0) },
@@ -137,6 +139,7 @@ public partial class MapGrid : Control, IMapGrid
 			EntitiesNode.AddChild(child);
 
 			var eNode = child as IEntity;
+			eNode.SetShowId(_showEntityIds);
 			eNode.SetPlayerColors(_playerColors);
 			eNode.Load(entity);
 
@@ -253,5 +256,16 @@ public partial class MapGrid : Control, IMapGrid
 		}
 	}
 
+	private void OnMatchShowEntityIdsToggled(bool v)
+	{
+		_showEntityIds = v;
+		foreach (var line in _tiles) {
+			foreach (var tile in line) {
+				tile.GetEntity()?.SetShowId(v);
+			}
+		}
+	}
+
 	#endregion
 }
+

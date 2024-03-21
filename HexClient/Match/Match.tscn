@@ -129,9 +129,15 @@ text = "Show player IDs"
 layout_mode = 2
 text = "Show tile IDs"
 
+[node name="ShowEntityIdsToggle" type="CheckButton" parent="Windows/OptionsWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Show entity IDs"
+
+[connection signal="ShowEntityIdsToggled" from="." to="VBoxContainer/HBoxContainer3/HBoxContainer2/Map/ScrollContainer/MapGrid" method="OnMatchShowEntityIdsToggled"]
 [connection signal="ShowTileIdsToggled" from="." to="VBoxContainer/HBoxContainer3/HBoxContainer2/Map/ScrollContainer/MapGrid" method="OnMatchShowTileIdsToggled"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/ShowOptionsButton" to="." method="OnShowOptionsButtonPressed"]
 [connection signal="close_requested" from="Windows/OptionsWindow" to="." method="OnOptionsWindowCloseRequested"]
 [connection signal="toggled" from="Windows/OptionsWindow/MarginContainer/VBoxContainer/ShowCardIdsToggle" to="." method="OnShowCardIdsToggleToggled"]
 [connection signal="toggled" from="Windows/OptionsWindow/MarginContainer/VBoxContainer/ShowPlayerIdsToggle" to="." method="OnShowPlayerIdsToggleToggled"]
 [connection signal="toggled" from="Windows/OptionsWindow/MarginContainer/VBoxContainer/ShowTileIdsToggle" to="." method="OnShowTileIdsToggleToggled"]
+[connection signal="toggled" from="Windows/OptionsWindow/MarginContainer/VBoxContainer/ShowEntityIdsToggle" to="." method="OnShowEntityIdsToggleToggled"]

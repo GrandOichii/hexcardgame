@@ -63,9 +63,10 @@ public partial class MapGrid : Control, IMapGrid
 		{ "1", new Color(1, 0, 0) },
 		{ "2", new Color(1, 1, 0) },
 	};
+
 	public void SetPlayerColors(Dictionary<string, Color> colors) {
 		_playerColors = colors;
-		// TODO tiles and entities
+		if (_tiles is null) return;
 
 		foreach (var line in _tiles) {
 			foreach (var tile in line) {
@@ -268,4 +269,5 @@ public partial class MapGrid : Control, IMapGrid
 
 	#endregion
 }
+
 

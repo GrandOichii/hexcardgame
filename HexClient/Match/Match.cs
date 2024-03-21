@@ -1,6 +1,7 @@
 using Godot;
 using HexClient.Match.Grid;
 using System;
+using System.Collections.Generic;
 
 namespace HexClient.Match;
 
@@ -11,6 +12,7 @@ public interface IPlayerDisplay {
 
 public interface IMapGrid {
 	public void Load(BaseState state);
+	public void SetPlayerColors(Dictionary<string, Color> colors);
 }
 
 public partial class Match : Control
@@ -43,6 +45,8 @@ public partial class Match : Control
 	public Container HandContainerNode { get; private set; }
 	public RichTextLabel LogsNode { get; private set; }
 	public IMapGrid MapGridNode { get; private set; }
+	public ColorPickerButton Player1ColorPickerNode { get; private set; }
+	public ColorPickerButton Player2ColorPickerNode { get; private set; }
 	
 	public Window OptionsWindowNode { get; private set; }
 	
@@ -54,6 +58,7 @@ public partial class Match : Control
 	}
 
 	public bool ShowCardIds { get; private set; }
+	private Dictionary<string, Color> _playerColors = new();
 
 	public override void _Ready()
 	{
@@ -64,8 +69,13 @@ public partial class Match : Control
 		HandContainerNode = GetNode<Container>("%HandContainer");
 		LogsNode = GetNode<RichTextLabel>("%Logs");
 		MapGridNode = GetNode<IMapGrid>("%MapGrid");
+		Player1ColorPickerNode = GetNode<ColorPickerButton>("%Player1ColorPicker");
+		Player2ColorPickerNode = GetNode<ColorPickerButton>("%Player2ColorPicker");
 		
 		#endregion
+
+		OnPlayer1ColorPickerColorChanged(Player1ColorPickerNode.Color);
+		OnPlayer2ColorPickerColorChanged(Player2ColorPickerNode.Color);
 		
 		OptionsWindowNode.Hide();
 	}
@@ -125,8 +135,19 @@ public partial class Match : Control
 	{
 		EmitSignal(SignalName.ShowEntityIdsToggled, buttonPressed);
 	}
+
+	private void OnPlayer2ColorPickerColorChanged(Color color)
+	{
+		_playerColors["2"] = color;
+		MapGridNode.SetPlayerColors(_playerColors);
+	}
+
+	private void OnPlayer1ColorPickerColorChanged(Color color)
+	{
+		_playerColors["1"] = color;
+		MapGridNode.SetPlayerColors(_playerColors);
+	}
 	
 	#endregion
 }
-
 

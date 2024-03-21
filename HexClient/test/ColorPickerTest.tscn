@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1as7s7hd6he5"]
+
+[ext_resource type="Script" path="res://test/ColorPickerTest.cs" id="1_ymcc0"]
+
+[node name="ColorPickerTest" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ymcc0")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Color: "
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "      "
+edit_alpha = false
+
+[connection signal="color_changed" from="MarginContainer/VBoxContainer/HBoxContainer/ColorPickerButton" to="." method="OnColorPickerButtonColorChanged"]

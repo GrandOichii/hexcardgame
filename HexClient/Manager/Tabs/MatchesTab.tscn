@@ -143,7 +143,7 @@ layout_mode = 2
 min_value = 1.0
 max_value = 20.0
 value = 1.0
-prefix = "Number of batches: "
+prefix = "Number of matches: "
 
 [node name="AutoConnectCheck" type="CheckBox" parent="HBoxContainer/VBoxContainer/CreateContainer"]
 unique_name_in_owner = true

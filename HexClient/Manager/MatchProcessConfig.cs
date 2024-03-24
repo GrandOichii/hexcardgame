@@ -10,13 +10,13 @@ public enum BotType {
 
 public static class BotTypeExtensions {
 	public static string ToFriendlyString(this BotType status) {
-        return status switch
-        {
-            BotType.RANDOM => "Random",
-            BotType.SMART => "Smart",
-            _ => "unknown bot type",
-        };
-    }
+		return status switch
+		{
+			BotType.RANDOM => "Random",
+			BotType.SMART => "Smart",
+			_ => "unknown bot type",
+		};
+	}
 }
 
 public class BotConfig {

@@ -35,3 +35,5 @@ unique_name_in_owner = true
 initial_position = 2
 theme = ExtResource("2_guucc")
 dialog_text = "Disconnected from live matches!"
+
+[connection signal="item_activated" from="MatchTree" to="." method="OnMatchTreeItemActivated"]

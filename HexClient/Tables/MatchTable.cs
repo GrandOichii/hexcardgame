@@ -11,6 +11,13 @@ namespace HexClient.Tables;
 
 public partial class MatchTable : Control
 {
+	#region Signals
+
+	[Signal]
+	public delegate void MatchActivatedEventHandler(Wrapper<MatchProcess> match);
+
+	#endregion
+
 	#region Node
 
 	public Tree MatchTreeNode { get; private set; }
@@ -99,7 +106,7 @@ public partial class MatchTable : Control
 	}
 
 	private void ProcessMatchData(Wrapper<MatchProcess> matchW) {
-		var existing = _root.GetChildren().FirstOrDefault(c => c.GetText(0)[..3] == matchW.Value.Id.ToString()[..3]);
+		var existing = _root.GetChildren().FirstOrDefault(c => c.GetMeta("MatchId").AsString() == matchW.Value.Id.ToString());
 		
 		var target = existing ?? _root.CreateChild();
 
@@ -107,9 +114,27 @@ public partial class MatchTable : Control
 	}
 
 	private static void SetMatchData(TreeItem item, MatchProcess match) {
+		item.SetMeta("MatchId", match.Id.ToString());
+		item.SetMeta("Match", new Wrapper<MatchProcess>(match));
+
 		item.SetText(0, match.Id.ToString()[..3]);
 		item.SetText(1, match.Status.ToFriendlyString());
 		item.SetText(2, match.Record.WinnerName ?? "");
 		item.SetText(3, match.TcpAddress);
 	}
+
+	#region Signal connections
+
+	private void OnMatchTreeItemActivated()
+	{
+		var row = MatchTreeNode.GetSelected();
+		var col = MatchTreeNode.GetSelectedColumn();
+
+		var match = row.GetMeta("Match").As<Wrapper<MatchProcess>>();
+
+		EmitSignal(SignalName.MatchActivated, match);
+	}
+	
+	#endregion
 }
+

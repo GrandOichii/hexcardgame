@@ -22,4 +22,7 @@ theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
 [node name="MatchRecordDisplay" parent="MarginContainer" instance=ExtResource("2_bwo6p")]
+unique_name_in_owner = true
 layout_mode = 2
+
+[connection signal="close_requested" from="." to="." method="OnCloseRequested"]

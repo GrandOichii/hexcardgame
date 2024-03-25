@@ -16,6 +16,10 @@ using System.Collections.Generic;
 
 namespace HexClient.Manager.Tabs;
 
+public interface IMatchRecordDisplayWindow {
+	public void Load(MatchRecord record);
+}
+
 public partial class MatchesTab : Control
 {
 	#region Packed scenes
@@ -24,6 +28,8 @@ public partial class MatchesTab : Control
 	private PackedScene MatchViewWindowPS { get; set; }
 	[Export]
 	private PackedScene ConnectedMatchWindowPS { get; set; }
+	[Export]
+	private PackedScene MatchRecordDisplayWindowPS { get; set; }
 
 	#endregion
 
@@ -375,12 +381,19 @@ public partial class MatchesTab : Control
 		}
 	}
 
+	private void OnMatchTableMatchActivated(Wrapper<MatchProcess> match)
+	{
+		// TODO? this allows to view the same record from 2 different windows, change?
+
+		var window = MatchRecordDisplayWindowPS.Instantiate() as Window;
+		WindowsNode.AddChild(window);
+		
+		window.Title = $"Match record {match.Value.Id.ToString()[..3]}";
+		
+		var display = window as IMatchRecordDisplayWindow;
+		display.Load(match.Value.Record);
+	}
+
 	#endregion
 }
-
-
-
-
-
-
 

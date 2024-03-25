@@ -36,8 +36,8 @@ public partial class HandCard : Control, IHandCard
 		CardNode.SetShowMID(v);
 	}
 
-    public MatchCardState GetState()
-    {
-        return _state;
-    }
+	public MatchCardState GetState()
+	{
+		return _state;
+	}
 }

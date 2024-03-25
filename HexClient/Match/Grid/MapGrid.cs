@@ -15,6 +15,7 @@ public interface ITile : IGamePart {
 	public Vector2 GetSize();
 	public void SetCoords(Vector2 coords);
 	public void SetShowId(bool v);
+	public void SetCommandProcessor(CommandProcessor processor);
 }
 
 public partial class MapGrid : Control, IMapGrid
@@ -58,6 +59,7 @@ public partial class MapGrid : Control, IMapGrid
 	// }
 
 	private bool _showEntityIds = false;
+	private CommandProcessor? _processor = null;
 
 	private Dictionary<string, Color> _playerColors = new Dictionary<string, Color>() {
 		{ "1", new Color(1, 0, 0) },
@@ -170,6 +172,18 @@ public partial class MapGrid : Control, IMapGrid
 		_enPositions = newPos;
 	}
 
+	public void SetCommandProcessor(CommandProcessor processor)
+	{
+		_processor = processor;
+		if (_tiles is null) return;
+
+		foreach (var line in _tiles) {
+			foreach (var tile in line) {
+				tile.SetCommandProcessor(processor);
+			}
+		}
+	}
+
 	private void PopulateTiles() {
 		var state = _state.Map;
 		_tiles = new();
@@ -179,7 +193,8 @@ public partial class MapGrid : Control, IMapGrid
 				var child = TilePS.Instantiate() as Tile;
 				TilesNode.AddChild(child);
 
-				var tile = child as ITile;				
+				var tile = child as ITile;
+				tile.SetCommandProcessor(_processor);
 				tile.SetPlayerColors(_playerColors);
 				
 				a.Add(tile);

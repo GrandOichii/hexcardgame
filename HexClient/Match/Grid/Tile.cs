@@ -42,6 +42,8 @@ public partial class Tile : Node2D, ITile
 	// public MatchConnection Client { get; set; }
 
 	private Dictionary<string, Color> _playerColors = new();
+
+	private CommandProcessor? _processor = null;
 	
 	public override void _Ready()
 	{
@@ -131,32 +133,42 @@ public partial class Tile : Node2D, ITile
 		CoordsLabelNode.Visible = v;
 	}
 
+	public void SetCommandProcessor(CommandProcessor processor)
+	{
+		_processor = processor;
+	}
+
 	#region Signal connections
 
-	// private void _on_collision_mouse_entered()
-	// {
-	// 	if (State is not null && State?.Entity is not null) {
-	// 		MatchCardState card = (MatchCardState)(State?.Entity);
-	// 		Client.HoverCard.Load(card);
-	// 		// HoverCard.Visible = true;
-	// 	}
-	// 	if (!Client.Accepts(this)) return;
+	private void OnCollisionMouseEntered()
+	{
+		if (_processor is null) {
+			GD.Print("processor is null");
+			return;
+		}
 
-	// 	BgNode.Color = HighlightColor;
+		if (State is not null && State?.Entity is not null) {
+			MatchCardState card = (MatchCardState)(State?.Entity);
 
-	// 	var command = Client.CurrentCommand;
-	// 	if (command is null || command.Name != "move") {
-	// 		return;
-	// 	}
+			// TODO add back
+			// _processor.HoverCard.Load(card);
+		}
+		if (!_processor.Accepts(this)) return;
+		BgNode.Color = HighlightColor;
 
-	// 	// TODO restore
-	// 	// var arrow = Map.MovementArrow;
-	// 	// arrow.Visible = true;
-	// 	// var tile = Game.Instance.CurrentCommand.Results[0] as TileBase;
-	// 	// arrow.Position = tile.Position + new Vector2(Size.X / 2, Size.Y / 2);
-	// 	// var dir = SelectDirection.GetDirection(tile, this);
-	// 	// arrow.Rotation = ANGLE * dir - ANGLE_OFFSET;
-	// }
+		var command = _processor.CurrentCommand;
+		if (command is null || command.Name != "move") {
+			return;
+		}
+
+		// TODO restore
+		// var arrow = Map.MovementArrow;
+		// arrow.Visible = true;
+		// var tile = Game.Instance.CurrentCommand.Results[0] as TileBase;
+		// arrow.Position = tile.Position + new Vector2(Size.X / 2, Size.Y / 2);
+		// var dir = SelectDirection.GetDirection(tile, this);
+		// arrow.Rotation = ANGLE * dir - ANGLE_OFFSET;
+	}
 
 	// private void _on_collision_mouse_exited()
 	// {
@@ -175,5 +187,6 @@ public partial class Tile : Node2D, ITile
 
 	#endregion
 }
+
 
 

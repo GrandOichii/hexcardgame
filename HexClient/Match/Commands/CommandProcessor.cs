@@ -16,11 +16,15 @@ public class CommandProcessor {
 		}
 	}
 	public MatchInfoState Config { get; set; }
+
+	#nullable enable
 	public Command? CurrentCommand { get; set; }
+	#nullable disable
+
 	private List<Command> _commands = new();
 
 	// public HoverCard HoverCard { get; set; }
-	private IConnection _connection;
+	private readonly IConnection _connection;
 
 	public CommandProcessor(IConnection connection) : base() {
 		_connection = connection;

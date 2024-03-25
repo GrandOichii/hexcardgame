@@ -14,6 +14,7 @@ public interface IPlayerDisplay {
 public interface IMapGrid {
 	public void Load(BaseState state);
 	public void SetPlayerColors(Dictionary<string, Color> colors);
+	public void SetCommandProcessor(CommandProcessor processor);
 }
 
 public interface IHandCard {
@@ -66,6 +67,7 @@ public partial class Match : Control
 
 	public bool ShowCardIds { get; private set; }
 	private Dictionary<string, Color> _playerColors = new();
+	private CommandProcessor _processor;
 
 	public override void _Ready()
 	{
@@ -85,6 +87,12 @@ public partial class Match : Control
 		OnPlayer2ColorPickerColorChanged(Player2ColorPickerNode.Color);
 		
 		OptionsWindowNode.Hide();
+	}
+
+	public void SetCommandProcessor(CommandProcessor processor) {
+		_processor = processor;
+		MapGridNode.SetCommandProcessor(_processor);
+		// TODO hand
 	}
 
 	private void SetOptionsWindowTitle(string title) {

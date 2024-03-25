@@ -43,6 +43,8 @@ public partial class ConnectedMatch : Control
 		Connection = connection;
 
 		Connection.SubscribeToUpdate(OnMatchUpdate);
+
+		MatchNode.SetCommandProcessor(new(connection));
 		return Task.CompletedTask;
 	}
 

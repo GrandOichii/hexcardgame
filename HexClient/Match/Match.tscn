@@ -13,6 +13,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 script = ExtResource("1_upmmj")
 PlayerInfoPS = ExtResource("2_dopeg")
 HandCardPS = ExtResource("3_mg04v")
@@ -53,6 +54,7 @@ size_flags_stretch_ratio = 5.0
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 4.0
+mouse_filter = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer2/Map"]
 layout_mode = 1

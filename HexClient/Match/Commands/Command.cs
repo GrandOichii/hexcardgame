@@ -24,16 +24,16 @@ public class Command {
 	public List<CommandPart> Parts { get; protected set; }
 	public int PartI => Results.Count;
 	public List<IGamePart> Results { get; } = new();
-	private CommandProcessor _connection;
-	public Command(CommandProcessor connection, string name, List<CommandPart> parts) {
-		_connection = connection;
+	private CommandProcessor _processor;
+	public Command(CommandProcessor processor, string name, List<CommandPart> parts) {
+		_processor = processor;
 		Name = name;
 		Parts = parts;
 	}
 
 	public void Reset() {
 		Results.Clear();
-		_connection.CurrentCommand = null;
+		_processor.CurrentCommand = null;
 	}
 
 	public void Add(IGamePart part, IConnection connection) {

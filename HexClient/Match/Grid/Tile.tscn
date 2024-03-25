@@ -49,6 +49,9 @@ offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 32
 text = "3.1"
+
+[connection signal="mouse_entered" from="Collision" to="." method="OnCollisionMouseEntered"]

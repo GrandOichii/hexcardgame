@@ -22,7 +22,7 @@ public partial class MatchState : BaseState {
 				var child = match.HandCardPS.Instantiate();
 				match.HandContainerNode.AddChild(child);
 
-				var cd = child as ICardDisplay;
+				var cd = child as IHandCard;
 				cd.SetShowCardIds(match.ShowCardIds);
 				match.ShowCardIdsToggled += cd.SetShowCardIds;
 			}
@@ -37,7 +37,7 @@ public partial class MatchState : BaseState {
 		}
 		// load card data
 		for (int i = 0; i < nCount; i++) {
-			(match.HandContainerNode.GetChild(i) as ICardDisplay).Load(MyData.Hand[i]);
+			(match.HandContainerNode.GetChild(i) as IHandCard).Load(MyData.Hand[i]);
 		}
 	}
 }

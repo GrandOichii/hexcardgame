@@ -1,5 +1,6 @@
 using Godot;
 using HexClient.Match.Grid;
+using HexCore.GameMatch.States;
 using System;
 using System.Collections.Generic;
 
@@ -13,6 +14,12 @@ public interface IPlayerDisplay {
 public interface IMapGrid {
 	public void Load(BaseState state);
 	public void SetPlayerColors(Dictionary<string, Color> colors);
+}
+
+public interface IHandCard {
+	public void Load(MatchCardState state);
+	public void SetShowCardIds(bool v);
+	public MatchCardState GetState();
 }
 
 public partial class Match : Control

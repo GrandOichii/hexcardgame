@@ -5,6 +5,7 @@ global using HexClient.Connection;
 global using HexClient.Cards;
 global using HexClient.Match.Player;
 global using HexClient.Match.State;
+global using HexClient.Match.Commands;
 global using HexClient.Match.View;
 global using HexClient.Manager.Tabs;
 

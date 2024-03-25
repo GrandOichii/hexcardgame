@@ -23,7 +23,7 @@ public class MatchConfigController : ControllerBase {
 
     [Authorize(Roles = "Admin")]
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] MatchConfig config) {
+    public async Task<IActionResult> Create([FromBody] PostMatchConfigDto config) {
         try {
             var result = await _configService.Create(config);
             return Ok(result);

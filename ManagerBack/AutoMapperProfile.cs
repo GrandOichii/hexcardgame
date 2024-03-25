@@ -15,5 +15,7 @@ public class AutoMapperProfile : Profile {
             .ForMember(u => u.PasswordHash, o => o.MapFrom(u => BCrypt.Net.BCrypt.HashPassword(u.Password)));
 
         CreateMap<PostDeckDto, DeckModel>();
+
+        CreateMap<PostMatchConfigDto, MatchConfigModel>();
     }
 }

@@ -52,7 +52,7 @@ public class MatchConfigService : IMatchConfigService
         return result;
     }
 
-    public async Task<MatchConfigModel> Create(MatchConfig config)
+    public async Task<MatchConfigModel> Create(PostMatchConfigDto config)
     {
         await _configValidator.Validate(config);
         

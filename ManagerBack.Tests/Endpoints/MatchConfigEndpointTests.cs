@@ -61,8 +61,9 @@ public class MatchConfigEndpointTests
         await Login(client, "admin", "password");
 
         // Act
-        var result = await client.PostAsync("/api/v1/config", JsonContent.Create(new MatchConfig {
+        var result = await client.PostAsync("/api/v1/config", JsonContent.Create(new PostMatchConfigDto {
             // TODO add more fields
+            Name = "config1",
             SetupScript = "print('setup')"
         }));
 
@@ -77,7 +78,8 @@ public class MatchConfigEndpointTests
         await Login(client, "admin", "password");
 
         // Act
-        var result = await client.PostAsync("/api/v1/config", JsonContent.Create(new MatchConfig {
+        var result = await client.PostAsync("/api/v1/config", JsonContent.Create(new PostMatchConfigDto {
+            Name = "config1",
             SetupScript = ""
         }));
 
@@ -87,11 +89,12 @@ public class MatchConfigEndpointTests
 
     [Fact]
     public async Task ShouldFetchById() {
-// Arrange
+        // Arrange
         var client = _factory.CreateClient();
         await Login(client, "admin", "password");
-        var response = await client.PostAsync("/api/v1/config", JsonContent.Create(new MatchConfig {
+        var response = await client.PostAsync("/api/v1/config", JsonContent.Create(new PostMatchConfigDto {
             // TODO add more fields
+            Name = "config1",
             SetupScript = "script"
         }));
         var id = (await response.Content.ReadFromJsonAsync<MatchConfigModel>())!.Id;
@@ -114,5 +117,24 @@ public class MatchConfigEndpointTests
 
         // Assert
         result.Should().HaveClientError();
+    }
+
+    [Fact]
+    public async Task ShouldFetchBasic() {
+        // Arrange
+        var client = _factory.CreateClient();
+        await Login(client, "admin", "password");
+        var response = await client.PostAsync("/api/v1/config", JsonContent.Create(new PostMatchConfigDto {
+            // TODO add more fields
+            Name = "basic",
+            SetupScript = "script"
+        }));
+        var id = (await response.Content.ReadFromJsonAsync<MatchConfigModel>())!.Id;
+
+        // Act
+        var result = await client.GetAsync($"/api/v1/config/basic");
+
+        // Assert
+        result.Should().BeSuccessful();
     }
 }

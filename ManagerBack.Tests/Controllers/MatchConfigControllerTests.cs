@@ -30,8 +30,8 @@ public class MatchConfigControllerTests {
     [Fact]
     public async Task ShouldCreate() {
         // Arrange
-        var config = A.Fake<MatchConfigModel>();
-        A.CallTo(() => _configService.Create(config)).Returns(config);
+        var config = A.Fake<PostMatchConfigDto>();
+        A.CallTo(() => _configService.Create(config)).Returns(A.Fake<MatchConfigModel>());
 
         // Act
         var result = await _configController.Create(config);
@@ -43,7 +43,7 @@ public class MatchConfigControllerTests {
     [Fact]
     public async Task ShouldNotCreate() {
         // Arrange
-        var config = A.Fake<MatchConfigModel>();
+        var config = A.Fake<PostMatchConfigDto>();
         A.CallTo(() => _configService.Create(config)).Throws<InvalidMatchConfigCreationParametersException>();
 
         // Act

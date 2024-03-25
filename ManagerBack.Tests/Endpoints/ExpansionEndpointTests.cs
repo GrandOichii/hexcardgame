@@ -33,7 +33,7 @@ public class ExpansionEndpointTests
         reg.Should().BeSuccessful();
         var result = await client.PostAsync("/api/v1/auth/login", JsonContent.Create(user));
         result.Should().BeSuccessful();
-        return await result.Content.ReadAsStringAsync();
+        return (await result.Content.ReadFromJsonAsync<LoginResult>())!.Token;
     }
 
     private static async Task Login(HttpClient client, string email = "mymail@email.com", string password = "password") {

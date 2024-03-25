@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 namespace ManagerBack.Tests.Mocks;
 
 public class FakeMatchConfigRepository : IMatchConfigRepository
@@ -17,5 +19,11 @@ public class FakeMatchConfigRepository : IMatchConfigRepository
     public Task<MatchConfigModel?> ById(string id)
     {
         return Task.FromResult(Configs.FirstOrDefault(c => c.Id == id));
+    }
+
+    public Task<IEnumerable<MatchConfigModel>> Filter(Expression<Func<MatchConfigModel, bool>> filter)
+    {
+        var f = filter.Compile();
+        return Task.FromResult(Configs.FindAll(f.Invoke).AsEnumerable());
     }
 }

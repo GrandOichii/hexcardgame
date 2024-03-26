@@ -23,3 +23,7 @@ offset_bottom = 420.0
 grow_horizontal = 1
 grow_vertical = 1
 scale = Vector2(0.7, 0.7)
+
+[connection signal="gui_input" from="Card" to="." method="OnCardGuiInput"]
+[connection signal="mouse_entered" from="Card" to="." method="OnCardMouseEntered"]
+[connection signal="mouse_exited" from="Card" to="." method="OnCardMouseExited"]

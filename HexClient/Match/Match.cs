@@ -17,10 +17,11 @@ public interface IMapGrid {
 	public void SetCommandProcessor(CommandProcessor processor);
 }
 
-public interface IHandCard {
+public interface IHandCard : IGamePart {
 	public void Load(MatchCardState state);
 	public void SetShowCardIds(bool v);
 	public MatchCardState GetState();
+	public void SetCommandProcessor(CommandProcessor processor);
 }
 
 public partial class Match : Control
@@ -105,8 +106,8 @@ public partial class Match : Control
 	
 	public void SetCommandProcessor(CommandProcessor processor) {
 		Processor = processor;
+
 		MapGridNode.SetCommandProcessor(Processor);
-		// TODO hand
 	}
 
 	private void SetOptionsWindowTitle(string title) {
@@ -114,7 +115,8 @@ public partial class Match : Control
 	}
 
 	public void LoadMatchInfo(MatchInfoState info) {
-		
+		Processor.Config = info;
+
 		// create player info nodes
 		var pCount = info.PlayerCount;
 		for (int i = 0; i < pCount; i++) {

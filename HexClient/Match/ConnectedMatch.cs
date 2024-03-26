@@ -44,7 +44,9 @@ public partial class ConnectedMatch : Control
 
 		Connection.SubscribeToUpdate(OnMatchUpdate);
 
-		MatchNode.SetCommandProcessor(new(connection));
+		var processor = new CommandProcessor(connection);
+		MatchNode.SetCommandProcessor(processor);
+		// MatchInfo
 		return Task.CompletedTask;
 	}
 

@@ -23,6 +23,7 @@ public partial class MatchState : BaseState {
 				match.HandContainerNode.AddChild(child);
 
 				var cd = child as IHandCard;
+				cd.SetCommandProcessor(match.Processor);
 				cd.SetShowCardIds(match.ShowCardIds);
 				match.ShowCardIdsToggled += cd.SetShowCardIds;
 			}

@@ -43,7 +43,9 @@ public partial class Tile : Node2D, ITile
 
 	private Dictionary<string, Color> _playerColors = new();
 
+	#nullable enable
 	private CommandProcessor? _processor = null;
+	#nullable disable
 
 	private bool _mouseOver = false;
 	
@@ -105,12 +107,12 @@ public partial class Tile : Node2D, ITile
 		} 
 		BgNode.Color = HighlightColor;
 
-		var command = _processor.CurrentCommand;
-		if (command is null || command.Name != "move") {
-			return;
-		}
-
 		// TODO restore
+		// var command = _processor.CurrentCommand;
+		// if (command is null || command.Name != "move") {
+		// 	return;
+		// }
+
 		// var arrow = Map.MovementArrow;
 		// arrow.Visible = true;
 		// var tile = Game.Instance.CurrentCommand.Results[0] as TileBase;
@@ -216,15 +218,10 @@ public partial class Tile : Node2D, ITile
 		}
 	}
 
-    #endregion
+	#endregion
 
-    public TileState? GetState()
-    {
+	public TileState? GetState()
+	{
 		return State;
-    }
-
-    public string GetCoordsStr()
-    {
-		return CoordsStr;
-    }
+	}
 }

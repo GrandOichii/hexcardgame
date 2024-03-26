@@ -14,6 +14,7 @@ public class SelectTileForPickTile : SelectTile {
 	protected override bool CanSelect(Command c, ITile tile)
 	{
 		var args = _processor.State.Args;
-		return args.Count == 0 || args.Contains(tile.GetCoordsStr());
+		var coords = tile.GetCoords();
+		return args.Count == 0 || args.Contains(coords.X + "." + coords.Y);
 	}
 }

@@ -18,7 +18,6 @@ public interface ITile : IGamePart {
 	public void SetShowId(bool v);
 	public void SetCommandProcessor(CommandProcessor processor);
 	public TileState? GetState();
-	public string GetCoordsStr();
 }
 
 public partial class MapGrid : Control, IMapGrid
@@ -62,7 +61,10 @@ public partial class MapGrid : Control, IMapGrid
 	// }
 
 	private bool _showEntityIds = false;
+
+	#nullable enable
 	private CommandProcessor? _processor = null;
+	#nullable disable
 
 	private Dictionary<string, Color> _playerColors = new Dictionary<string, Color>() {
 		{ "1", new Color(1, 0, 0) },

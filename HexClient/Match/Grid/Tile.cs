@@ -153,6 +153,7 @@ public partial class Tile : Node2D, ITile
 			// TODO add back
 			// _processor.HoverCard.Load(card);
 		}
+		
 		if (!_processor.Accepts(this)) return;
 		BgNode.Color = HighlightColor;
 
@@ -170,14 +171,14 @@ public partial class Tile : Node2D, ITile
 		// arrow.Rotation = ANGLE * dir - ANGLE_OFFSET;
 	}
 
-	// private void _on_collision_mouse_exited()
-	// {
-	// 	Unfocus();
-	// 	// SetColor(BaseColor);
-	// 	// if (HoverCard.Visible)
-	// 		// HoverCard.Visible = false;
-	// 	// if (Map.MovementArrow.Visible) Map.MovementArrow.Visible = false;
-	// }
+	 private void OnCollisionMouseExited()
+	 {
+	 	Unfocus();
+	 	// SetColor(BaseColor);
+	 	// if (HoverCard.Visible)
+	 		// HoverCard.Visible = false;
+	 	// if (Map.MovementArrow.Visible) Map.MovementArrow.Visible = false;
+	 }
 
 	// private void _on_collision_input_event(Node viewport, InputEvent e, long shape_idx)
 	// {
@@ -185,8 +186,10 @@ public partial class Tile : Node2D, ITile
 	// 		_pressed();
 	// }
 
+
 	#endregion
 }
+
 
 
 

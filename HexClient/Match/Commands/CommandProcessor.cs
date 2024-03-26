@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Godot;
 using HexCore.GameMatch.States;
 
 namespace HexClient.Match.Commands;
@@ -7,8 +8,8 @@ public interface IGamePart {}
 
 public class CommandProcessor {
 	private Dictionary<string, List<Command>> _requestCommandMap;
-	private State.MatchState _state;
-	public State.MatchState State { 
+	private BaseState _state;
+	public BaseState State { 
 		get => _state; 
 		set {
 			_state = value;

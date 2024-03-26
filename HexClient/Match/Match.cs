@@ -67,7 +67,7 @@ public partial class Match : Control
 
 	public bool ShowCardIds { get; private set; }
 	private Dictionary<string, Color> _playerColors = new();
-	private CommandProcessor _processor;
+	public CommandProcessor Processor { get; private set; }
 
 	public override void _Ready()
 	{
@@ -90,8 +90,8 @@ public partial class Match : Control
 	}
 
 	public void SetCommandProcessor(CommandProcessor processor) {
-		_processor = processor;
-		MapGridNode.SetCommandProcessor(_processor);
+		Processor = processor;
+		MapGridNode.SetCommandProcessor(Processor);
 		// TODO hand
 	}
 

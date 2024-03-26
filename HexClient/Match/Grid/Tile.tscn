@@ -54,5 +54,5 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 32
 text = "3.1"
 
+[connection signal="input_event" from="Collision" to="." method="OnCollisionInputEvent"]
 [connection signal="mouse_entered" from="Collision" to="." method="OnCollisionMouseEntered"]
-[connection signal="mouse_exited" from="Collision" to="." method="OnCollisionMouseExited"]

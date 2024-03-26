@@ -255,3 +255,9 @@ n. - neighboring
     Structure
     At the start of your turn, reduce the cost of Spells in your hand by 1. (Can't go below 0)
     L: TODO
+
+[TODO]:TODO
+    Unit
+    At the end of your turn, if didn't move, [CARDNAME] gains +1 power and +1 life.
+    P: TODO
+    L: TODO

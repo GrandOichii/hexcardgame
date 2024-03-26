@@ -67,7 +67,10 @@ public partial class Match : Control
 
 	public bool ShowCardIds { get; private set; }
 	private Dictionary<string, Color> _playerColors = new();
-	public CommandProcessor Processor { get; private set; }
+
+	#nullable enable
+	public CommandProcessor? Processor { get; private set; }
+	#nullable disable
 
 	public override void _Ready()
 	{
@@ -89,6 +92,17 @@ public partial class Match : Control
 		OptionsWindowNode.Hide();
 	}
 
+	public override void _Input(InputEvent e) {
+		if (Processor is null) return;
+
+		if (e.IsActionPressed("cancel-command"))
+			CancelCommand();
+	}
+	
+	private void CancelCommand() {
+		Processor.ResetCommand();
+	}
+	
 	public void SetCommandProcessor(CommandProcessor processor) {
 		Processor = processor;
 		MapGridNode.SetCommandProcessor(Processor);
@@ -99,7 +113,7 @@ public partial class Match : Control
 		OptionsWindowNode.Title = title;
 	}
 
-	public void LoadMatchInfo(HexStates.MatchInfoState info) {
+	public void LoadMatchInfo(MatchInfoState info) {
 		
 		// create player info nodes
 		var pCount = info.PlayerCount;

@@ -29,15 +29,15 @@ size_flags_vertical = 3
 [node name="ActionContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="SendActionButton" type="Button" parent="VBoxContainer/ActionContainer"]
-layout_mode = 2
-text = " Send "
-
 [node name="ActionEdit" type="LineEdit" parent="VBoxContainer/ActionContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Enter action"
+
+[node name="SendActionButton" type="Button" parent="VBoxContainer/ActionContainer"]
+layout_mode = 2
+text = " Send "
 
 [node name="PassButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2

@@ -13,16 +13,14 @@ public class SelectTile : CommandPart {
 
 	public override bool Accepts(Command c, IGamePart o)
 	{
-		switch(o) {
-			case null:
-				return false;
-			case HandCard:
-				return false;
-			case Tile tile:
-				return CanSelect(c, tile);
-		}
-		throw new Exception("Does no accept IGamePart of type " + nameof(o));
-	}
+        return o switch
+        {
+            null => false,
+            HandCard => false,
+            Tile tile => CanSelect(c, tile),
+            _ => throw new Exception("Does no accept IGamePart of type " + nameof(o)),
+        };
+    }
 
 	protected virtual bool CanSelect(Command c, Tile tile) {
 		return true;
@@ -30,7 +28,7 @@ public class SelectTile : CommandPart {
 
 	public override string ToActionPart(Command c, IGamePart o)
 	{
-		var t = o as Tile;
-		return "" + t.Coords.Y + "." + t.Coords.X;
+		var t = o as ITile;
+		return $"{t.GetCoords().X}.{t.GetCoords().Y}";
 	}
 }

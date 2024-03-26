@@ -44,6 +44,8 @@ public partial class Tile : Node2D, ITile
 	private Dictionary<string, Color> _playerColors = new();
 
 	private CommandProcessor? _processor = null;
+
+	private bool _mouseOver = false;
 	
 	public override void _Ready()
 	{
@@ -62,8 +64,8 @@ public partial class Tile : Node2D, ITile
 
 	public override void _Input(InputEvent e)
 	{
-		// if (e.IsActionPressed("cancel-command"))
-		// 	Recheck();
+		if (e.IsActionPressed("cancel-command"))
+			Check();
 	}
 
 	public string CoordsStr => Coords.X + "." + Coords.Y;
@@ -80,8 +82,42 @@ public partial class Tile : Node2D, ITile
 		}
 	}
 	
-	public void Recheck() {
-		Unfocus();
+	public void Check() {
+		if (_processor is null) {
+			return;
+		}
+
+		if (!_mouseOver) {
+			Unfocus();
+			return;
+		}
+
+		if (State is not null && State?.Entity is not null) {
+			MatchCardState card = (MatchCardState)(State?.Entity);
+
+			// TODO add back
+			// _processor.HoverCard.Load(card);
+		}
+		
+		if (!_processor.Accepts(this)) {
+			Unfocus();
+			return;
+		} 
+		BgNode.Color = HighlightColor;
+
+		var command = _processor.CurrentCommand;
+		if (command is null || command.Name != "move") {
+			return;
+		}
+
+		// TODO restore
+		// var arrow = Map.MovementArrow;
+		// arrow.Visible = true;
+		// var tile = Game.Instance.CurrentCommand.Results[0] as TileBase;
+		// arrow.Position = tile.Position + new Vector2(Size.X / 2, Size.Y / 2);
+		// var dir = SelectDirection.GetDirection(tile, this);
+		// arrow.Rotation = ANGLE * dir - ANGLE_OFFSET;
+
 	}
 
 	public void Load(TileState? state) {
@@ -129,6 +165,7 @@ public partial class Tile : Node2D, ITile
 		Coords = coords;
 		CoordsLabelNode.Text = CoordsStr;
 	}
+	public Vector2 GetCoords() => Coords;
 	public void SetShowId(bool v) {
 		CoordsLabelNode.Visible = v;
 	}
@@ -138,47 +175,33 @@ public partial class Tile : Node2D, ITile
 		_processor = processor;
 	}
 
+	private void TryAddToAction() {
+		if (!_processor.Accepts(this)) return;
+
+		_processor.Process(this);
+		// Map.MovementArrow.Visible = false;
+
+		Check();
+	}
+
 	#region Signal connections
 
 	private void OnCollisionMouseEntered()
 	{
-		if (_processor is null) {
-			GD.Print("processor is null");
-			return;
-		}
-
-		if (State is not null && State?.Entity is not null) {
-			MatchCardState card = (MatchCardState)(State?.Entity);
-
-			// TODO add back
-			// _processor.HoverCard.Load(card);
-		}
-		
-		if (!_processor.Accepts(this)) return;
-		BgNode.Color = HighlightColor;
-
-		var command = _processor.CurrentCommand;
-		if (command is null || command.Name != "move") {
-			return;
-		}
-
-		// TODO restore
-		// var arrow = Map.MovementArrow;
-		// arrow.Visible = true;
-		// var tile = Game.Instance.CurrentCommand.Results[0] as TileBase;
-		// arrow.Position = tile.Position + new Vector2(Size.X / 2, Size.Y / 2);
-		// var dir = SelectDirection.GetDirection(tile, this);
-		// arrow.Rotation = ANGLE * dir - ANGLE_OFFSET;
+		_mouseOver = true;
+		Check();
 	}
 
-	 private void OnCollisionMouseExited()
-	 {
-	 	Unfocus();
-	 	// SetColor(BaseColor);
-	 	// if (HoverCard.Visible)
-	 		// HoverCard.Visible = false;
-	 	// if (Map.MovementArrow.Visible) Map.MovementArrow.Visible = false;
-	 }
+	private void OnCollisionMouseExited()
+	{
+		_mouseOver = false;
+		Unfocus();
+		
+		// SetColor(BaseColor);
+		// if (HoverCard.Visible)
+			// HoverCard.Visible = false;
+		// if (Map.MovementArrow.Visible) Map.MovementArrow.Visible = false;
+	}
 
 	// private void _on_collision_input_event(Node viewport, InputEvent e, long shape_idx)
 	// {
@@ -186,10 +209,12 @@ public partial class Tile : Node2D, ITile
 	// 		_pressed();
 	// }
 
+	private void OnCollisionInputEvent(Node viewport, InputEvent e, long shape_idx)
+	{
+		if (e.IsActionPressed("add-to-action")) {
+			TryAddToAction();
+		}
+	}
 
 	#endregion
 }
-
-
-
-

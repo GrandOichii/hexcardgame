@@ -26,11 +26,11 @@ public class SelectDirection : CommandPart
 	static public int GetDirection(Tile from, Tile to) {
 		var coords = to.Coords;
 		var all_dir_arr = HexCore.GameMatch.Tiles.Map.DIR_ARR;
-		var ii = (int)coords.Y % 2;
+		var ii = (int)coords.X % 2;
 		var dir_arr = all_dir_arr[ii];
 		var compare = from.Coords;
 		for (int i = 0; i < dir_arr.Length; i++) {
-			var newC = new Vector2((int)coords.X + dir_arr[i][1], (int)coords.Y + dir_arr[i][0]);
+			var newC = new Vector2((int)coords.X + dir_arr[i][0], (int)coords.Y + dir_arr[i][1]);
 
 			if (newC.IsEqualApprox(compare)) {
 				return (i + 3) % 6;

@@ -14,6 +14,7 @@ public interface ITile : IGamePart {
 	public void SetPosition(Vector2 pos);
 	public Vector2 GetSize();
 	public void SetCoords(Vector2 coords);
+	public Vector2 GetCoords();
 	public void SetShowId(bool v);
 	public void SetCommandProcessor(CommandProcessor processor);
 }

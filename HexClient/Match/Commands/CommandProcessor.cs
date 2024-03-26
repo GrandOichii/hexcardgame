@@ -7,7 +7,7 @@ namespace HexClient.Match.Commands;
 public interface IGamePart {}
 
 public class CommandProcessor {
-	private Dictionary<string, List<Command>> _requestCommandMap;
+	private readonly Dictionary<string, List<Command>> _requestCommandMap;
 	private BaseState _state;
 	public BaseState State { 
 		get => _state; 

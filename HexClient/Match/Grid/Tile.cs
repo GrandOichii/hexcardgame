@@ -216,5 +216,15 @@ public partial class Tile : Node2D, ITile
 		}
 	}
 
-	#endregion
+    #endregion
+
+    public TileState? GetState()
+    {
+		return State;
+    }
+
+    public string GetCoordsStr()
+    {
+		return CoordsStr;
+    }
 }

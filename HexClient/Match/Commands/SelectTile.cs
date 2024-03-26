@@ -16,13 +16,13 @@ public class SelectTile : CommandPart {
         return o switch
         {
             null => false,
-            HandCard => false,
-            Tile tile => CanSelect(c, tile),
+            IHandCard => false,
+            ITile tile => CanSelect(c, tile),
             _ => throw new Exception("Does no accept IGamePart of type " + nameof(o)),
         };
     }
 
-	protected virtual bool CanSelect(Command c, Tile tile) {
+	protected virtual bool CanSelect(Command c, ITile tile) {
 		return true;
 	}
 

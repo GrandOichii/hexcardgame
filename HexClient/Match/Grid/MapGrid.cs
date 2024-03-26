@@ -17,6 +17,8 @@ public interface ITile : IGamePart {
 	public Vector2 GetCoords();
 	public void SetShowId(bool v);
 	public void SetCommandProcessor(CommandProcessor processor);
+	public TileState? GetState();
+	public string GetCoordsStr();
 }
 
 public partial class MapGrid : Control, IMapGrid
@@ -191,7 +193,7 @@ public partial class MapGrid : Control, IMapGrid
 		for (int i = 0; i < state.Tiles.Count; i++) {
 			var a = new List<ITile>();
 			for (int j = 0; j < state.Tiles[i].Count; j++) {
-				var child = TilePS.Instantiate() as Tile;
+				var child = TilePS.Instantiate();
 				TilesNode.AddChild(child);
 
 				var tile = child as ITile;

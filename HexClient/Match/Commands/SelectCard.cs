@@ -24,7 +24,7 @@ public class SelectCard : CommandPart
 
 	public override string ToActionPart(Command c, IGamePart o)
 	{
-		return (o as HandCard).GetState().MID;
+		return (o as IHandCard).GetState().MID;
 	}
 
 }

@@ -24,7 +24,8 @@ public class Command {
 	public List<CommandPart> Parts { get; protected set; }
 	public int PartI => Results.Count;
 	public List<IGamePart> Results { get; } = new();
-	private CommandProcessor _processor;
+	private readonly CommandProcessor _processor;
+	
 	public Command(CommandProcessor processor, string name, List<CommandPart> parts) {
 		_processor = processor;
 		Name = name;

@@ -17,18 +17,18 @@ public class SelectDirection : CommandPart
 	{
         return o switch
         {
-            HandCard => false,
-            Tile tile => CanAccept(c, tile),
+            IHandCard => false,
+            ITile tile => CanAccept(c, tile),
             _ => throw new Exception("Does no accept IGamePart of type " + nameof(o)),
         };
     }
 
-	static public int GetDirection(Tile from, Tile to) {
-		var coords = to.Coords;
+	static public int GetDirection(ITile from, ITile to) {
+		var coords = to.GetCoords();
 		var all_dir_arr = HexCore.GameMatch.Tiles.Map.DIR_ARR;
 		var ii = (int)coords.X % 2;
 		var dir_arr = all_dir_arr[ii];
-		var compare = from.Coords;
+		var compare = from.GetCoords();
 		for (int i = 0; i < dir_arr.Length; i++) {
 			var newC = new Vector2((int)coords.X + dir_arr[i][0], (int)coords.Y + dir_arr[i][1]);
 
@@ -40,20 +40,20 @@ public class SelectDirection : CommandPart
 		return -1;
 	}
 
-	private bool CanAccept(Command c, Tile tile) {
-		if (tile.State is null) return false;
-		if (tile.State?.Entity is not null) {
-			if (tile.State?.Entity?.OwnerID == _processor.Config.MyID)
+	private bool CanAccept(Command c, ITile tile) {
+		if (tile.GetState() is null) return false;
+		if (tile.GetState()?.Entity is not null) {
+			if (tile.GetState()?.Entity?.OwnerID == _processor.Config.MyID)
 			return false;
 		}
-		return GetDirection(c.Results[_comparedToI] as Tile, tile) != -1;
+		return GetDirection(c.Results[_comparedToI] as ITile, tile) != -1;
 	}
 
 	public override string ToActionPart(Command c, IGamePart o)
 	{
-		var t = o as Tile;
-		var d = GetDirection(c.Results[_comparedToI] as Tile, t);
-		if (d == -1) throw new Exception("Can't construct direction to " + t.Coords.ToString() + " from " + (c.Results[_comparedToI] as Tile).Coords);
+		var t = o as ITile;
+		var d = GetDirection(c.Results[_comparedToI] as ITile, t);
+		if (d == -1) throw new Exception("Can't construct direction to " + t.GetCoords().ToString() + " from " + (c.Results[_comparedToI] as ITile).GetCoords());
 		return d.ToString();
 	}
 }

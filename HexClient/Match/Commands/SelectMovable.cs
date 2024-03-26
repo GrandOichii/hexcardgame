@@ -11,10 +11,10 @@ public class SelectMovable : SelectTile {
 	{
 	}
 
-	protected override bool CanSelect(Command c, Tile tile) {
-		if (tile.State is null) return false;
-		if (tile.State?.Entity is null) return false;
-		MatchCardState en = (MatchCardState)(tile.State?.Entity);
+	protected override bool CanSelect(Command c, ITile tile) {
+		if (tile.GetState() is null) return false;
+		if (tile.GetState()?.Entity is null) return false;
+		MatchCardState en = (MatchCardState)(tile.GetState()?.Entity);
 		return en.AvailableActions.Contains("move");;
 	}
 }

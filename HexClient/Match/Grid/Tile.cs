@@ -190,12 +190,14 @@ public partial class Tile : Node2D, ITile
 
 	private void OnCollisionMouseEntered()
 	{
+		GD.Print("ENTER");
 		_mouseOver = true;
 		Check();
 	}
 
 	private void OnCollisionMouseExited()
 	{
+		GD.Print("LEAVE");
 		_mouseOver = false;
 		Unfocus();
 		

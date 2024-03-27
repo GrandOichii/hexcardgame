@@ -18,6 +18,7 @@ public interface ITile : IGamePart {
 	public void SetShowId(bool v);
 	public void SetCommandProcessor(CommandProcessor processor);
 	public TileState? GetState();
+	public void SetHoverCard(IHoverCard hoverCard);
 }
 
 public partial class MapGrid : Control, IMapGrid
@@ -66,6 +67,8 @@ public partial class MapGrid : Control, IMapGrid
 	private CommandProcessor? _processor = null;
 	#nullable disable
 
+	private IHoverCard _hoverCard;
+
 	private Dictionary<string, Color> _playerColors = new Dictionary<string, Color>() {
 		{ "1", new Color(1, 0, 0) },
 		{ "2", new Color(1, 1, 0) },
@@ -79,6 +82,18 @@ public partial class MapGrid : Control, IMapGrid
 			foreach (var tile in line) {
 				tile.SetPlayerColors(colors);
 				tile.GetEntity()?.SetPlayerColors(colors);
+			}
+		}
+	}
+
+	public void SetHoverCard(IHoverCard card) {
+		_hoverCard = card;
+
+		if (_tiles is null) return;
+
+		foreach (var line in _tiles) {
+			foreach (var tile in line) {
+				tile.SetHoverCard(card);
 			}
 		}
 	}
@@ -199,6 +214,7 @@ public partial class MapGrid : Control, IMapGrid
 				TilesNode.AddChild(child);
 
 				var tile = child as ITile;
+				tile.SetHoverCard(_hoverCard);
 				tile.SetCommandProcessor(_processor);
 				tile.SetPlayerColors(_playerColors);
 				

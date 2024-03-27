@@ -48,6 +48,20 @@ public partial class Tile : Node2D, ITile
 	#nullable disable
 
 	private bool _mouseOver = false;
+	private IHoverCard _hoverCard;
+
+	private string _playerID;
+	public string PlayerID {
+		get => _playerID;
+		set {
+			_playerID = value;
+			if (string.IsNullOrEmpty(_playerID) || !_playerColors.ContainsKey(value)) return;
+
+			var color = _playerColors[value];
+			FgNode.Color = color;
+		}
+	}
+	
 	
 	public override void _Ready()
 	{
@@ -72,18 +86,15 @@ public partial class Tile : Node2D, ITile
 
 	public string CoordsStr => Coords.X + "." + Coords.Y;
 
-	private string _playerID;
-	public string PlayerID {
-		get => _playerID;
-		set {
-			_playerID = value;
-			if (string.IsNullOrEmpty(_playerID) || !_playerColors.ContainsKey(value)) return;
-
-			var color = _playerColors[value];
-			FgNode.Color = color;
-		}
+	public void SetHoverCard(IHoverCard card) {
+		_hoverCard = card;
 	}
-	
+
+	public TileState? GetState()
+	{
+		return State;
+	}
+
 	public void Check() {
 		if (_processor is null) {
 			return;
@@ -98,6 +109,7 @@ public partial class Tile : Node2D, ITile
 			MatchCardState card = (MatchCardState)(State?.Entity);
 
 			// TODO add back
+			_hoverCard.Load(card);
 			// _processor.HoverCard.Load(card);
 		}
 		
@@ -132,14 +144,6 @@ public partial class Tile : Node2D, ITile
 		Visible = true;
 		PlayerID = state?.OwnerID;
 	}
-	
-	// private void _pressed() {
-	// 	if (!Client.Accepts(this)) return;
-
-	// 	Client.Process(this);
-	// 	// Map.MovementArrow.Visible = false;
-	// 	Recheck();
-	// }
 	
 	private void Unfocus() {
 		BgNode.Color = _defaultBgColor;
@@ -190,14 +194,12 @@ public partial class Tile : Node2D, ITile
 
 	private void OnCollisionMouseEntered()
 	{
-		GD.Print("ENTER");
 		_mouseOver = true;
 		Check();
 	}
 
 	private void OnCollisionMouseExited()
 	{
-		GD.Print("LEAVE");
 		_mouseOver = false;
 		Unfocus();
 		
@@ -222,8 +224,4 @@ public partial class Tile : Node2D, ITile
 
 	#endregion
 
-	public TileState? GetState()
-	{
-		return State;
-	}
 }

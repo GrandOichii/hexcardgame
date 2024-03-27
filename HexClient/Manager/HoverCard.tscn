@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://08ehw5dq5udq"]
+
+[ext_resource type="Script" path="res://Manager/HoverCard.cs" id="1_1w0c8"]
+[ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Cards/Card.tscn" id="1_4rmhh"]
+
+[node name="HoverCard" type="MarginContainer"]
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+script = ExtResource("1_1w0c8")
+
+[node name="Card" parent="." instance=ExtResource("1_4rmhh")]
+unique_name_in_owner = true
+layout_mode = 2

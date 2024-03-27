@@ -15,6 +15,7 @@ public interface IMapGrid {
 	public void Load(BaseState state);
 	public void SetPlayerColors(Dictionary<string, Color> colors);
 	public void SetCommandProcessor(CommandProcessor processor);
+	public void SetHoverCard(IHoverCard card);
 }
 
 public interface IHandCard : IGamePart {
@@ -22,6 +23,10 @@ public interface IHandCard : IGamePart {
 	public void SetShowCardIds(bool v);
 	public MatchCardState GetState();
 	public void SetCommandProcessor(CommandProcessor processor);
+}
+
+public interface IHoverCard {
+	public void Load(MatchCardState state);
 }
 
 public partial class Match : Control
@@ -56,6 +61,7 @@ public partial class Match : Control
 	public IMapGrid MapGridNode { get; private set; }
 	public ColorPickerButton Player1ColorPickerNode { get; private set; }
 	public ColorPickerButton Player2ColorPickerNode { get; private set; }
+	public IHoverCard HoverCardNode { get; private set; }
 	
 	public Window OptionsWindowNode { get; private set; }
 	
@@ -84,9 +90,12 @@ public partial class Match : Control
 		MapGridNode = GetNode<IMapGrid>("%MapGrid");
 		Player1ColorPickerNode = GetNode<ColorPickerButton>("%Player1ColorPicker");
 		Player2ColorPickerNode = GetNode<ColorPickerButton>("%Player2ColorPicker");
+		HoverCardNode = GetNode<IHoverCard>("%HoverCard");
 		
 		#endregion
 
+		MapGridNode.SetHoverCard(HoverCardNode);
+		
 		OnPlayer1ColorPickerColorChanged(Player1ColorPickerNode.Color);
 		OnPlayer2ColorPickerColorChanged(Player2ColorPickerNode.Color);
 		

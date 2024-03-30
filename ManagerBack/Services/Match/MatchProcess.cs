@@ -81,10 +81,16 @@ public class TcpConnectionChecker : IConnectionChecker {
         _socket = socket;
     }
 
-    public Task<bool> Check()
+    public async Task<bool> Check()
     {
-        // TODO something similar to WebSocketConnectionChecker
-        throw new NotImplementedException();
+        try {
+            NetUtil.Write(_socket.GetStream(), "ping");
+            var resp = await Read();
+            return resp == "pong";
+        } catch {
+            // TODO bee more specific with exception types
+            return false;
+        }
     }
 
     public Task<string> Read()
@@ -159,7 +165,7 @@ public class QueuedPlayer {
 }
 
 public class MatchProcess {
-     private static readonly Dictionary<BotType, string> BOT_TYPE_PATH_MAP = new() {
+    private static readonly Dictionary<BotType, string> BOT_TYPE_PATH_MAP = new() {
         {BotType.RANDOM, "../bots/random.lua"},
         {BotType.SMART, "../bots/basic.lua"},
     };
@@ -177,7 +183,11 @@ public class MatchProcess {
     public Match? Match { get; private set; } = null;
     public ConnectedMatchView View { get; }
     public MatchRecord Record { get; }
+    public int TcpPort { get; }
+    public string TcpAddress { get; }
 
+    [JsonIgnore]
+    public TcpListener TcpListener { get; } 
 
     private readonly IMatchService _matchService;
     private readonly MatchConfig _matchConfig;
@@ -201,6 +211,11 @@ public class MatchProcess {
         Record = new() {
             Config = config
         };
+
+        TcpListener = new TcpListener(IPAddress.Loopback, 0);
+        TcpListener.Start();
+        TcpPort = ((IPEndPoint)TcpListener.LocalEndpoint).Port;
+        TcpAddress = ((IPEndPoint)TcpListener.LocalEndpoint).ToString();
     }
 
     public Task InitialSetup() {
@@ -227,7 +242,12 @@ public class MatchProcess {
             SetQueuedPlayer(i, player);
         }
 
-        _ = TryRun();
+        if (CanConnect()) {
+            Task.Run(ConnectTcpPlayers);
+            // ConnectTcpPlayers();
+        } else {
+            _ = TryRun();
+        }
 
         return Task.CompletedTask;
     }
@@ -242,7 +262,7 @@ public class MatchProcess {
     }
 
     public bool CanConnect() {
-        return QueuedPlayers.Any(p => p is null);
+        return Status == MatchStatus.WAITING_FOR_PLAYERS && QueuedPlayers.Any(p => p is null);
     }
 
     private bool CanStart() {
@@ -384,35 +404,30 @@ public class MatchProcess {
             await Task.Delay(200);
         }
     }
+
+    private async Task ConnectTcpPlayers() {
+        while (CanConnect()) {
+            await AddTcpConnection();
+        }
+    }
+
+    private async Task AddTcpConnection() {
+        System.Console.WriteLine("Waiting for tcp connection...");
+        var client = TcpListener.AcceptTcpClient();
+        if (!CanConnect()) {
+            client.Close();
+            return;
+        }
+        System.Console.WriteLine("Connected!");
+        var controller = new TCPPlayerController(client, Match!);
+        await AddPlayer(controller, new TcpConnectionChecker(client));
+        System.Console.WriteLine("player added!");
+    }    
 }
 
 
 
 // public class MatchProcess_old {
-//     public string TcpAddress { get; set; }
-//     [JsonIgnore]
-//     public TcpListener TcpListener { get; } 
-//     [JsonIgnore]
-//     public Match Match { get; }
-//     [JsonIgnore]
-//     public MatchProcessConfig Config { get; }
-
-//     private readonly IMatchService _matchService;
-//     private readonly IValidator<DeckTemplate> _deckValidator;
-
-//     public MatchProcess_old(IMatchService matchService, ICardMaster cMaster, MatchProcessConfig config, MatchConfig mConfig, IValidator<DeckTemplate> deckValidator)
-//     {
-
-//         TcpListener = new TcpListener(IPAddress.Loopback, 0);
-//         TcpListener.Start();
-//         TcpAddress = ((IPEndPoint)TcpListener.LocalEndpoint).ToString();
-
-
-//         _deckValidator = deckValidator;
-
-//         
-//     }
-
 //     public async Task ConnectTcpPlayers() {
 //         // TODO keeps listening even after the match starts
 //         while (CanAddConnection() && !Started()) {
@@ -481,39 +496,4 @@ public class MatchProcess {
 //         --_realPlayerCount;
 //     }
 
-//     public bool Started() {
-//         return Status != MatchStatus.WAITING_FOR_PLAYERS;
-//     }
-
-//     private void TryRun() {
-//         if (CanAddConnection()) return;
-
-//         Run();
-//     }
-
-//     private async Task Run() {
-//         System.Console.WriteLine("Match started!");
-//         await SetStatus(MatchStatus.IN_PROGRESS);
-//         StartTime = DateTime.Now;
-//         try {
-//             await Match.Start();
-//             await SetStatus(MatchStatus.FINISHED);
-//             Record.WinnerName = Match.Winner!.Name;
-//             await _matchService.ServiceStatusUpdated(this);
-//             System.Console.WriteLine("Match ended");
-//         } catch (Exception e) {
-//             await SetStatus(MatchStatus.CRASHED);
-//             Record.ExceptionMessage = e.Message;
-//             if (e.InnerException is not null)
-//                 Record.InnerExceptionMessage = e.InnerException.Message;      
-//             // System.Console.WriteLine(e.Message);      
-//             // System.Console.WriteLine(e.StackTrace);
-//             // System.Console.WriteLine("Match crashed");
-//             await Match.View.End();
-//         }
-
-//         EndTime = DateTime.Now; 
-//         TcpListener.Stop();
-//     }
-    
 // }

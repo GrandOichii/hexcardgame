@@ -46,14 +46,16 @@ public partial class ConnectedMatch : Control
 
 		var processor = new CommandProcessor(connection);
 		MatchNode.SetCommandProcessor(processor);
-		// MatchInfo
+
 		return Task.CompletedTask;
 	}
 
 	private static readonly string CONFIG_PREFIX = "config-";
 	private Task OnMatchUpdate(string message) {
-
+		GD.Print(message);
+		GD.Print();
 		if (message.StartsWith(CONFIG_PREFIX)) {
+			GD.Print("READING CONFIG");
 			message = message[CONFIG_PREFIX.Length..];
 			MatchInfo = JsonSerializer.Deserialize<HexStates.MatchInfoState>(message, Common.JSON_SERIALIZATION_OPTIONS);
 			MatchNode.LoadMatchInfo(MatchInfo);

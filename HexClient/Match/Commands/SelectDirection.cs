@@ -42,8 +42,9 @@ public class SelectDirection : CommandPart
 
 	private bool CanAccept(Command c, ITile tile) {
 		if (tile.GetState() is null) return false;
-		if (tile.GetState()?.Entity is not null) {
-			if (tile.GetState()?.Entity?.OwnerID == _processor.Config.MyID)
+		var en = tile.GetState()?.Entity;
+		if (en is not null) {
+			if (en?.OwnerID == _processor.Config.MyID)
 			return false;
 		}
 		return GetDirection(c.Results[_comparedToI] as ITile, tile) != -1;

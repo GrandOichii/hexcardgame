@@ -99,13 +99,13 @@ size_flags_horizontal = 3
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+button_pressed = true
 text = "WebSocket"
 
 [node name="TcpCheck" type="CheckBox" parent="HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-button_pressed = true
 text = "Tcp"
 
 [node name="BaseUrlEdit" type="LineEdit" parent="HBoxContainer/VBoxContainer"]
@@ -114,6 +114,47 @@ layout_mode = 2
 placeholder_text = "Enter base url"
 
 [node name="HSeparator4" type="HSeparator" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ConnectContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ConnectToMatchLabel" type="Label" parent="HBoxContainer/VBoxContainer/ConnectContainer"]
+layout_mode = 2
+text = "Connect to a match"
+
+[node name="ConnectMatchIdEdit" type="LineEdit" parent="HBoxContainer/VBoxContainer/ConnectContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Enter match id"
+
+[node name="ConnectButton" type="Button" parent="HBoxContainer/VBoxContainer/ConnectContainer"]
+layout_mode = 2
+text = "Connect"
+
+[node name="ConnectRequest" type="HTTPRequest" parent="HBoxContainer/VBoxContainer/ConnectContainer"]
+unique_name_in_owner = true
+
+[node name="HSeparator2" type="HSeparator" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="WatchContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="WatchMatchLabel" type="Label" parent="HBoxContainer/VBoxContainer/WatchContainer"]
+layout_mode = 2
+text = "Watch match"
+
+[node name="WatchMatchIdEdit" type="LineEdit" parent="HBoxContainer/VBoxContainer/WatchContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Enter match id"
+
+[node name="WatchButton" type="Button" parent="HBoxContainer/VBoxContainer/WatchContainer"]
+layout_mode = 2
+text = "Watch match"
+
+[node name="HSeparator3" type="HSeparator" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
 [node name="CreateContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
@@ -182,47 +223,6 @@ text = "Create"
 
 [node name="CreateRequest" type="HTTPRequest" parent="HBoxContainer/VBoxContainer/CreateContainer"]
 unique_name_in_owner = true
-
-[node name="HSeparator3" type="HSeparator" parent="HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="ConnectContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="ConnectToMatchLabel" type="Label" parent="HBoxContainer/VBoxContainer/ConnectContainer"]
-layout_mode = 2
-text = "Connect to a match"
-
-[node name="ConnectMatchIdEdit" type="LineEdit" parent="HBoxContainer/VBoxContainer/ConnectContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-placeholder_text = "Enter match id"
-
-[node name="ConnectButton" type="Button" parent="HBoxContainer/VBoxContainer/ConnectContainer"]
-layout_mode = 2
-text = "Connect"
-
-[node name="ConnectRequest" type="HTTPRequest" parent="HBoxContainer/VBoxContainer/ConnectContainer"]
-unique_name_in_owner = true
-
-[node name="HSeparator2" type="HSeparator" parent="HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="WatchContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="WatchMatchLabel" type="Label" parent="HBoxContainer/VBoxContainer/WatchContainer"]
-layout_mode = 2
-text = "Watch match"
-
-[node name="WatchMatchIdEdit" type="LineEdit" parent="HBoxContainer/VBoxContainer/WatchContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-placeholder_text = "Enter match id"
-
-[node name="WatchButton" type="Button" parent="HBoxContainer/VBoxContainer/WatchContainer"]
-layout_mode = 2
-text = "Watch match"
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer"]
 layout_mode = 2
@@ -297,12 +297,12 @@ unique_name_in_owner = true
 [connection signal="toggled" from="HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/WebSocketCheck" to="." method="OnWebSocketCheckToggled"]
 [connection signal="toggled" from="HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/TcpCheck" to="." method="OnTcpCheckToggled"]
 [connection signal="text_changed" from="HBoxContainer/VBoxContainer/BaseUrlEdit" to="." method="OnBaseUrlEditTextChanged"]
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/CreateContainer/HBoxContainer2/FetchBasicConfigButton" to="." method="OnFetchBasicConfigButtonPressed"]
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/CreateContainer/CreateMatchButton" to="." method="OnCreateMatchButtonPressed"]
-[connection signal="request_completed" from="HBoxContainer/VBoxContainer/CreateContainer/CreateRequest" to="." method="OnCreateRequestRequestCompleted"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/ConnectContainer/ConnectButton" to="." method="OnConnectButtonPressed"]
 [connection signal="request_completed" from="HBoxContainer/VBoxContainer/ConnectContainer/ConnectRequest" to="." method="OnConnectRequestRequestCompleted"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/WatchContainer/WatchButton" to="." method="OnWatchButtonPressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/CreateContainer/HBoxContainer2/FetchBasicConfigButton" to="." method="OnFetchBasicConfigButtonPressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/CreateContainer/CreateMatchButton" to="." method="OnCreateMatchButtonPressed"]
+[connection signal="request_completed" from="HBoxContainer/VBoxContainer/CreateContainer/CreateRequest" to="." method="OnCreateRequestRequestCompleted"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer2/LiveMatchesButton" to="." method="OnLiveMatchesButtonPressed"]
 [connection signal="MatchActivated" from="HBoxContainer/VBoxContainer2/MatchTable" to="." method="OnMatchTableMatchActivated"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer2/RemoveCrashedButton" to="." method="OnRemoveCrashedButtonPressed"]

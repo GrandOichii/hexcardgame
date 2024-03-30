@@ -117,7 +117,7 @@ public partial class MatchesTab : Control
 		OnFetchBasicConfigButtonPressed();
 	}
 
-	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match, string name, string deck) {
+	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match) {
 		var client = new ClientWebSocket();
 
 		await client.ConnectAsync(new Uri(BaseUrl
@@ -125,14 +125,14 @@ public partial class MatchesTab : Control
 			.Replace("https://", "wss://")
 		+ "match/connect/" + match.Id.ToString()), CancellationToken.None);
 
-		var result = new WebSocketConnection(client, name, deck);
+		var result = new WebSocketConnection(client);
 		return result;
 	}
 
-	private async Task<TcpConnection> CreateTcpConnection(MatchProcess match, string name, string deck) {
+	private async Task<TcpConnection> CreateTcpConnection(MatchProcess match) {
 		var client = new TcpClient();
 		await client.ConnectAsync(IPEndPoint.Parse(match.TcpAddress));
-		var result = new TcpConnection(client, name, deck);
+		var result = new TcpConnection(client);
 		return result;
 	}
 
@@ -157,9 +157,17 @@ public partial class MatchesTab : Control
 
 		IConnection client =
 			WebSocketCheckNode.ButtonPressed
-			? await CreateWebSocketConnection(match, name, deck)
-			: await CreateTcpConnection(match, name, deck)
+			? await CreateWebSocketConnection(match)
+			: await CreateTcpConnection(match)
 		;
+
+		await client.SendName(name);
+		GD.Print("sent name");
+
+		await client.SendDeck(deck);
+		GD.Print("sent deck");
+		
+		client.StartReceiveLoop(name, deck);
 		var window = ConnectedMatchWindowPS.Instantiate() as ConnectedMatchWindow;
 		WindowsNode.AddChild(window);
 
@@ -215,9 +223,11 @@ public partial class MatchesTab : Control
 
 				return;
 			}
-
-			string[] headers = new string[] { "Content-Type: application/json" };
+			
+			var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
+			string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
 			var data = JsonSerializer.Serialize(config, Common.JSON_SERIALIZATION_OPTIONS);
+			GD.Print(data);
 			CreateRequestNode.Request(BaseUrl + "match/create", headers, HttpClient.Method.Post, data);
 			await ToSignal(CreateRequestNode, "request_completed");
 		}

@@ -4,6 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Cards/Card.tscn" id="1_4rmhh"]
 
 [node name="HoverCard" type="MarginContainer"]
+offset_left = 1.0
+offset_right = 307.0
+offset_bottom = 426.0
 theme_override_constants/margin_left = 3
 theme_override_constants/margin_top = 3
 theme_override_constants/margin_right = 3

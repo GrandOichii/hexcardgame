@@ -13,11 +13,23 @@ namespace HexClient.Connection;
 public interface IConnection {
 
 	public delegate Task MessageHandler(string message);
+	public void StartReceiveLoop(string name, string deck);
 	public delegate void CloseHandler();
 	public Task Write(string message);
 	public void SubscribeToUpdate(MessageHandler func);
 	public void SubscribeToClose(CloseHandler func);
 	public Task Close();
+	public Task<string> Read();
+
+	public async Task SendName(string name) {
+		await Read(); // should be "name"
+		await Write(name);
+	}
+
+	public async Task SendDeck(string deck) {
+		await Read(); // should be "deck"
+		await Write(deck);
+	}
 }
 
 // !FIXME crashes the backend sometimes :)
@@ -32,17 +44,14 @@ public class WebSocketConnection : IConnection
 	private event IConnection.CloseHandler? OnClose;
 	#nullable disable
 
-	public WebSocketConnection(ClientWebSocket client, string name, string deck)
+	public WebSocketConnection(ClientWebSocket client)
 	{
 		_client = client;
+	}
 
-		_ = Task.Run(async () =>
+	public void StartReceiveLoop(string name, string deck) {
+		Task.Run(async () =>
 		{
-			await Read(); // should be "name"
-			await Write(name);
-			await Read(); // should be "deck"
-			await Write(deck);
-
 			// !FIXME failed when creating match with two players
 			string resp;
 			while (true) {
@@ -61,10 +70,9 @@ public class WebSocketConnection : IConnection
 			}
 			OnClose?.Invoke();
 		});
-
 	}
 
-	private async Task<string> Read() {
+	public async Task<string> Read() {
 		WebSocketReceiveResult result;
 		var buffer = new ArraySegment<byte>(new byte[1024]);
 		var message = new StringBuilder();
@@ -113,19 +121,16 @@ public class TcpConnection : IConnection
 	private event IConnection.CloseHandler? OnClose;
 	#nullable disable
 
-	public TcpConnection(TcpClient client, string name, string deck) {
+	public TcpConnection(TcpClient client) {
 		_client = client;
+	}
 
-		_ = Task.Run(async () => {
-			NetUtil.Read(client.GetStream()); // should be name
-			await Write(name);
-			NetUtil.Read(client.GetStream()); // should be deck
-			await Write(deck);
-
-			_client.ReceiveTimeout = 20;
+	public void StartReceiveLoop(string name, string deck) {
+		Task.Run(async () => {
+			// _client.ReceiveTimeout = 50;
 			while (_client.Connected) {
 				try {
-					var message = NetUtil.Read(_client.GetStream());
+					var message = await Read();
 					OnReceive?.Invoke(message);
 				} catch {
 					continue;
@@ -155,5 +160,11 @@ public class TcpConnection : IConnection
 	{
 		_client.Close();
 		return Task.CompletedTask;
+	}
+
+	public Task<string> Read() {
+		var result = NetUtil.Read(_client.GetStream());
+		GD.Print("READ " + result[..10]);
+		return Task.FromResult(result);
 	}
 }

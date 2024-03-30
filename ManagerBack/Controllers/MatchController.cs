@@ -1,4 +1,5 @@
 using System.Net;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,11 +17,10 @@ public class MatchController : ControllerBase {
     }
 
     // TODO authorize
-    // [Authorize]
+    [Authorize]
     [HttpPost("create")]
     public async Task<IActionResult> Create([FromBody] MatchProcessConfig config) {
-        // var userId = this.ExtractClaim(ClaimTypes.NameIdentifier);
-        var userId = "";
+        var userId = this.ExtractClaim(ClaimTypes.NameIdentifier);
         try {
             var match = await _matchService.Create(userId, config);
             return Ok(match);
@@ -50,24 +50,6 @@ public class MatchController : ControllerBase {
             HttpContext.Response.StatusCode = 400;
         }
     }
-
-    // TODO authorize
-    // [Authorize]
-    // [HttpGet("tcpconnect/{matchId}")]
-    // public async Task TCPConnect(string matchId) {
-    //     // var userId = this.ExtractClaim(ClaimTypes.NameIdentifier);
-    //     var userId = "";
-
-    //     try {
-    //         await _matchService.TCPConnect(userId, matchId);
-    //     } catch (InvalidMatchIdException) {
-    //         HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest; 
-    //     } catch (MatchNotFoundException) {
-    //         HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
-    //     } catch (MatchRefusedConnectionException) {
-    //         HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-    //     }
-    // }
 
     [HttpGet]
     public async Task<IActionResult> All() {

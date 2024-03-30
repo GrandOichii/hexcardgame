@@ -40,6 +40,7 @@ public class RecordingPlayerController : IPlayerController
 
     public async Task Setup(Player player, Match match)
     {
+        System.Console.WriteLine("Sending setup to " + player.Name);
         await _baseController.Setup(player, match);
     }
 

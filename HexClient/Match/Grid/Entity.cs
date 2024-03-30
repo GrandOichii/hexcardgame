@@ -93,5 +93,4 @@ public partial class Entity : Node2D, IEntity
 	public void SetShowId(bool v) {
 		IDLabelNode.Visible = v;
 	}
-	
 }

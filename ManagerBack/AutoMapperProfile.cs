@@ -6,6 +6,8 @@ namespace ManagerBack;
 public class AutoMapperProfile : Profile {
     public AutoMapperProfile()
     {
+        // AllowNullCollections = true;
+
         CreateMap<ExpansionCard, CardModel>();
         
         CreateMap<MatchConfig, MatchConfigModel>();
@@ -17,5 +19,6 @@ public class AutoMapperProfile : Profile {
         CreateMap<PostDeckDto, DeckModel>();
 
         CreateMap<PostMatchConfigDto, MatchConfigModel>();
+        CreateMap<MatchProcess, GetMatchProcessDto>();
     }
 }

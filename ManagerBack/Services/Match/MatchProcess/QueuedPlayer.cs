@@ -40,12 +40,14 @@ public class QueuedPlayer {
     // public PlayerConfig Config { get; }
     public string? Name { get; set; } = null;
     public string? Deck { get; set; } = null;
+    public bool IsBot { get; }
     
     [JsonIgnore]
     public IConnectionChecker Checker { get; }
 
-    public QueuedPlayer(IPlayerController controller, IConnectionChecker checker)
+    public QueuedPlayer(IPlayerController controller, IConnectionChecker checker, bool isBot)
     {
+        IsBot = isBot;
         Controller = controller;
         Checker = checker;
     }

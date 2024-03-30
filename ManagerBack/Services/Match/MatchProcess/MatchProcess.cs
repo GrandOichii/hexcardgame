@@ -26,7 +26,6 @@ public class MatchProcess {
         {BotType.SMART, "../bots/basic.lua"},
     };
 
-
     public MatchStatus Status { get; private set; } = MatchStatus.WAITING_FOR_PLAYERS;
     public string CreatorId { get; }
     public Guid Id { get; }
@@ -85,7 +84,7 @@ public class MatchProcess {
             var name = pConfig.BotConfig.Name;
             var deck = pConfig.BotConfig.StrDeck;
 
-            var player = new QueuedPlayer(controller, new BotConnectionChecker()){
+            var player = new QueuedPlayer(controller, new BotConnectionChecker(), true){
                 Name = name,
                 Deck = deck,
                 Status = QueuedPlayerStatus.READY
@@ -183,7 +182,6 @@ public class MatchProcess {
         await _matchService.ServiceStatusUpdated(this);
     }
     
-    private readonly object _runLock = new();
     private async Task Run() {
         // * just in case
         if (Status >= MatchStatus.IN_PROGRESS) return;
@@ -228,7 +226,7 @@ public class MatchProcess {
 
     private readonly object _addPlayerLock = new();
     private async Task AddPlayer(IOPlayerController controller, IConnectionChecker checker) {
-        var player = new QueuedPlayer(controller, checker);
+        var player = new QueuedPlayer(controller, checker, false);
         player.StatusUpdated += OnPlayerStatusUpdated;
         player.Status = QueuedPlayerStatus.WAITING_FOR_DATA;
 

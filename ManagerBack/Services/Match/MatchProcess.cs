@@ -180,13 +180,11 @@ public class MatchProcess {
     public DateTime? StartTime { get; set; }
     public DateTime? EndTime { get; set; }
 
-    [JsonIgnore]
     public Match? Match { get; private set; } = null;
     public ConnectedMatchView View { get; }
     public MatchRecord Record { get; }
     public int TcpPort { get; }
 
-    [JsonIgnore]
     public TcpListener TcpListener { get; } 
 
     private readonly IMatchService _matchService;

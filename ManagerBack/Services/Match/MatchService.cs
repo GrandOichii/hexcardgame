@@ -79,7 +79,7 @@ public class MatchService : IMatchService
         ;
     }
 
-    public async Task<MatchProcess> Create(string userId, MatchProcessConfig config)
+    public async Task<GetMatchProcessDto> Create(string userId, MatchProcessConfig config)
     {
         var mConfig = await _configRepo.ById(config.MatchConfigId)
             ?? throw new MatchConfigNotFoundException($"no match config with id {config.MatchConfigId}")
@@ -91,9 +91,9 @@ public class MatchService : IMatchService
 
         _ = match.InitialSetup();
 
-        return
+        return _mapper.Map<GetMatchProcessDto>(
             match
-        ;
+        );
     }
 
     public async Task EndView(string matchId)

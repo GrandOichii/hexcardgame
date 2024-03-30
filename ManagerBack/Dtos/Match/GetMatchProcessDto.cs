@@ -10,6 +10,4 @@ public class GetMatchProcessDto {
     public required QueuedPlayer[] QueuedPlayers { get; set; }
     public required MatchRecord Record { get; set; }
     public required int TcpPort { get; set; }
-    public required string TcpAddress { get; set; }
-
 }

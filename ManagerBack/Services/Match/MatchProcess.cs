@@ -180,11 +180,11 @@ public class MatchProcess {
     public DateTime? StartTime { get; set; }
     public DateTime? EndTime { get; set; }
 
+    [JsonIgnore]
     public Match? Match { get; private set; } = null;
     public ConnectedMatchView View { get; }
     public MatchRecord Record { get; }
     public int TcpPort { get; }
-    public string TcpAddress { get; }
 
     [JsonIgnore]
     public TcpListener TcpListener { get; } 
@@ -215,7 +215,6 @@ public class MatchProcess {
         TcpListener = new TcpListener(IPAddress.Loopback, 0);
         TcpListener.Start();
         TcpPort = ((IPEndPoint)TcpListener.LocalEndpoint).Port;
-        TcpAddress = ((IPEndPoint)TcpListener.LocalEndpoint).ToString();
     }
 
     public Task InitialSetup() {
@@ -246,7 +245,7 @@ public class MatchProcess {
             Task.Run(ConnectTcpPlayers);
             // ConnectTcpPlayers();
         } else {
-            _ = TryRun();
+            Task.Run(TryRun);
         }
 
         return Task.CompletedTask;
@@ -318,6 +317,7 @@ public class MatchProcess {
                 Name = player.Name!
             };
             Record.Players.Add(record);
+
             var controller = new RecordingPlayerController(baseController, record);
 
             await Match!.AddPlayer(player.GetName(), player.GetDeck(), controller!);
@@ -333,7 +333,6 @@ public class MatchProcess {
     private async Task Run() {
         // * just in case
         if (Status >= MatchStatus.IN_PROGRESS) return;
-
         Match = new(Id.ToString(), _matchConfig, _cardMaster){
             View = View
         };

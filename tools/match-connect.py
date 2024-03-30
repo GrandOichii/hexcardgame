@@ -57,11 +57,13 @@ class TcpConnection:
 
         except socket.timeout:
             message = ''
+        except socket.error:
+            self.open = False
 
         return message
     
     def run_loop(self):
-        while True:
+        while self.open:
             msg = self.read()
             if msg == '': continue
             self.respond(msg)
@@ -152,5 +154,10 @@ CREATE_DATA = {
 }
 
 MATCH_ID = argv[1]
+TYPE = argv[2]
 
-conn = TcpConnection(MATCH_ID)
+if __name__ == '__main__':
+    if TYPE == 'tcp':
+        conn = TcpConnection(MATCH_ID)
+    else:
+        conn = WebSocketConnection(MATCH_ID)

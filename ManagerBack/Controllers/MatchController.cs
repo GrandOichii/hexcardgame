@@ -16,7 +16,6 @@ public class MatchController : ControllerBase {
         _matchService = matchService;
     }
 
-    // TODO authorize
     [Authorize]
     [HttpPost("create")]
     public async Task<IActionResult> Create([FromBody] MatchProcessConfig config) {

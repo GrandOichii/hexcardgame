@@ -48,8 +48,6 @@ def create_match(bot_count: int):
         data[f'p{i+1}Config'] = BOT_CONFIG
 
     resp = requests.request('post', BASE_URL + 'match/create', json=data, headers=HEADERS)
-    print(resp.status_code)
-    print(resp.text)
     return resp.json()['id']
 
 def config_receive_count(connections):
@@ -71,22 +69,3 @@ if __name__ == '__main__':
     connections = []
 
     match_id = create_match(int(argv[1]))
-    print(match_id)
-
-# def connect_to_match(match_id: str):
-#     global connections
-#     connection1 = WebSocketConnection(match_id)
-#     # connection2 = WebSocketConnection(match_id)
-#     connections += [connection1]
-#     # connections += [connection2]
-
-# for i in range(AMOUNT):
-#     match_id = create_match(2)
-#     connect_to_match(match_id)
-# while True:
-#     crc = config_receive_count()
-#     gsrc = first_state_receive_count()
-#     print(f'Config receive: {crc}\tFirst state receive: {gsrc}')
-#     if crc == AMOUNT and gsrc == AMOUNT:
-#         break
-#     time.sleep(50)

@@ -69,3 +69,4 @@ if __name__ == '__main__':
     connections = []
 
     match_id = create_match(int(argv[1]))
+    print(match_id)

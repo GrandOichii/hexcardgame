@@ -1,0 +1,75 @@
+[gd_scene load_steps=3 format=3 uid="uid://teei8y2b8h4x"]
+
+[ext_resource type="Script" path="res://Manager/MatchProcessView/QueuedPlayerDisplay.cs" id="1_4r1fn"]
+[ext_resource type="Texture2D" uid="uid://cv24alm7645fj" path="res://icon.svg" id="2_uqn7j"]
+
+[node name="QueuedPlayerDisplay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_4r1fn")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NameContainer" type="HBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/NameContainer"]
+layout_mode = 2
+text = "Name: "
+
+[node name="NameLabel" type="Label" parent="VBoxContainer/NameContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BotIndicator" type="TextureRect" parent="VBoxContainer/NameContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("2_uqn7j")
+expand_mode = 2
+
+[node name="DeckContainer" type="HBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/DeckContainer"]
+layout_mode = 2
+text = "Deck: "
+
+[node name="RevealDeckButton" type="Button" parent="VBoxContainer/DeckContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Reveal"
+
+[node name="DeckDisplay" type="LineEdit" parent="VBoxContainer/DeckContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Status: "
+
+[node name="StatusLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[connection signal="pressed" from="VBoxContainer/DeckContainer/RevealDeckButton" to="." method="OnRevealDeckButtonPressed"]

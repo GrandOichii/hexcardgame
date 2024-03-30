@@ -1,0 +1,171 @@
+[gd_scene load_steps=3 format=3 uid="uid://lfaid4nc6p47"]
+
+[ext_resource type="Script" path="res://Manager/MatchProcessView/MatchProcessView.cs" id="1_lk05a"]
+[ext_resource type="PackedScene" uid="uid://teei8y2b8h4x" path="res://Manager/MatchProcessView/QueuedPlayerDisplay.tscn" id="2_5572j"]
+
+[node name="MatchProcessView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_lk05a")
+QueuedPlayerDisplayPS = ExtResource("2_5572j")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GeneralInfoContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/GeneralInfoContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/GeneralInfoContainer/HBoxContainer"]
+layout_mode = 2
+text = "Match ID:"
+
+[node name="MatchId" type="LineEdit" parent="VBoxContainer/GeneralInfoContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/GeneralInfoContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/GeneralInfoContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Status: "
+
+[node name="StatusLabel" type="Label" parent="VBoxContainer/GeneralInfoContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="StartTime" type="HBoxContainer" parent="VBoxContainer/GeneralInfoContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/GeneralInfoContainer/StartTime"]
+layout_mode = 2
+text = "Start time:  "
+
+[node name="StartTimeLabel" type="Label" parent="VBoxContainer/GeneralInfoContainer/StartTime"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="EndTime" type="HBoxContainer" parent="VBoxContainer/GeneralInfoContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/GeneralInfoContainer/EndTime"]
+layout_mode = 2
+text = "StartEnd time:  "
+
+[node name="EndTimeLabel" type="Label" parent="VBoxContainer/GeneralInfoContainer/EndTime"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="QueuedPlayerInfoContainer" type="HBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ConnectionContainer" type="VBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="HBoxContainer" parent="VBoxContainer/ConnectionContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ConnectionContainer/VBoxContainer"]
+layout_mode = 2
+text = "Name: "
+
+[node name="NameEdit" type="LineEdit" parent="VBoxContainer/ConnectionContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ConnectionContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ConnectionContainer/HBoxContainer"]
+layout_mode = 2
+text = "Deck: "
+
+[node name="DeckEdit" type="LineEdit" parent="VBoxContainer/ConnectionContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SearchDeckButton" type="Button" parent="VBoxContainer/ConnectionContainer/HBoxContainer"]
+layout_mode = 2
+text = " ... "
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/ConnectionContainer"]
+layout_mode = 2
+
+[node name="RefreshDecksButton" type="Button" parent="VBoxContainer/ConnectionContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Refresh"
+
+[node name="DeckOption" type="OptionButton" parent="VBoxContainer/ConnectionContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PasteDeckButton" type="Button" parent="VBoxContainer/ConnectionContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Paste"
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ConnectButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Connect"
+
+[node name="WatchButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Watch"
+
+[node name="ViewRecordingButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "View recording"
+
+[node name="RefreshButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Refresh"
+
+[node name="Requests" type="Node" parent="."]
+
+[node name="FetchMatchRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
+[connection signal="pressed" from="VBoxContainer/ConnectionContainer/HBoxContainer/SearchDeckButton" to="." method="OnSearchDeckButtonPressed"]
+[connection signal="pressed" from="VBoxContainer/ConnectionContainer/HBoxContainer2/RefreshDecksButton" to="." method="OnRefreshDecksButtonPressed"]
+[connection signal="item_selected" from="VBoxContainer/ConnectionContainer/HBoxContainer2/DeckOption" to="." method="OnDeckOptionItemSelected"]
+[connection signal="pressed" from="VBoxContainer/ConnectionContainer/HBoxContainer2/PasteDeckButton" to="." method="OnPasteDeckButtonPressed"]
+[connection signal="pressed" from="VBoxContainer/ButtonsContainer/ConnectButton" to="." method="OnConnectButtonPressed"]
+[connection signal="pressed" from="VBoxContainer/ButtonsContainer/ViewRecordingButton" to="." method="OnViewRecordingButtonPressed"]
+[connection signal="pressed" from="VBoxContainer/RefreshButton" to="." method="OnRefreshButtonPressed"]
+[connection signal="request_completed" from="Requests/FetchMatchRequest" to="." method="OnFetchMatchRequestRequestCompleted"]

@@ -116,7 +116,7 @@ public class MatchService : IMatchService
         }
         _matches = newMatches;
 
-        var data = JsonSerializer.Serialize(_matches.Values, Common.JSON_SERIALIZATION_OPTIONS);
+        var data = JsonSerializer.Serialize(_matches.Values.Select(_mapper.Map<GetMatchProcessDto>), Common.JSON_SERIALIZATION_OPTIONS);
         await _liveHubContext.Clients.All.SendAsync("UpdateAll", data); 
     }
 
@@ -138,8 +138,9 @@ public class MatchService : IMatchService
 
     public async Task ServiceStatusUpdated(MatchProcess match)
     {
-        // var data = JsonSerializer.Serialize(match, Common.JSON_SERIALIZATION_OPTIONS);
-        // await _liveHubContext.Clients.All.SendAsync("Update", data);
+        var matchDto = _mapper.Map<GetMatchProcessDto>(match);
+        var data = JsonSerializer.Serialize(matchDto, Common.JSON_SERIALIZATION_OPTIONS);
+        await _liveHubContext.Clients.All.SendAsync("Update", data);
     }
 
     public async Task UpdateView(string matchId, BaseMatchState state)

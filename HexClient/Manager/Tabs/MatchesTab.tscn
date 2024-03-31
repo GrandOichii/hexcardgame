@@ -5,8 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://d20hdeknnjx41" path="res://Tables/MatchTable.tscn" id="2_tc0t2"]
 [ext_resource type="PackedScene" uid="uid://dqjostws3wlet" path="res://Match/ConnectedMatchWindow.tscn" id="3_p667x"]
 [ext_resource type="PackedScene" uid="uid://deejm2jhiio78" path="res://Manager/PlayerConfig.tscn" id="4_5dfgw"]
+[ext_resource type="PackedScene" uid="uid://dkppauhxka1v6" path="res://Manager/MatchProcessView/MatchProcessViewWindow.tscn" id="4_qhh8p"]
 [ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="5_5s7fd"]
-[ext_resource type="PackedScene" uid="uid://dcpphua3qlyle" path="res://Manager/MatchRecordDisplay/MatchRecordDisplayWindow.tscn" id="6_58mcm"]
 
 [node name="MatchesTab" type="Control"]
 layout_mode = 3
@@ -19,7 +19,7 @@ mouse_filter = 1
 script = ExtResource("1_efqvs")
 MatchViewWindowPS = ExtResource("2_6ly2s")
 ConnectedMatchWindowPS = ExtResource("3_p667x")
-MatchRecordDisplayWindowPS = ExtResource("6_58mcm")
+MatchProcessViewWindowPS = ExtResource("4_qhh8p")
 
 [node name="HBoxContainer" type="HSplitContainer" parent="."]
 layout_mode = 1
@@ -32,85 +32,6 @@ grow_vertical = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="Legacy" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
-visible = false
-layout_mode = 2
-
-[node name="PlayerNameEdit" type="LineEdit" parent="HBoxContainer/VBoxContainer/Legacy"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "real-player"
-placeholder_text = "Enter your name"
-
-[node name="HSeparator" type="HSeparator" parent="HBoxContainer/VBoxContainer/Legacy"]
-layout_mode = 2
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/Legacy"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer/Legacy/HBoxContainer2"]
-layout_mode = 2
-text = "Deck: "
-
-[node name="PlayerDeckEdit" type="LineEdit" parent="HBoxContainer/VBoxContainer/Legacy/HBoxContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-text = "dev::Mana Drill#3|dev::Brute#3|dev::Mage Initiate#3|dev::Warrior Initiate#3|dev::Rogue Initiate#3|dev::Urakshi Shaman#3|dev::Urakshi Raider#3|dev::Give Strength#3|dev::Blood for Knowledge#3|dev::Dragotha Mage#3|dev::Prophecy Scholar#3|dev::Trained Knight#3|dev::Cast Armor#3|dev::Druid Outcast#3|starters::Knowledge Tower#3|dev::Elven Idealist#3|dev::Elven Outcast#3|dev::Barracks#3|dev::Shieldmate#3|dev::Healer Initiate#3|dev::Archdemon Priest#3|dev::Kobold Warrior#3|dev::Kobold Mage#3|dev::Kobold Rogue#3|starters::Dragotha Student#3|starters::Tutoring Sphinx#3|starters::Dragotha Battlemage#3|starters::Inspiration#3"
-
-[node name="ChoosePlayerDeckButton" type="Button" parent="HBoxContainer/VBoxContainer/Legacy/HBoxContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-text = " ... "
-
-[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer/Legacy"]
-layout_mode = 2
-text = "Use saved deck:"
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/Legacy"]
-layout_mode = 2
-
-[node name="RefreshDecksButton" type="Button" parent="HBoxContainer/VBoxContainer/Legacy/HBoxContainer3"]
-layout_mode = 2
-text = "Refresh"
-
-[node name="SavedDecksOption" type="OptionButton" parent="HBoxContainer/VBoxContainer/Legacy/HBoxContainer3"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="PasteFromDeckButton" type="Button" parent="HBoxContainer/VBoxContainer/Legacy/HBoxContainer3"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Paste"
-
-[node name="HSeparator5" type="HSeparator" parent="HBoxContainer/VBoxContainer/Legacy"]
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/Legacy"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer/Legacy/HBoxContainer"]
-layout_mode = 2
-text = "Client type:"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/Legacy/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="WebSocketCheck" type="CheckBox" parent="HBoxContainer/VBoxContainer/Legacy/HBoxContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-button_pressed = true
-text = "WebSocket"
-
-[node name="TcpCheck" type="CheckBox" parent="HBoxContainer/VBoxContainer/Legacy/HBoxContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Tcp"
 
 [node name="BaseUrlEdit" type="LineEdit" parent="HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
@@ -261,12 +182,6 @@ unique_name_in_owner = true
 initial_position = 2
 theme = ExtResource("5_5s7fd")
 
-[node name="DeckErrorPopup" type="AcceptDialog" parent="Popups"]
-unique_name_in_owner = true
-title = "Deck error!"
-initial_position = 2
-theme = ExtResource("5_5s7fd")
-
 [node name="FailedToFetchBasicConfigPopup" type="AcceptDialog" parent="Popups"]
 unique_name_in_owner = true
 title = "Match config error!"
@@ -284,6 +199,12 @@ file_mode = 0
 access = 2
 filters = PackedStringArray("*.deck")
 
+[node name="DeckErrorPopup" type="AcceptDialog" parent="Popups"]
+unique_name_in_owner = true
+title = "Deck error!"
+initial_position = 2
+theme = ExtResource("5_5s7fd")
+
 [node name="Requests" type="Node" parent="."]
 
 [node name="FetchBasicConfigRequest" type="HTTPRequest" parent="Requests"]
@@ -295,11 +216,6 @@ unique_name_in_owner = true
 [node name="FetchDecksRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/Legacy/HBoxContainer2/ChoosePlayerDeckButton" to="." method="OnChoosePlayerDeckButtonPressed"]
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/Legacy/HBoxContainer3/RefreshDecksButton" to="." method="OnRefreshDecksButtonPressed"]
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/Legacy/HBoxContainer3/PasteFromDeckButton" to="." method="OnPasteFromDeckButtonPressed"]
-[connection signal="toggled" from="HBoxContainer/VBoxContainer/Legacy/HBoxContainer/VBoxContainer/WebSocketCheck" to="." method="OnWebSocketCheckToggled"]
-[connection signal="toggled" from="HBoxContainer/VBoxContainer/Legacy/HBoxContainer/VBoxContainer/TcpCheck" to="." method="OnTcpCheckToggled"]
 [connection signal="text_changed" from="HBoxContainer/VBoxContainer/BaseUrlEdit" to="." method="OnBaseUrlEditTextChanged"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/CreateContainer/HBoxContainer2/FetchBasicConfigButton" to="." method="OnFetchBasicConfigButtonPressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/CreateContainer/CreateMatchButton" to="." method="OnCreateMatchButtonPressed"]

@@ -1,4 +1,5 @@
 using Godot;
+using HexClient.Manager;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Text.Json;

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://lfaid4nc6p47"]
+[gd_scene load_steps=4 format=3 uid="uid://lfaid4nc6p47"]
 
 [ext_resource type="Script" path="res://Manager/MatchProcessView/MatchProcessView.cs" id="1_lk05a"]
 [ext_resource type="PackedScene" uid="uid://teei8y2b8h4x" path="res://Manager/MatchProcessView/QueuedPlayerDisplay.tscn" id="2_5572j"]
+[ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="3_v4kc8"]
 
 [node name="MatchProcessView" type="Control"]
 layout_mode = 3
@@ -131,6 +132,28 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "Paste"
 
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/ConnectionContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ConnectionContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Client type: "
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ConnectionContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WebSocketCheck" type="CheckBox" parent="VBoxContainer/ConnectionContainer/HBoxContainer3/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Web socket"
+
+[node name="TcpCheck" type="CheckBox" parent="VBoxContainer/ConnectionContainer/HBoxContainer3/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Tcp"
+
 [node name="ButtonsContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
@@ -161,11 +184,42 @@ text = "Refresh"
 [node name="FetchMatchRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
+[node name="FetchDecksRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
+[node name="ConnectRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
+[node name="Popups" type="Node" parent="."]
+
+[node name="ChooseDeckFileDialog" type="FileDialog" parent="Popups"]
+unique_name_in_owner = true
+title = "Open a File"
+initial_position = 2
+size = Vector2i(800, 600)
+theme = ExtResource("3_v4kc8")
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.deck")
+
+[node name="DeckErrorPopup" type="AcceptDialog" parent="Popups"]
+unique_name_in_owner = true
+title = "Deck error!"
+initial_position = 2
+theme = ExtResource("3_v4kc8")
+
 [connection signal="pressed" from="VBoxContainer/ConnectionContainer/HBoxContainer/SearchDeckButton" to="." method="OnSearchDeckButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/ConnectionContainer/HBoxContainer2/RefreshDecksButton" to="." method="OnRefreshDecksButtonPressed"]
 [connection signal="item_selected" from="VBoxContainer/ConnectionContainer/HBoxContainer2/DeckOption" to="." method="OnDeckOptionItemSelected"]
 [connection signal="pressed" from="VBoxContainer/ConnectionContainer/HBoxContainer2/PasteDeckButton" to="." method="OnPasteDeckButtonPressed"]
+[connection signal="toggled" from="VBoxContainer/ConnectionContainer/HBoxContainer3/VBoxContainer/WebSocketCheck" to="." method="OnWebSocketCheckToggled"]
+[connection signal="toggled" from="VBoxContainer/ConnectionContainer/HBoxContainer3/VBoxContainer/TcpCheck" to="." method="OnTcpCheckToggled"]
 [connection signal="pressed" from="VBoxContainer/ButtonsContainer/ConnectButton" to="." method="OnConnectButtonPressed"]
+[connection signal="pressed" from="VBoxContainer/ButtonsContainer/WatchButton" to="." method="OnWatchButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/ButtonsContainer/ViewRecordingButton" to="." method="OnViewRecordingButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/RefreshButton" to="." method="OnRefreshButtonPressed"]
 [connection signal="request_completed" from="Requests/FetchMatchRequest" to="." method="OnFetchMatchRequestRequestCompleted"]
+[connection signal="request_completed" from="Requests/FetchDecksRequest" to="." method="OnFetchDecksRequestRequestCompleted"]
+[connection signal="request_completed" from="Requests/ConnectRequest" to="." method="OnConnectRequestRequestCompleted"]
+[connection signal="file_selected" from="Popups/ChooseDeckFileDialog" to="." method="OnChooseDeckFileDialogFileSelected"]

@@ -90,6 +90,7 @@ public class MatchService : IMatchService
         _matches.Add(match.Id, match);
 
         _ = match.InitialSetup();
+        await ServiceStatusUpdated(match);
 
         return _mapper.Map<GetMatchProcessDto>(
             match

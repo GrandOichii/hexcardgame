@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Utility;
 
-namespace HexClient.Tables;
+namespace HexClient.Manager.Tables;
 
 public partial class MatchTable : Control
 {
@@ -120,7 +120,7 @@ public partial class MatchTable : Control
 		item.SetText(0, match.Id.ToString()[..3]);
 		item.SetText(1, match.Status.ToFriendlyString());
 		item.SetText(2, match.Record.WinnerName ?? "");
-		item.SetText(3, match.TcpAddress);
+		item.SetText(3, match.TcpPort.ToString());
 	}
 
 	#region Signal connections

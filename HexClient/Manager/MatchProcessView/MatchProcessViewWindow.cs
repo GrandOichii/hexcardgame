@@ -1,9 +1,10 @@
 using Godot;
+using Microsoft.AspNetCore.SignalR.Client;
 using System;
 
 namespace HexClient.Manager;
 
-public partial class MatchProcessViewWindow : Window
+public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 {
 	#region Nodes
 
@@ -20,7 +21,11 @@ public partial class MatchProcessViewWindow : Window
 		#endregion
 
 		// TODO remove
-		MatchProcessViewNode.Load("18c44bc1-8e10-43b6-916e-b70be65e61ab");
+	}
+
+	public void Load(string matchId)
+	{
+		MatchProcessViewNode.Load(matchId);
 	}
 
 	#region Signal connections
@@ -30,7 +35,20 @@ public partial class MatchProcessViewWindow : Window
 		QueueFree();
 	}
 
+	private void OnMatchProcessViewConnectionCreated(Wrapper<IConnection> connectionW)
+	{
+		// TODO
+	}
+
+	private void OnMatchProcessViewWatcherConnectionCreated(Wrapper<HubConnection> connectionW, string matchId)
+	{
+		// Replace with function body.
+	}
+	
 	#endregion
 }
+
+
+
 
 

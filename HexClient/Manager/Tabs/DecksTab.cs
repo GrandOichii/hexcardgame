@@ -71,7 +71,7 @@ public partial class DecksTab : Control
 		RightNode.Hide();
 	}
 	
-	private string BaseUrl => GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+	private string BaseUrl => GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 
 	private void UpdateDecks(List<Deck> decks) {
 		RightNode.Hide();
@@ -172,7 +172,7 @@ public partial class DecksTab : Control
 		var deck = DeleteDeckConfirmationPopupNode.GetMeta("Deck").As<Wrapper<Deck>>().Value;
 
 		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
-		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 		
 		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
 
@@ -211,7 +211,7 @@ public partial class DecksTab : Control
 	private void OnDeckEditSaved(Wrapper<Deck> deckW, string oldId)
 	{
 		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
-		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 		
 		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
 		var deck = deckW.Value;

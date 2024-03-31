@@ -26,3 +26,5 @@ layout_mode = 2
 theme = ExtResource("3_yb3fn")
 
 [connection signal="close_requested" from="." to="." method="OnCloseRequested"]
+[connection signal="ConnectionCreated" from="MarginContainer/MatchProcessView" to="." method="OnMatchProcessViewConnectionCreated"]
+[connection signal="WatcherConnectionCreated" from="MarginContainer/MatchProcessView" to="." method="OnMatchProcessViewWatcherConnectionCreated"]

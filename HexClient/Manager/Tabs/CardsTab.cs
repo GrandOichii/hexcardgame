@@ -85,7 +85,7 @@ public partial class CardsTab : Control
 	}
 
 	private void LoadExpansion(string expansion) {
-		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 		FetchExpansionCardsRequestNode.CancelRequest();
 		FetchExpansionCardsRequestNode.Request(baseUrl + "card/fromexpansion/" + Uri.EscapeDataString(expansion));
 	}
@@ -112,7 +112,7 @@ public partial class CardsTab : Control
 
 	private void OnFetchExpansionsButtonPressed()
 	{
-		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 		FetchExpansionsRequestNode.CancelRequest();
 		FetchExpansionsRequestNode.Request(baseUrl + "expansion");
 	}
@@ -191,7 +191,7 @@ public partial class CardsTab : Control
 		// ! pretty sus code, might break
 
 		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
-		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 		
 		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
 		var card = cardW.Value;
@@ -306,7 +306,7 @@ public partial class CardsTab : Control
 	#endregion
 
 	private void DeleteCard(string cid) {
-		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
 
 		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };

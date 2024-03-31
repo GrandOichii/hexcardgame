@@ -37,7 +37,7 @@ public partial class AddCard : Control
 		#endregion
 	}
 
-	public string BaseUrl => GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+	public string BaseUrl => GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 
 	
 	#region Signal connections

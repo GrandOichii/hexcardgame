@@ -3,12 +3,20 @@ using System.Net.Http;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Godot;
+using HexClient.Manager;
 using Shared;
+using Utility;
 
 namespace HexClient.Connection;
+
+class PlayerData {
+    public required string Name { get; set; }
+    public required string Deck { get; set; }
+}
 
 public interface IConnection {
 
@@ -21,18 +29,15 @@ public interface IConnection {
 	public Task Close();
 	public Task<string> Read();
 
-	public async Task SendName(string name) {
-		await Read(); // should be "name"
-		await Write(name);
-	}
-
-	public async Task SendDeck(string deck) {
-		await Read(); // should be "deck"
-		await Write(deck);
+	public async Task SendData(string name, string deck) {
+		var pData = new PlayerData {
+			Name = name,
+			Deck = deck,
+		};
+		var data = JsonSerializer.Serialize(pData, Common.JSON_SERIALIZATION_OPTIONS);
+		await Write(data);
 	}
 }
-
-// !FIXME crashes the backend sometimes :)
 
 public class WebSocketConnection : IConnection
 {
@@ -52,21 +57,10 @@ public class WebSocketConnection : IConnection
 	public void StartReceiveLoop(string name, string deck) {
 		Task.Run(async () =>
 		{
-			// !FIXME failed when creating match with two players
-			string resp;
-			while (true) {
-				resp = await Read();
-				if (resp != "ping") {
-					break;
-				}
-				await Write("pong");
-			}
-			OnReceive?.Invoke(resp);
-
 			while (_client.State == WebSocketState.Open)
 			{
 				var message = await Read();
-				OnReceive?.Invoke(message.ToString());
+				await OnReceive?.Invoke(message.ToString());
 			}
 			OnClose?.Invoke();
 		});
@@ -131,7 +125,7 @@ public class TcpConnection : IConnection
 			while (_client.Connected) {
 				try {
 					var message = await Read();
-					OnReceive?.Invoke(message);
+					await OnReceive?.Invoke(message);
 				} catch {
 					continue;
 				}

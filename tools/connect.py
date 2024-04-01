@@ -82,10 +82,10 @@ class TcpConnection:
         data = json.loads(msg)
         if data['request'] == 'update':
             return
-        # resp = input('Enter response: ')
-        # self.write(resp)
-        if self.config_received and self.first_state_received:
-            self.force_close()
+        resp = input('Enter response: ')
+        self.write(resp)
+        # if self.config_received and self.first_state_received:
+        #     self.force_close()
 
 class WebSocketConnection:
     def force_close(self):

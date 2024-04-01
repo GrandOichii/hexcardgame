@@ -222,6 +222,8 @@ public partial class MapGrid : Control, IMapGrid
 			}
 			_tiles.Add(a);
 		}
+
+		OnResized();
 	}
 
 	#region Utility static methods

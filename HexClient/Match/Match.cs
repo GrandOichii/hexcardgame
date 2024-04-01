@@ -101,17 +101,6 @@ public partial class Match : Control
 		
 		OptionsWindowNode.Hide();
 	}
-
-	public override void _Input(InputEvent e) {
-		if (Processor is null) return;
-
-		if (e.IsActionPressed("cancel-command"))
-			CancelCommand();
-	}
-	
-	private void CancelCommand() {
-		Processor.ResetCommand();
-	}
 	
 	public void SetCommandProcessor(CommandProcessor processor) {
 		Processor = processor;
@@ -124,7 +113,8 @@ public partial class Match : Control
 	}
 
 	public void LoadMatchInfo(MatchInfoState info) {
-		Processor.Config = info;
+		if (Processor is not null)
+			Processor.Config = info;
 
 		// create player info nodes
 		var pCount = info.PlayerCount;

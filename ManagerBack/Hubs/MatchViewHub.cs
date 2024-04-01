@@ -16,8 +16,10 @@ public class MatchViewHub : Hub {
     // public async Task Connect(string matchId, string jwtToken) {
     public async Task Connect(string matchId) {
         GetMatchProcessDto match;
+        System.Console.WriteLine("requested connection");
         try {
             match = await _matchService.ById(matchId);
+            System.Console.WriteLine(matchId);
             if (!match.Config.CanWatch) {
                 await Clients.Caller.SendAsync("Forbidden");
                 return;

@@ -73,15 +73,10 @@ max_value = 20.0
 value = 1.0
 prefix = "Number of matches: "
 
-[node name="AutoConnectCheck" type="CheckBox" parent="HBoxContainer/VBoxContainer/CreateContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-button_pressed = true
-text = "Auto connect to match"
-
 [node name="CanWatchCheck" type="CheckBox" parent="HBoxContainer/VBoxContainer/CreateContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+button_pressed = true
 text = "Allow players to watch match"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/CreateContainer"]

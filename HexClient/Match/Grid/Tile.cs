@@ -217,6 +217,8 @@ public partial class Tile : Node2D, ITile
 
 	private void OnCollisionInputEvent(Node viewport, InputEvent e, long shape_idx)
 	{
+		if (_processor is null)
+			return;
 		if (e.IsActionPressed("add-to-action")) {
 			TryAddToAction();
 		}

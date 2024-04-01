@@ -14,7 +14,9 @@ public partial class BaseState : Node {
 	public List<string> Args { get; set; }
 
 	public virtual void ApplyTo(Match match, HexStates.MatchInfoState info) {
-		match.Processor.State = this;
+		if (match.Processor is not null)
+			match.Processor.State = this;
+			
 		CallDeferred("ApplyToPlayerInfo", match, new Wrapper<HexStates.MatchInfoState>(info));
 		CallDeferred("ApplyToLogs", match);
 		CallDeferred("ApplyToMap", match);

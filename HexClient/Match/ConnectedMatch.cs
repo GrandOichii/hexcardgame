@@ -18,6 +18,8 @@ public partial class ConnectedMatch : Control
 	#endregion
 	
 	public IConnection Connection { get; private set; }
+	public CommandProcessor Processor { get; private set; }
+
 
 	private HexStates.MatchInfoState _personalConfig;
 	public HexStates.MatchInfoState MatchInfo { 
@@ -39,6 +41,15 @@ public partial class ConnectedMatch : Control
 		#endregion
 	}
 
+	public override void _Input(InputEvent e) {
+		if (e.IsActionPressed("cancel-command"))
+			CancelCommand();
+	}
+
+	private void CancelCommand() {
+		Processor.ResetCommand();
+	}
+
 	public async Task LoadConnection(IConnection connection, string name, string deck) {
 		Connection = connection;
 
@@ -47,8 +58,8 @@ public partial class ConnectedMatch : Control
 		Connection.SubscribeToUpdate(OnMatchUpdate);
 		Connection.StartReceiveLoop();
 
-		var processor = new CommandProcessor(connection);
-		MatchNode.SetCommandProcessor(processor);
+		Processor = new CommandProcessor(connection);
+		MatchNode.SetCommandProcessor(Processor);
 	}
 
 	private static readonly string CONFIG_PREFIX = "config-";

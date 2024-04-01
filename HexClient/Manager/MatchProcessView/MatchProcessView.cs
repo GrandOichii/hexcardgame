@@ -393,9 +393,6 @@ public partial class MatchProcessView : Control
 			.Build();
 
 		EmitSignal(SignalName.WatcherConnectionCreated, new Wrapper<HubConnection>(connection), MatchIdNode.Text);
-		// var window = MatchViewWindowPS.Instantiate() as MatchViewWindow;
-		// WindowsNode.AddChild(window);
-		// _ = window.Connect(connection, WatchMatchIdEditNode.Text);
 	}
 	
 	private void OnChooseDeckFileDialogFileSelected(string path)

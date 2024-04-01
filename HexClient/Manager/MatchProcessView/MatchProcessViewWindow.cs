@@ -11,6 +11,8 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 
 	[Export]
 	private PackedScene ConnectedMatchWindowPS { get; set; }
+	[Export]
+	private PackedScene MatchViewWindowPS { get; set; }
 
 	#endregion
 	#region Nodes
@@ -50,7 +52,6 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 
 		var window = ConnectedMatchWindowPS.Instantiate() as ConnectedMatchWindow;
 
-		// TODO
 		GetParent().AddChild(window);
 
 		await window.Load(client, name, deck);
@@ -61,7 +62,14 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 
 	private void OnMatchProcessViewWatcherConnectionCreated(Wrapper<HubConnection> connectionW, string matchId)
 	{
-		// TODO
+		var connection = connectionW.Value;
+		var window = MatchViewWindowPS.Instantiate() as MatchViewWindow;
+
+		GetParent().AddChild(window);
+
+		window.GrabFocus();
+		_ = window.Connect(connection, matchId);
+		QueueFree();
 	}
 	
 	#endregion

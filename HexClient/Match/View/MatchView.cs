@@ -75,6 +75,7 @@ public partial class MatchView : Control
 
 	private Task OnViewConfig(string message) {
 		MatchInfo = JsonSerializer.Deserialize<HexStates.MatchInfoState>(message, Common.JSON_SERIALIZATION_OPTIONS);
+		GD.Print(message);
 		MatchNode.LoadMatchInfo(MatchInfo);
 		return Task.CompletedTask;
 	}

@@ -25,6 +25,8 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 
 	public void Load(string matchId)
 	{
+		Title = $"Match {matchId[..10]}";
+		
 		MatchProcessViewNode.Load(matchId);
 	}
 
@@ -37,7 +39,7 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 
 	private void OnMatchProcessViewConnectionCreated(Wrapper<IConnection> connectionW)
 	{
-		// TODO
+		GD.Print("connection created");
 	}
 
 	private void OnMatchProcessViewWatcherConnectionCreated(Wrapper<HubConnection> connectionW, string matchId)

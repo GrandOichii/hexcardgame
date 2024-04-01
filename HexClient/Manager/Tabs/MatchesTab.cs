@@ -200,11 +200,11 @@ public partial class MatchesTab : Control
 	{
 		// TODO? this allows to view the same record from 2 different windows, change?
 
-		var window = MatchProcessViewWindowPS.Instantiate() as Window;
-		WindowsNode.AddChild(window);
+		var child = MatchProcessViewWindowPS.Instantiate() as Window;
+		WindowsNode.AddChild(child);
 		
-		var display = window as IMatchProcessViewWindow;
-		display.Load(match.Value.Id.ToString());
+		var window = child as IMatchProcessViewWindow;
+		window.Load(match.Value.Id.ToString());
 	}
 
 	#endregion

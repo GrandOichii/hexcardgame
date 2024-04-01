@@ -246,19 +246,9 @@ public partial class MatchProcessView : Control
 			? await CreateWebSocketConnection(match)
 			: await CreateTcpConnection(match)
 		;
-
-		GD.Print("sent data");
 		await client.SendData(name, deck);
 		
-		client.StartReceiveLoop(name, deck);
-
 		EmitSignal(SignalName.ConnectionCreated, new Wrapper<IConnection>(client));
-		// var window = ConnectedMatchWindowPS.Instantiate() as ConnectedMatchWindow;
-
-		// WindowsNode.AddChild(window);
-
-		// await window.Load(client);
-		// window.GrabFocus();
 	}
 
 	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match) {
@@ -275,7 +265,7 @@ public partial class MatchProcessView : Control
 
 	private async Task<TcpConnection> CreateTcpConnection(MatchProcess match) {
 		var client = new TcpClient();
-		var address = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl + match.TcpPort;
+		var address = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl + ":" + match.TcpPort;
 		await client.ConnectAsync(IPEndPoint.Parse(address));
 		var result = new TcpConnection(client);
 		return result;

@@ -14,10 +14,19 @@ public class WebSocketConnectionChecker : IConnectionChecker
     public async Task<bool> Check()
     {
         try {
+            System.Console.WriteLine("WebSocket check, sent ping...");
             await _socket.Write("ping");
-            var resp = await _socket.Read();
+            
+            var timeOut = new CancellationTokenSource(5000).Token;
+            var resp = await _socket.Read(timeOut);
+            System.Console.WriteLine("WebSocket received " + resp);
             return resp == "pong";
-        } catch {
+        // catch(OperationCancelledException)
+        // {
+        //     DoInactivityAction();
+        // }
+        } catch (Exception e) {
+            System.Console.WriteLine(e.Message);
             // TODO bee more specific with exception types
             return false;
         }

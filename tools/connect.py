@@ -18,6 +18,7 @@ class TcpConnection:
         resp = requests.get(API_URL + 'match/' + match_id)
         port = resp.json()['tcpPort']
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        print((ADDRESS, port))
         self.socket.connect((ADDRESS, port))
         self.socket.settimeout(.2)
         self.on_connect()

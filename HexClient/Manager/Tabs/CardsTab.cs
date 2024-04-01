@@ -260,7 +260,6 @@ public partial class CardsTab : Control
 			var resp = Encoding.UTF8.GetString(body);
 
 			CardAlertPopupNode.DialogText = $"Failed to delete card! (Response code: {response_code})\n\n{resp}";
-			GD.Print(resp);
 			CardAlertPopupNode.Show();
 			return;
 		}

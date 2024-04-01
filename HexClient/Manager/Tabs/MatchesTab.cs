@@ -138,7 +138,6 @@ public partial class MatchesTab : Control
 			var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
 			string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
 			var data = JsonSerializer.Serialize(config, Common.JSON_SERIALIZATION_OPTIONS);
-			GD.Print(data);
 			CreateRequestNode.Request(BaseUrl + "match/create", headers, HttpClient.Method.Post, data);
 			await ToSignal(CreateRequestNode, "request_completed");
 		}

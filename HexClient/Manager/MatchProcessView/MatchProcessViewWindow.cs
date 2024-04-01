@@ -1,11 +1,18 @@
 using Godot;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
+using System.Threading.Tasks;
 
 namespace HexClient.Manager;
 
 public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 {
+	#region Packed scenes
+
+	[Export]
+	private PackedScene ConnectedMatchWindowPS { get; set; }
+
+	#endregion
 	#region Nodes
 
 	public MatchProcessView MatchProcessViewNode { get; private set; }
@@ -37,9 +44,17 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 		QueueFree();
 	}
 
-	private void OnMatchProcessViewConnectionCreated(Wrapper<IConnection> connectionW)
+	private async void OnMatchProcessViewConnectionCreated(Wrapper<IConnection> connectionW)
 	{
-		GD.Print("connection created");
+		var client = connectionW.Value;
+
+		var window = ConnectedMatchWindowPS.Instantiate() as ConnectedMatchWindow;
+
+		// TODO
+		AddChild(window);
+
+		await window.Load(client);
+		window.GrabFocus();
 	}
 
 	private void OnMatchProcessViewWatcherConnectionCreated(Wrapper<HubConnection> connectionW, string matchId)

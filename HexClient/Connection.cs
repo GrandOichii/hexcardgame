@@ -21,7 +21,7 @@ class PlayerData {
 public interface IConnection {
 
 	public delegate Task MessageHandler(string message);
-	public void StartReceiveLoop(string name, string deck);
+	public void StartReceiveLoop();
 	public delegate void CloseHandler();
 	public Task Write(string message);
 	public void SubscribeToUpdate(MessageHandler func);
@@ -54,13 +54,15 @@ public class WebSocketConnection : IConnection
 		_client = client;
 	}
 
-	public void StartReceiveLoop(string name, string deck) {
+	public void StartReceiveLoop() {
 		Task.Run(async () =>
 		{
 			while (_client.State == WebSocketState.Open)
 			{
 				var message = await Read();
-				await OnReceive?.Invoke(message.ToString());
+				GD.Print("read " + message);
+				GD.Print(OnReceive);
+				await OnReceive?.Invoke(message);
 			}
 			OnClose?.Invoke();
 		});
@@ -74,6 +76,8 @@ public class WebSocketConnection : IConnection
 		{
 			result = await _client.ReceiveAsync(buffer, CancellationToken.None);
 			string messagePart = Encoding.UTF8.GetString(buffer.Array, 0, result.Count);
+			// messagePart = messagePart.Replace("\0", string.Empty);
+			GD.Print(result.EndOfMessage);
 			message.Append(messagePart);
 		}
 		while (!result.EndOfMessage);
@@ -119,7 +123,7 @@ public class TcpConnection : IConnection
 		_client = client;
 	}
 
-	public void StartReceiveLoop(string name, string deck) {
+	public void StartReceiveLoop() {
 		Task.Run(async () => {
 			// _client.ReceiveTimeout = 50;
 			while (_client.Connected) {
@@ -158,7 +162,6 @@ public class TcpConnection : IConnection
 
 	public Task<string> Read() {
 		var result = NetUtil.Read(_client.GetStream());
-		GD.Print("READ " + result[..10]);
 		return Task.FromResult(result);
 	}
 }

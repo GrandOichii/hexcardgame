@@ -42,7 +42,9 @@ public partial class ConnectedMatch : Control
 	public Task LoadConnection(IConnection connection) {
 		Connection = connection;
 
+		// TODO? send player info here
 		Connection.SubscribeToUpdate(OnMatchUpdate);
+		Connection.StartReceiveLoop();
 
 		var processor = new CommandProcessor(connection);
 		MatchNode.SetCommandProcessor(processor);
@@ -51,22 +53,23 @@ public partial class ConnectedMatch : Control
 	}
 
 	private static readonly string CONFIG_PREFIX = "config-";
-	private Task OnMatchUpdate(string message) {
+	private async Task OnMatchUpdate(string message) {
 		GD.Print(message);
 		GD.Print();
+		if (message == "ping") {
+			await Connection.Write("pong");
+			return;
+		}
 		if (message.StartsWith(CONFIG_PREFIX)) {
-			GD.Print("READING CONFIG");
 			message = message[CONFIG_PREFIX.Length..];
 			MatchInfo = JsonSerializer.Deserialize<HexStates.MatchInfoState>(message, Common.JSON_SERIALIZATION_OPTIONS);
 			MatchNode.LoadMatchInfo(MatchInfo);
 			
-			return Task.CompletedTask;
+			return;
 		}
 
 		var state = JsonSerializer.Deserialize<MatchState>(message, Common.JSON_SERIALIZATION_OPTIONS);
 		CallDeferred("LoadState", state);
-
-		return Task.CompletedTask;
 	}
 
 	private void LoadState(MatchState state) {

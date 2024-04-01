@@ -151,7 +151,6 @@ public class MatchProcess {
 
     public async Task TryRun() {
         if (!CanStart()) return;
-        System.Console.WriteLine("Attempted to start match, checking players");
         var valid = await CheckPlayers();
         if (!valid) {
             System.Console.WriteLine("some connections were invalid, waiting for new connections..");

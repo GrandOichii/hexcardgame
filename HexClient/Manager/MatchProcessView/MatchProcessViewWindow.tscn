@@ -1,13 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://dkppauhxka1v6"]
+[gd_scene load_steps=5 format=3 uid="uid://dkppauhxka1v6"]
 
 [ext_resource type="Script" path="res://Manager/MatchProcessView/MatchProcessViewWindow.cs" id="1_4xp6m"]
 [ext_resource type="PackedScene" uid="uid://lfaid4nc6p47" path="res://Manager/MatchProcessView/MatchProcessView.tscn" id="2_1ab13"]
+[ext_resource type="PackedScene" uid="uid://dqjostws3wlet" path="res://Match/ConnectedMatchWindow.tscn" id="2_jvr7h"]
 [ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="3_yb3fn"]
 
 [node name="MatchProcessViewWindow" type="Window"]
 initial_position = 2
 size = Vector2i(800, 600)
 script = ExtResource("1_4xp6m")
+ConnectedMatchWindowPS = ExtResource("2_jvr7h")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 15

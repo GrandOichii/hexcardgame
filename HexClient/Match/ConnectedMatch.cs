@@ -39,17 +39,16 @@ public partial class ConnectedMatch : Control
 		#endregion
 	}
 
-	public Task LoadConnection(IConnection connection) {
+	public async Task LoadConnection(IConnection connection, string name, string deck) {
 		Connection = connection;
 
-		// TODO? send player info here
+		await Connection.SendData(name, deck);
+
 		Connection.SubscribeToUpdate(OnMatchUpdate);
 		Connection.StartReceiveLoop();
 
 		var processor = new CommandProcessor(connection);
 		MatchNode.SetCommandProcessor(processor);
-
-		return Task.CompletedTask;
 	}
 
 	private static readonly string CONFIG_PREFIX = "config-";

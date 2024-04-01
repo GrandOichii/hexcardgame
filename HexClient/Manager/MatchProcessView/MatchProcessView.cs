@@ -105,7 +105,7 @@ public partial class MatchProcessView : Control
 	#region Signals
 
 	[Signal]
-	public delegate void ConnectionCreatedEventHandler(Wrapper<IConnection> connectionW);
+	public delegate void ConnectionCreatedEventHandler(Wrapper<IConnection> connectionW, string name, string deck);
 	[Signal]
 	public delegate void WatcherConnectionCreatedEventHandler(Wrapper<HubConnection> connectionW, string matchId);
 
@@ -246,9 +246,8 @@ public partial class MatchProcessView : Control
 			? await CreateWebSocketConnection(match)
 			: await CreateTcpConnection(match)
 		;
-		await client.SendData(name, deck);
 		
-		EmitSignal(SignalName.ConnectionCreated, new Wrapper<IConnection>(client));
+		EmitSignal(SignalName.ConnectionCreated, new Wrapper<IConnection>(client), name, deck);
 	}
 
 	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match) {

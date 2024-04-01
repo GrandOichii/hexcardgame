@@ -44,22 +44,24 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 		QueueFree();
 	}
 
-	private async void OnMatchProcessViewConnectionCreated(Wrapper<IConnection> connectionW)
+	private async void OnMatchProcessViewConnectionCreated(Wrapper<IConnection> connectionW, string name, string deck)
 	{
 		var client = connectionW.Value;
 
 		var window = ConnectedMatchWindowPS.Instantiate() as ConnectedMatchWindow;
 
 		// TODO
-		AddChild(window);
+		GetParent().AddChild(window);
 
-		await window.Load(client);
+		await window.Load(client, name, deck);
 		window.GrabFocus();
+
+		QueueFree();
 	}
 
 	private void OnMatchProcessViewWatcherConnectionCreated(Wrapper<HubConnection> connectionW, string matchId)
 	{
-		// Replace with function body.
+		// TODO
 	}
 	
 	#endregion

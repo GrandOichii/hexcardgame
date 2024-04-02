@@ -220,6 +220,10 @@ public partial class MatchProcessView : Control
 			var display = child as IQueuedPlayerDisplay;
 			display.Load(match.QueuedPlayers[i]);
 		}
+
+		WatchButtonNode.Visible = match.Status == MatchStatus.IN_PROGRESS;
+		ConnectButtonNode.Visible = match.Status == MatchStatus.WAITING_FOR_PLAYERS;
+		ViewRecordingButtonNode.Visible = match.Status >= MatchStatus.FINISHED;
 	}
 
 	private async Task ConnectTo(MatchProcess match) {
@@ -269,7 +273,6 @@ public partial class MatchProcessView : Control
 		var result = new TcpConnection(client);
 		return result;
 	}
-
 
 
 	#region Signal connections
@@ -388,13 +391,11 @@ public partial class MatchProcessView : Control
 
 	private void OnWatchButtonPressed()
 	{
-		for (int i = 0; i < 50; i++) {
-			var connection = new HubConnectionBuilder()
-				.WithUrl(BaseUrl + "match/watch")
-				.Build();
+		var connection = new HubConnectionBuilder()
+			.WithUrl(BaseUrl + "match/watch")
+			.Build();
 
-			EmitSignal(SignalName.WatcherConnectionCreated, new Wrapper<HubConnection>(connection), MatchIdNode.Text);
-		}
+		EmitSignal(SignalName.WatcherConnectionCreated, new Wrapper<HubConnection>(connection), MatchIdNode.Text);
 	}
 	
 	private void OnChooseDeckFileDialogFileSelected(string path)

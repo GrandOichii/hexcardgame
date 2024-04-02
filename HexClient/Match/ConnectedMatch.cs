@@ -64,8 +64,6 @@ public partial class ConnectedMatch : Control
 
 	private static readonly string CONFIG_PREFIX = "config-";
 	private async Task OnMatchUpdate(string message) {
-		GD.Print(message);
-		GD.Print();
 		if (message == "ping") {
 			await Connection.Write("pong");
 			return;

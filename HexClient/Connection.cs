@@ -60,8 +60,6 @@ public class WebSocketConnection : IConnection
 			while (_client.State == WebSocketState.Open)
 			{
 				var message = await Read();
-				GD.Print("read " + message);
-				GD.Print(OnReceive);
 				await OnReceive?.Invoke(message);
 			}
 			OnClose?.Invoke();
@@ -76,8 +74,6 @@ public class WebSocketConnection : IConnection
 		{
 			result = await _client.ReceiveAsync(buffer, CancellationToken.None);
 			string messagePart = Encoding.UTF8.GetString(buffer.Array, 0, result.Count);
-			// messagePart = messagePart.Replace("\0", string.Empty);
-			GD.Print(result.EndOfMessage);
 			message.Append(messagePart);
 		}
 		while (!result.EndOfMessage);

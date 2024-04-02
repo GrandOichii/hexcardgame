@@ -132,7 +132,8 @@ public class MatchService : IMatchService
     public async Task SendMatchState(string matchId, string connectionId)
     {
         var match = await GetMatch(matchId);
-        var state = new BaseMatchState(match.Match!);
+        
+        var state = match.View.LastState;
         var data = JsonSerializer.Serialize(state, Common.JSON_SERIALIZATION_OPTIONS);
         await _viewHubContext.Clients.Client(connectionId).SendAsync("Update", data);
     }

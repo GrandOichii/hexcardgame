@@ -33,10 +33,6 @@ public class SelectPlayTile : SelectTile {
 		}
 		// card is not spell: tile has to be empty and owned by the player or has to have an enemy entity
 		if (tile.GetState()?.OwnerID != myID) {
-			GD.Print("owner id doesnt match");
-			GD.Print(tile.GetState()?.OwnerID + "  " + myID);
-
-
 			return false;
 		}
 		if (tile.GetState()?.Entity is not null) {

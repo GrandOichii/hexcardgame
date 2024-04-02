@@ -218,7 +218,6 @@ public partial class DecksTab : Control
 
 		if (!string.IsNullOrEmpty(oldId)) {
 
-			GD.Print(baseUrl + "deck/" + Uri.EscapeDataString(deck.Id));
 			UpdateCardRequestNode.Request(baseUrl + "deck/" + Uri.EscapeDataString(deck.Id), headers, HttpClient.Method.Put, JsonSerializer.Serialize(deck, Common.JSON_SERIALIZATION_OPTIONS));
 			return;
 		}

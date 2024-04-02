@@ -21,7 +21,8 @@ public struct BaseMatchState {
 public class ConnectedMatchView : IMatchView
 {
     private readonly IMatchService _matchService;
-    private readonly Guid _matchId; 
+    private readonly Guid _matchId;
+    public BaseMatchState LastState { get; private set; }
 
     public ConnectedMatchView(Guid matchId, IMatchService matchService)
     {
@@ -41,7 +42,7 @@ public class ConnectedMatchView : IMatchView
 
     public async Task Update(Match match)
     {
-        var state = new BaseMatchState(match);
-        await _matchService.UpdateView(_matchId.ToString(), state);
+        LastState = new BaseMatchState(match);
+        await _matchService.UpdateView(_matchId.ToString(), LastState);
     }
 }

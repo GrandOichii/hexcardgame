@@ -388,11 +388,13 @@ public partial class MatchProcessView : Control
 
 	private void OnWatchButtonPressed()
 	{
-		var connection = new HubConnectionBuilder()
-			.WithUrl(BaseUrl + "match/watch")
-			.Build();
+		for (int i = 0; i < 50; i++) {
+			var connection = new HubConnectionBuilder()
+				.WithUrl(BaseUrl + "match/watch")
+				.Build();
 
-		EmitSignal(SignalName.WatcherConnectionCreated, new Wrapper<HubConnection>(connection), MatchIdNode.Text);
+			EmitSignal(SignalName.WatcherConnectionCreated, new Wrapper<HubConnection>(connection), MatchIdNode.Text);
+		}
 	}
 	
 	private void OnChooseDeckFileDialogFileSelected(string path)

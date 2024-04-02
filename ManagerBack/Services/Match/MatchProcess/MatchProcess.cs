@@ -153,10 +153,8 @@ public class MatchProcess {
         if (!CanStart()) return;
         var valid = await CheckPlayers();
         if (!valid) {
-            System.Console.WriteLine("some connections were invalid, waiting for new connections..");
             return;
         }
-        System.Console.WriteLine("All players passed check, starting!");
 
         _ = Run();
     }
@@ -193,7 +191,6 @@ public class MatchProcess {
         
         await CreatePlayerControllers();
 
-        System.Console.WriteLine("Match started!");
         await SetStatus(MatchStatus.IN_PROGRESS);
         StartTime = DateTime.Now;
         try {
@@ -201,20 +198,18 @@ public class MatchProcess {
             await SetStatus(MatchStatus.FINISHED);
             Record.WinnerName = Match.Winner!.Name;
             await _matchService.ServiceStatusUpdated(this);
-            System.Console.WriteLine("Match ended");
         } catch (Exception e) {
             await SetStatus(MatchStatus.CRASHED);
             Record.ExceptionMessage = e.Message;
             if (e.InnerException is not null)
                 Record.InnerExceptionMessage = e.InnerException.Message;      
-            // System.Console.WriteLine(e.Message);      
-            // System.Console.WriteLine(e.StackTrace);
+            System.Console.WriteLine(e.Message);      
+            System.Console.WriteLine(e.StackTrace);
             System.Console.WriteLine("Match crashed");
             await Match.View.End();
         }
 
         EndTime = DateTime.Now; 
-        // TcpListener.Stop();
     }
 
     public async Task AddWebSocketConnection(WebSocket socket) {
@@ -262,16 +257,13 @@ public class MatchProcess {
     }
 
     private async Task AddTcpConnection() {
-        System.Console.WriteLine("Waiting for tcp connection...");
         var client = TcpListener.AcceptTcpClient();
         if (!CanConnect()) {
             client.Close();
             return;
         }
-        System.Console.WriteLine("Connected!");
         var controller = new TCPPlayerController(client, Match!);
         await AddPlayer(controller, new TcpConnectionChecker(client));
-        System.Console.WriteLine("player added!");
     }    
 }
 

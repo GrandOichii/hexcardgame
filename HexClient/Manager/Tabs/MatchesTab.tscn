@@ -38,6 +38,11 @@ unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Enter base url"
 
+[node name="ApiUrlEdit" type="LineEdit" parent="HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Enter api url"
+
 [node name="HSeparator4" type="HSeparator" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
@@ -212,6 +217,7 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 
 [connection signal="text_changed" from="HBoxContainer/VBoxContainer/BaseUrlEdit" to="." method="OnBaseUrlEditTextChanged"]
+[connection signal="text_changed" from="HBoxContainer/VBoxContainer/ApiUrlEdit" to="." method="OnBaseUrlEditTextChanged"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/CreateContainer/HBoxContainer2/FetchBasicConfigButton" to="." method="OnFetchBasicConfigButtonPressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/CreateContainer/CreateMatchButton" to="." method="OnCreateMatchButtonPressed"]
 [connection signal="request_completed" from="HBoxContainer/VBoxContainer/CreateContainer/CreateRequest" to="." method="OnCreateRequestRequestCompleted"]

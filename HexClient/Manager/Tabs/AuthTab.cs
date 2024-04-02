@@ -85,8 +85,8 @@ public partial class AuthTab : Control
 		};
 
 		string[] headers = new string[] { "Content-Type: application/json" };
-		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
-		LoginRequestNode.Request(baseUrl + "auth/login", headers, HttpClient.Method.Post, JsonSerializer.Serialize(data));
+		var apiUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
+		LoginRequestNode.Request(apiUrl + "auth/login", headers, HttpClient.Method.Post, JsonSerializer.Serialize(data));
 	}
 
 	private void OnLoginRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)

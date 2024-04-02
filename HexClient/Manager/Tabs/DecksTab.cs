@@ -71,7 +71,7 @@ public partial class DecksTab : Control
 		RightNode.Hide();
 	}
 	
-	private string BaseUrl => GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
+	private string ApiUrl => GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 
 	private void UpdateDecks(List<Deck> decks) {
 		RightNode.Hide();
@@ -136,7 +136,7 @@ public partial class DecksTab : Control
 		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
 		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
 
-		FetchDecksRequestNode.Request(BaseUrl + "deck", headers);
+		FetchDecksRequestNode.Request(ApiUrl + "deck", headers);
 	}
 
 	private void OnDeleteButtonPressed()
@@ -172,11 +172,11 @@ public partial class DecksTab : Control
 		var deck = DeleteDeckConfirmationPopupNode.GetMeta("Deck").As<Wrapper<Deck>>().Value;
 
 		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
-		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
+		var apiUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 		
 		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
 
-		DeleteDeckRequestNode.Request(baseUrl + "deck/" + Uri.EscapeDataString(deck.Id), headers, HttpClient.Method.Delete);
+		DeleteDeckRequestNode.Request(apiUrl + "deck/" + Uri.EscapeDataString(deck.Id), headers, HttpClient.Method.Delete);
 
 	}
 
@@ -211,18 +211,18 @@ public partial class DecksTab : Control
 	private void OnDeckEditSaved(Wrapper<Deck> deckW, string oldId)
 	{
 		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
-		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
+		var apiUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 		
 		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
 		var deck = deckW.Value;
 
 		if (!string.IsNullOrEmpty(oldId)) {
 
-			UpdateCardRequestNode.Request(baseUrl + "deck/" + Uri.EscapeDataString(deck.Id), headers, HttpClient.Method.Put, JsonSerializer.Serialize(deck, Common.JSON_SERIALIZATION_OPTIONS));
+			UpdateCardRequestNode.Request(apiUrl + "deck/" + Uri.EscapeDataString(deck.Id), headers, HttpClient.Method.Put, JsonSerializer.Serialize(deck, Common.JSON_SERIALIZATION_OPTIONS));
 			return;
 		}
 
-		CreateDeckRequestNode.Request(baseUrl + "deck", headers, HttpClient.Method.Post, JsonSerializer.Serialize(deck, Common.JSON_SERIALIZATION_OPTIONS));
+		CreateDeckRequestNode.Request(apiUrl + "deck", headers, HttpClient.Method.Post, JsonSerializer.Serialize(deck, Common.JSON_SERIALIZATION_OPTIONS));
 	}
 	
 	private void OnCreateDeckRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)

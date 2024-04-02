@@ -30,15 +30,16 @@ theme_override_constants/margin_bottom = 5
 
 [node name="TabContainer" type="TabContainer" parent="MarginContainer"]
 layout_mode = 2
+current_tab = 1
 
 [node name="Auth" type="TabBar" parent="MarginContainer/TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="AuthTab" parent="MarginContainer/TabContainer/Auth" instance=ExtResource("1_8wqqx")]
 layout_mode = 1
 
 [node name="Matches" type="TabBar" parent="MarginContainer/TabContainer"]
-visible = false
 layout_mode = 2
 mouse_filter = 1
 

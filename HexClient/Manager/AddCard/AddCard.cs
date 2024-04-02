@@ -37,14 +37,14 @@ public partial class AddCard : Control
 		#endregion
 	}
 
-	public string BaseUrl => GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
+	public string ApiUrl => GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 
 	
 	#region Signal connections
 	
 	private void OnAddButtonPressed()
 	{
-		FetchCardRequestNode.Request(BaseUrl + "card/" + Uri.EscapeDataString(CIDEditNode.Text));
+		FetchCardRequestNode.Request(ApiUrl + "card/" + Uri.EscapeDataString(CIDEditNode.Text));
 	}
 
 	private void OnFetchCardRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)

@@ -85,9 +85,9 @@ public partial class CardsTab : Control
 	}
 
 	private void LoadExpansion(string expansion) {
-		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
+		var apiUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 		FetchExpansionCardsRequestNode.CancelRequest();
-		FetchExpansionCardsRequestNode.Request(baseUrl + "card/fromexpansion/" + Uri.EscapeDataString(expansion));
+		FetchExpansionCardsRequestNode.Request(apiUrl + "card/fromexpansion/" + Uri.EscapeDataString(expansion));
 	}
 
 	private void TryDeleteCard(ExpansionCard card) {
@@ -112,9 +112,9 @@ public partial class CardsTab : Control
 
 	private void OnFetchExpansionsButtonPressed()
 	{
-		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
+		var apiUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 		FetchExpansionsRequestNode.CancelRequest();
-		FetchExpansionsRequestNode.Request(baseUrl + "expansion");
+		FetchExpansionsRequestNode.Request(apiUrl + "expansion");
 	}
 
 	private void OnFetchExpansionsRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
@@ -191,7 +191,7 @@ public partial class CardsTab : Control
 		// ! pretty sus code, might break
 
 		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
-		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
+		var apiUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 		
 		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
 		var card = cardW.Value;
@@ -199,18 +199,18 @@ public partial class CardsTab : Control
 		if (string.IsNullOrEmpty(oldName)) {
 			// create card
 
-			CreateCardRequestNode.Request(baseUrl + "card", headers, HttpClient.Method.Post, JsonSerializer.Serialize(card, Common.JSON_SERIALIZATION_OPTIONS));
+			CreateCardRequestNode.Request(apiUrl + "card", headers, HttpClient.Method.Post, JsonSerializer.Serialize(card, Common.JSON_SERIALIZATION_OPTIONS));
 			return;
 		}
 
 		// update card
 		if (card.GetCID() == oldName) {
-			UpdateCardRequestNode.Request(baseUrl + "card", headers, HttpClient.Method.Put, JsonSerializer.Serialize(card, Common.JSON_SERIALIZATION_OPTIONS));
+			UpdateCardRequestNode.Request(apiUrl + "card", headers, HttpClient.Method.Put, JsonSerializer.Serialize(card, Common.JSON_SERIALIZATION_OPTIONS));
 			return;
 		}
 
 		// delete card with the old name and create the new one
-		CreateCardRequestNode.Request(baseUrl + "card", headers, HttpClient.Method.Post, JsonSerializer.Serialize(card, Common.JSON_SERIALIZATION_OPTIONS));
+		CreateCardRequestNode.Request(apiUrl + "card", headers, HttpClient.Method.Post, JsonSerializer.Serialize(card, Common.JSON_SERIALIZATION_OPTIONS));
 		var createResult = await ToSignal(CreateCardRequestNode, "request_completed");
 		var respCode = createResult[1].As<long>();
 		if (respCode != 200) {
@@ -305,10 +305,10 @@ public partial class CardsTab : Control
 	#endregion
 
 	private void DeleteCard(string cid) {
-		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
+		var apiUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
 
 		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
-		DeleteCardRequestNode.Request(baseUrl + "card/" + Uri.EscapeDataString(cid), headers, HttpClient.Method.Delete);
+		DeleteCardRequestNode.Request(apiUrl + "card/" + Uri.EscapeDataString(cid), headers, HttpClient.Method.Delete);
 	}
 }

@@ -50,9 +50,9 @@ public partial class DeckCardDisplay : Control, IDeckCardDisplay
 		CIDLabelNode.Text = cid;
 		Amount = amount;
 		
-		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
+		var apiUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 		FetchCardRequestNode.CancelRequest();
-		FetchCardRequestNode.Request(baseUrl + "card/" + Uri.EscapeDataString(cid));
+		FetchCardRequestNode.Request(apiUrl + "card/" + Uri.EscapeDataString(cid));
 	}
 	
 	#region Signal connections

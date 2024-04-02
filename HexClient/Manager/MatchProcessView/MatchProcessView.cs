@@ -148,7 +148,7 @@ public partial class MatchProcessView : Control
 
 	private string _matchId;
 
-	public string BaseUrl {
+	public string ApiUrl {
 		get => GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 	}
 
@@ -191,7 +191,7 @@ public partial class MatchProcessView : Control
 	}
 
 	private void FetchMatchInfo() {
-		FetchMatchRequestNode.Request(BaseUrl + "match/" + Uri.EscapeDataString(_matchId));
+		FetchMatchRequestNode.Request(ApiUrl + "match/" + Uri.EscapeDataString(_matchId));
 	}
 
 	private void LoadMatch(MatchProcess match) {
@@ -257,7 +257,7 @@ public partial class MatchProcessView : Control
 	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match) {
 		var client = new ClientWebSocket();
 
-		await client.ConnectAsync(new Uri(BaseUrl
+		await client.ConnectAsync(new Uri(ApiUrl
 			.Replace("http://", "ws://")
 			.Replace("https://", "wss://")
 		+ "match/connect/" + match.Id.ToString()), CancellationToken.None);
@@ -269,6 +269,7 @@ public partial class MatchProcessView : Control
 	private async Task<TcpConnection> CreateTcpConnection(MatchProcess match) {
 		var client = new TcpClient();
 		var address = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl + ":" + match.TcpPort;
+		GD.Print(address);
 		await client.ConnectAsync(IPEndPoint.Parse(address));
 		var result = new TcpConnection(client);
 		return result;
@@ -287,7 +288,7 @@ public partial class MatchProcessView : Control
 		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
 		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
 
-		FetchDecksRequestNode.Request(BaseUrl + "deck", headers);
+		FetchDecksRequestNode.Request(ApiUrl + "deck", headers);
 	}
 	
 	private void OnDeckOptionItemSelected(long index)
@@ -316,7 +317,7 @@ public partial class MatchProcessView : Control
 
 	private void OnConnectButtonPressed()
 	{
-		ConnectRequestNode.Request(BaseUrl + "match/" + MatchIdNode.Text);
+		ConnectRequestNode.Request(ApiUrl + "match/" + MatchIdNode.Text);
 	}
 	
 	private void OnViewRecordingButtonPressed()
@@ -392,7 +393,7 @@ public partial class MatchProcessView : Control
 	private void OnWatchButtonPressed()
 	{
 		var connection = new HubConnectionBuilder()
-			.WithUrl(BaseUrl + "match/watch")
+			.WithUrl(ApiUrl + "match/watch")
 			.Build();
 
 		EmitSignal(SignalName.WatcherConnectionCreated, new Wrapper<HubConnection>(connection), MatchIdNode.Text);

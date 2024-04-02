@@ -54,9 +54,14 @@ public partial class MatchesTab : Control
 	
 	#endregion
 	
-	public string BaseUrl {
+	public string ApiUrl {
 		get => GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 		set => GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl = value;
+	}
+
+	public string BaseUrl {
+		get => GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		set => GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl = value;
 	}
 	
 	public override void _Ready()
@@ -82,6 +87,7 @@ public partial class MatchesTab : Control
 
 		#endregion
 
+		GetNode<LineEdit>("%ApiUrlEdit").Text = ApiUrl;
 		GetNode<LineEdit>("%BaseUrlEdit").Text = BaseUrl;
 
 		PlayerConfig1Node.BotNameEditNode.Text += "1";
@@ -112,9 +118,9 @@ public partial class MatchesTab : Control
 
 	#region Signal connections
 
-	private void OnBaseUrlEditTextChanged(string newText)
+	private void OnApiUrlEditTextChanged(string newText)
 	{
-		BaseUrl = newText;
+		ApiUrl = newText;
 	}
 
 	private async void OnCreateMatchButtonPressed()
@@ -138,7 +144,7 @@ public partial class MatchesTab : Control
 			var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
 			string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
 			var data = JsonSerializer.Serialize(config, Common.JSON_SERIALIZATION_OPTIONS);
-			CreateRequestNode.Request(BaseUrl + "match/create", headers, HttpClient.Method.Post, data);
+			CreateRequestNode.Request(ApiUrl + "match/create", headers, HttpClient.Method.Post, data);
 			await ToSignal(CreateRequestNode, "request_completed");
 		}
 	}
@@ -157,7 +163,7 @@ public partial class MatchesTab : Control
 
 	private void OnLiveMatchesButtonPressed()
 	{
-		_ = MatchTableNode.Connect(BaseUrl + "match/live");
+		_ = MatchTableNode.Connect(ApiUrl + "match/live");
 	}
 
 	private void OnFetchBasicConfigRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
@@ -176,7 +182,7 @@ public partial class MatchesTab : Control
 
 	private void OnFetchBasicConfigButtonPressed()
 	{
-		FetchBasicConfigRequestNode.Request(BaseUrl + "config/basic");
+		FetchBasicConfigRequestNode.Request(ApiUrl + "config/basic");
 	}
 
 	private void OnRemoveCrashedButtonPressed()
@@ -184,7 +190,7 @@ public partial class MatchesTab : Control
 		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
 		string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
 
-		RemoveCrashedRequestNode.Request(BaseUrl + "match/crashed", headers, HttpClient.Method.Delete);
+		RemoveCrashedRequestNode.Request(ApiUrl + "match/crashed", headers, HttpClient.Method.Delete);
 	}
 
 	private void OnRemoveCrashedRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
@@ -206,6 +212,12 @@ public partial class MatchesTab : Control
 		window.Load(match.Value.Id.ToString());
 	}
 
+	private void OnBaseUrlEditTextChanged(string newText)
+	{
+		BaseUrl = newText;
+	}
+
 	#endregion
 }
+
 

@@ -14,6 +14,7 @@ public partial class ConnectedMatch : Control
 	
 	public Match MatchNode { get; private set; }
 	public LineEdit ActionEditNode { get; private set; }
+	public CheckBox AutoPassCheckNode { get; private set; }
 	
 	#endregion
 	
@@ -37,6 +38,7 @@ public partial class ConnectedMatch : Control
 		
 		MatchNode = GetNode<Match>("%Match");
 		ActionEditNode = GetNode<LineEdit>("%ActionEdit");
+		AutoPassCheckNode = GetNode<CheckBox>("%AutoPassCheck");
 
 		#endregion
 	}
@@ -78,6 +80,10 @@ public partial class ConnectedMatch : Control
 
 		var state = JsonSerializer.Deserialize<MatchState>(message, Common.JSON_SERIALIZATION_OPTIONS);
 		CallDeferred("LoadState", state);
+
+		if (AutoPassCheckNode.ButtonPressed) {
+			await Connection.Write("pass");
+		}
 	}
 
 	private void LoadState(MatchState state) {

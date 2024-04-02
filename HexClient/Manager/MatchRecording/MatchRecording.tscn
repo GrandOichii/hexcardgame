@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=3 uid="uid://d4ckxltt8ci2n"]
+
+[ext_resource type="Script" path="res://Manager/MatchRecording/MatchRecording.cs" id="1_djfcm"]
+[ext_resource type="PackedScene" uid="uid://bdi8qkiqq33ej" path="res://Match/Match.tscn" id="2_5aubl"]
+
+[node name="MatchRecording" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_djfcm")
+
+[node name="Match" parent="." instance=ExtResource("2_5aubl")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="Requests" type="Node" parent="."]
+
+[node name="FetchRecordRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
+[node name="FetchConfigRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
+[node name="Overlay" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="request_completed" from="Requests/FetchRecordRequest" to="." method="OnFetchRecordRequestRequestCompleted"]

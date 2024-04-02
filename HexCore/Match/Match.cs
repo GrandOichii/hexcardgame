@@ -52,7 +52,7 @@ public class Match
     // TODO remove
     public readonly int MaxPass = 100;
     public int PassCount { get; set; } = 0;
-    public Match(string id, MatchConfig config, ICardMaster master) {
+    public Match(string id, MatchConfig config, ICardMaster master, int seed) {
         CardMaster = master;
         Logger = new(this);
         ID = id;
@@ -61,7 +61,7 @@ public class Match
         Players = new();
         Config = config;
         
-        Rnd = config.Seed is {} seed ? new Random(seed) : new Random();
+        Rnd = new Random(seed);
 
         Map = Map.FromConfig(this, config);
 

@@ -21,6 +21,7 @@ public enum MatchStatus {
     CRASHED
 }
 public class MatchProcess {
+    private static readonly Random _seedGenerator = new();
     private static readonly Dictionary<BotType, string> BOT_TYPE_PATH_MAP = new() {
         {BotType.RANDOM, "../bots/random.lua"},
         {BotType.SMART, "../bots/basic.lua"},
@@ -62,7 +63,9 @@ public class MatchProcess {
         _cardMaster = cardMaster;
 
         Record = new() {
-            Config = config
+            Config = config,
+            Seed = _seedGenerator.Next(),
+            ConfigId = config.MatchConfigId
         };
 
         TcpListener = new TcpListener(IPAddress.Loopback, 0);
@@ -164,7 +167,8 @@ public class MatchProcess {
             var baseController = player!.Controller;
             // TODO wrap with recording player controller
             var record = new PlayerRecord() {
-                Name = player.Name!
+                Name = player.Name!,
+                Deck = player.Deck!,
             };
             Record.Players.Add(record);
 
@@ -182,8 +186,8 @@ public class MatchProcess {
     private async Task Run() {
         // * just in case
         if (Status >= MatchStatus.IN_PROGRESS) return;
-        Match = new(Id.ToString(), _matchConfig, _cardMaster){
-            View = View
+        Match = new(Id.ToString(), _matchConfig, _cardMaster, Record.Seed ){
+            View = View,
         };
 
         // TODO replace with a db call

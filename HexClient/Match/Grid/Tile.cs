@@ -108,9 +108,7 @@ public partial class Tile : Node2D, ITile
 		if (State is not null && State?.Entity is not null) {
 			MatchCardState card = (MatchCardState)(State?.Entity);
 
-			// TODO add back
 			_hoverCard.Load(card);
-			// _processor.HoverCard.Load(card);
 		}
 		
 		if (!_processor.Accepts(this)) {

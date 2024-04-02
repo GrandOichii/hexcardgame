@@ -49,7 +49,7 @@ public partial class MatchView : Control
 		connection.On<string>("Config", OnViewConfig);
 		connection.On<string>("Update", OnViewUpdate);
 		connection.On<string>("ConnectFail", OnViewConnectFail);
-		// TODO add handler for MatchNotStarted
+		connection.On("Forbidden", OnViewForbidden);
 		connection.On<MatchStatus, string>("EndView", OnEndView);
 		connection.Closed += OnConnectionClosed;
 

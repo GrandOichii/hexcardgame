@@ -45,6 +45,7 @@ public static class MatchStatusExtensions {
 
 public class PlayerRecord {
 	public required string Name { get; set; }
+	public required string Deck { get; set; }
 	public List<string> Actions { get; set; } = new();
 }
 
@@ -57,6 +58,8 @@ public class MatchRecord {
 	
 	#nullable disable
 	public List<PlayerRecord> Players { get; set; } = new();
+	public int Seed { get; set; }
+	public string ConfigId { get; set; }
 }
 
 public class MatchProcess {
@@ -269,7 +272,6 @@ public partial class MatchProcessView : Control
 	private async Task<TcpConnection> CreateTcpConnection(MatchProcess match) {
 		var client = new TcpClient();
 		var address = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl + ":" + match.TcpPort;
-		GD.Print(address);
 		await client.ConnectAsync(IPEndPoint.Parse(address));
 		var result = new TcpConnection(client);
 		return result;

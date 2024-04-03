@@ -70,7 +70,7 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 		window.GrabFocus();
 		_ = window.Connect(connection, matchId);
 		
-		// QueueFree();
+		QueueFree();
 	}
 	
 	#endregion

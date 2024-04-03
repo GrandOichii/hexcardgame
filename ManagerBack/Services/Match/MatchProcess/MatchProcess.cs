@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using HexCore.GameMatch.View;
 using ManagerBack.Hubs;
+using Microsoft.AspNetCore.SignalR;
 using Shared;
 using Utility;
 
@@ -27,6 +28,9 @@ public class MatchProcess {
         {BotType.SMART, "../bots/basic.lua"},
     };
 
+    public delegate Task MatchProcessChanged(string matchId);
+    public event MatchProcessChanged? Changed;
+
     public MatchStatus Status { get; private set; } = MatchStatus.WAITING_FOR_PLAYERS;
     public string CreatorId { get; }
     public Guid Id { get; }
@@ -46,8 +50,9 @@ public class MatchProcess {
     private readonly IMatchService _matchService;
     private readonly MatchConfig _matchConfig;
     private readonly ICardMaster _cardMaster;
+    private readonly IHubContext<MatchProcessHub> _matchProcessHub;
 
-    public MatchProcess(string creatorId, MatchProcessConfig config, MatchConfig mConfig, ICardMaster cardMaster, IMatchService matchService)
+    public MatchProcess(string creatorId, MatchProcessConfig config, MatchConfig mConfig, ICardMaster cardMaster, IMatchService matchService, IHubContext<MatchProcessHub> matchProcessHub)
     {
         CreatorId = creatorId;
         Id = Guid.NewGuid();
@@ -62,7 +67,8 @@ public class MatchProcess {
         _matchConfig = mConfig;
         _cardMaster = cardMaster;
 
-        Record = new() {
+        Record = new()
+        {
             Config = config,
             Seed = _seedGenerator.Next(),
             ConfigId = config.MatchConfigId
@@ -71,6 +77,7 @@ public class MatchProcess {
         TcpListener = new TcpListener(IPAddress.Loopback, 0);
         TcpListener.Start();
         TcpPort = ((IPEndPoint)TcpListener.LocalEndpoint).Port;
+        _matchProcessHub = matchProcessHub;
     }
 
     public Task InitialSetup() {
@@ -92,6 +99,7 @@ public class MatchProcess {
                 Deck = deck,
                 Status = QueuedPlayerStatus.READY
             };
+            player.Changed += OnPlayerChanged;
 
             player.StatusUpdated += OnPlayerStatusUpdated;
             SetQueuedPlayer(i, player);
@@ -105,6 +113,11 @@ public class MatchProcess {
         }
 
         return Task.CompletedTask;
+    }
+
+    public async Task OnPlayerChanged() {
+        if (Changed is not null)
+            await Changed.Invoke(Id.ToString());
     }
 
     private void SetQueuedPlayer(int idx, QueuedPlayer player) {
@@ -181,6 +194,9 @@ public class MatchProcess {
     private async Task SetStatus(MatchStatus status) {
         Status = status;
         await _matchService.ServiceStatusUpdated(this);
+        
+        if (Changed is not null)
+            await Changed.Invoke(Id.ToString());
     }
     
     private async Task Run() {
@@ -225,6 +241,8 @@ public class MatchProcess {
     private readonly object _addPlayerLock = new();
     private async Task AddPlayer(IOPlayerController controller, IConnectionChecker checker) {
         var player = new QueuedPlayer(controller, checker, false);
+        player.Changed += OnPlayerChanged;
+
         player.StatusUpdated += OnPlayerStatusUpdated;
         player.Status = QueuedPlayerStatus.WAITING_FOR_DATA;
 
@@ -268,78 +286,5 @@ public class MatchProcess {
         }
         var controller = new TCPPlayerController(client, Match!);
         await AddPlayer(controller, new TcpConnectionChecker(client));
-    }    
+    }
 }
-
-
-
-// public class MatchProcess_old {
-//     public async Task ConnectTcpPlayers() {
-//         // TODO keeps listening even after the match starts
-//         while (CanAddConnection() && !Started()) {
-//             await AddTCPConnection();
-//         }
-//     }
-
-//     private Task<RecordingPlayerController> CreateRecordedPlayer(string name, IPlayerController baseController) {
-//         var record = new PlayerRecord() {
-//             Name = name
-//         };
-//         Record.Players.Add(record);
-//         var result = new RecordingPlayerController(baseController, record);
-//         return Task.FromResult(result);
-//     }
-
-//     private async Task<DeckTemplate> LoadDeck(string deck) {
-//         var result = DeckTemplate.FromText(deck);
-//         await _deckValidator.Validate(result);
-//         return result;
-//     }
-
-//     public bool CanAddConnection() {
-//         return Status == MatchStatus.WAITING_FOR_PLAYERS && _realPlayerCount > 0;
-//     }
-
-//     public async Task AddTCPConnection() {
-//         var client = TcpListener.AcceptTcpClient();
-//         if (!CanAddConnection()) {
-//             client.Close();
-//             return;
-//         }
-        
-//         client.ReceiveTimeout = 1000;
-//         var baseController = new TCPPlayerController(client, Match);
-
-//         await AddPlayer(baseController);
-//         client.ReceiveTimeout = 0;
-
-//         TryRun();
-//     }
-
-//     private async Task AddPlayer(IOPlayerController baseController) {
-//         string name;
-//         string deckRaw;
-//         try {
-//             // TODO change to username extracted from jwt
-//             await baseController.Write("name");
-//             name = await baseController.Read();
-
-//             // TODO this allows any user to submit any deck, change this later to deckId
-//             await baseController.Write("deck");
-//             deckRaw = await baseController.Read();
-//         } catch (Exception e) {
-//             Console.WriteLine(e.Message);
-//             Console.WriteLine(e.StackTrace);
-//             Console.WriteLine("Failed to connect");
-//             return;
-//         }
-//         // TODO add exception handling
-//         var deck = await LoadDeck(deckRaw);
-
-//         var controller = await CreateRecordedPlayer(name, baseController);
-//         await Match.AddPlayer(name, deck, controller);
-
-//         --_realPlayerCount;
-//     }
-
-// }

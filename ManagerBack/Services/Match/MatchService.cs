@@ -35,16 +35,18 @@ public class MatchService : IMatchService
     private readonly IMapper _mapper;
     private readonly IHubContext<MatchLiveHub> _liveHubContext;
     private readonly IHubContext<MatchViewHub> _viewHubContext;
+    private readonly IHubContext<MatchProcessHub> _matchProcessHub;
     private readonly IMatchConfigRepository _configRepo;
     private readonly ICardMaster _cardMaster;
 
-    public MatchService(IMapper mapper, IHubContext<MatchLiveHub> hubContext, IHubContext<MatchViewHub> viewHubContext, IMatchConfigRepository configRepo, ICardRepository cardRepo)
+    public MatchService(IMapper mapper, IHubContext<MatchLiveHub> hubContext, IHubContext<MatchViewHub> viewHubContext, IMatchConfigRepository configRepo, ICardRepository cardRepo, IHubContext<MatchProcessHub> matchProcessHub)
     {
         _mapper = mapper;
         _liveHubContext = hubContext;
         _viewHubContext = viewHubContext;
         _configRepo = configRepo;
         _cardMaster = new DBCardMaster(cardRepo);
+        _matchProcessHub = matchProcessHub;
     }
 
     private Task<MatchProcess> GetMatch(Guid guid) {
@@ -86,7 +88,8 @@ public class MatchService : IMatchService
         ;
         
         // TODO check user id
-        var match = new MatchProcess(userId, config, mConfig, _cardMaster, this);
+        var match = new MatchProcess(userId, config, mConfig, _cardMaster, this, _matchProcessHub);
+        match.Changed += OnMatchProcessChanged;
         _matches.Add(match.Id, match);
 
         _ = match.InitialSetup();
@@ -103,7 +106,6 @@ public class MatchService : IMatchService
         var group = MatchViewHub.ToGroupName(matchId);
 
         await _viewHubContext.Clients.Group(group).SendAsync("EndView", match.Status, match.Match!.Winner);
-
     }
 
     public async Task Remove(Func<MatchProcess, bool> filter)
@@ -162,5 +164,31 @@ public class MatchService : IMatchService
         var socket = await manager.AcceptWebSocketAsync();
         await match.AddWebSocketConnection(socket);
         await match.Finish(socket);
+    }
+
+    private static string ToGroupName(string matchId) => $"watchers-{matchId}";
+    public async Task RegisterWatcher(string matchId, string connectionId)
+    {
+        try {
+            var _ = await GetMatch(matchId);
+        } catch (Exception e) when (e is InvalidMatchIdException || e is MatchNotFoundException) {
+            await _matchProcessHub.Clients.Client(connectionId).SendAsync("Refused");
+            return;
+        }
+
+        await _matchProcessHub.Groups.AddToGroupAsync(connectionId, ToGroupName(matchId));
+
+        await UpdateWatchers(matchId);
+    }
+
+    private async Task UpdateWatchers(string matchId) {
+        var match = await GetMatch(matchId);
+
+        var matchDto = _mapper.Map<GetMatchProcessDto>(match);
+        await _matchProcessHub.Clients.Group(ToGroupName(matchId)).SendAsync("Update", JsonSerializer.Serialize(matchDto, Common.JSON_SERIALIZATION_OPTIONS));
+    }
+
+    private async Task OnMatchProcessChanged(string matchId) {
+        await UpdateWatchers(matchId);
     }
 }

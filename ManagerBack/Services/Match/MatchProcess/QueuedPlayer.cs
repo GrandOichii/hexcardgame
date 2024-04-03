@@ -22,6 +22,9 @@ class PlayerInfo {
 }
 
 public class QueuedPlayer {
+
+    public delegate Task PlayerChanged();
+    public event PlayerChanged? Changed;
     
     public delegate Task StatusUpdate();
     public event StatusUpdate? StatusUpdated;
@@ -31,6 +34,7 @@ public class QueuedPlayer {
         set {
             _status = value;
             StatusUpdated?.Invoke();
+            Changed?.Invoke();
         }
     }
 
@@ -38,8 +42,19 @@ public class QueuedPlayer {
     public IPlayerController Controller { get; }
 
     // public PlayerConfig Config { get; }
-    public string? Name { get; set; } = null;
-    public string? Deck { get; set; } = null;
+    private string? _name = null;
+    public string? Name
+    {
+        get { return _name; }
+        set { _name = value; Changed?.Invoke(); }
+    }
+    private string? _deck = null;
+    public string? Deck
+    {
+        get { return _deck; }
+        set { _deck = value; Changed?.Invoke(); }
+    }
+    
     public bool IsBot { get; }
     
     [JsonIgnore]

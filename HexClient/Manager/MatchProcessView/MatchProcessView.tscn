@@ -179,14 +179,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "View recording"
 
-[node name="RefreshButton" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-text = "Refresh"
-
 [node name="Requests" type="Node" parent="."]
-
-[node name="FetchMatchRequest" type="HTTPRequest" parent="Requests"]
-unique_name_in_owner = true
 
 [node name="FetchDecksRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
@@ -222,8 +215,6 @@ theme = ExtResource("3_v4kc8")
 [connection signal="pressed" from="VBoxContainer/ButtonsContainer/ConnectButton" to="." method="OnConnectButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/ButtonsContainer/WatchButton" to="." method="OnWatchButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/ButtonsContainer/ViewRecordingButton" to="." method="OnViewRecordingButtonPressed"]
-[connection signal="pressed" from="VBoxContainer/RefreshButton" to="." method="OnRefreshButtonPressed"]
-[connection signal="request_completed" from="Requests/FetchMatchRequest" to="." method="OnFetchMatchRequestRequestCompleted"]
 [connection signal="request_completed" from="Requests/FetchDecksRequest" to="." method="OnFetchDecksRequestRequestCompleted"]
 [connection signal="request_completed" from="Requests/ConnectRequest" to="." method="OnConnectRequestRequestCompleted"]
 [connection signal="file_selected" from="Popups/ChooseDeckFileDialog" to="." method="OnChooseDeckFileDialogFileSelected"]

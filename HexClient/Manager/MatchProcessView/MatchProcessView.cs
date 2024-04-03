@@ -140,7 +140,7 @@ public partial class MatchProcessView : Control
 	public CheckBox WebSocketCheckNode { get; private set; }
 	public CheckBox TcpCheckNode { get; private set; }
 
-	public HttpRequest FetchMatchRequestNode { get; private set; }
+	//public HttpRequest FetchMatchRequestNode { get; private set; }
 	public HttpRequest FetchDecksRequestNode { get; private set; }
 	public HttpRequest ConnectRequestNode { get; private set; }
 
@@ -177,7 +177,6 @@ public partial class MatchProcessView : Control
 		WebSocketCheckNode = GetNode<CheckBox>("%WebSocketCheck");
 		TcpCheckNode = GetNode<CheckBox>("%TcpCheck");
 
-		FetchMatchRequestNode = GetNode<HttpRequest>("%FetchMatchRequest");
 		FetchDecksRequestNode = GetNode<HttpRequest>("%FetchDecksRequest");
 		ConnectRequestNode = GetNode<HttpRequest>("%ConnectRequest");
 
@@ -190,14 +189,37 @@ public partial class MatchProcessView : Control
 	public void Load(string matchId) {
 		_matchId = matchId;
 
-		FetchMatchInfo();
+		_ = FetchMatchInfo(matchId);
 	}
 
-	private void FetchMatchInfo() {
-		FetchMatchRequestNode.Request(ApiUrl + "match/" + Uri.EscapeDataString(_matchId));
+	private HubConnection _processView;
+	private async Task FetchMatchInfo(string matchId) {
+		_processView = new HubConnectionBuilder()
+			.WithUrl(ApiUrl + "match/view")
+			.Build();
+
+		_processView.On<string>("Update", OnProcessViewUpdate);
+		// TODO add handler for "Refused" method
+
+		try {
+			await _processView.StartAsync();
+		} catch (Exception e) {
+			GD.Print("failed to connect");
+			GD.Print(e.Message);
+		}
+		await _processView.SendAsync("Connect", matchId);
 	}
 
-	private void LoadMatch(MatchProcess match) {
+	private Task OnProcessViewUpdate(string data) {
+		GD.Print("update received");
+
+		var match = JsonSerializer.Deserialize<MatchProcess>(data, Common.JSON_SERIALIZATION_OPTIONS);
+		CallDeferred("LoadMatch", new Wrapper<MatchProcess>(match));
+		return Task.CompletedTask;
+	}
+
+	private void LoadMatch(Wrapper<MatchProcess> matchW) {
+		var match = matchW.Value;
 		MatchIdNode.Text = match.Id.ToString();
 		StatusLabelNode.Text = match.Status.ToFriendlyString();
 		
@@ -227,6 +249,8 @@ public partial class MatchProcessView : Control
 		WatchButtonNode.Visible = match.Status == MatchStatus.IN_PROGRESS;
 		ConnectButtonNode.Visible = match.Status == MatchStatus.WAITING_FOR_PLAYERS;
 		ViewRecordingButtonNode.Visible = match.Status >= MatchStatus.FINISHED;
+
+		GD.Print("update completed");
 	}
 
 	private async Task ConnectTo(MatchProcess match) {
@@ -325,28 +349,9 @@ public partial class MatchProcessView : Control
 	private void OnViewRecordingButtonPressed()
 	{
 		// TODO
+		
 	}
 
-	private void OnRefreshButtonPressed()
-	{
-		FetchMatchInfo();
-	}
-
-	private void OnFetchMatchRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
-	{
-		if (response_code != 200) {
-			var resp = Encoding.UTF8.GetString(body);
-			// TODO show popup
-			GD.Print("Failed to fetch match info!");
-			GD.Print("Response code: " + response_code);
-			GD.Print(resp);
-			return;
-		}
-
-		var data = JsonSerializer.Deserialize<MatchProcess>(body, Common.JSON_SERIALIZATION_OPTIONS);
-		LoadMatch(data);
-	}
-	
 	private void OnFetchDecksRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
 		if (response_code != 200) {

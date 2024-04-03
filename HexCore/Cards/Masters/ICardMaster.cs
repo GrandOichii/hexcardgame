@@ -12,10 +12,4 @@ public interface ICardMaster
     /// <returns>Card with the specified CID</returns>
     /// 
     public Task<ExpansionCard> Get(string cid);
-    
-    /// <summary>
-    /// Fetches all cards
-    /// </summary>
-    /// <returns><Container of all cards/returns>
-    public Task<IEnumerable<ExpansionCard>> GetAll();
 }

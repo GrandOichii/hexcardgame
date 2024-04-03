@@ -145,7 +145,19 @@ public partial class MatchesTab : Control
 			string[] headers = new string[] { "Content-Type: application/json", $"Authorization: Bearer {token}" };
 			var data = JsonSerializer.Serialize(config, Common.JSON_SERIALIZATION_OPTIONS);
 			CreateRequestNode.Request(ApiUrl + "match/create", headers, HttpClient.Method.Post, data);
-			await ToSignal(CreateRequestNode, "request_completed");
+
+			var result = await ToSignal(CreateRequestNode, "request_completed");
+			var responseCode = result[1].As<int>();
+			var body = result[3].As<byte[]>();
+			if (responseCode != 200) {
+				var resp = Encoding.UTF8.GetString(body);
+				// TODO show popup
+				GD.Print(responseCode);
+				GD.Print(resp);
+				return;
+			}
+			var match = JsonSerializer.Deserialize<MatchProcess>(body, Common.JSON_SERIALIZATION_OPTIONS);
+			OnMatchTableMatchActivated(new Wrapper<MatchProcess>(match));
 		}
 	}
 

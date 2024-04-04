@@ -23,7 +23,8 @@ public partial class MatchRecordingWindow : Window
 		
 		#endregion
 		
-		Load("5c91b0ff-c4e4-4edc-9f45-bf6b5e259c37");
+		GrabFocus();
+		Load("12ddcbb9-255b-4303-9b2e-7db1351a82ee");
 	}
 
 	public void Load(string matchId) {

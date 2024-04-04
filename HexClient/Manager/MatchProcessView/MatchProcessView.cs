@@ -199,7 +199,7 @@ public partial class MatchProcessView : Control
 			.Build();
 
 		_processView.On<string>("Update", OnProcessViewUpdate);
-		// TODO add handler for "Refused" method
+		_processView.On("Refused", OnProcessViewRefused);
 
 		try {
 			await _processView.StartAsync();
@@ -211,10 +211,14 @@ public partial class MatchProcessView : Control
 	}
 
 	private Task OnProcessViewUpdate(string data) {
-		GD.Print("update received");
-
 		var match = JsonSerializer.Deserialize<MatchProcess>(data, Common.JSON_SERIALIZATION_OPTIONS);
 		CallDeferred("LoadMatch", new Wrapper<MatchProcess>(match));
+		return Task.CompletedTask;
+	}
+	
+	private Task OnProcessViewRefused() {
+		// TODO do something
+		GD.Print("connection refused");
 		return Task.CompletedTask;
 	}
 
@@ -249,8 +253,6 @@ public partial class MatchProcessView : Control
 		WatchButtonNode.Visible = match.Status == MatchStatus.IN_PROGRESS;
 		ConnectButtonNode.Visible = match.Status == MatchStatus.WAITING_FOR_PLAYERS;
 		ViewRecordingButtonNode.Visible = match.Status >= MatchStatus.FINISHED;
-
-		GD.Print("update completed");
 	}
 
 	private async Task ConnectTo(MatchProcess match) {
@@ -295,12 +297,13 @@ public partial class MatchProcessView : Control
 
 	private async Task<TcpConnection> CreateTcpConnection(MatchProcess match) {
 		var client = new TcpClient();
-		var address = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl + ":" + match.TcpPort;
+		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+
+		var address = baseUrl + ":" + match.TcpPort;
 		await client.ConnectAsync(IPEndPoint.Parse(address));
 		var result = new TcpConnection(client);
 		return result;
 	}
-
 
 	#region Signal connections
 	
@@ -412,6 +415,7 @@ public partial class MatchProcessView : Control
 	}
 	
 	#endregion
+
 }
 
 

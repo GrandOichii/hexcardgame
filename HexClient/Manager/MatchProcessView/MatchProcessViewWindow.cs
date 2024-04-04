@@ -57,6 +57,9 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 		await window.Load(client, name, deck);
 		window.GrabFocus();
 
+		// !FIXME if two views are open and viewing same match process and one view connects to match, the whole app crashes
+		// !FIXME this is the problem, find a way to fix
+		// GetParent().RemoveChild(this);
 		QueueFree();
 	}
 

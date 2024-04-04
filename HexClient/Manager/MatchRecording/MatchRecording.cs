@@ -5,6 +5,7 @@ using HexCore.Decks;
 using HexCore.GameMatch;
 using HexCore.GameMatch.Players;
 using HexCore.GameMatch.Players.Controllers;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,31 +21,37 @@ namespace HexClient.Manager;
 
 // !FIXME this will change to MatchRecord when a separate controller for match records will be created
 
+public class ConsoleLogger : ILogger
+{
+	public IDisposable BeginScope<TState>(TState state) where TState : notnull => default!;
+
+	public bool IsEnabled(LogLevel logLevel) => true;
+		// getCurrentConfig().LogLevelToColorMap.ContainsKey(logLevel);
+
+	public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+	{
+		GD.Print(formatter(state, exception));
+	}
+}
+
 public partial class ApiCardMaster : ICardMaster
 {
-	private readonly System.Net.Http.HttpClient _client;
 	private readonly string _apiUrl;
 	private readonly HttpRequest _requestNode;
 	public ApiCardMaster(string apiUrl, HttpRequest cardFetchRequestNode)
 	{
 		_requestNode = cardFetchRequestNode;	
 		_apiUrl = apiUrl;
-		_client = new();
 	}
 
 	public async Task<ExpansionCard> Get(string cid)
 	{
-		_requestNode.Request(_apiUrl + "card/" + Uri.EscapeDataString(cid));
-		var result = await _requestNode.ToSignal(_requestNode, "request_completed");
-		var responseCode = result[1].As<int>();
-		var body = result[3].As<byte[]>();
-		if (responseCode != 200) {
-			// TODO do something
-			var resp = Encoding.UTF8.GetString(body);
-			GD.Print(responseCode);
-			GD.Print(resp);
-		}
-		var card = JsonSerializer.Deserialize<ExpansionCard>(body, Common.JSON_SERIALIZATION_OPTIONS);
+		var client = new System.Net.Http.HttpClient();
+
+		var url = _apiUrl + "card/" + Uri.EscapeDataString(cid);
+		var data = await client.GetAsync(url);
+		var str = await data.Content.ReadAsStringAsync();
+		var card = JsonSerializer.Deserialize<ExpansionCard>(str, Common.JSON_SERIALIZATION_OPTIONS);
 		return card;
 	}
 }
@@ -152,9 +159,10 @@ public partial class MatchRecording : Control
 	private async Task CreateRecording(MatchRecord record) {
 		var config = await FetchConfig(record.ConfigId);
 		var cm = new ApiCardMaster(ApiUrl, FetchCardRequestNode);
-		var match = new HexCore.GameMatch.Match("", config, cm, record.Seed);
-
 		var card = await cm.Get("dev::Dub");
+		var match = new HexCore.GameMatch.Match("", config, cm, record.Seed);
+		match.SystemLogger = new ConsoleLogger();
+
 		// TODO change
 		match.InitialSetup("../HexCore/core.lua");
 
@@ -162,18 +170,24 @@ public partial class MatchRecording : Control
 			var controller = new QueuedActionPlayerController(p);
 			var deck = DeckTemplate.FromText(p.Deck);
 			await match.AddPlayer(p.Name, deck, controller);
+			GD.Print("added player");
 		}
 
-		CallDeferred("RunMatch", new Wrapper<HexCore.GameMatch.Match>(match));
+		_ = Task.Run(async () => await RunMatch(match));
 	}
 
-	private async void RunMatch(Wrapper<HexCore.GameMatch.Match> matchW) {
-		await matchW.Value.Start();
+	private async Task RunMatch(HexCore.GameMatch.Match match) {
+		try {
+			await match.Start();
+			GD.Print("match completed");
+		} catch (Exception) {
+			GD.Print("match crashed");
+		}
 	}
 
 	
 	#region Signal connections
-	
+
 	private void OnFetchRecordRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
 		if (response_code != 200) {

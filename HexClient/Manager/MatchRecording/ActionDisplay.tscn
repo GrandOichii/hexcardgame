@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=3 uid="uid://c628be2lpt2fp"]
+
+[ext_resource type="Script" path="res://Manager/MatchRecording/ActionDisplay.cs" id="1_23ll7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sb42x"]
+
+[node name="ActionDisplay" type="Control"]
+custom_minimum_size = Vector2(140, 40)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1860.0
+offset_bottom = -1464.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_23ll7")
+
+[node name="Bg" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sb42x")
+
+[node name="MarginContainer" type="MarginContainer" parent="Bg"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="ActionLabel" type="Label" parent="Bg/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "ACTION HERE"
+horizontal_alignment = 1

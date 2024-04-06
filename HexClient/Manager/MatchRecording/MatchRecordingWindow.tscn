@@ -6,7 +6,7 @@
 
 [node name="MatchRecordingWindow" type="Window"]
 initial_position = 2
-size = Vector2i(1600, 1200)
+size = Vector2i(2000, 1200)
 theme = ExtResource("1_w1nty")
 script = ExtResource("1_yqiri")
 

@@ -5,6 +5,8 @@ using HexCore.Decks;
 using HexCore.GameMatch;
 using HexCore.GameMatch.Players;
 using HexCore.GameMatch.Players.Controllers;
+using HexCore.GameMatch.View;
+using Microsoft.AspNetCore.SignalR.Protocol;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -58,11 +60,17 @@ public partial class ApiCardMaster : ICardMaster
 
 public class QueuedActionPlayerController : IPlayerController
 {
-	public Queue<string> Actions;
-	public QueuedActionPlayerController(PlayerRecord record)
+	public Queue<string> Actions { get; }
+	private readonly ActionAggregate _aggregate;
+	private readonly PlayerRecord _record;
+	public QueuedActionPlayerController(PlayerRecord record, ActionAggregate aggregate)
 	{
+		_aggregate = aggregate;
+		_record = record;
+
 		Actions = new();
-		foreach	(var action in record.Actions) {
+		foreach (var action in record.Actions)
+		{
 			Actions.Enqueue(action);
 		}
 	}
@@ -74,15 +82,29 @@ public class QueuedActionPlayerController : IPlayerController
 
 	public Task<string> DoPickTile(List<int[]> choices, Player player, HexCore.GameMatch.Match match)
 	{
+		var result = Actions.Dequeue();
+
+		_aggregate.Actions.Add(new() {
+			PlayerName = _record.Name,
+			Action = result
+		});
+
 		return Task.FromResult(
-			Actions.Dequeue()
+			result
 		);
 	}
 
 	public Task<string> DoPromptAction(Player player, HexCore.GameMatch.Match match)
 	{
+		var result = Actions.Dequeue();
+
+		_aggregate.Actions.Add(new() {
+			PlayerName = _record.Name,
+			Action = result
+		});
+		
 		return Task.FromResult(
-			Actions.Dequeue()
+			result
 		);
 	}
 
@@ -102,12 +124,59 @@ public class QueuedActionPlayerController : IPlayerController
 	}
 }
 
+public class RecordingMatchView : IMatchView
+{
+	public delegate Task MatchEnd();
+
+	#nullable enable
+	public event MatchEnd? MatchEnded;
+	#nullable disable
+
+	public async Task End()
+	{
+		if (MatchEnded is not null)
+			await MatchEnded.Invoke();
+	}
+
+	public Task Start()
+	{
+		return Task.CompletedTask;
+	}
+
+	public Task Update(HexCore.GameMatch.Match match)
+	{
+
+		return Task.CompletedTask;
+	}
+}
+
+public struct RecordedAction {
+	public required string PlayerName { get; set; }
+	public required string Action { get; set; }
+}
+
+public class ActionAggregate {
+	public List<RecordedAction> Actions { get; } = new();
+}
+
+public interface IActionDisplay {
+	public void Load(RecordedAction action);
+}
+
 public partial class MatchRecording : Control
 {
+	#region Packed scenes
+
+	[Export]
+	private PackedScene ActionDisplayPS { get; set; }
+
+	#endregion
+
 	#region Nodes
 	
 	public Match.Match MatchNode { get; private set; }
 	public Control OverlayNode { get; private set; }
+	public Container ActionContainerNode { get; private set; }
 
 	public HttpRequest FetchRecordRequestNode { get; private set; }
 	public HttpRequest FetchConfigRequestNode { get; private set; }
@@ -123,6 +192,7 @@ public partial class MatchRecording : Control
 		
 		MatchNode = GetNode<Match.Match>("%Match");
 		OverlayNode = GetNode<Control>("%Overlay");
+		ActionContainerNode = GetNode<Container>("%ActionContainer");
 		
 		FetchRecordRequestNode = GetNode<HttpRequest>("%FetchRecordRequest");
 		FetchConfigRequestNode = GetNode<HttpRequest>("%FetchConfigRequest");
@@ -159,32 +229,54 @@ public partial class MatchRecording : Control
 	private async Task CreateRecording(MatchRecord record) {
 		var config = await FetchConfig(record.ConfigId);
 		var cm = new ApiCardMaster(ApiUrl, FetchCardRequestNode);
-		var card = await cm.Get("dev::Dub");
-		var match = new HexCore.GameMatch.Match("", config, cm, record.Seed);
-		match.SystemLogger = new ConsoleLogger();
+		
+		var view = new RecordingMatchView();
+		var match = new HexCore.GameMatch.Match("", config, cm, record.Seed) {
+			SystemLogger = new ConsoleLogger(),
+			View = view,
+		};
 
 		// TODO change
 		match.InitialSetup("../HexCore/core.lua");
 
+		var aAggregate = new ActionAggregate();
+
 		foreach (var p in record.Players) {
-			var controller = new QueuedActionPlayerController(p);
+			var controller = new QueuedActionPlayerController(p, aAggregate);
 			var deck = DeckTemplate.FromText(p.Deck);
 			await match.AddPlayer(p.Name, deck, controller);
 			GD.Print("added player");
 		}
 
-		_ = Task.Run(async () => await RunMatch(match));
+		_ = Task.Run(async () => await RunMatch(match, aAggregate));
 	}
 
-	private async Task RunMatch(HexCore.GameMatch.Match match) {
+	private async Task RunMatch(HexCore.GameMatch.Match match, ActionAggregate aggregate) {
 		try {
 			await match.Start();
+
 			GD.Print("match completed");
 		} catch (Exception) {
 			GD.Print("match crashed");
 		}
+
+		CallDeferred("LoadActionAggregate", new Wrapper<ActionAggregate>(aggregate));
 	}
 
+	private void LoadActionAggregate(Wrapper<ActionAggregate> aggregateW) {
+		var aggregate = aggregateW.Value;
+
+		while (ActionContainerNode.GetChildCount() > 0)
+			ActionContainerNode.RemoveChild(ActionContainerNode.GetChild(0));
+
+		foreach (var action in aggregate.Actions) {
+			var child = ActionDisplayPS.Instantiate();
+			ActionContainerNode.AddChild(child);
+
+			var display = child as IActionDisplay;
+			display.Load(action);
+		}
+	}
 	
 	#region Signal connections
 

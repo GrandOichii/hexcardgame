@@ -23,17 +23,28 @@ namespace HexClient.Manager;
 
 // !FIXME this will change to MatchRecord when a separate controller for match records will be created
 
-public class ConsoleLogger : ILogger
+public class RecordingLogger : ILogger
 {
 	public IDisposable BeginScope<TState>(TState state) where TState : notnull => default!;
 
+	// TODO
 	public bool IsEnabled(LogLevel logLevel) => true;
 		// getCurrentConfig().LogLevelToColorMap.ContainsKey(logLevel);
 
+
+	public List<string> Logs { get; } = new();
+	public RecordingLogger() {
+
+	}
+
 	public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
 	{
-		GD.Print(formatter(state, exception));
+		var log = formatter(state, exception);
+		Logs.Add(log);
+		// GD.Print();
 	}
+
+	public void ClearLogs() => Logs.Clear();
 }
 
 public partial class ApiCardMaster : ICardMaster
@@ -132,6 +143,8 @@ public class RecordingMatchView : IMatchView
 	public event MatchEnd? MatchEnded;
 	#nullable disable
 
+	public List<Snapshot> Snapshots { get; } = new();
+
 	public async Task End()
 	{
 		if (MatchEnded is not null)
@@ -145,6 +158,8 @@ public class RecordingMatchView : IMatchView
 
 	public Task Update(HexCore.GameMatch.Match match)
 	{
+		var snap = new Snapshot(match);
+		Snapshots.Add(snap);
 
 		return Task.CompletedTask;
 	}
@@ -163,6 +178,23 @@ public interface IActionDisplay {
 	public void Load(RecordedAction action);
 }
 
+
+/// <summary>
+/// A match snapshot
+/// </summary>
+public readonly struct Snapshot {
+	public List<string> AddedLogs { get; } = new();
+
+	public Snapshot(HexCore.GameMatch.Match match) {
+		var logger = match.SystemLogger as RecordingLogger;
+		foreach (var log in logger.Logs) {
+			AddedLogs.Add(log);
+		}
+		logger.ClearLogs();
+	}
+
+}
+
 public partial class MatchRecording : Control
 {
 	#region Packed scenes
@@ -177,6 +209,7 @@ public partial class MatchRecording : Control
 	public Match.Match MatchNode { get; private set; }
 	public Control OverlayNode { get; private set; }
 	public Container ActionContainerNode { get; private set; }
+	public RichTextLabel LogsLabelNode { get; private set; }
 
 	public HttpRequest FetchRecordRequestNode { get; private set; }
 	public HttpRequest FetchConfigRequestNode { get; private set; }
@@ -193,6 +226,7 @@ public partial class MatchRecording : Control
 		MatchNode = GetNode<Match.Match>("%Match");
 		OverlayNode = GetNode<Control>("%Overlay");
 		ActionContainerNode = GetNode<Container>("%ActionContainer");
+		LogsLabelNode = GetNode<RichTextLabel>("%LogsLabel");
 		
 		FetchRecordRequestNode = GetNode<HttpRequest>("%FetchRecordRequest");
 		FetchConfigRequestNode = GetNode<HttpRequest>("%FetchConfigRequest");
@@ -232,7 +266,7 @@ public partial class MatchRecording : Control
 		
 		var view = new RecordingMatchView();
 		var match = new HexCore.GameMatch.Match("", config, cm, record.Seed) {
-			// SystemLogger = new ConsoleLogger(),
+			SystemLogger = new RecordingLogger(),
 			View = view,
 		};
 
@@ -261,6 +295,7 @@ public partial class MatchRecording : Control
 		}
 
 		CallDeferred("LoadActionAggregate", new Wrapper<ActionAggregate>(aggregate));
+		CallDeferred("LoadSnapshots", new Wrapper<HexCore.GameMatch.Match>(match));
 	}
 
 	private void LoadActionAggregate(Wrapper<ActionAggregate> aggregateW) {
@@ -271,12 +306,24 @@ public partial class MatchRecording : Control
 
 		foreach (var action in aggregate.Actions) {
 			var child = ActionDisplayPS.Instantiate() as Control;
-			GD.Print(child.CustomMinimumSize);
 			ActionContainerNode.AddChild(child);
 
 			var display = child as IActionDisplay;
 			display.Load(action);
 		}
+	}
+
+	private void LoadSnapshots(Wrapper<HexCore.GameMatch.Match> matchW) {
+		var match = matchW.Value;
+		var view = match.View as RecordingMatchView;
+
+
+		// TODO remove
+		foreach (var snap in view.Snapshots) {
+			foreach (var log in snap.AddedLogs)
+				LogsLabelNode.AppendText(log + "\n");
+		}
+		LogsLabelNode.ScrollToLine(LogsLabelNode.GetLineCount()-1);
 	}
 	
 	#region Signal connections

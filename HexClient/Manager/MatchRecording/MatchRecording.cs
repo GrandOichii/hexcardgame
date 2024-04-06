@@ -232,7 +232,7 @@ public partial class MatchRecording : Control
 		
 		var view = new RecordingMatchView();
 		var match = new HexCore.GameMatch.Match("", config, cm, record.Seed) {
-			SystemLogger = new ConsoleLogger(),
+			// SystemLogger = new ConsoleLogger(),
 			View = view,
 		};
 
@@ -270,7 +270,8 @@ public partial class MatchRecording : Control
 			ActionContainerNode.RemoveChild(ActionContainerNode.GetChild(0));
 
 		foreach (var action in aggregate.Actions) {
-			var child = ActionDisplayPS.Instantiate();
+			var child = ActionDisplayPS.Instantiate() as Control;
+			GD.Print(child.CustomMinimumSize);
 			ActionContainerNode.AddChild(child);
 
 			var display = child as IActionDisplay;

@@ -20,6 +20,9 @@ public partial class ActionDisplay : Control, IActionDisplay
 		ActionLabelNode = GetNode<Label>("%ActionLabel");
 
 		#endregion
+
+		// CustomMinimumSize = new(140, 40);
+		// GD.Print(Size);
 	}
 
 	public void Load(RecordedAction action) {

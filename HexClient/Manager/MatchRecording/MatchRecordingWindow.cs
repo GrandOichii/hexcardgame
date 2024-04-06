@@ -24,7 +24,7 @@ public partial class MatchRecordingWindow : Window
 		#endregion
 		
 		GrabFocus();
-		Load("12ddcbb9-255b-4303-9b2e-7db1351a82ee");
+		Load("7bfbedf6-db4c-4bdc-be47-5ad254ed5048");
 	}
 
 	public void Load(string matchId) {

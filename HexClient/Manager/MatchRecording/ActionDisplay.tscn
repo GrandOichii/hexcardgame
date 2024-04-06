@@ -3,18 +3,16 @@
 [ext_resource type="Script" path="res://Manager/MatchRecording/ActionDisplay.cs" id="1_23ll7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sb42x"]
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
 
 [node name="ActionDisplay" type="Control"]
 custom_minimum_size = Vector2(140, 40)
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -1860.0
-offset_bottom = -1464.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
+anchors_preset = 0
 script = ExtResource("1_23ll7")
 
 [node name="Bg" type="PanelContainer" parent="."]

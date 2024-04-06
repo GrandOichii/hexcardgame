@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://b1as7s7hd6he5"]
+[gd_scene load_steps=3 format=3 uid="uid://b1as7s7hd6he5"]
 
 [ext_resource type="Script" path="res://test/ColorPickerTest.cs" id="1_ymcc0"]
+[ext_resource type="PackedScene" uid="uid://c628be2lpt2fp" path="res://Manager/MatchRecording/ActionDisplay.tscn" id="2_d860a"]
 
 [node name="ColorPickerTest" type="Control"]
+custom_minimum_size = Vector2(140, 40)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -10,6 +12,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ymcc0")
+PS = ExtResource("2_d860a")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1

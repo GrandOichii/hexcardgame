@@ -1,23 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://d4ckxltt8ci2n"]
+[gd_scene load_steps=4 format=3 uid="uid://d4ckxltt8ci2n"]
 
 [ext_resource type="Script" path="res://Manager/MatchRecording/MatchRecording.cs" id="1_djfcm"]
 [ext_resource type="PackedScene" uid="uid://bdi8qkiqq33ej" path="res://Match/Match.tscn" id="2_5aubl"]
-[ext_resource type="Script" path="res://Manager/MatchRecording/ActionDisplay.cs" id="2_lgk3f"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sb42x"]
-
-[sub_resource type="PackedScene" id="PackedScene_ju8b2"]
-_bundled = {
-"conn_count": 0,
-"conns": PackedInt32Array(),
-"editable_instances": [],
-"names": PackedStringArray("ActionDisplay", "layout_mode", "anchors_preset", "anchor_right", "anchor_bottom", "offset_right", "offset_bottom", "grow_horizontal", "grow_vertical", "script", "Control", "Bg", "unique_name_in_owner", "theme_override_styles/panel", "PanelContainer", "MarginContainer", "theme_override_constants/margin_left", "theme_override_constants/margin_top", "theme_override_constants/margin_right", "theme_override_constants/margin_bottom", "ActionLabel", "text", "horizontal_alignment", "Label"),
-"node_count": 4,
-"node_paths": [],
-"nodes": PackedInt32Array(-1, -1, 10, 0, -1, 9, 1, 0, 2, 1, 3, 2, 4, 2, 5, 3, 6, 4, 7, 5, 8, 5, 9, 6, 0, 0, 0, 14, 11, -1, 8, 12, 7, 1, 8, 2, 1, 3, 2, 4, 2, 7, 5, 8, 5, 13, 9, 0, 1, 0, 15, 15, -1, 5, 1, 5, 16, 10, 17, 10, 18, 10, 19, 10, 0, 2, 0, 23, 20, -1, 4, 12, 7, 1, 5, 21, 11, 22, 8, 0),
-"variants": [3, 15, 1.0, -1637.0, -1381.0, 2, ExtResource("2_lgk3f"), true, 1, SubResource("StyleBoxFlat_sb42x"), 5, "ACTION HERE"],
-"version": 3
-}
+[ext_resource type="PackedScene" uid="uid://c628be2lpt2fp" path="res://Manager/MatchRecording/ActionDisplay.tscn" id="2_85vnn"]
 
 [node name="MatchRecording" type="Control"]
 layout_mode = 3
@@ -27,7 +12,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_djfcm")
-ActionDisplayPS = SubResource("PackedScene_ju8b2")
+ActionDisplayPS = ExtResource("2_85vnn")
 
 [node name="Requests" type="Node" parent="."]
 
@@ -77,7 +62,16 @@ text = "Player actions:"
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ActionContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="ActionContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ScrollContainer/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

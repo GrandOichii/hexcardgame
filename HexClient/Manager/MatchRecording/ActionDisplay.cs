@@ -6,8 +6,7 @@ namespace HexClient.Manager;
 
 public partial class ActionDisplay : Control, IActionDisplay
 {
-	private static readonly Dictionary<string, Color> _colorMap = new () {
-	};
+	private Dictionary<string, Color> _colorMap = new();
 
 	#region Nodes
 
@@ -37,19 +36,19 @@ public partial class ActionDisplay : Control, IActionDisplay
 
 	private StyleBoxFlat BgStyle => BgNode.Get("theme_override_styles/panel").As<StyleBoxFlat>();
 
-	public void Load(RecordedAction action) {
-		// TODO change
-		ActionLabelNode.Text = action.Action;
+	private RecordedAction _action;
 
-		if (!_colorMap.ContainsKey(action.PlayerName)) {
-			GD.Print(action.PlayerName);
-			_colorMap[action.PlayerName] = new Color(
-				GD.Randf(),
-				GD.Randf(),
-				GD.Randf()
-			);
-		}
+	public void Load(RecordedAction action) {
+		_action = action;
+		ActionLabelNode.Text = action.Action;
 		
-		BgColor = _colorMap[action.PlayerName];
+		if (_colorMap.ContainsKey(action.PlayerId))
+			BgColor = _colorMap[action.PlayerId];
+	}
+
+	public void OnPlayerColorsUpdated(Wrapper<Dictionary<string, Color>> mapW)
+	{
+		_colorMap = mapW.Value;
+		Load(_action);
 	}
 }

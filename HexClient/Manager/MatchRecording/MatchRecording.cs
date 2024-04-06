@@ -96,7 +96,7 @@ public class QueuedActionPlayerController : IPlayerController
 		var result = Actions.Dequeue();
 
 		_aggregate.Actions.Add(new() {
-			PlayerName = _record.Name,
+			PlayerId = player.ID,
 			Action = result
 		});
 
@@ -110,7 +110,7 @@ public class QueuedActionPlayerController : IPlayerController
 		var result = Actions.Dequeue();
 
 		_aggregate.Actions.Add(new() {
-			PlayerName = _record.Name,
+			PlayerId = player.ID,
 			Action = result
 		});
 		
@@ -177,7 +177,7 @@ public class RecordingMatchView : IMatchView
 }
 
 public struct RecordedAction {
-	public required string PlayerName { get; set; }
+	public required string PlayerId { get; set; }
 	public required string Action { get; set; }
 	public List<Snapshot> Snapshots { get; } = new();
 
@@ -190,6 +190,7 @@ public class ActionAggregate {
 
 public interface IActionDisplay {
 	public void Load(RecordedAction action);
+	public void OnPlayerColorsUpdated(Wrapper<Dictionary<string, Color>> mapW);
 }
 
 
@@ -336,7 +337,10 @@ public partial class MatchRecording : Control
 			ActionContainerNode.AddChild(child);
 
 			var display = child as IActionDisplay;
+			MatchNode.PlayerColorMappingUpdated += display.OnPlayerColorsUpdated;
 			display.Load(action);
+			display.OnPlayerColorsUpdated(new(MatchNode.PlayerColors));
+			// MatchNode.
 
 			GD.Print($"{action.Action} -> {action.Snapshots.Count}");
 		}
@@ -347,7 +351,6 @@ public partial class MatchRecording : Control
 			var i = SnapshotListNode.AddItem($"{snap.ParentAction?.Action} -> {snap.Id}");
 			SnapshotListNode.SetItemMetadata(i, new Wrapper<Snapshot>(snap));
 		}
-		// LogsLabelNode.ScrollToLine(LogsLabelNode.GetLineCount() - 1);
 	}
 
 	private void LoadSnapshot(Snapshot snapshot) {
@@ -400,6 +403,3 @@ public partial class MatchRecording : Control
 	}
 	#endregion
 }
-
-
-

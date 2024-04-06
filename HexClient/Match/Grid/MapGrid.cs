@@ -305,7 +305,13 @@ public partial class MapGrid : Control, IMapGrid
 		}
 	}
 
+	private void OnMatchPlayerColorMappingUpdated(Wrapper<Dictionary<string, Color>> mapW)
+	{
+		SetPlayerColors(mapW.Value);
+	}
+
 	#endregion
 }
+
 
 

@@ -181,6 +181,7 @@ text = "Show tile IDs"
 layout_mode = 2
 text = "Show entity IDs"
 
+[connection signal="PlayerColorMappingUpdated" from="." to="VBoxContainer/HBoxContainer3/HBoxContainer2/Map/ScrollContainer/MapGrid" method="OnMatchPlayerColorMappingUpdated"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/ShowOptionsButton" to="." method="OnShowOptionsButtonPressed"]
 [connection signal="close_requested" from="Windows/OptionsWindow" to="." method="OnOptionsWindowCloseRequested"]
 [connection signal="color_changed" from="Windows/OptionsWindow/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/Player1ColorPicker" to="." method="OnPlayer1ColorPickerColorChanged"]

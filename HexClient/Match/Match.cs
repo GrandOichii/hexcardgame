@@ -34,6 +34,8 @@ public partial class Match : Control
 	#region Signals
 
 	[Signal]
+	public delegate void PlayerColorMappingUpdatedEventHandler(Wrapper<Dictionary<string, Color>> mapW);
+	[Signal]
 	public delegate void ShowCardIdsToggledEventHandler(bool v);
 	[Signal]
 	public delegate void ShowPlayerIdsToggledEventHandler(bool v);
@@ -73,7 +75,7 @@ public partial class Match : Control
 	}
 
 	public bool ShowCardIds { get; private set; }
-	private Dictionary<string, Color> _playerColors = new();
+	public Dictionary<string, Color> PlayerColors { get; } = new();
 
 	#nullable enable
 	public CommandProcessor? Processor { get; private set; }
@@ -168,14 +170,14 @@ public partial class Match : Control
 
 	private void OnPlayer2ColorPickerColorChanged(Color color)
 	{
-		_playerColors["2"] = color;
-		MapGridNode.SetPlayerColors(_playerColors);
+		PlayerColors["2"] = color;
+		EmitSignal(SignalName.PlayerColorMappingUpdated, new Wrapper<Dictionary<string, Color>>(PlayerColors));
 	}
 
 	private void OnPlayer1ColorPickerColorChanged(Color color)
 	{
-		_playerColors["1"] = color;
-		MapGridNode.SetPlayerColors(_playerColors);
+		PlayerColors["1"] = color;
+		EmitSignal(SignalName.PlayerColorMappingUpdated, new Wrapper<Dictionary<string, Color>>(PlayerColors));
 	}
 	
 	#endregion

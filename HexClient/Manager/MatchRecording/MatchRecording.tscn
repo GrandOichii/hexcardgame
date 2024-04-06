@@ -99,4 +99,11 @@ layout_mode = 2
 size_flags_vertical = 3
 bbcode_enabled = true
 
+[node name="SnapshotList" type="ItemList" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
 [connection signal="request_completed" from="Requests/FetchRecordRequest" to="." method="OnFetchRecordRequestRequestCompleted"]
+[connection signal="item_activated" from="HBoxContainer/SnapshotList" to="." method="OnSnapshotListItemActivated"]
+[connection signal="item_selected" from="HBoxContainer/SnapshotList" to="." method="OnSnapshotListItemSelected"]

@@ -143,7 +143,13 @@ public class RecordingMatchView : IMatchView
 	public event MatchEnd? MatchEnded;
 	#nullable disable
 
+	private readonly ActionAggregate _aggregate;
 	public List<Snapshot> Snapshots { get; } = new();
+
+	public RecordingMatchView(ActionAggregate aggregate)
+	{
+		_aggregate = aggregate;
+	}
 
 	public async Task End()
 	{
@@ -158,7 +164,12 @@ public class RecordingMatchView : IMatchView
 
 	public Task Update(HexCore.GameMatch.Match match)
 	{
-		var snap = new Snapshot(match);
+		RecordedAction? parent = null;
+		if (_aggregate.Actions.Count > 0)
+			parent = _aggregate.Actions.Last();
+
+		var snap = new Snapshot(match, parent);
+		parent?.Snapshots.Add(snap);
 		Snapshots.Add(snap);
 
 		return Task.CompletedTask;
@@ -168,6 +179,9 @@ public class RecordingMatchView : IMatchView
 public struct RecordedAction {
 	public required string PlayerName { get; set; }
 	public required string Action { get; set; }
+	public List<Snapshot> Snapshots { get; } = new();
+
+	public RecordedAction() {}
 }
 
 public class ActionAggregate {
@@ -182,10 +196,14 @@ public interface IActionDisplay {
 /// <summary>
 /// A match snapshot
 /// </summary>
-public readonly struct Snapshot {
+public class Snapshot {
+	public Guid Id { get;  } = Guid.NewGuid();
 	public List<string> AddedLogs { get; } = new();
+	public RecordedAction? ParentAction { get; }
 
-	public Snapshot(HexCore.GameMatch.Match match) {
+	public Snapshot(HexCore.GameMatch.Match match, RecordedAction? parentAction) {
+		ParentAction = parentAction;
+
 		var logger = match.SystemLogger as RecordingLogger;
 		foreach (var log in logger.Logs) {
 			AddedLogs.Add(log);
@@ -210,12 +228,16 @@ public partial class MatchRecording : Control
 	public Control OverlayNode { get; private set; }
 	public Container ActionContainerNode { get; private set; }
 	public RichTextLabel LogsLabelNode { get; private set; }
+	public ItemList SnapshotListNode { get; private set; }
 
 	public HttpRequest FetchRecordRequestNode { get; private set; }
 	public HttpRequest FetchConfigRequestNode { get; private set; }
 	public HttpRequest FetchCardRequestNode { get; private set; }
 	
 	#endregion
+
+	private ActionAggregate _aggregate;
+	private RecordingMatchView _view;
 
 	public string ApiUrl => GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 	
@@ -227,6 +249,7 @@ public partial class MatchRecording : Control
 		OverlayNode = GetNode<Control>("%Overlay");
 		ActionContainerNode = GetNode<Container>("%ActionContainer");
 		LogsLabelNode = GetNode<RichTextLabel>("%LogsLabel");
+		SnapshotListNode = GetNode<ItemList>("%SnapshotList");
 		
 		FetchRecordRequestNode = GetNode<HttpRequest>("%FetchRecordRequest");
 		FetchConfigRequestNode = GetNode<HttpRequest>("%FetchConfigRequest");
@@ -263,26 +286,27 @@ public partial class MatchRecording : Control
 	private async Task CreateRecording(MatchRecord record) {
 		var config = await FetchConfig(record.ConfigId);
 		var cm = new ApiCardMaster(ApiUrl, FetchCardRequestNode);
-		
-		var view = new RecordingMatchView();
+
+		_aggregate = new ActionAggregate();
+
+		_view = new RecordingMatchView(_aggregate);
 		var match = new HexCore.GameMatch.Match("", config, cm, record.Seed) {
 			SystemLogger = new RecordingLogger(),
-			View = view,
+			View = _view,
 		};
 
 		// TODO change
 		match.InitialSetup("../HexCore/core.lua");
 
-		var aAggregate = new ActionAggregate();
 
 		foreach (var p in record.Players) {
-			var controller = new QueuedActionPlayerController(p, aAggregate);
+			var controller = new QueuedActionPlayerController(p, _aggregate);
 			var deck = DeckTemplate.FromText(p.Deck);
 			await match.AddPlayer(p.Name, deck, controller);
 			GD.Print("added player");
 		}
 
-		_ = Task.Run(async () => await RunMatch(match, aAggregate));
+		_ = Task.Run(async () => await RunMatch(match, _aggregate));
 	}
 
 	private async Task RunMatch(HexCore.GameMatch.Match match, ActionAggregate aggregate) {
@@ -290,7 +314,9 @@ public partial class MatchRecording : Control
 			await match.Start();
 
 			GD.Print("match completed");
-		} catch (Exception) {
+		} catch (Exception e) {
+			GD.PrintErr(e.Message);
+			GD.Print(e.StackTrace);
 			GD.Print("match crashed");
 		}
 
@@ -304,26 +330,45 @@ public partial class MatchRecording : Control
 		while (ActionContainerNode.GetChildCount() > 0)
 			ActionContainerNode.RemoveChild(ActionContainerNode.GetChild(0));
 
+		GD.Print(aggregate.Actions.Count);
 		foreach (var action in aggregate.Actions) {
 			var child = ActionDisplayPS.Instantiate() as Control;
 			ActionContainerNode.AddChild(child);
 
 			var display = child as IActionDisplay;
 			display.Load(action);
+
+			GD.Print($"{action.Action} -> {action.Snapshots.Count}");
 		}
 	}
 
 	private void LoadSnapshots(Wrapper<HexCore.GameMatch.Match> matchW) {
-		var match = matchW.Value;
-		var view = match.View as RecordingMatchView;
-
-
-		// TODO remove
-		foreach (var snap in view.Snapshots) {
-			foreach (var log in snap.AddedLogs)
-				LogsLabelNode.AppendText(log + "\n");
+		foreach (var snap in _view.Snapshots) {
+			var i = SnapshotListNode.AddItem($"{snap.ParentAction?.Action} -> {snap.Id}");
+			SnapshotListNode.SetItemMetadata(i, new Wrapper<Snapshot>(snap));
 		}
-		LogsLabelNode.ScrollToLine(LogsLabelNode.GetLineCount()-1);
+		// LogsLabelNode.ScrollToLine(LogsLabelNode.GetLineCount() - 1);
+	}
+
+	private void LoadSnapshot(Snapshot snapshot) {
+		LogsLabelNode.Clear();
+		LogsLabelNode.Text = "";
+
+		foreach (var snap in _view.Snapshots) {
+			var isLast = snap == snapshot;
+			foreach (var log in snap.AddedLogs) {
+				var text = log;
+				if (isLast) {
+					text = $"[color=green][+] {text}[/color]";
+				}
+				LogsLabelNode.AppendText(text + "\n");
+			}
+
+			if (snap == snapshot)
+				break;
+		}
+
+		LogsLabelNode.ScrollToLine(LogsLabelNode.GetLineCount() - 1);
 	}
 	
 	#region Signal connections
@@ -342,6 +387,19 @@ public partial class MatchRecording : Control
 		_ = CreateRecording(data.Record);
 	}
 
+	private void OnSnapshotListItemActivated(int index)
+	{
+		var snapshot = SnapshotListNode.GetItemMetadata(index).As<Wrapper<Snapshot>>().Value;
+		// TODO focus on parent action
+		LoadSnapshot(snapshot);
+	}
+
+	private void OnSnapshotListItemSelected(int index)
+	{
+		// TODO
+	}
 	#endregion
 }
+
+
 

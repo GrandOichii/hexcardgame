@@ -5,6 +5,7 @@ using HexCore.Decks;
 using HexCore.GameMatch;
 using HexCore.GameMatch.Players;
 using HexCore.GameMatch.Players.Controllers;
+using HexCore.GameMatch.States;
 using HexCore.GameMatch.View;
 using Microsoft.AspNetCore.SignalR.Protocol;
 using Microsoft.Extensions.Logging;
@@ -193,6 +194,28 @@ public interface IActionDisplay {
 	public void OnPlayerColorsUpdated(Wrapper<Dictionary<string, Color>> mapW);
 }
 
+public class SnapshotMatchState {
+	public BaseState BaseState { get; }
+
+	public SnapshotMatchState(HexCore.GameMatch.Match match)
+	{
+		var players = new List<HexStates.PlayerState>();
+		foreach (var p in match.Players)
+			players.Add(new HexStates.PlayerState(p));
+
+		BaseState = new() {
+			CurPlayerID = match.CurrentPlayer.ID,
+
+			// TODO
+			NewLogs = new(),
+			
+			Players = players,
+			
+			Map = new HexStates.MapState(match.Map),
+		};
+
+	}
+}
 
 /// <summary>
 /// A match snapshot
@@ -201,9 +224,11 @@ public class Snapshot {
 	public Guid Id { get;  } = Guid.NewGuid();
 	public List<string> AddedLogs { get; } = new();
 	public RecordedAction? ParentAction { get; }
+	public SnapshotMatchState State { get; }
 
 	public Snapshot(HexCore.GameMatch.Match match, RecordedAction? parentAction) {
 		ParentAction = parentAction;
+		State = new(match);
 
 		var logger = match.SystemLogger as RecordingLogger;
 		foreach (var log in logger.Logs) {
@@ -239,6 +264,7 @@ public partial class MatchRecording : Control
 
 	private ActionAggregate _aggregate;
 	private RecordingMatchView _view;
+	private MatchInfoState MatchInfo;
 
 	public string ApiUrl => GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 	
@@ -312,6 +338,7 @@ public partial class MatchRecording : Control
 
 	private async Task RunMatch(HexCore.GameMatch.Match match, ActionAggregate aggregate) {
 		try {
+			MatchInfo = new MatchInfoState(match);
 			await match.Start();
 
 			GD.Print("match completed");
@@ -372,6 +399,8 @@ public partial class MatchRecording : Control
 		}
 
 		LogsLabelNode.ScrollToLine(LogsLabelNode.GetLineCount() - 1);
+
+		snapshot.State.BaseState.ApplyTo(MatchNode, MatchInfo);
 	}
 	
 	#region Signal connections
@@ -401,5 +430,6 @@ public partial class MatchRecording : Control
 	{
 		// TODO
 	}
+
 	#endregion
 }

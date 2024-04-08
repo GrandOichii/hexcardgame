@@ -9,39 +9,12 @@ public partial class MatchState : BaseState {
 	public void ApplyTo(ConnectedMatch match, HexStates.MatchInfoState info) {
 		base.ApplyTo(match.MatchNode, info);
 
+		match.HandContainerNode.Load(this, match.MatchNode, match.HandCardPS);
 		// hand cards
-		var cCount = match.HandContainerNode.GetChildCount();
-		var nCount = MyData.Hand.Count;
-
-		if (nCount > cCount) {
-			// fill hand up to new count
-			for (int i = 0; i < nCount - cCount; i++) {
-				var child = match.HandCardPS.Instantiate();
-				match.HandContainerNode.AddChild(child);
-
-				var cd = child as IHandCard;
-				cd.SetCommandProcessor(match.Processor);
-				cd.SetShowCardIds(match.MatchNode.ShowCardIds);
-				match.MatchNode.ShowCardIdsToggled += cd.SetShowCardIds;
-			}
-		}
-		if (nCount < cCount) {
-			// trim child count
-			for (int i = cCount - 1; i >= nCount; i--) {
-			// for (int i = nCount + 1; i < cCount; i++) {
-				var child = match.HandContainerNode.GetChild(i);
-				child.Free();
-			}
-		}
-		// load card data
-		for (int i = 0; i < nCount; i++) {
-			(match.HandContainerNode.GetChild(i) as IHandCard).Load(MyData.Hand[i]);
-		}
 	}
 
 	public override void ApplyTo(Match match, HexStates.MatchInfoState info)
 	{
 		base.ApplyTo(match, info);
-
 	}
 }

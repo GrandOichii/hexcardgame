@@ -22,8 +22,7 @@ public partial class ConnectedMatch : Control
 	public Match MatchNode { get; private set; }
 	public LineEdit ActionEditNode { get; private set; }
 	public CheckBox AutoPassCheckNode { get; private set; }
-	public Container HandContainerNode { get; private set; }
-
+	public HandContainer HandContainerNode { get; private set; }
 	
 	#endregion
 	
@@ -46,7 +45,7 @@ public partial class ConnectedMatch : Control
 		#region Node fetching
 		
 		MatchNode = GetNode<Match>("%Match");
-		HandContainerNode = GetNode<Container>("%HandContainer");
+		HandContainerNode = GetNode<HandContainer>("%HandContainer");
 		ActionEditNode = GetNode<LineEdit>("%ActionEdit");
 		AutoPassCheckNode = GetNode<CheckBox>("%AutoPassCheck");
 

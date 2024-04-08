@@ -6,9 +6,8 @@ namespace HexClient.Match.State;
 public partial class MatchState : BaseState {
 	public HexStates.MyDataState MyData { get; set; }
 
-	public override void ApplyTo(Match match, HexStates.MatchInfoState info)
-	{
-		base.ApplyTo(match, info);
+	public void ApplyTo(ConnectedMatch match, HexStates.MatchInfoState info) {
+		base.ApplyTo(match.MatchNode, info);
 
 		// hand cards
 		var cCount = match.HandContainerNode.GetChildCount();
@@ -22,8 +21,8 @@ public partial class MatchState : BaseState {
 
 				var cd = child as IHandCard;
 				cd.SetCommandProcessor(match.Processor);
-				cd.SetShowCardIds(match.ShowCardIds);
-				match.ShowCardIdsToggled += cd.SetShowCardIds;
+				cd.SetShowCardIds(match.MatchNode.ShowCardIds);
+				match.MatchNode.ShowCardIdsToggled += cd.SetShowCardIds;
 			}
 		}
 		if (nCount < cCount) {
@@ -38,5 +37,11 @@ public partial class MatchState : BaseState {
 		for (int i = 0; i < nCount; i++) {
 			(match.HandContainerNode.GetChild(i) as IHandCard).Load(MyData.Hand[i]);
 		}
+	}
+
+	public override void ApplyTo(Match match, HexStates.MatchInfoState info)
+	{
+		base.ApplyTo(match, info);
+
 	}
 }

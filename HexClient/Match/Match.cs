@@ -50,15 +50,12 @@ public partial class Match : Control
 
 	[Export]
 	private PackedScene PlayerInfoPS { get; set; }
-	[Export]
-	public PackedScene HandCardPS { get; set; }
 
 	#endregion
 
 	#region Nodes
 	
 	public Control PlayerContainerNode { get; private set; }
-	public Container HandContainerNode { get; private set; }
 	public RichTextLabel LogsNode { get; private set; }
 	public IMapGrid MapGridNode { get; private set; }
 	public ColorPickerButton Player1ColorPickerNode { get; private set; }
@@ -87,7 +84,6 @@ public partial class Match : Control
 		
 		OptionsWindowNode = GetNode<Window>("%OptionsWindow");
 		PlayerContainerNode = GetNode<Control>("%PlayerContainer");
-		HandContainerNode = GetNode<Container>("%HandContainer");
 		LogsNode = GetNode<RichTextLabel>("%Logs");
 		MapGridNode = GetNode<IMapGrid>("%MapGrid");
 		Player1ColorPickerNode = GetNode<ColorPickerButton>("%Player1ColorPicker");

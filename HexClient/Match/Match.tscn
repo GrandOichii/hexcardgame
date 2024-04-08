@@ -1,9 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://bdi8qkiqq33ej"]
+[gd_scene load_steps=6 format=3 uid="uid://bdi8qkiqq33ej"]
 
 [ext_resource type="Script" path="res://Match/Match.cs" id="1_upmmj"]
 [ext_resource type="PackedScene" uid="uid://br1un240i4414" path="res://Match/Player/PlayerInfo.tscn" id="2_dopeg"]
 [ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="3_mcapw"]
-[ext_resource type="PackedScene" uid="uid://6jnalmals06c" path="res://Match/Hand/HandCard.tscn" id="3_mg04v"]
 [ext_resource type="PackedScene" uid="uid://b0hq0akjd1k87" path="res://Match/Grid/MapGrid.tscn" id="4_smbi3"]
 [ext_resource type="PackedScene" uid="uid://08ehw5dq5udq" path="res://Manager/HoverCard.tscn" id="5_xp34a"]
 
@@ -17,7 +16,6 @@ grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_upmmj")
 PlayerInfoPS = ExtResource("2_dopeg")
-HandCardPS = ExtResource("3_mg04v")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -93,16 +91,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
-
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
-layout_mode = 2
-vertical_scroll_mode = 0
-
-[node name="HandContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 
 [node name="Windows" type="Node" parent="."]
 

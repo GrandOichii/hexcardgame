@@ -10,11 +10,20 @@ namespace HexClient.Match;
 
 public partial class ConnectedMatch : Control
 {
+	#region Packed scenes
+
+	[Export]
+	public PackedScene HandCardPS { get; set; }
+
+	#endregion
+
 	#region Nodes
 	
 	public Match MatchNode { get; private set; }
 	public LineEdit ActionEditNode { get; private set; }
 	public CheckBox AutoPassCheckNode { get; private set; }
+	public Container HandContainerNode { get; private set; }
+
 	
 	#endregion
 	
@@ -37,6 +46,7 @@ public partial class ConnectedMatch : Control
 		#region Node fetching
 		
 		MatchNode = GetNode<Match>("%Match");
+		HandContainerNode = GetNode<Container>("%HandContainer");
 		ActionEditNode = GetNode<LineEdit>("%ActionEdit");
 		AutoPassCheckNode = GetNode<CheckBox>("%AutoPassCheck");
 
@@ -87,7 +97,7 @@ public partial class ConnectedMatch : Control
 	}
 
 	private void LoadState(MatchState state) {
-		state.ApplyTo(MatchNode, MatchInfo);
+		state.ApplyTo(this, MatchInfo);
 	}
 	
 	#region Signal connections

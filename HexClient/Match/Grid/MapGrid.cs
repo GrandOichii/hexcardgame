@@ -153,6 +153,23 @@ public partial class MapGrid : Control, IMapGrid
 			child.Free();
 		}
 
+		// move existing entities
+		foreach (var mid in sameKeys) {
+			var newP = newPos[mid];
+			var oldP = _enPositions[mid];
+			var t = _tiles[oldP[0]][oldP[1]];
+			var e = t.GetEntity();
+			if (!(newP[0] == oldP[0] && newP[1] == oldP[1])) {
+				t.SetEntity(null);
+				var newT = _tiles[newP[0]][newP[1]];
+				newT.SetEntity(e);
+
+				e.TweenPosition(newT.GetPosition(), .1);
+			}
+			e.Load(newEn[mid]);
+		}
+
+
 		// add new entities
 		foreach (var pair in addedEntities) {
 			var mid = pair.Key;
@@ -172,21 +189,6 @@ public partial class MapGrid : Control, IMapGrid
 			t.SetEntity(eNode);
 		}
 
-		// move existing entities
-		foreach (var mid in sameKeys) {
-			var newP = newPos[mid];
-			var oldP = _enPositions[mid];
-			var t = _tiles[oldP[0]][oldP[1]];
-			var e = t.GetEntity();
-			if (!(newP[0] == oldP[0] && newP[1] == oldP[1])) {
-				t.SetEntity(null);
-				var newT = _tiles[newP[0]][newP[1]];
-				newT.SetEntity(e);
-
-				e.TweenPosition(newT.GetPosition(), .1);
-			}
-			e.Load(newEn[mid]);
-		}
 
 		_entities = newEn;
 		_enPositions = newPos;

@@ -330,7 +330,6 @@ public partial class MatchRecording : Control
 			var controller = new QueuedActionPlayerController(p, _aggregate);
 			var deck = DeckTemplate.FromText(p.Deck);
 			await match.AddPlayer(p.Name, deck, controller);
-			GD.Print("added player");
 		}
 
 		_ = Task.Run(async () => await RunMatch(match, _aggregate));
@@ -358,7 +357,6 @@ public partial class MatchRecording : Control
 		while (ActionContainerNode.GetChildCount() > 0)
 			ActionContainerNode.RemoveChild(ActionContainerNode.GetChild(0));
 
-		GD.Print(aggregate.Actions.Count);
 		foreach (var action in aggregate.Actions) {
 			var child = ActionDisplayPS.Instantiate() as Control;
 			ActionContainerNode.AddChild(child);
@@ -369,7 +367,6 @@ public partial class MatchRecording : Control
 			display.OnPlayerColorsUpdated(new(MatchNode.PlayerColors));
 			// MatchNode.
 
-			GD.Print($"{action.Action} -> {action.Snapshots.Count}");
 		}
 	}
 

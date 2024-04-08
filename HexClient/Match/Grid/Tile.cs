@@ -36,6 +36,7 @@ public partial class Tile : Node2D, ITile
 	public TileState? State { get; private set; }
 	
 	private Color _defaultBgColor;
+	private Color _defaultFgColor;
 	public Vector2 Size => BBoxNode.Size;
 	public Vector2 Coords { get; set; }
 	public IEntity Entity { get; set; }
@@ -55,7 +56,10 @@ public partial class Tile : Node2D, ITile
 		get => _playerID;
 		set {
 			_playerID = value;
-			if (string.IsNullOrEmpty(_playerID) || !_playerColors.ContainsKey(value)) return;
+			if (string.IsNullOrEmpty(_playerID) || !_playerColors.ContainsKey(value)) {
+				FgNode.Color = _defaultFgColor;
+				return;
+			}
 
 			var color = _playerColors[value];
 			FgNode.Color = color;
@@ -76,6 +80,7 @@ public partial class Tile : Node2D, ITile
 		#endregion
 		
 		_defaultBgColor = BgNode.Color;
+		_defaultFgColor = FgNode.Color;
 	}
 
 	public override void _Input(InputEvent e)

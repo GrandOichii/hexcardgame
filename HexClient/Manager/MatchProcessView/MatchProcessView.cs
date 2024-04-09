@@ -111,6 +111,8 @@ public partial class MatchProcessView : Control
 	public delegate void ConnectionCreatedEventHandler(Wrapper<IConnection> connectionW, string name, string deck);
 	[Signal]
 	public delegate void WatcherConnectionCreatedEventHandler(Wrapper<HubConnection> connectionW, string matchId);
+	[Signal]
+	public delegate void RecordingRequestedEventHandler(string matchId);
 
 	#endregion
 
@@ -351,8 +353,7 @@ public partial class MatchProcessView : Control
 	
 	private void OnViewRecordingButtonPressed()
 	{
-		// TODO
-		
+		EmitSignal(SignalName.RecordingRequested, MatchIdNode.Text);
 	}
 
 	private void OnFetchDecksRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)

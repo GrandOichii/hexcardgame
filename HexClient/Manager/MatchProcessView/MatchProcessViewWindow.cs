@@ -1,4 +1,5 @@
 using Godot;
+using HexClient.Manager.Recording;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Threading.Tasks;
@@ -13,6 +14,8 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 	private PackedScene ConnectedMatchWindowPS { get; set; }
 	[Export]
 	private PackedScene MatchViewWindowPS { get; set; }
+	[Export]
+	private PackedScene MatchRecordingWindowPS { get; set; }
 
 	#endregion
 	#region Nodes
@@ -76,8 +79,20 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 		QueueFree();
 	}
 	
+	private void OnMatchProcessViewRecordingRequested(string matchId)
+	{
+		var window = MatchRecordingWindowPS.Instantiate() as MatchRecordingWindow;
+		
+		GetParent().AddChild(window);
+		window.Load(matchId);
+
+		// QueueFree();
+	}
+	
 	#endregion
 }
+
+
 
 
 

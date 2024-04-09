@@ -24,10 +24,19 @@ public partial class MatchRecordingWindow : Window
 		#endregion
 		
 		GrabFocus();
-		Load("7bfbedf6-db4c-4bdc-be47-5ad254ed5048");
 	}
 
 	public void Load(string matchId) {
 		MatchRecordingNode.Load(matchId);
 	}
+	
+	#region Signal connections
+	
+	private void OnCloseRequested()
+	{
+		QueueFree();
+	}
+	
+	#endregion
 }
+

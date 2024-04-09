@@ -44,9 +44,7 @@ layout_mode = 2
 [node name="NameLabel" type="Label" parent="Bg/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "PLAYER NAME HERE"
 
 [node name="EnergyLabel" type="Label" parent="Bg/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "ENERGY COUNT HERE"

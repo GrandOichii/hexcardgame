@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://dkppauhxka1v6"]
+[gd_scene load_steps=7 format=3 uid="uid://dkppauhxka1v6"]
 
 [ext_resource type="Script" path="res://Manager/MatchProcessView/MatchProcessViewWindow.cs" id="1_4xp6m"]
 [ext_resource type="PackedScene" uid="uid://lfaid4nc6p47" path="res://Manager/MatchProcessView/MatchProcessView.tscn" id="2_1ab13"]
 [ext_resource type="PackedScene" uid="uid://dqjostws3wlet" path="res://Match/ConnectedMatchWindow.tscn" id="2_jvr7h"]
 [ext_resource type="PackedScene" uid="uid://rsvnq74xsoqi" path="res://Match/View/MatchViewWindow.tscn" id="3_bgmy5"]
 [ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="3_yb3fn"]
+[ext_resource type="PackedScene" uid="uid://cgmpejr4vpeif" path="res://Manager/MatchRecording/MatchRecordingWindow.tscn" id="4_7paea"]
 
 [node name="MatchProcessViewWindow" type="Window"]
 initial_position = 2
@@ -12,6 +13,7 @@ size = Vector2i(800, 600)
 script = ExtResource("1_4xp6m")
 ConnectedMatchWindowPS = ExtResource("2_jvr7h")
 MatchViewWindowPS = ExtResource("3_bgmy5")
+MatchRecordingWindowPS = ExtResource("4_7paea")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 15
@@ -31,4 +33,5 @@ theme = ExtResource("3_yb3fn")
 
 [connection signal="close_requested" from="." to="." method="OnCloseRequested"]
 [connection signal="ConnectionCreated" from="MarginContainer/MatchProcessView" to="." method="OnMatchProcessViewConnectionCreated"]
+[connection signal="RecordingRequested" from="MarginContainer/MatchProcessView" to="." method="OnMatchProcessViewRecordingRequested"]
 [connection signal="WatcherConnectionCreated" from="MarginContainer/MatchProcessView" to="." method="OnMatchProcessViewWatcherConnectionCreated"]

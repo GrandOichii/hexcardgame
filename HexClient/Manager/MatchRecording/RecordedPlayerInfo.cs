@@ -6,14 +6,14 @@ namespace HexClient.Manager.Recording;
 
 public partial class RecordedPlayerInfo : Control, IRecordedPlayerInfo
 {
-    #region Nodes
+	#region Nodes
 
 	public PlayerInfo PlayerInfoNode { get; private set; }
 	public HandContainer HandContainerNode { get; private set; }
 
-    #endregion
+	#endregion
 
-    public override void _Ready()
+	public override void _Ready()
 	{
 		#region Node fetching
 		
@@ -28,10 +28,10 @@ public partial class RecordedPlayerInfo : Control, IRecordedPlayerInfo
 		PlayerInfoNode.PlayerI = playerI;
 	} 
 
-    public void Load(MyDataState pState, BaseState state, Match.Match match, PackedScene handCardPS)
-    {
+	public void Load(MyDataState pState, BaseState state, Match.Match match, PackedScene handCardPS)
+	{
 		PlayerInfoNode.LoadState(state);
 		
 		HandContainerNode.Load(pState, match, handCardPS);
-    }
+	}
 }

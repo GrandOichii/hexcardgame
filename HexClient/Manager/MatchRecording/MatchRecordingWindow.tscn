@@ -24,3 +24,5 @@ theme_override_constants/margin_bottom = 4
 [node name="MatchRecording" parent="MarginContainer" instance=ExtResource("3_coo4g")]
 unique_name_in_owner = true
 layout_mode = 2
+
+[connection signal="close_requested" from="." to="." method="OnCloseRequested"]

@@ -1,4 +1,5 @@
 using Godot;
+using HexCore.GameMatch.States;
 using System;
 
 namespace HexClient.Match;
@@ -21,9 +22,13 @@ public partial class HandContainer : Control
 		#endregion
 	}
 
-	public void Load(MatchState state, Match match, PackedScene handCardPS) {
+	public void Load(State.MatchState state, Match match, PackedScene handCardPS) {
+		Load(state.MyData, match, handCardPS);
+	}
+
+	public void Load(MyDataState state, Match match, PackedScene handCardPS) {
 		var cCount = CardContainerNode.GetChildCount();
-		var nCount = state.MyData.Hand.Count;
+		var nCount = state.Hand.Count;
 
 		if (nCount > cCount) {
 			// fill hand up to new count
@@ -47,7 +52,7 @@ public partial class HandContainer : Control
 		}
 		// load card data
 		for (int i = 0; i < nCount; i++) {
-			(CardContainerNode.GetChild(i) as IHandCard).Load(state.MyData.Hand[i]);
+			(CardContainerNode.GetChild(i) as IHandCard).Load(state.Hand[i]);
 		}
 	}
 }

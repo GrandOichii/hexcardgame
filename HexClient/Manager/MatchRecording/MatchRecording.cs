@@ -20,7 +20,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Utility;
 
-namespace HexClient.Manager;
+namespace HexClient.Manager.Recording;
 
 // !FIXME this will change to MatchRecord when a separate controller for match records will be created
 
@@ -194,14 +194,22 @@ public interface IActionDisplay {
 	public void OnPlayerColorsUpdated(Wrapper<Dictionary<string, Color>> mapW);
 }
 
+public interface IRecordedPlayerInfo {
+	public void Load(MyDataState pState, BaseState state, Match.Match match, PackedScene handCardPS);
+	public void SetPlayerI(int playerI);
+}
+
 public class SnapshotMatchState {
 	public BaseState BaseState { get; }
+	public List<MyDataState> PlayerStates { get; } = new();
 
 	public SnapshotMatchState(HexCore.GameMatch.Match match)
 	{
-		var players = new List<HexStates.PlayerState>();
-		foreach (var p in match.Players)
-			players.Add(new HexStates.PlayerState(p));
+		var players = new List<PlayerState>();
+		foreach (var player in match.Players) {
+			players.Add(new PlayerState(player));
+			PlayerStates.Add(new(player));
+		}
 
 		BaseState = new() {
 			CurPlayerID = match.CurrentPlayer.ID,
@@ -211,7 +219,7 @@ public class SnapshotMatchState {
 			
 			Players = players,
 			
-			Map = new HexStates.MapState(match.Map),
+			Map = new MapState(match.Map),
 		};
 
 	}
@@ -235,6 +243,7 @@ public class Snapshot {
 			AddedLogs.Add(log);
 		}
 		logger.ClearLogs();
+
 	}
 
 }
@@ -245,6 +254,10 @@ public partial class MatchRecording : Control
 
 	[Export]
 	private PackedScene ActionDisplayPS { get; set; }
+	[Export]
+	private PackedScene RecordedPlayerInfoPS { get; set; }
+	[Export]
+	private PackedScene HandCardPS { get; set; }
 
 	#endregion
 
@@ -255,6 +268,7 @@ public partial class MatchRecording : Control
 	public Container ActionContainerNode { get; private set; }
 	public RichTextLabel LogsLabelNode { get; private set; }
 	public ItemList SnapshotListNode { get; private set; }
+	public Container PlayerContainerNode { get; private set; }
 
 	public HttpRequest FetchRecordRequestNode { get; private set; }
 	public HttpRequest FetchConfigRequestNode { get; private set; }
@@ -264,7 +278,27 @@ public partial class MatchRecording : Control
 
 	private ActionAggregate _aggregate;
 	private RecordingMatchView _view;
-	private MatchInfoState MatchInfo;
+
+	private MatchInfoState _matchInfo;
+	private MatchInfoState MatchInfo {
+		get => _matchInfo;
+		set {
+			_matchInfo = value;
+
+			while (PlayerContainerNode.GetChildCount() > 0)
+				PlayerContainerNode.RemoveChild(PlayerContainerNode.GetChild(0));
+
+			for (int i = 0; i < value.PlayerCount; i++) {
+				if (i != 0)
+					PlayerContainerNode.AddChild(new VSeparator());
+		
+				var child = RecordedPlayerInfoPS.Instantiate();
+				PlayerContainerNode.AddChild(child);
+				var info = child as IRecordedPlayerInfo;
+				info.SetPlayerI(i);
+			}
+		}
+	}
 
 	public string ApiUrl => GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 	
@@ -277,6 +311,7 @@ public partial class MatchRecording : Control
 		ActionContainerNode = GetNode<Container>("%ActionContainer");
 		LogsLabelNode = GetNode<RichTextLabel>("%LogsLabel");
 		SnapshotListNode = GetNode<ItemList>("%SnapshotList");
+		PlayerContainerNode = GetNode<Container>("%PlayerContainer");
 		
 		FetchRecordRequestNode = GetNode<HttpRequest>("%FetchRecordRequest");
 		FetchConfigRequestNode = GetNode<HttpRequest>("%FetchConfigRequest");
@@ -332,12 +367,14 @@ public partial class MatchRecording : Control
 			await match.AddPlayer(p.Name, deck, controller);
 		}
 
+		MatchInfo = new MatchInfoState(match);
+
 		_ = Task.Run(async () => await RunMatch(match, _aggregate));
 	}
 
 	private async Task RunMatch(HexCore.GameMatch.Match match, ActionAggregate aggregate) {
 		try {
-			MatchInfo = new MatchInfoState(match);
+			GD.Print("match started");
 			await match.Start();
 
 			GD.Print("match completed");
@@ -378,6 +415,7 @@ public partial class MatchRecording : Control
 	}
 
 	private void LoadSnapshot(Snapshot snapshot) {
+		// logs
 		LogsLabelNode.Clear();
 		LogsLabelNode.Text = "";
 
@@ -397,7 +435,16 @@ public partial class MatchRecording : Control
 
 		LogsLabelNode.ScrollToLine(LogsLabelNode.GetLineCount() - 1);
 
+		// base match
 		snapshot.State.BaseState.ApplyTo(MatchNode, MatchInfo);
+
+		// players
+		var pI = 0;
+		foreach (var child in PlayerContainerNode.GetChildren()) {
+			if (child is not IRecordedPlayerInfo rp) continue;
+			rp.Load(snapshot.State.PlayerStates[pI], snapshot.State.BaseState, MatchNode, HandCardPS);
+			++pI;
+		}
 	}
 	
 	#region Signal connections

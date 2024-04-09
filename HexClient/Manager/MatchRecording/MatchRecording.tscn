@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://d4ckxltt8ci2n"]
+[gd_scene load_steps=6 format=3 uid="uid://d4ckxltt8ci2n"]
 
 [ext_resource type="Script" path="res://Manager/MatchRecording/MatchRecording.cs" id="1_djfcm"]
 [ext_resource type="PackedScene" uid="uid://bdi8qkiqq33ej" path="res://Match/Match.tscn" id="2_5aubl"]
 [ext_resource type="PackedScene" uid="uid://c628be2lpt2fp" path="res://Manager/MatchRecording/ActionDisplay.tscn" id="2_85vnn"]
+[ext_resource type="PackedScene" uid="uid://cb671hrq0cdwx" path="res://Manager/MatchRecording/RecordedPlayerInfo.tscn" id="3_emd5q"]
+[ext_resource type="PackedScene" uid="uid://6jnalmals06c" path="res://Match/Hand/HandCard.tscn" id="4_eo0xo"]
 
 [node name="MatchRecording" type="Control"]
 layout_mode = 3
@@ -13,6 +15,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_djfcm")
 ActionDisplayPS = ExtResource("2_85vnn")
+RecordedPlayerInfoPS = ExtResource("3_emd5q")
+HandCardPS = ExtResource("4_eo0xo")
 
 [node name="Requests" type="Node" parent="."]
 
@@ -88,7 +92,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-size_flags_stretch_ratio = 4.0
+size_flags_stretch_ratio = 3.0
 
 [node name="HSeparator" type="HSeparator" parent="HBoxContainer/VBoxContainer2"]
 layout_mode = 2
@@ -98,6 +102,12 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 bbcode_enabled = true
+
+[node name="PlayerContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
 
 [node name="SnapshotList" type="ItemList" parent="HBoxContainer"]
 unique_name_in_owner = true

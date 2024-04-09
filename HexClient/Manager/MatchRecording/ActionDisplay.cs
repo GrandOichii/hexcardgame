@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-namespace HexClient.Manager;
+namespace HexClient.Manager.Recording;
 
 public partial class ActionDisplay : Control, IActionDisplay
 {

@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://cb671hrq0cdwx"]
+
+[ext_resource type="Script" path="res://Manager/MatchRecording/RecordedPlayerInfo.cs" id="1_c623k"]
+[ext_resource type="PackedScene" uid="uid://6pg1p7owcne7" path="res://Match/Hand/HandContainer.tscn" id="2_m0mte"]
+[ext_resource type="PackedScene" uid="uid://br1un240i4414" path="res://Match/Player/PlayerInfo.tscn" id="3_p5an1"]
+
+[node name="RecordedPlayerInfo" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_c623k")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PlayerInfo" parent="VBoxContainer" instance=ExtResource("3_p5an1")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HandContainer" parent="VBoxContainer" instance=ExtResource("2_m0mte")]
+unique_name_in_owner = true
+layout_mode = 2

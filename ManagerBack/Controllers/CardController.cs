@@ -67,4 +67,9 @@ public class CardController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+
+    [HttpGet("name/all")]
+    public async Task<IActionResult> GetAllNames() {
+        return Ok( await _cardService.AllNames() );
+    }
 }

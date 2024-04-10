@@ -5,7 +5,6 @@ namespace HexClient;
 
 public partial class GlobalSettings : Node
 {
-	// TODO allow to set
 	public string BaseUrl { get; set; } = "127.0.0.1";
 	public string ApiUrl { get; set; } = "http://localhost:5239/api/v1/";
 	public string JwtToken { get; set; }

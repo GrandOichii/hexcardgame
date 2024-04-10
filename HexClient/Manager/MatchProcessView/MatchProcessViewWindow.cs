@@ -33,8 +33,6 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 		MatchProcessViewNode = GetNode<MatchProcessView>("%MatchProcessView");
 
 		#endregion
-
-		// TODO remove
 	}
 
 	public void Load(string matchId)

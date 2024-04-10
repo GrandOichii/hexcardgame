@@ -466,13 +466,12 @@ public partial class MatchRecording : Control
 	private void OnSnapshotListItemActivated(int index)
 	{
 		var snapshot = SnapshotListNode.GetItemMetadata(index).As<Wrapper<Snapshot>>().Value;
-		// TODO focus on parent action
 		LoadSnapshot(snapshot);
 	}
 
 	private void OnSnapshotListItemSelected(int index)
 	{
-		// TODO
+		// TODO focus on parent action
 	}
 
 	#endregion

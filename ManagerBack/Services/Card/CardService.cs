@@ -36,6 +36,11 @@ public partial class CardService : ICardService
         return (await _cardRepo.All()).Select(_mapper.Map<ExpansionCard>);
     }
 
+    public async Task<IEnumerable<string>> AllNames()
+    {
+        return (await _cardRepo.All()).Select(c => c.GetCID());
+    }
+
     public async Task<ExpansionCard> ByCID(string cid)
     {
         await _cidValidator.Validate(cid);

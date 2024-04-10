@@ -1,7 +1,7 @@
 namespace ManagerBack.Services;
 
 public interface ICardService {
-    
+    public Task<IEnumerable<string>> AllNames();    
     public Task<ExpansionCard> ByCID(string cid);
     public Task<ExpansionCard> Create(ExpansionCard card);
     public Task Update(ExpansionCard card);

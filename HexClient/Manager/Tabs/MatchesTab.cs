@@ -18,6 +18,8 @@ namespace HexClient.Manager.Tabs;
 
 public interface IMatchProcessViewWindow {
 	public void Load(string matchId);
+	public string GetMatchId();
+	public void Focus();
 }
 
 public partial class MatchesTab : Control
@@ -215,7 +217,14 @@ public partial class MatchesTab : Control
 
 	private void OnMatchTableMatchActivated(Wrapper<MatchProcess> match)
 	{
-		// TODO? this allows to view the same record from 2 different windows, change?
+		foreach (var c in WindowsNode.GetChildren()) {
+			if (c is not IMatchProcessViewWindow w) continue;
+
+			if (w.GetMatchId() == match.Value.Id.ToString()) {
+				w.Focus();
+				return;
+			}
+		}
 
 		var child = MatchProcessViewWindowPS.Instantiate() as Window;
 		WindowsNode.AddChild(child);

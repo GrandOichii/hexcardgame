@@ -68,8 +68,8 @@ public class CardController : ControllerBase
         }
     }
 
-    [HttpGet("name/all")]
-    public async Task<IActionResult> GetAllNames() {
-        return Ok( await _cardService.AllNames() );
+    [HttpGet("cid/all")]
+    public async Task<IActionResult> GetAllCIDs() {
+        return Ok( await _cardService.AllCIDs() );
     }
 }

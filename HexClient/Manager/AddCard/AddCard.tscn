@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://djkpxvklrhloa"]
+[gd_scene load_steps=4 format=3 uid="uid://djkpxvklrhloa"]
 
 [ext_resource type="Script" path="res://Manager/AddCard/AddCard.cs" id="1_4fjws"]
+[ext_resource type="PackedScene" uid="uid://dicpedvts17tf" path="res://Cards/Card.tscn" id="2_028tb"]
 [ext_resource type="Theme" uid="uid://dbcqc2305kdu8" path="res://Theme1.tres" id="2_ao2yl"]
 
 [node name="AddCard" type="Control"]
@@ -8,8 +9,8 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -1413.0
-offset_bottom = -1433.0
+offset_right = -1367.0
+offset_bottom = -1048.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_4fjws")
@@ -22,19 +23,34 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CIDEdit" type="LineEdit" parent="HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CIDEdit" type="LineEdit" parent="HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Enter card CID"
 
-[node name="AddButton" type="Button" parent="HBoxContainer"]
+[node name="CIDList" type="ItemList" parent="HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-text = " Add "
+size_flags_vertical = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="Card" parent="HBoxContainer/CenterContainer" instance=ExtResource("2_028tb")]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="Requests" type="Node" parent="."]
 
 [node name="FetchCardRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
+[node name="FetchCIDsRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
 [node name="Popups" type="Node" parent="."]
@@ -44,5 +60,8 @@ unique_name_in_owner = true
 initial_position = 2
 theme = ExtResource("2_ao2yl")
 
-[connection signal="pressed" from="HBoxContainer/AddButton" to="." method="OnAddButtonPressed"]
+[connection signal="text_changed" from="HBoxContainer/VBoxContainer/CIDEdit" to="." method="OnCidEditTextChanged"]
+[connection signal="item_activated" from="HBoxContainer/VBoxContainer/CIDList" to="." method="OnCidListItemActivated"]
+[connection signal="item_selected" from="HBoxContainer/VBoxContainer/CIDList" to="." method="OnCidListItemSelected"]
 [connection signal="request_completed" from="Requests/FetchCardRequest" to="." method="OnFetchCardRequestRequestCompleted"]
+[connection signal="request_completed" from="Requests/FetchCIDsRequest" to="." method="OnFetchCiDsRequestRequestCompleted"]

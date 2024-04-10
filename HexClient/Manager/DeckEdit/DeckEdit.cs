@@ -38,6 +38,7 @@ public partial class DeckEdit : Control
 	public LineEdit NameEditNode { get; private set; }
 	public TextEdit DescriptionEditNode { get; private set; }
 	public FlowContainer CardsContainerNode { get; private set; }
+	public AddCard AddCardNode { get; private set; }
 	
 	public Window AddCardWindowNode { get; private set; }
 
@@ -56,6 +57,7 @@ public partial class DeckEdit : Control
 		NameEditNode = GetNode<LineEdit>("%NameEdit");
 		DescriptionEditNode = GetNode<TextEdit>("%DescriptionEdit");
 		CardsContainerNode = GetNode<FlowContainer>("%CardsContainer");
+		AddCardNode = GetNode<AddCard>("%AddCard");
 		
 		AddCardWindowNode = GetNode<Window>("%AddCardWindow");
 
@@ -135,6 +137,7 @@ public partial class DeckEdit : Control
 	}
 	
 	private void TryAddCard() {
+		AddCardNode.RefetchCIDs();
 		AddCardWindowNode.Show();
 	}
 

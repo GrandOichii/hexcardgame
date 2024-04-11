@@ -360,7 +360,6 @@ public partial class MatchRecording : Control
 		// TODO change
 		match.InitialSetup("../HexCore/core.lua");
 
-
 		foreach (var p in record.Players) {
 			var controller = new QueuedActionPlayerController(p, _aggregate);
 			var deck = DeckTemplate.FromText(p.Deck);

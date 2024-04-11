@@ -153,26 +153,13 @@ public partial class MatchesTab : Control
 			var body = result[3].As<byte[]>();
 			if (responseCode != 200) {
 				var resp = Encoding.UTF8.GetString(body);
-				// TODO show popup
-				GD.Print(responseCode);
-				GD.Print(resp);
+				FailedToCreatePopupNode.DialogText = $"Failed to create match! (code: {responseCode})\n\n{resp}";
+				FailedToCreatePopupNode.Show();
 				return;
 			}
 			var match = JsonSerializer.Deserialize<MatchProcess>(body, Common.JSON_SERIALIZATION_OPTIONS);
 			OnMatchTableMatchActivated(new Wrapper<MatchProcess>(match));
 		}
-	}
-
-	private void OnCreateRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
-	{
-		if (response_code != 200) {
-			var resp = Encoding.UTF8.GetString(body);
-			FailedToCreatePopupNode.DialogText = $"Failed to create match! (code: {response_code})\n\n{resp}";
-			FailedToCreatePopupNode.Show();
-
-			return;
-		}
-
 	}
 
 	private void OnLiveMatchesButtonPressed()

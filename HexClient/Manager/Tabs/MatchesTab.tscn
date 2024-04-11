@@ -105,9 +105,6 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "Create"
 
-[node name="CreateRequest" type="HTTPRequest" parent="HBoxContainer/VBoxContainer/CreateContainer"]
-unique_name_in_owner = true
-
 [node name="HSeparator3" type="HSeparator" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
@@ -216,11 +213,13 @@ unique_name_in_owner = true
 [node name="FetchDecksRequest" type="HTTPRequest" parent="Requests"]
 unique_name_in_owner = true
 
+[node name="CreateRequest" type="HTTPRequest" parent="Requests"]
+unique_name_in_owner = true
+
 [connection signal="text_changed" from="HBoxContainer/VBoxContainer/BaseUrlEdit" to="." method="OnBaseUrlEditTextChanged"]
 [connection signal="text_changed" from="HBoxContainer/VBoxContainer/ApiUrlEdit" to="." method="OnBaseUrlEditTextChanged"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/CreateContainer/HBoxContainer2/FetchBasicConfigButton" to="." method="OnFetchBasicConfigButtonPressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/CreateContainer/CreateMatchButton" to="." method="OnCreateMatchButtonPressed"]
-[connection signal="request_completed" from="HBoxContainer/VBoxContainer/CreateContainer/CreateRequest" to="." method="OnCreateRequestRequestCompleted"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/ConnectContainer/ConnectButton" to="." method="OnConnectButtonPressed"]
 [connection signal="request_completed" from="HBoxContainer/VBoxContainer/ConnectContainer/ConnectRequest" to="." method="OnConnectRequestRequestCompleted"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/WatchContainer/WatchButton" to="." method="OnWatchButtonPressed"]

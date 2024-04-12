@@ -1,6 +1,7 @@
 using Godot;
 using HexCore.Decks;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -411,8 +412,13 @@ public partial class MatchProcessView : Control
 
 	private void OnWatchButtonPressed()
 	{
+		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
+
 		var connection = new HubConnectionBuilder()
-			.WithUrl(ApiUrl + "match/watch")
+			.WithUrl(ApiUrl + "match/watch", options =>
+				options.AccessTokenProvider = () => Task.FromResult(token)
+			)
+
 			.Build();
 
 		EmitSignal(SignalName.WatcherConnectionCreated, new Wrapper<HubConnection>(connection), MatchIdNode.Text);

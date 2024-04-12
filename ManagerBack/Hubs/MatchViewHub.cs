@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ManagerBack.Hubs;
@@ -14,9 +15,9 @@ public class MatchViewHub : Hub {
 
     // TODO authorize
     // public async Task Connect(string matchId, string jwtToken) {
+    [Authorize]
     public async Task Connect(string matchId) {
         GetMatchProcessDto match;
-        System.Console.WriteLine("requested connection");
         try {
             match = await _matchService.ById(matchId);
             System.Console.WriteLine(matchId);

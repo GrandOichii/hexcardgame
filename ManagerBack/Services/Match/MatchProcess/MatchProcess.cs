@@ -181,7 +181,6 @@ public class MatchProcess {
     private async Task CreatePlayerControllers() {
         foreach (var player in QueuedPlayers) {
             var baseController = player!.Controller;
-            // TODO wrap with recording player controller
             var record = new PlayerRecord() {
                 Name = player.Name!,
                 Deck = player.Deck!,

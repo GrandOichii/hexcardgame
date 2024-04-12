@@ -21,7 +21,6 @@ public class TcpConnectionChecker : IConnectionChecker {
             _socket.ReceiveTimeout = 0;
             return resp == "pong";
         } catch {
-            // TODO bee more specific with exception types
             return false;
         }
     }

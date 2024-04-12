@@ -17,7 +17,7 @@ public class PostUserDtoValidator : IValidator<PostUserDto>
     {
         // TODO better username validation
         if (string.IsNullOrEmpty(user.Username))
-            throw new InvalidRegisterCredentialsException($"invalid email");
+            throw new InvalidRegisterCredentialsException($"invalid usernaem");
         if (user.Username.Length < MIN_USERNAME_LENGTH)
             throw new InvalidRegisterCredentialsException($"username too short: minimal length is {MIN_USERNAME_LENGTH}");
         if (user.Username.Length > MAX_USERNAME_LENGTH)

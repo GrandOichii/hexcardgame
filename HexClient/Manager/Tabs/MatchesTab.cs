@@ -42,6 +42,7 @@ public partial class MatchesTab : Control
 	public CheckBox CanWatchCheckNode { get; private set; }
 	public SpinBox BatchEditNode { get; private set; }
 	public Node WindowsNode { get; private set; }
+	public LineEdit PasswordEditNode { get; private set; }
 	
 	public HttpRequest CreateRequestNode { get; private set; }
 	public HttpRequest FetchBasicConfigRequestNode { get; private set; }
@@ -75,6 +76,7 @@ public partial class MatchesTab : Control
 		CanWatchCheckNode = GetNode<CheckBox>("%CanWatchCheck");
 		BatchEditNode = GetNode<SpinBox>("%BatchEdit");
 		WindowsNode = GetNode<Node>("%Windows");
+		PasswordEditNode = GetNode<LineEdit>("%PasswordEdit");
 		
 		CreateRequestNode = GetNode<HttpRequest>("%CreateRequest");
 		FetchBasicConfigRequestNode = GetNode<HttpRequest>("%FetchBasicConfigRequest");
@@ -113,6 +115,7 @@ public partial class MatchesTab : Control
 			CanWatch = CanWatchCheckNode.ButtonPressed,
 			P1Config = p1Config,
 			P2Config = p2Config,
+			Password = PasswordEditNode.Text
 		};
 
 		return result;

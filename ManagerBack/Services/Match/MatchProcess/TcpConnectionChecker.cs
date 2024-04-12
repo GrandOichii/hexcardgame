@@ -32,5 +32,11 @@ public class TcpConnectionChecker : IConnectionChecker {
             NetUtil.Read(_socket.GetStream())
         );
     }
+
+    public Task Write(string msg)
+    {
+        NetUtil.Write(_socket.GetStream(), msg);
+        return Task.CompletedTask;
+    }
 }
 

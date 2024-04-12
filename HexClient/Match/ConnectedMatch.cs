@@ -61,10 +61,16 @@ public partial class ConnectedMatch : Control
 		Processor.ResetCommand();
 	}
 
-	public async Task LoadConnection(IConnection connection, string name, string deck) {
+	public async Task LoadConnection(IConnection connection, string name, string deck, string password) {
 		Connection = connection;
 
-		await Connection.SendData(name, deck);
+		await Connection.SendData(name, deck, password);
+		var resp = await Connection.Read();
+		if (resp != "accept") {
+			// TODO show popup
+			GD.Print(resp);
+			return;
+		}
 
 		Connection.SubscribeToUpdate(OnMatchUpdate);
 		Connection.StartReceiveLoop();

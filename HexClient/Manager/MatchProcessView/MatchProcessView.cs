@@ -108,7 +108,7 @@ public partial class MatchProcessView : Control
 	#region Signals
 
 	[Signal]
-	public delegate void ConnectionCreatedEventHandler(Wrapper<IConnection> connectionW, string name, string deck);
+	public delegate void ConnectionCreatedEventHandler(Wrapper<IConnection> connectionW, string name, string deck, string password);
 	[Signal]
 	public delegate void WatcherConnectionCreatedEventHandler(Wrapper<HubConnection> connectionW, string matchId);
 	[Signal]
@@ -125,6 +125,8 @@ public partial class MatchProcessView : Control
 
 	#region Nodes
 
+	public Control PasswordContainerNode { get; private set; }
+	public LineEdit PasswordEditNode { get; private set; }
 	public LineEdit MatchIdNode { get; private set; }
 	public Label StatusLabelNode { get; private set; }
 	public Container StartTimeNode { get; private set; }
@@ -163,6 +165,9 @@ public partial class MatchProcessView : Control
 		#region Node fetching
 		MatchIdNode = GetNode<LineEdit>("%MatchId");
 		
+
+		PasswordContainerNode = GetNode<Control>("%PasswordContainer");
+		PasswordEditNode = GetNode<LineEdit>("%PasswordEdit");
 		StatusLabelNode = GetNode<Label>("%StatusLabel");
 		StartTimeNode = GetNode<Container>("%StartTime");
 		StartTimeLabelNode = GetNode<Label>("%StartTimeLabel");
@@ -282,7 +287,7 @@ public partial class MatchProcessView : Control
 			: await CreateTcpConnection(match)
 		;
 		
-		EmitSignal(SignalName.ConnectionCreated, new Wrapper<IConnection>(client), name, deck);
+		EmitSignal(SignalName.ConnectionCreated, new Wrapper<IConnection>(client), name, deck, PasswordEditNode.Text);
 	}
 
 	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match) {

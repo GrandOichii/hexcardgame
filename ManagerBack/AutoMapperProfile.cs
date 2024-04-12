@@ -19,6 +19,8 @@ public class AutoMapperProfile : Profile {
         CreateMap<PostDeckDto, DeckModel>();
 
         CreateMap<PostMatchConfigDto, MatchConfigModel>();
-        CreateMap<MatchProcess, GetMatchProcessDto>();
+        CreateMap<MatchProcess, GetMatchProcessDto>()
+            .ForMember(m => m.PasswordRequired, o => o.MapFrom(m => m.RequiresPassword()));
+        ;
     }
 }

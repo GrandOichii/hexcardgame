@@ -12,4 +12,9 @@ public class BotConnectionChecker : IConnectionChecker
         // * not needed, as bots are always ready
         return Task.FromResult("");
     }
+
+    public Task Write(string msg)
+    {
+        return Task.CompletedTask;
+    }
 }

@@ -4,13 +4,12 @@ using System.Net.WebSockets;
 using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using BCrypt.Net;
 using HexCore.GameMatch.View;
 using ManagerBack.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Shared;
 using Utility;
-
-// TODO add games with password
 
 namespace ManagerBack.Services;
 
@@ -46,6 +45,7 @@ public class MatchProcess {
     public int TcpPort { get; }
 
     public TcpListener TcpListener { get; } 
+    private readonly string _passHash = "";
 
     private readonly IMatchService _matchService;
     private readonly MatchConfig _matchConfig;
@@ -54,6 +54,9 @@ public class MatchProcess {
 
     public MatchProcess(string creatorId, MatchProcessConfig config, MatchConfig mConfig, ICardMaster cardMaster, IMatchService matchService, IHubContext<MatchProcessHub> matchProcessHub)
     {
+        if (!string.IsNullOrEmpty(config.Password))
+            _passHash = BCrypt.Net.BCrypt.HashPassword(config.Password);
+        
         CreatorId = creatorId;
         Id = Guid.NewGuid();
         Config = config;
@@ -246,8 +249,9 @@ public class MatchProcess {
         player.StatusUpdated += OnPlayerStatusUpdated;
         player.Status = QueuedPlayerStatus.WAITING_FOR_DATA;
 
-        var valid = await player.ReadPlayerInfo(checker);
-        if (!valid) {
+        var errMsg = await player.ReadPlayerInfo(this, checker);
+        if (!string.IsNullOrEmpty(errMsg)) {
+            await checker.Write(errMsg);
             return;
         }
 
@@ -255,6 +259,7 @@ public class MatchProcess {
             var idx = GetFreeIdx();
             SetQueuedPlayer(idx, player);
         }
+        await checker.Write("accept");
 
         player.Status = QueuedPlayerStatus.READY;
     }
@@ -287,4 +292,12 @@ public class MatchProcess {
         var controller = new TCPPlayerController(client, Match!);
         await AddPlayer(controller, new TcpConnectionChecker(client));
     }
+
+    public bool CheckPassword(string password) {
+        if (!RequiresPassword()) return true;
+
+        return BCrypt.Net.BCrypt.Verify(password, _passHash);
+    }
+
+    public bool RequiresPassword() => !string.IsNullOrEmpty(_passHash);
 }

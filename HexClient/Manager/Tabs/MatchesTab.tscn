@@ -84,6 +84,11 @@ layout_mode = 2
 button_pressed = true
 text = "Allow players to watch match"
 
+[node name="PasswordEdit" type="LineEdit" parent="HBoxContainer/VBoxContainer/CreateContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Enter match password (leave empty for public match)"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/CreateContainer"]
 layout_mode = 2
 size_flags_vertical = 3

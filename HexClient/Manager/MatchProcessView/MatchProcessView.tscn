@@ -120,6 +120,20 @@ placeholder_text = "Enter deck text or paste contents from saved decks"
 layout_mode = 2
 text = " ... "
 
+[node name="PasswordContainer" type="HBoxContainer" parent="VBoxContainer/ConnectionContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ConnectionContainer/PasswordContainer"]
+layout_mode = 2
+text = "Password: "
+
+[node name="PasswordEdit" type="LineEdit" parent="VBoxContainer/ConnectionContainer/PasswordContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter the match password"
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/ConnectionContainer"]
 layout_mode = 2
 

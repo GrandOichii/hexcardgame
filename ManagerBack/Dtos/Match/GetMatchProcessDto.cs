@@ -11,4 +11,5 @@ public class GetMatchProcessDto {
     // !FIXME hide seed while match is in progress
     public required MatchRecord Record { get; set; }
     public required int TcpPort { get; set; }
+    public required bool PasswordRequired { get; set; }
 }

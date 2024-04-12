@@ -19,6 +19,7 @@ public enum QueuedPlayerStatus {
 class PlayerInfo {
     public required string Name { get; set; }
     public required string Deck { get; set; }
+    public required string Password { get; set; }
 }
 
 public class QueuedPlayer {
@@ -75,23 +76,25 @@ public class QueuedPlayer {
         return DeckTemplate.FromText(Deck!);
     }
 
-    public async Task<bool> ReadPlayerInfo(IConnectionChecker checker) {
+    public async Task<string> ReadPlayerInfo(MatchProcess match, IConnectionChecker checker) {
         try {
             var data = await checker.Read();
             var info = JsonSerializer.Deserialize<PlayerInfo>(data, Common.JSON_SERIALIZATION_OPTIONS);
 
             // * failed to read data, consider the connection to be invalid
             if (info is null) {
-                return false;
+                return "failed to parse info";
             }
+
+            if (!match.CheckPassword(info.Password)) return "incorrect password";
 
             Name = info.Name;
             Deck = info.Deck;
         } catch (Exception e) {
             System.Console.WriteLine(e.Message);
             System.Console.WriteLine(e.StackTrace);
-            return false;
+            return e.Message;
         }
-        return true;
+        return "";
     }
 }

@@ -37,6 +37,7 @@ public class MatchProcessConfig {
 	public required string MatchConfigId { get; set; }
 
 	public required bool CanWatch { get; set; }
+	public required string Password { get; set; }
 
 	public required MatchPlayerConfig P1Config { get; set; }
 	public required MatchPlayerConfig P2Config { get; set; }

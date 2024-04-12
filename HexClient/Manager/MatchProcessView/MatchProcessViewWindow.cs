@@ -50,7 +50,7 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 		QueueFree();
 	}
 
-	private async void OnMatchProcessViewConnectionCreated(Wrapper<IConnection> connectionW, string name, string deck)
+	private async void OnMatchProcessViewConnectionCreated(Wrapper<IConnection> connectionW, string name, string deck, string password)
 	{
 		var client = connectionW.Value;
 
@@ -58,7 +58,7 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 
 		GetParent().AddChild(window);
 
-		await window.Load(client, name, deck);
+		await window.Load(client, name, deck, password);
 		window.GrabFocus();
 
 		// !FIXME if two views are open and viewing same match process and one view connects to match, the whole app crashes
@@ -91,15 +91,15 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 		// QueueFree();
 	}
 
-    public string GetMatchId()
-    {
+	public string GetMatchId()
+	{
 		return _matchId;
-    }
+	}
 
-    public void Focus()
-    {
+	public void Focus()
+	{
 		GrabFocus();
-    }
+	}
 
-    #endregion
+	#endregion
 }

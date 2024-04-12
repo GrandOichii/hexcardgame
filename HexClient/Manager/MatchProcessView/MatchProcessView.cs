@@ -72,6 +72,7 @@ public class MatchProcess {
 	public required QueuedPlayer[] QueuedPlayers { get; set; }
 	public required MatchRecord Record { get; set; }
 	public required int TcpPort { get; set; }
+	public required bool PasswordRequired { get; set; }
 }
 
 public enum QueuedPlayerStatus {
@@ -231,6 +232,8 @@ public partial class MatchProcessView : Control
 
 	private void LoadMatch(Wrapper<MatchProcess> matchW) {
 		var match = matchW.Value;
+
+		PasswordContainerNode.Visible = match.PasswordRequired;
 		MatchIdNode.Text = match.Id.ToString();
 		StatusLabelNode.Text = match.Status.ToFriendlyString();
 		

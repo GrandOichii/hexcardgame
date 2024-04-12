@@ -11,7 +11,6 @@ using MongoDB.Driver;
 
 namespace ManagerBack.Services;
 
-// TODO limit the amount of decks a player can have
 // TODO? does the userId need to be checked?
 
 [Serializable]
@@ -41,8 +40,18 @@ public class DeckUpdateException : Exception
     public DeckUpdateException(string message) : base(message) { }
 }
 
+[Serializable]
+public class DeckAmountLimitException : Exception
+{
+    public DeckAmountLimitException() { }
+    public DeckAmountLimitException(string message) : base(message) { }
+}
+
 public partial class DeckService : IDeckService
 {
+    // TODO subject to change
+    private static readonly int MAX_DECK_COUNT = 2;
+
     private readonly IMapper _mapper;
     private readonly IDeckRepository _deckRepo;
     private readonly ICardRepository _cardRepo;
@@ -65,6 +74,10 @@ public partial class DeckService : IDeckService
 
     public async Task<DeckModel> Create(string userId, PostDeckDto deck)
     {
+        var deckCount = await GetDeckCount(userId);
+        if (deckCount >= MAX_DECK_COUNT) {
+            throw new DeckAmountLimitException($"can't go over the deck limit ({MAX_DECK_COUNT})");
+        }
         var newDeck = _mapper.Map<DeckModel>(deck);
         newDeck.OwnerId = userId;
         
@@ -105,5 +118,10 @@ public partial class DeckService : IDeckService
             throw new DeckUpdateException($"failed to update deck with id {deckId}");
 
         return newDeck;
+    }
+
+    private async Task<int> GetDeckCount(string userId) {
+        var decks = await _deckRepo.Filter(d => d.OwnerId == userId);
+        return decks.Count();
     }
 }

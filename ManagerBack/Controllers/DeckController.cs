@@ -40,6 +40,8 @@ public class DeckController : ControllerBase {
             return BadRequest(e.Message);
         } catch (CardNotFoundException e) {
             return NotFound(e.Message);
+        } catch (DeckAmountLimitException e) {
+            return BadRequest(e.Message);
         }
     }
 

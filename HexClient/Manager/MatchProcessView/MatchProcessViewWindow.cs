@@ -38,7 +38,7 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 	public void Load(string matchId)
 	{
 		_matchId = matchId;
-		Title = $"Match {matchId[..10]}";
+		Title = $"Match {matchId[..3]}";
 		
 		MatchProcessViewNode.Load(matchId);
 	}
@@ -64,7 +64,7 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 		// !FIXME if two views are open and viewing same match process and one view connects to match, the whole app crashes
 		// !FIXME this is the problem, find a way to fix
 		// GetParent().RemoveChild(this);
-		QueueFree();
+		// QueueFree();
 	}
 
 	private void OnMatchProcessViewWatcherConnectionCreated(Wrapper<HubConnection> connectionW, string matchId)
@@ -87,6 +87,7 @@ public partial class MatchProcessViewWindow : Window, IMatchProcessViewWindow
 		GetParent().AddChild(window);
 		window.Load(matchId);
 
+		// !FIXME crashes, same as OnMatchProcessViewConnectionCreated
 		// QueueFree();
 	}
 

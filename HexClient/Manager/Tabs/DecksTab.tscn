@@ -111,6 +111,13 @@ theme = ExtResource("2_x2rqf")
 dialog_text = "
 "
 
+[node name="CreateDeckErrorPopup" type="AcceptDialog" parent="Popups"]
+unique_name_in_owner = true
+initial_position = 2
+theme = ExtResource("2_x2rqf")
+dialog_text = "
+"
+
 [node name="DeleteDeckConfirmationPopup" type="ConfirmationDialog" parent="Popups"]
 unique_name_in_owner = true
 initial_position = 2

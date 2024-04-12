@@ -15,7 +15,7 @@ public class MatchConfigController : ControllerBase {
         _configService = configService;
     }
 
-    // TODO authorize to admins
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> All() {
         return Ok(await _configService.All());
@@ -32,7 +32,7 @@ public class MatchConfigController : ControllerBase {
         }
     }
 
-    // TODO authorize to admins
+    [Authorize(Roles = "Admin")]
     [HttpGet("{id}")]
     public async Task<IActionResult> ById(string id) {
         try {

@@ -34,6 +34,7 @@ public partial class DecksTab : Control
 	public AcceptDialog DeleteDeckErrorPopupNode { get; private set; }
 	public AcceptDialog DeletedPopupNode { get; private set; }
 	public AcceptDialog UpdateDeckErrorPopupNode { get; private set; }
+	public AcceptDialog CreateDeckErrorPopupNode { get; private set; }
 	
 	public HttpRequest FetchDecksRequestNode { get; private set; }
 	public HttpRequest DeleteDeckRequestNode { get; private set; }
@@ -60,6 +61,7 @@ public partial class DecksTab : Control
 		DeleteDeckErrorPopupNode = GetNode<AcceptDialog>("%DeleteDeckErrorPopup");
 		DeletedPopupNode = GetNode<AcceptDialog>("%DeletedPopup");
 		UpdateDeckErrorPopupNode = GetNode<AcceptDialog>("%UpdateDeckErrorPopup");
+		CreateDeckErrorPopupNode = GetNode<AcceptDialog>("%CreateDeckErrorPopup");
 		
 		FetchDecksRequestNode = GetNode<HttpRequest>("%FetchDecksRequest");
 		DeleteDeckRequestNode = GetNode<HttpRequest>("%DeleteDeckRequest");
@@ -228,7 +230,10 @@ public partial class DecksTab : Control
 	private void OnCreateDeckRequestRequestCompleted(long result, long response_code, string[] headers, byte[] body)
 	{
 		if (response_code != 200) {
-
+			var resp = Encoding.UTF8.GetString(body);
+			// * throws annoying error, doesnt disrupt the program
+			CreateDeckErrorPopupNode.DialogText = $"Failed to create deck! (code: {response_code})\n\n{resp}";
+			CreateDeckErrorPopupNode.Show();
 			return;
 		}
 

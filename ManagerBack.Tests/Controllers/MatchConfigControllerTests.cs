@@ -78,4 +78,17 @@ public class MatchConfigControllerTests {
         // Assert
         result.Should().BeOfType<NotFoundObjectResult>();
     }
+
+    [Fact]
+    public async Task ShouldFetchBasic() {
+        // Arrange
+        A.CallTo(() => _configService.Basic()).Returns(A.Fake<MatchConfigModel>());
+
+        // Act
+        var result = await _configController.Basic();
+
+        // Assert
+
+        result.Should().BeOfType<OkObjectResult>();
+    }
 }

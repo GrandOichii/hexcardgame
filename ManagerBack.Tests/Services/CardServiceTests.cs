@@ -170,4 +170,18 @@ public class CardServiceTests {
         // Assert
         result.Should().BeEquivalentTo(cards);
     }
+
+    [Fact]
+    public async Task ShouldFetchAllCIDs() {
+        // Arrange
+        var cards = A.Fake<IEnumerable<CardModel>>();
+        A.CallTo(() => _cardRepo.All()).Returns(cards);
+        var expected = cards.Select(c => c.GetCID());
+
+        // Act
+        var result = await _cardService.AllCIDs();
+
+        // Assert
+        result.Should().BeEquivalentTo(expected);
+    }
 }

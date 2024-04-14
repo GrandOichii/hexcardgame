@@ -116,7 +116,6 @@ public class CardControllerTests {
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
     }
-
     
     [Fact]
     public async Task ShouldUpdate() {
@@ -196,5 +195,15 @@ public class CardControllerTests {
         result.Should().BeOfType<BadRequestObjectResult>();
     }
 
+    [Fact]
+    public async Task ShouldFetchAllCIDs() {
+        // Arange
+        A.CallTo(() => _cardService.AllCIDs()).Returns(A.Fake<IEnumerable<string>>());
 
+        // Act
+        var result = await _cardController.GetAllCIDs();
+
+        // Assert
+        result.Should().BeOfType<OkObjectResult>();
+    }
 }

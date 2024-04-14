@@ -46,6 +46,7 @@ public class MatchConfigEndpointTests
     public async Task ShouldFetchAll() {
         // Arrange
         var client = _factory.CreateClient();
+        await Login(client, "admin", "password");
 
         // Act
         var result = await client.GetAsync("/api/v1/config");
@@ -124,12 +125,11 @@ public class MatchConfigEndpointTests
         // Arrange
         var client = _factory.CreateClient();
         await Login(client, "admin", "password");
-        var response = await client.PostAsync("/api/v1/config", JsonContent.Create(new PostMatchConfigDto {
+        await client.PostAsync("/api/v1/config", JsonContent.Create(new PostMatchConfigDto {
             // TODO add more fields
             Name = "basic",
             SetupScript = "script"
         }));
-        var id = (await response.Content.ReadFromJsonAsync<MatchConfigModel>())!.Id;
 
         // Act
         var result = await client.GetAsync($"/api/v1/config/basic");

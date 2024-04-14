@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using AutoMapper;
 using FakeItEasy;
 using FluentAssertions;
@@ -72,6 +73,31 @@ public class MatchConfigServiceTests {
         
         // Act
         var result = await _configService.ById(id);
+
+        // Assert
+        result.Should().Be(config);
+    }
+
+    [Fact]
+    public async Task ShouldNotFetchBasic() {
+        // Arrange
+        
+        // Act
+        var act = () => _configService.Basic();
+
+        // Assert
+        await act.Should().ThrowAsync<NoBasicMatchConfigException>();
+
+    }
+
+    [Fact]
+    public async Task ShouldFetchBasic() {
+        // Arrange
+        var config = A.Fake<MatchConfigModel>();
+        A.CallTo(() => _configRepo.Filter(A<Expression<Func<MatchConfigModel, bool>>>._)).Returns(new List<MatchConfigModel> { config });
+        
+        // Act
+        var result = await _configService.Basic();
 
         // Assert
         result.Should().Be(config);

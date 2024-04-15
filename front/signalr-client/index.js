@@ -2,7 +2,7 @@ const signalr = require('@microsoft/signalr')
 const reader = require('prompt-sync')()
 
 var conn = new signalr.HubConnectionBuilder()
-    .withUrl('http://localhost:5239/api/v1/match/watch')
+    .withUrl('http://localhost:5239/api/v1/test/hub')
     .build();
 
 // conn.on('Confirm', async () => {
@@ -13,15 +13,13 @@ var conn = new signalr.HubConnectionBuilder()
 //     return process.argv[2]
 // })
 
-conn.on('Update', async data => {
-    console.log('Match update:');
+conn.on('response', async data => {
     console.log(data);
-    console.log();
 })
 
 conn.start()
     .then(() => {
-        conn.send('Connect', process.argv[2])
-        console.log('connected');
+        // conn.send('Public')
+        conn.send('Private')
     })
 

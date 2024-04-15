@@ -28,7 +28,6 @@ public class MatchController : ControllerBase {
         }
     }
 
-    // TODO authorize
     [Authorize]
     [HttpGet("connect/{matchId}")]
     public async Task WebSocketConnect(string matchId) {

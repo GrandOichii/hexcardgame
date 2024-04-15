@@ -3,17 +3,21 @@ using System.Text;
 
 namespace ManagerBack.Extensions;
 
+[System.Serializable]
+public class WebSocketClosedException : System.Exception
+{
+    public WebSocketClosedException() { }
+    public WebSocketClosedException(string message) : base(message) { }
+}
+
 public static class WebSocketExtensions {
     public static async Task<string> Read(this WebSocket socket, CancellationToken cancellationToken) {
-        if (socket.State == WebSocketState.Closed)  {
-            // TODO
-            throw new Exception("socket us closed");
-        }
+        if (socket.State == WebSocketState.Closed)
+            throw new WebSocketClosedException("socket is closed");
+        
         var buffer = new byte[1024 * 4];
         var response = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
         if (response.MessageType == WebSocketMessageType.Close) {
-            // TODO check
-            // socket.close
             await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "SocketClose", CancellationToken.None);
             return "";
         }

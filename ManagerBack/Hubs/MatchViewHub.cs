@@ -40,7 +40,6 @@ public class MatchViewHub : Hub {
         await _matchService.SendMatchState(matchId, Context.ConnectionId);
     }
 
-    // TODO is this method exposed
     private async Task RemoveFromAll(string connectionId) {
         foreach (var match in await _matchService.All()) {
             var group = ToGroupName(match.Id.ToString());

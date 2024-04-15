@@ -220,6 +220,13 @@ title = "Deck error!"
 initial_position = 2
 theme = ExtResource("3_v4kc8")
 
+[node name="NotLoggedInPopup" type="AcceptDialog" parent="Popups"]
+unique_name_in_owner = true
+title = "Failed to connect"
+initial_position = 2
+theme = ExtResource("3_v4kc8")
+dialog_text = "Log in to join a match"
+
 [connection signal="pressed" from="VBoxContainer/ConnectionContainer/HBoxContainer/SearchDeckButton" to="." method="OnSearchDeckButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/ConnectionContainer/HBoxContainer2/RefreshDecksButton" to="." method="OnRefreshDecksButtonPressed"]
 [connection signal="item_selected" from="VBoxContainer/ConnectionContainer/HBoxContainer2/DeckOption" to="." method="OnDeckOptionItemSelected"]

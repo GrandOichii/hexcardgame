@@ -1,7 +1,9 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Runtime.Serialization;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using BCrypt.Net;
@@ -288,6 +290,14 @@ public class MatchProcess {
             client.Close();
             return;
         }
+        var jwt = NetUtil.Read(client.GetStream());
+        var handler = new JwtSecurityTokenHandler();
+        var jsonToken = handler.ReadToken(jwt);
+        if (jsonToken is not JwtSecurityToken tokenS) return;
+
+        var userId = tokenS.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+        System.Console.WriteLine(userId);
+
         var controller = new TCPPlayerController(client, Match!);
         await AddPlayer(controller, new TcpConnectionChecker(client));
     }

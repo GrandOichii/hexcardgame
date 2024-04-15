@@ -29,12 +29,12 @@ public class MatchController : ControllerBase {
     }
 
     // TODO authorize
-    // [Authorize]
+    [Authorize]
     [HttpGet("connect/{matchId}")]
     public async Task WebSocketConnect(string matchId) {
         if (HttpContext.WebSockets.IsWebSocketRequest) {
-            // var userId = this.ExtractClaim(ClaimTypes.NameIdentifier);
-            var userId = "";
+            var userId = this.ExtractClaim(ClaimTypes.NameIdentifier);
+            // var userId = "";
 
             try {
                 await _matchService.WSConnect(HttpContext.WebSockets, userId, matchId);

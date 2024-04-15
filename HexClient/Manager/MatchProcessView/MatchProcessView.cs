@@ -152,6 +152,7 @@ public partial class MatchProcessView : Control
 
 	public FileDialog ChooseDeckFileDialogNode { get; private set; }
 	public AcceptDialog DeckErrorPopupNode { get; private set; }
+	public AcceptDialog NotLoggedInPopupNode { get; private set; }
 
 	#endregion
 
@@ -191,6 +192,7 @@ public partial class MatchProcessView : Control
 
 		ChooseDeckFileDialogNode = GetNode<FileDialog>("%ChooseDeckFileDialog");
 		DeckErrorPopupNode = GetNode<AcceptDialog>("%DeckErrorPopup");
+		NotLoggedInPopupNode = GetNode<AcceptDialog>("%NotLoggedInPopup");
 
 		#endregion
 	}
@@ -296,6 +298,9 @@ public partial class MatchProcessView : Control
 
 	private async Task<WebSocketConnection> CreateWebSocketConnection(MatchProcess match) {
 		var client = new ClientWebSocket();
+		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
+
+		client.Options.SetRequestHeader("Authorization", $"Bearer {token}");
 
 		await client.ConnectAsync(new Uri(ApiUrl
 			.Replace("http://", "ws://")
@@ -309,9 +314,11 @@ public partial class MatchProcessView : Control
 	private async Task<TcpConnection> CreateTcpConnection(MatchProcess match) {
 		var client = new TcpClient();
 		var baseUrl = GetNode<GlobalSettings>("/root/GlobalSettings").BaseUrl;
+		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
 
 		var address = baseUrl + ":" + match.TcpPort;
 		await client.ConnectAsync(IPEndPoint.Parse(address));
+		NetUtil.Write(client.GetStream(), token);
 		var result = new TcpConnection(client);
 		return result;
 	}
@@ -357,6 +364,11 @@ public partial class MatchProcessView : Control
 
 	private void OnConnectButtonPressed()
 	{
+		var token = GetNode<GlobalSettings>("/root/GlobalSettings").JwtToken;
+		if (string.IsNullOrEmpty(token)) {
+			NotLoggedInPopupNode.Show();
+			return;
+		}
 		ConnectRequestNode.Request(ApiUrl + "match/" + MatchIdNode.Text);
 	}
 	

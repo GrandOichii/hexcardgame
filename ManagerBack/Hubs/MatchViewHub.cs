@@ -13,8 +13,6 @@ public class MatchViewHub : Hub {
 
     public static string ToGroupName(string matchId) => $"match-{matchId}";
 
-    // TODO authorize
-    // public async Task Connect(string matchId, string jwtToken) {
     [Authorize]
     public async Task Connect(string matchId) {
         GetMatchProcessDto match;

@@ -1,6 +1,11 @@
 namespace ManagerBack.Validators;
 
-
+[Serializable]
+public class InvalidDeckException : Exception
+{
+    public InvalidDeckException() { }
+    public InvalidDeckException(string message) : base(message) { }
+}
 public class DeckTemplateValidator : IValidator<DeckTemplate>
 {
     private readonly ICardRepository _cardRepo;
@@ -14,7 +19,6 @@ public class DeckTemplateValidator : IValidator<DeckTemplate>
 
     public async Task Validate(DeckTemplate deck)
     {
-        // TODO repeated code 
         foreach (var pair in deck.Index) {
             var cid = pair.Key;
             var amount = pair.Value;

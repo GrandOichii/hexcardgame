@@ -5,4 +5,10 @@ public class PostDeckDto {
     public required string Description { get; set; }
 
     public Dictionary<string, int> Index { get; set; } = new();
+
+    public DeckTemplate ToDeckTemplate() {
+        return new DeckTemplate {
+            Index = Index            
+        };
+    }
 }

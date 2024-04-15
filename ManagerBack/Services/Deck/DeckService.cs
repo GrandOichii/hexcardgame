@@ -50,15 +50,15 @@ public class DeckAmountLimitException : Exception
 public partial class DeckService : IDeckService
 {
     // TODO subject to change
-    private static readonly int MAX_DECK_COUNT = 2;
+    private static readonly int MAX_DECK_COUNT = 20;
 
     private readonly IMapper _mapper;
     private readonly IDeckRepository _deckRepo;
     private readonly ICardRepository _cardRepo;
-    private readonly IValidator<PostDeckDto> _deckValidator;
+    private readonly IValidator<DeckTemplate> _deckValidator;
 
 
-    public DeckService(IDeckRepository deckRepo, IMapper mapper, ICardRepository cardRepo, IValidator<PostDeckDto> deckValidator)
+    public DeckService(IDeckRepository deckRepo, IMapper mapper, ICardRepository cardRepo, IValidator<DeckTemplate> deckValidator)
     {
         _deckRepo = deckRepo;
         _mapper = mapper;
@@ -81,7 +81,7 @@ public partial class DeckService : IDeckService
         var newDeck = _mapper.Map<DeckModel>(deck);
         newDeck.OwnerId = userId;
         
-        await _deckValidator.Validate(deck);
+        await _deckValidator.Validate(deck.ToDeckTemplate());
 
         await _deckRepo.Add(newDeck);
         return newDeck;

@@ -40,7 +40,6 @@ public class MatchConfigRepository : IMatchConfigRepository {
             return cached;
         }
 
-        // TODO this doesn't tell the user that the id is invalid
         try {
             var found = await _collection.FindAsync(c => c.Id == id);
             var result = await found.FirstOrDefaultAsync();

@@ -153,6 +153,7 @@ public partial class MatchProcessView : Control
 	public FileDialog ChooseDeckFileDialogNode { get; private set; }
 	public AcceptDialog DeckErrorPopupNode { get; private set; }
 	public AcceptDialog NotLoggedInPopupNode { get; private set; }
+	public AcceptDialog SelectDeckPopupNode { get; private set; }
 
 	#endregion
 
@@ -193,6 +194,7 @@ public partial class MatchProcessView : Control
 		ChooseDeckFileDialogNode = GetNode<FileDialog>("%ChooseDeckFileDialog");
 		DeckErrorPopupNode = GetNode<AcceptDialog>("%DeckErrorPopup");
 		NotLoggedInPopupNode = GetNode<AcceptDialog>("%NotLoggedInPopup");
+		SelectDeckPopupNode = GetNode<AcceptDialog>("%SelectDeckPopup");
 
 		#endregion
 	}
@@ -338,15 +340,11 @@ public partial class MatchProcessView : Control
 		FetchDecksRequestNode.Request(ApiUrl + "deck", headers);
 	}
 	
-	private void OnDeckOptionItemSelected(long index)
-	{
-		// TODO
-	}
-	
 	private void OnPasteDeckButtonPressed()
 	{
 		if (DeckOptionNode.Selected == -1) {
-			// TODO show popup
+			SelectDeckPopupNode.DialogText = "Select deck for pasting";
+			SelectDeckPopupNode.Show();
 			return;
 		}
 		try {

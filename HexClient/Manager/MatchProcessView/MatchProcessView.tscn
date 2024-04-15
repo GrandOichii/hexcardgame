@@ -227,9 +227,15 @@ initial_position = 2
 theme = ExtResource("3_v4kc8")
 dialog_text = "Log in to join a match"
 
+[node name="SelectDeckPopup" type="AcceptDialog" parent="Popups"]
+unique_name_in_owner = true
+title = "Select deck"
+initial_position = 2
+theme = ExtResource("3_v4kc8")
+dialog_text = "Log in to join a match"
+
 [connection signal="pressed" from="VBoxContainer/ConnectionContainer/HBoxContainer/SearchDeckButton" to="." method="OnSearchDeckButtonPressed"]
 [connection signal="pressed" from="VBoxContainer/ConnectionContainer/HBoxContainer2/RefreshDecksButton" to="." method="OnRefreshDecksButtonPressed"]
-[connection signal="item_selected" from="VBoxContainer/ConnectionContainer/HBoxContainer2/DeckOption" to="." method="OnDeckOptionItemSelected"]
 [connection signal="pressed" from="VBoxContainer/ConnectionContainer/HBoxContainer2/PasteDeckButton" to="." method="OnPasteDeckButtonPressed"]
 [connection signal="toggled" from="VBoxContainer/ConnectionContainer/HBoxContainer3/VBoxContainer/WebSocketCheck" to="." method="OnWebSocketCheckToggled"]
 [connection signal="toggled" from="VBoxContainer/ConnectionContainer/HBoxContainer3/VBoxContainer/TcpCheck" to="." method="OnTcpCheckToggled"]

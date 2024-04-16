@@ -64,6 +64,7 @@ public class DeckControllerTests {
         get {
             yield return new object[] { new InvalidDeckException() };
             yield return new object[] { new InvalidCIDException("") };
+            yield return new object[] { new UserNotFoundException("") };
         }
     }
 
@@ -122,6 +123,7 @@ public class DeckControllerTests {
         get {
             yield return new object[] { new DeckNotFoundException() };
             yield return new object[] { new UnmatchedUserIdException() };
+            yield return new object[] { new UserNotFoundException("") };
         }
     }
 
@@ -165,6 +167,7 @@ public class DeckControllerTests {
         get {
             yield return new object[] { new DeckNotFoundException() };
             yield return new object[] { new UnmatchedUserIdException() };
+            yield return new object[] { new UserNotFoundException("") };
         }
     }
 

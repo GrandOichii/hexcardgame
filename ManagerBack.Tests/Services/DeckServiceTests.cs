@@ -12,6 +12,7 @@ public class DeckServiceTests {
     private readonly IDeckRepository _deckRepo;
     private readonly ICardRepository _cardRepo;
     private readonly IValidator<DeckTemplate> _validator;
+    private readonly IUserRepository _userRepo;
 
     public DeckServiceTests() {
         var mC = new MapperConfiguration(cfg => {
@@ -21,8 +22,9 @@ public class DeckServiceTests {
         _deckRepo = A.Fake<IDeckRepository>();
         _cardRepo = A.Fake<ICardRepository>();
         _validator = A.Fake<IValidator<DeckTemplate>>();
+        _userRepo = A.Fake<IUserRepository>();
 
-        _deckService = new(_deckRepo, _mapper, _cardRepo, _validator);
+        _deckService = new(_deckRepo, _mapper, _cardRepo, _validator, _userRepo);
     }
 
     [Fact]
@@ -48,6 +50,7 @@ public class DeckServiceTests {
         };
         var deckModel = _mapper.Map<DeckModel>(deck);
         var userId = "u1";
+        A.CallTo(() => _userRepo.CheckId(userId)).Returns(true);
         A.CallTo(() => _deckRepo.Add(deckModel)).DoesNothing();
 
         // Act
@@ -66,6 +69,7 @@ public class DeckServiceTests {
         var userId = "u1";
         // CardModel? nullCard = null; 
         A.CallTo(() => _validator.Validate(A<DeckTemplate>._)).Throws<InvalidDeckException>();
+        A.CallTo(() => _userRepo.CheckId(userId)).Returns(true);
         // A.CallTo(() => _cardRepo.ByCID(A<string>._)).Returns(nullCard);
         // A.CallTo(() => _cardRepo.ByCID("dev::Dub")).Returns(A.Fake<CardModel>());
 
@@ -85,6 +89,7 @@ public class DeckServiceTests {
         var userId = "u1";
         // CardModel? nullCard = null; 
         A.CallTo(() => _validator.Validate(A<DeckTemplate>._)).Throws(new InvalidCIDException(""));
+        A.CallTo(() => _userRepo.CheckId(userId)).Returns(true);
         // A.CallTo(() => _cardRepo.ByCID(A<string>._)).Returns(nullCard);
         // A.CallTo(() => _cardRepo.ByCID("dev::Dub")).Returns(A.Fake<CardModel>());
 
@@ -95,16 +100,15 @@ public class DeckServiceTests {
         await act.Should().ThrowAsync<InvalidCIDException>();
     }
 
-
     [Fact]
     public async Task ShouldNotCreateCardNotFound() {
-
         // Arrange
         var deck = A.Fake<PostDeckDto>();
         var deckModel = _mapper.Map<DeckModel>(deck);
         var userId = "u1";
         // CardModel? nullCard = null; 
         A.CallTo(() => _validator.Validate(A<DeckTemplate>._)).Throws(new CardNotFoundException(""));
+        A.CallTo(() => _userRepo.CheckId(userId)).Returns(true);
         // A.CallTo(() => _cardRepo.ByCID(A<string>._)).Returns(nullCard);
         // A.CallTo(() => _cardRepo.ByCID("dev::Dub")).Returns(A.Fake<CardModel>());
 
@@ -113,6 +117,24 @@ public class DeckServiceTests {
 
         // Assert
         await act.Should().ThrowAsync<CardNotFoundException>();
+    }
+
+    [Fact]
+    public async Task ShouldNotCreateInvalidUser() {
+        var deck = new PostDeckDto {
+            Name = "Deck",
+            Description = ""
+        };
+        var deckModel = _mapper.Map<DeckModel>(deck);
+        var userId = "u1";
+        A.CallTo(() => _userRepo.CheckId(userId)).Returns(false);
+        A.CallTo(() => _deckRepo.Add(deckModel)).DoesNothing();
+
+        // Act
+        var act = () => _deckService.Create(userId, deck);
+
+        // Assert
+        await act.Should().ThrowAsync<UserNotFoundException>();
     }
 
     [Fact]
@@ -127,6 +149,7 @@ public class DeckServiceTests {
         };
         A.CallTo(() => _deckRepo.ById(deckId)).Returns(deck);
         A.CallTo(() => _deckRepo.Delete(deckId)).Returns(1);
+        A.CallTo(() => _userRepo.CheckId(userId)).Returns(true);
 
         // Act
         var act = () => _deckService.Delete(userId, deckId);
@@ -136,7 +159,28 @@ public class DeckServiceTests {
     }
 
     [Fact]
-    public async Task ShouldNotDelete()
+    public async Task ShouldNotDeleteInvalidUserId() {
+        // Arrange
+        var userId = "u1";
+        var deckId = "d1";
+        var deck = new DeckModel {
+            Name = "Deck",
+            Description = "deck description",
+            OwnerId = userId
+        };
+        A.CallTo(() => _deckRepo.ById(deckId)).Returns(deck);
+        A.CallTo(() => _deckRepo.Delete(deckId)).Returns(1);
+        A.CallTo(() => _userRepo.CheckId(userId)).Returns(false);
+
+        // Act
+        var act = () => _deckService.Delete(userId, deckId);
+
+        // Assert
+        await act.Should().ThrowAsync<UserNotFoundException>();
+    }
+
+    [Fact]
+    public async Task ShouldNotDeleteDeckNotFound()
     {
         // Arrange
         var userId = "u1";
@@ -144,6 +188,7 @@ public class DeckServiceTests {
         DeckModel? deck = null;
         A.CallTo(() => _deckRepo.ById(deckId)).Returns(deck);
         A.CallTo(() => _deckRepo.Delete(deckId)).Returns(0);
+        A.CallTo(() => _userRepo.CheckId(userId)).Returns(true);
 
         // Act
         var act = () => _deckService.Delete(userId, deckId);
@@ -166,6 +211,7 @@ public class DeckServiceTests {
         };
         A.CallTo(() => _deckRepo.ById(deckId)).Returns(deck);
         A.CallTo(() => _deckRepo.Update(deckId, A<DeckModel>._)).Returns(1);
+        A.CallTo(() => _userRepo.CheckId(userId)).Returns(true);
 
         // Act
         var act = () => _deckService.Update(userId, deckId, A.Fake<PostDeckDto>());
@@ -175,7 +221,30 @@ public class DeckServiceTests {
     }
 
     [Fact]
-    public async Task ShouldNotUpdate()
+    public async Task ShouldNotUpdateInvalidUserId()
+    {
+        // Arrange
+        var userId = "u1";
+        var deckId = "d1";
+        var deck = new DeckModel {
+            Id = deckId,
+            Name = "Deck",
+            Description = "deck description",
+            OwnerId = userId
+        };
+        A.CallTo(() => _deckRepo.ById(deckId)).Returns(deck);
+        A.CallTo(() => _deckRepo.Update(deckId, A<DeckModel>._)).Returns(1);
+        A.CallTo(() => _userRepo.CheckId(userId)).Returns(false);
+
+        // Act
+        var act = () => _deckService.Update(userId, deckId, A.Fake<PostDeckDto>());
+
+        // Assert
+        await act.Should().ThrowAsync<UserNotFoundException>();
+    }
+
+    [Fact]
+    public async Task ShouldNotUpdateDeckNotFound()
     {
         // Arrange
         var userId = "u1";
@@ -183,6 +252,7 @@ public class DeckServiceTests {
         DeckModel? deck = null;
         A.CallTo(() => _deckRepo.ById(deckId)).Returns(deck);
         A.CallTo(() => _deckRepo.Update(deckId, A<DeckModel>._)).Returns(0);
+        A.CallTo(() => _userRepo.CheckId(userId)).Returns(true);
 
         // Act
         var act = () => _deckService.Update(userId, deckId, A.Fake<PostDeckDto>());

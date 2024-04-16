@@ -11,8 +11,6 @@ using MongoDB.Driver;
 
 namespace ManagerBack.Services;
 
-// TODO? does the userId need to be checked?
-
 [Serializable]
 public class DeckNotFoundException : Exception
 {
@@ -56,14 +54,15 @@ public partial class DeckService : IDeckService
     private readonly IDeckRepository _deckRepo;
     private readonly ICardRepository _cardRepo;
     private readonly IValidator<DeckTemplate> _deckValidator;
+    private readonly IUserRepository _userRepository;
 
-
-    public DeckService(IDeckRepository deckRepo, IMapper mapper, ICardRepository cardRepo, IValidator<DeckTemplate> deckValidator)
+    public DeckService(IDeckRepository deckRepo, IMapper mapper, ICardRepository cardRepo, IValidator<DeckTemplate> deckValidator, IUserRepository userRepository)
     {
         _deckRepo = deckRepo;
         _mapper = mapper;
         _cardRepo = cardRepo;
         _deckValidator = deckValidator;
+        _userRepository = userRepository;
     }
 
     public async Task<IEnumerable<DeckModel>> All(string userId)
@@ -74,6 +73,10 @@ public partial class DeckService : IDeckService
 
     public async Task<DeckModel> Create(string userId, PostDeckDto deck)
     {
+        var idValid = await _userRepository.CheckId(userId);
+        if (!idValid)
+            throw new UserNotFoundException($"no user with id {userId}");
+        
         var deckCount = await GetDeckCount(userId);
         if (deckCount >= MAX_DECK_COUNT) {
             throw new DeckAmountLimitException($"can't go over the deck limit ({MAX_DECK_COUNT})");
@@ -89,6 +92,10 @@ public partial class DeckService : IDeckService
 
     public async Task Delete(string userId, string deckId)
     {
+        var idValid = await _userRepository.CheckId(userId);
+        if (!idValid)
+            throw new UserNotFoundException($"no user with id {userId}");
+
         var deck = await _deckRepo.ById(deckId)
             ?? throw new DeckNotFoundException($"no deck with id {deckId}");
 
@@ -103,6 +110,10 @@ public partial class DeckService : IDeckService
 
     public async Task<DeckModel> Update(string userId, string deckId, PostDeckDto deck)
     {
+        var idValid = await _userRepository.CheckId(userId);
+        if (!idValid)
+            throw new UserNotFoundException($"no user with id {userId}");
+
         var existing = await _deckRepo.ById(deckId)
             ?? throw new DeckNotFoundException($"no deck with id {deckId}");
         

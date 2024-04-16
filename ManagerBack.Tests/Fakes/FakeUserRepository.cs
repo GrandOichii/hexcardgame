@@ -18,4 +18,10 @@ public class FakeUserRepository : IUserRepository
     {
         return Task.FromResult(Users.FirstOrDefault(u => u.Username == username));
     }
+
+    public Task<bool> CheckId(string id) {
+        return Task.FromResult(
+            Users.Count(u => u.Id == id) == 1
+        );
+    }
 }

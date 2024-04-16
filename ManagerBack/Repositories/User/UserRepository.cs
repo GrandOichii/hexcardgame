@@ -28,4 +28,9 @@ public class UserRepository : IUserRepository
         var result = await _collection.FindAsync(u => u.Username == username);
         return result.FirstOrDefault();
     }
+
+    public async Task<bool> CheckId(string id) {
+        var result = await _collection.CountDocumentsAsync(u => u.Id == id);
+        return result == 1;
+    }
 }

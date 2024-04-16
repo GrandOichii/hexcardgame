@@ -42,6 +42,8 @@ public class DeckController : ControllerBase {
             return NotFound(e.Message);
         } catch (DeckAmountLimitException e) {
             return BadRequest(e.Message);
+        } catch (UserNotFoundException e) {
+            return BadRequest(e.Message);
         }
     }
 
@@ -57,6 +59,8 @@ public class DeckController : ControllerBase {
             return BadRequest(e.Message);
         } catch(UnmatchedUserIdException e) {
             return BadRequest(e.Message);
+        } catch(UserNotFoundException e) {
+            return BadRequest(e.Message);
         }
     }
 
@@ -71,6 +75,8 @@ public class DeckController : ControllerBase {
         } catch(DeckNotFoundException e) {
             return BadRequest(e.Message);
         } catch(UnmatchedUserIdException e) {
+            return BadRequest(e.Message);
+        } catch(UserNotFoundException e) {
             return BadRequest(e.Message);
         }
     }

@@ -1,6 +1,7 @@
 using AutoMapper;
 using FakeItEasy;
 using FluentAssertions;
+using HexCore.Decks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ManagerBack.Tests.Services;
@@ -10,7 +11,7 @@ public class DeckServiceTests {
     private readonly IMapper _mapper;
     private readonly IDeckRepository _deckRepo;
     private readonly ICardRepository _cardRepo;
-    private readonly IValidator<PostDeckDto> _validator;
+    private readonly IValidator<DeckTemplate> _validator;
 
     public DeckServiceTests() {
         var mC = new MapperConfiguration(cfg => {
@@ -19,7 +20,7 @@ public class DeckServiceTests {
         _mapper = new Mapper(mC);
         _deckRepo = A.Fake<IDeckRepository>();
         _cardRepo = A.Fake<ICardRepository>();
-        _validator = A.Fake<IValidator<PostDeckDto>>();
+        _validator = A.Fake<IValidator<DeckTemplate>>();
 
         _deckService = new(_deckRepo, _mapper, _cardRepo, _validator);
     }
@@ -64,7 +65,7 @@ public class DeckServiceTests {
         var deckModel = _mapper.Map<DeckModel>(deck);
         var userId = "u1";
         // CardModel? nullCard = null; 
-        A.CallTo(() => _validator.Validate(deck)).Throws<InvalidDeckException>();
+        A.CallTo(() => _validator.Validate(A<DeckTemplate>._)).Throws<InvalidDeckException>();
         // A.CallTo(() => _cardRepo.ByCID(A<string>._)).Returns(nullCard);
         // A.CallTo(() => _cardRepo.ByCID("dev::Dub")).Returns(A.Fake<CardModel>());
 
@@ -83,7 +84,7 @@ public class DeckServiceTests {
         var deckModel = _mapper.Map<DeckModel>(deck);
         var userId = "u1";
         // CardModel? nullCard = null; 
-        A.CallTo(() => _validator.Validate(deck)).Throws(new InvalidCIDException(""));
+        A.CallTo(() => _validator.Validate(A<DeckTemplate>._)).Throws(new InvalidCIDException(""));
         // A.CallTo(() => _cardRepo.ByCID(A<string>._)).Returns(nullCard);
         // A.CallTo(() => _cardRepo.ByCID("dev::Dub")).Returns(A.Fake<CardModel>());
 
@@ -103,7 +104,7 @@ public class DeckServiceTests {
         var deckModel = _mapper.Map<DeckModel>(deck);
         var userId = "u1";
         // CardModel? nullCard = null; 
-        A.CallTo(() => _validator.Validate(deck)).Throws(new CardNotFoundException(""));
+        A.CallTo(() => _validator.Validate(A<DeckTemplate>._)).Throws(new CardNotFoundException(""));
         // A.CallTo(() => _cardRepo.ByCID(A<string>._)).Returns(nullCard);
         // A.CallTo(() => _cardRepo.ByCID("dev::Dub")).Returns(A.Fake<CardModel>());
 

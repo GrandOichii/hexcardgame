@@ -19,6 +19,11 @@ public class DeckTemplateValidator : IValidator<DeckTemplate>
 
     public async Task Validate(DeckTemplate deck)
     {
+        // TODO more name checks
+        var name = deck.GetDescriptor("name");
+        if (string.IsNullOrEmpty(name))
+            throw new InvalidDeckException("deck name can't be empty");
+            
         foreach (var pair in deck.Index) {
             var cid = pair.Key;
             var amount = pair.Value;

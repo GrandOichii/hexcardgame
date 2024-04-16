@@ -8,6 +8,10 @@ public class PostDeckDto {
 
     public DeckTemplate ToDeckTemplate() {
         return new DeckTemplate {
+            Descriptors = new() {
+                { "name", Name },
+                { "description", Description },
+            },
             Index = Index            
         };
     }

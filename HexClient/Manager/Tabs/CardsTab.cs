@@ -87,7 +87,8 @@ public partial class CardsTab : Control
 	private void LoadExpansion(string expansion) {
 		var apiUrl = GetNode<GlobalSettings>("/root/GlobalSettings").ApiUrl;
 		FetchExpansionCardsRequestNode.CancelRequest();
-		FetchExpansionCardsRequestNode.Request(apiUrl + "card/fromexpansion/" + Uri.EscapeDataString(expansion));
+
+		FetchExpansionCardsRequestNode.Request(apiUrl + "card?Expansion=" + Uri.EscapeDataString(expansion));
 	}
 
 	private void TryDeleteCard(ExpansionCard card) {

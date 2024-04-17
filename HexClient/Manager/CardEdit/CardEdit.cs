@@ -1,7 +1,5 @@
 using Godot;
 // using HexCore.Cards;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
-using System;
 using System.Text.Json;
 
 public partial class CardEdit : Control
@@ -110,9 +108,9 @@ public partial class CardEdit : Control
 		if (card.Name != oldCard.Name) return true;
 		if (card.Cost != oldCard.Cost) return true;
 		if (card.Expansion != oldCard.Expansion) return true;
-		if (card.Expansion != oldCard.Expansion) return true;
 		if (card.Type != oldCard.Type) return true;
 		if (card.Text != oldCard.Text) return true;
+		GD.Print(card.Power + " " + oldCard.Power);
 		if (card.Power != oldCard.Power) return true;
 		if (card.Life != oldCard.Life) return true;
 		if (card.DeckUsable != oldCard.DeckUsable) return true;

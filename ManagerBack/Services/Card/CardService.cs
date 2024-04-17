@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using AutoMapper;
+using ManagerBack.Controllers;
 
 namespace ManagerBack.Services;
 
@@ -50,13 +51,6 @@ public partial class CardService : ICardService
         return result;
     }
 
-    // TODO make more complex querying
-    public async Task<IEnumerable<ExpansionCard>> ByExpansion(string expansion)
-    {
-        var cards = await _cardRepo.Filter(c => c.Expansion == expansion);
-        return cards.Select(_mapper.Map<ExpansionCard>);
-    }
-
     public async Task<ExpansionCard> Create(ExpansionCard card)
     {
         var existing = await _cardRepo.ByCID(card.GetCID());
@@ -74,6 +68,11 @@ public partial class CardService : ICardService
         var deletedCount = await _cardRepo.Delete(cid);
         if (deletedCount != 1) 
             throw new CardNotFoundException("no card with cid " + cid);
+    }
+
+    public async Task<IEnumerable<ExpansionCard>> Query(CardQuery query)
+    {
+        return await _cardRepo.Query(query);
     }
 
     public async Task Update(ExpansionCard card)

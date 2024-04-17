@@ -1,3 +1,5 @@
+using ManagerBack.Controllers;
+
 namespace ManagerBack.Services;
 
 public interface ICardService {
@@ -7,5 +9,5 @@ public interface ICardService {
     public Task Update(ExpansionCard card);
     public Task Delete(string cid);
     public Task<IEnumerable<ExpansionCard>> All();
-    public Task<IEnumerable<ExpansionCard>> ByExpansion(string expansion);
+    public Task<IEnumerable<ExpansionCard>> Query(CardQuery query);
 }

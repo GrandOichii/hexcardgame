@@ -127,7 +127,6 @@ public class MatchProcess {
 
     private void SetQueuedPlayer(int idx, QueuedPlayer player) {
         if (QueuedPlayers[idx] is not null) {
-            // TODO format like an actual warning
             Console.WriteLine($"WARNING: Setting SetQueuedPlayer with index {idx}, which is already set (matchId: {Id})");
         }
 

@@ -1,7 +1,16 @@
+using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ManagerBack.Controllers;
+
+
+public class CardQuery {
+    public string Name { get; set; } = "";
+    public string Type { get; set; } = "";
+    public string Text { get; set; } = "";
+    public string Expansion { get; set; } = "";
+}
 
 
 [ApiController]
@@ -12,11 +21,6 @@ public class CardController : ControllerBase
 
     public CardController(ICardService cardService) {
         _cardService = cardService;
-    }
-
-    [HttpGet("fromexpansion/{expansion}")]
-    public async Task<IActionResult> FromExpansion(string expansion) {
-        return Ok(await _cardService.ByExpansion(expansion));
     }
 
     [HttpGet("{cid}")]
@@ -71,5 +75,10 @@ public class CardController : ControllerBase
     [HttpGet("cid/all")]
     public async Task<IActionResult> GetAllCIDs() {
         return Ok( await _cardService.AllCIDs() );
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Query([FromQuery] CardQuery query) {
+        return Ok(await _cardService.Query(query) );
     }
 }

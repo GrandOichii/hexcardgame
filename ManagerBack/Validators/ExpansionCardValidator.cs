@@ -22,7 +22,6 @@ public class ExpansionCardValidator : IValidator<ExpansionCard>
         if (string.IsNullOrEmpty(card.Script))
             throw new InvalidCardCreationParametersException("card script can't be empty");
 
-
         return Task.CompletedTask;
     }
 }

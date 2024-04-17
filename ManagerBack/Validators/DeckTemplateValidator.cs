@@ -8,6 +8,9 @@ public class InvalidDeckException : Exception
 }
 public class DeckTemplateValidator : IValidator<DeckTemplate>
 {
+    private static readonly int MIN_DECK_NAME_SIZE = 3;
+    private static readonly int MAX_DECK_NAME_SIZE = 20;
+
     private readonly ICardRepository _cardRepo;
     private readonly IValidator<string> _cidValidator;
 
@@ -19,10 +22,13 @@ public class DeckTemplateValidator : IValidator<DeckTemplate>
 
     public async Task Validate(DeckTemplate deck)
     {
-        // TODO more name checks
         var name = deck.GetDescriptor("name");
         if (string.IsNullOrEmpty(name))
             throw new InvalidDeckException("deck name can't be empty");
+        if (name.Length < MIN_DECK_NAME_SIZE)
+            throw new InvalidDeckException($"deck name too short (min: {MIN_DECK_NAME_SIZE})");
+        if (name.Length > MAX_DECK_NAME_SIZE)
+            throw new InvalidDeckException($"deck name too long (min: {MAX_DECK_NAME_SIZE})");
             
         foreach (var pair in deck.Index) {
             var cid = pair.Key;

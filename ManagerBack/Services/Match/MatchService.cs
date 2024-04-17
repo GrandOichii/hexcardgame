@@ -31,7 +31,7 @@ public class MatchNotFoundException : Exception
 public class MatchService : IMatchService
 {
     public Dictionary<Guid, MatchProcess> _matches = new();
-
+    private readonly IUserRepository _userRepo;
     private readonly IMapper _mapper;
     private readonly IHubContext<MatchLiveHub> _liveHubContext;
     private readonly IHubContext<MatchViewHub> _viewHubContext;
@@ -39,7 +39,7 @@ public class MatchService : IMatchService
     private readonly IMatchConfigRepository _configRepo;
     private readonly ICardMaster _cardMaster;
 
-    public MatchService(IMapper mapper, IHubContext<MatchLiveHub> hubContext, IHubContext<MatchViewHub> viewHubContext, IMatchConfigRepository configRepo, ICardRepository cardRepo, IHubContext<MatchProcessHub> matchProcessHub)
+    public MatchService(IMapper mapper, IHubContext<MatchLiveHub> hubContext, IHubContext<MatchViewHub> viewHubContext, IMatchConfigRepository configRepo, ICardRepository cardRepo, IHubContext<MatchProcessHub> matchProcessHub, IUserRepository userRepo)
     {
         _mapper = mapper;
         _liveHubContext = hubContext;
@@ -47,6 +47,7 @@ public class MatchService : IMatchService
         _configRepo = configRepo;
         _cardMaster = new DBCardMaster(cardRepo);
         _matchProcessHub = matchProcessHub;
+        _userRepo = userRepo;
     }
 
     private Task<MatchProcess> GetMatch(Guid guid) {
@@ -87,7 +88,10 @@ public class MatchService : IMatchService
             ?? throw new MatchConfigNotFoundException($"no match config with id {config.MatchConfigId}")
         ;
         
-        // TODO check user id
+        var userExists = await _userRepo.CheckId(userId);
+        if (!userExists)
+            throw new UserNotFoundException($"no user with id {userId}");
+
         var match = new MatchProcess(userId, config, mConfig, _cardMaster, this, _matchProcessHub);
         match.Changed += OnMatchProcessChanged;
         _matches.Add(match.Id, match);

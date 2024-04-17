@@ -127,7 +127,6 @@ public partial class MatchesTab : Control
 	{
 		ApiUrl = newText;
 	}
-
 	private async void OnCreateMatchButtonPressed()
 	{
 		for (int i = 0; i < BatchEditNode.Value; i++) {

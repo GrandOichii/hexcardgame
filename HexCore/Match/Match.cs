@@ -68,9 +68,9 @@ public class Match
         SystemLogger = NullLogger.Instance;
     }
 
-    public void InitialSetup(string coreFilePath) {
+    public void InitialSetup(string coreScript) {
         SystemLogger.LogInformation("Running core file");
-        LState.DoFile(coreFilePath);
+        LState.DoString(coreScript);
 
         SystemLogger.LogInformation("Running addons");
         foreach (var addonPath in Config.AddonPaths) {

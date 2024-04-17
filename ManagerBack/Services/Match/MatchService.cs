@@ -38,8 +38,9 @@ public class MatchService : IMatchService
     private readonly IHubContext<MatchProcessHub> _matchProcessHub;
     private readonly IMatchConfigRepository _configRepo;
     private readonly ICardMaster _cardMaster;
+    private readonly IMatchScriptsRepository _scriptsRepo;
 
-    public MatchService(IMapper mapper, IHubContext<MatchLiveHub> hubContext, IHubContext<MatchViewHub> viewHubContext, IMatchConfigRepository configRepo, ICardRepository cardRepo, IHubContext<MatchProcessHub> matchProcessHub, IUserRepository userRepo)
+    public MatchService(IMapper mapper, IHubContext<MatchLiveHub> hubContext, IHubContext<MatchViewHub> viewHubContext, IMatchConfigRepository configRepo, ICardRepository cardRepo, IHubContext<MatchProcessHub> matchProcessHub, IUserRepository userRepo, IMatchScriptsRepository scriptsRepo)
     {
         _mapper = mapper;
         _liveHubContext = hubContext;
@@ -48,6 +49,7 @@ public class MatchService : IMatchService
         _cardMaster = new DBCardMaster(cardRepo);
         _matchProcessHub = matchProcessHub;
         _userRepo = userRepo;
+        _scriptsRepo = scriptsRepo;
     }
 
     private Task<MatchProcess> GetMatch(Guid guid) {
@@ -92,7 +94,7 @@ public class MatchService : IMatchService
         if (!userExists)
             throw new UserNotFoundException($"no user with id {userId}");
 
-        var match = new MatchProcess(userId, config, mConfig, _cardMaster, this, _matchProcessHub);
+        var match = new MatchProcess(userId, config, mConfig, _cardMaster, this, _scriptsRepo);
         match.Changed += OnMatchProcessChanged;
         _matches.Add(match.Id, match);
 

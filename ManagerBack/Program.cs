@@ -26,6 +26,7 @@ public class Program {
         builder.Services.AddSingleton<ICardRepository, CardRepository>();
         builder.Services.AddSingleton<IUserRepository, UserRepository>();
         builder.Services.AddSingleton<IDeckRepository, DeckRepository>();
+        builder.Services.AddSingleton<IMatchScriptsRepository, MatchScriptsRepository>();
         builder.Services.AddSingleton<IMatchConfigRepository, MatchConfigRepository>();
 
         builder.Services.AddSingleton<ICachedCardRepository, CachedCardRepository>();

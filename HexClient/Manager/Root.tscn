@@ -45,7 +45,6 @@ mouse_filter = 1
 
 [node name="MatchesTab" parent="MarginContainer/TabContainer/Matches" instance=ExtResource("1_qqjyb")]
 layout_mode = 1
-MatchProcessViewWindowPS = null
 
 [node name="Cards" type="TabBar" parent="MarginContainer/TabContainer"]
 visible = false

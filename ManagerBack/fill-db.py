@@ -5,6 +5,7 @@ from pymongo import MongoClient
 
 CARDS_DIR = '../cards'
 CONFIGS_DIR = '../configs'
+CORE_FILE_PATH = '../HexCore/core.lua'
 CONNECTION_STRING = 'mongodb://localhost:27017'
 
 def fill_cards():
@@ -30,6 +31,13 @@ def fill_cards():
 
     client['hex']['cards'].insert_many(cards)
 
+def fill_match_scripts():
+    script = open(CORE_FILE_PATH, 'r').read()
+    client['hex']['matchScripts'].insert_one({
+        'Name': 'core',
+        'Script': script
+    })
+
 
 client = MongoClient(CONNECTION_STRING)
 
@@ -51,6 +59,7 @@ def fill_configs():
             continue
     client['hex']['configs'].insert_many(configs)
 
-fill_cards()
-fill_configs()
+# fill_cards()
+# fill_configs()
+fill_match_scripts()
 

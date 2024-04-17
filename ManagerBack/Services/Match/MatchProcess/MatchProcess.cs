@@ -2,18 +2,17 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Sockets;
 using System.Net.WebSockets;
-using System.Runtime.Serialization;
 using System.Security.Claims;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using BCrypt.Net;
-using HexCore.GameMatch.View;
-using ManagerBack.Hubs;
-using Microsoft.AspNetCore.SignalR;
 using Shared;
-using Utility;
 
 namespace ManagerBack.Services;
+
+[System.Serializable]
+public class CoreFileNotFoundException : System.Exception
+{
+    public CoreFileNotFoundException() { }
+    public CoreFileNotFoundException(string message) : base(message) { }
+}
 
 public enum MatchStatus {
     WAITING_FOR_PLAYERS,
@@ -52,13 +51,13 @@ public class MatchProcess {
     private readonly IMatchService _matchService;
     private readonly MatchConfig _matchConfig;
     private readonly ICardMaster _cardMaster;
-    private readonly IHubContext<MatchProcessHub> _matchProcessHub;
+    private readonly IMatchScriptsRepository _scriptsRepo;
 
-    public MatchProcess(string creatorId, MatchProcessConfig config, MatchConfig mConfig, ICardMaster cardMaster, IMatchService matchService, IHubContext<MatchProcessHub> matchProcessHub)
+    public MatchProcess(string creatorId, MatchProcessConfig config, MatchConfig mConfig, ICardMaster cardMaster, IMatchService matchService, IMatchScriptsRepository scriptsRepo)
     {
         if (!string.IsNullOrEmpty(config.Password))
             _passHash = BCrypt.Net.BCrypt.HashPassword(config.Password);
-        
+
         CreatorId = creatorId;
         Id = Guid.NewGuid();
         Config = config;
@@ -82,7 +81,7 @@ public class MatchProcess {
         TcpListener = new TcpListener(IPAddress.Loopback, 0);
         TcpListener.Start();
         TcpPort = ((IPEndPoint)TcpListener.LocalEndpoint).Port;
-        _matchProcessHub = matchProcessHub;
+        _scriptsRepo = scriptsRepo;
     }
 
     public Task InitialSetup() {
@@ -209,8 +208,15 @@ public class MatchProcess {
             View = View,
         };
 
-        // TODO replace with a db call
-        Match.InitialSetup("../HexCore/core.lua");        
+        System.Console.WriteLine("fetching");
+
+        var script = await _scriptsRepo.GetCoreScript() ??
+            throw new CoreFileNotFoundException()
+        ;
+
+        System.Console.WriteLine("fetched " + script.Script);
+        
+        Match.InitialSetup(script.Script);
         
         await CreatePlayerControllers();
 

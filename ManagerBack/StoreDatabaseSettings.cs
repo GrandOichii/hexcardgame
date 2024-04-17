@@ -6,5 +6,6 @@ public class StoreDatabaseSettings {
     public required string CardCollectionName { get; set; }
     public required string UserCollectionName { get; set; }
     public required string DeckCollectionName { get; set; }
+    public required string MatchScriptsCollectionName { get; set; }
     public required string MatchConfigCollectionName { get; set; }
 }

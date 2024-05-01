@@ -199,7 +199,6 @@ function Common:IsNeighbor(card)
 end
 
 
--- TODO
 function Common:Moved(card)
     return function (playerID, args)
         return card.id == args.mid
@@ -325,7 +324,6 @@ function Pipeline.New()
         for i, layer in ipairs(self.layers) do
             local returned, success = layer.delegate(...)
             if not success then
-                -- TODO
                 return self.result, false
             end
             if self.collectFunc ~= nil then

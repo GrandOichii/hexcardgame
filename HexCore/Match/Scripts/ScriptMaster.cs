@@ -170,7 +170,7 @@ public class ScriptMaster {
     /// <param name="point">Tile coordinates</param>
     /// <param name="cID">ID of the card</param>
     [LuaCommand]
-    public void CreateAndPutEntity(string pID, LuaTable point, string cID) {
+    public bool CreateAndPutEntity(string pID, LuaTable point, string cID) {
         var player = _match.PlayerWithID(pID);
         var card = _match.CardMaster.Get(cID).GetAwaiter().GetResult();
         var mCard = new MatchCard(_match, card, player)
@@ -181,11 +181,12 @@ public class ScriptMaster {
         var tile = TileAt(point);
         if (tile is null) {
             // TODO? throw exception
-            return;
+            return false;
         }
         tile.Entity = mCard;
 
         player.AllCards.Add(mCard, ZoneTypes.PLACED);
+        return true;
     }
 
     /// <summary>

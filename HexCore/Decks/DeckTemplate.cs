@@ -38,8 +38,6 @@ public class DeckTemplate {
             var descriptors = gLines[1].Split(DESCRIPTOR_PARTS_SPLITTER);
             foreach (var dLine in descriptors) {
                 var s = dLine.Split("=");
-                if (s.Length != 2)
-                    throw new Exception("SSS " + dLine);
                 result.Descriptors.Add(s[0], s[1]);
                 // dev::Dub#3|dev::Urakshi Raider#3|dev::Elven Outcast#3;name=deck1,description=This is a simple deck, used for testing.
             }

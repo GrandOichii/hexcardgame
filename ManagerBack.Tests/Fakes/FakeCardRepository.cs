@@ -40,8 +40,25 @@ public class FakeCardRepository : ICardRepository
 
     public Task<IEnumerable<CardModel>> Query(CardQuery query)
     {
-        // TODO
-        throw new NotImplementedException();
+        var result = new List<CardModel>();
+        foreach (var card in Cards ) 
+            if (
+                card.Name.ToLower().Contains(query.Name.ToLower()) &&
+                card.Type.ToLower().Contains(query.Type.ToLower()) &&
+                card.Text.ToLower().Contains(query.Text.ToLower()) &&
+                card.Text.ToLower() == query.Text.ToLower()
+            ) result.Add(card);
+        
+
+        return Task.FromResult(result.AsEnumerable());
+    
+        // var filter = 
+        //     builder.Regex(c => c.Name, new Regex(query.Name.ToLower(), RegexOptions.IgnoreCase)) &
+        //     builder.Regex(c => c.Type, new Regex(query.Type.ToLower(), RegexOptions.IgnoreCase)) &
+        //     builder.Regex(c => c.Text, new Regex(query.Text.ToLower(), RegexOptions.IgnoreCase)) &
+        //     builder.Regex(c => c.Expansion, new Regex(query.Expansion.ToLower(), RegexOptions.IgnoreCase))
+        // ;
+        // return await _collection.Find(filter).ToListAsync();
     }
 
     public async Task<long> Update(CardModel card)

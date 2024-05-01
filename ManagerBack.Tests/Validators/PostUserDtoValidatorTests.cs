@@ -66,6 +66,7 @@ public class PostUserDtoValidatorTests {
             };
         }
     }
+    
     [Theory]
     [MemberData(nameof(BadUserList))]
     public async Task ShouldNotValidate(PostUserDto user) {

@@ -103,19 +103,18 @@ public class CardEndpointTests
         result.Should().HaveClientError();
     }
 
-    // TODO add back
-    // [Fact]
-    // public async Task ShouldFetchFromExpansionEmpty() {
-    //     // Arrange
-    //     var expansion = "expansion1";
-    //     var client = _factory.CreateClient();
+    [Fact]
+    public async Task ShouldFetchFromExpansionEmpty() {
+        // Arrange
+        var expansion = "expansion1";
+        var client = _factory.CreateClient();
 
-    //     // Act
-    //     var result = await client.GetAsync($"/api/v1/card/fromexpansion/{expansion}");
+        // Act
+        var result = await client.GetAsync($"/api/v1/card/?expansion={expansion}");
 
-    //     // Assert
-    //     result.Should().BeSuccessful();
-    // }
+        // Assert
+        result.Should().BeSuccessful();
+    }
 
     [Fact]
     public async Task ShouldCreate() {

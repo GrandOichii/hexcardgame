@@ -157,20 +157,19 @@ public class CardServiceTests {
         await act.Should().ThrowAsync<CardNotFoundException>();
     }
 
-    // TODO add back
-    // [Fact]
-    // public async Task ShouldFetchByExpansion() {
-    //     // Arrange
-    //     var expansion = "expansion";
-    //     var cards = A.Fake<IEnumerable<CardModel>>();
-    //     A.CallTo(() => _cardRepo.Filter(c => c.Expansion == expansion)).Returns(cards);
+    [Fact]
+    public async Task ShouldFetchByExpansion() {
+        // Arrange
+        var cards = A.Fake<IEnumerable<CardModel>>();
+        var query = A.Fake<CardQuery>();
+        A.CallTo(() => _cardRepo.Query(query)).Returns(cards);
 
-    //     // Act
-    //     var result = await _cardService.ByExpansion(expansion);
+        // Act
+        var result = await _cardService.Query(query);
 
-    //     // Assert
-    //     result.Should().BeEquivalentTo(cards);
-    // }
+        // Assert
+        result.Should().BeEquivalentTo(cards);
+    }
 
     [Fact]
     public async Task ShouldFetchAllCIDs() {

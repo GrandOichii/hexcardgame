@@ -36,11 +36,11 @@ public class ExpansionEndpointTests
         return (await result.Content.ReadFromJsonAsync<LoginResult>())!.Token;
     }
 
-    private static async Task Login(HttpClient client, string email = "mymail@email.com", string password = "password") {
-        var token = await GetJwtToken(client, email, password);
+    private static async Task Login(HttpClient client, string username = "user1", string password = "password") {
+        var token = await GetJwtToken(client, username, password);
         client.SetBearerToken(token);
     }
-
+    
     [Fact]
     public async Task ShouldFetchAll() {
         // Arrange

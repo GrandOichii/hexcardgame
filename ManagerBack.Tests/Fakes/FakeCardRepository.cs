@@ -38,6 +38,12 @@ public class FakeCardRepository : ICardRepository
         return Task.FromResult(Cards.FindAll(f.Invoke).AsEnumerable());
     }
 
+    public Task<IEnumerable<CardModel>> Query(CardQuery query)
+    {
+        // TODO
+        throw new NotImplementedException();
+    }
+
     public async Task<long> Update(CardModel card)
     {
         var deleted = await Delete(card.GetCID());

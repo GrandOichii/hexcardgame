@@ -47,7 +47,6 @@ public class DeckAmountLimitException : Exception
 
 public partial class DeckService : IDeckService
 {
-    // TODO subject to change
     private static readonly int MAX_DECK_COUNT = 20;
 
     private readonly IMapper _mapper;

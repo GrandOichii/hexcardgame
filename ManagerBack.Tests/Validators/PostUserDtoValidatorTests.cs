@@ -34,10 +34,36 @@ public class PostUserDtoValidatorTests {
    public static IEnumerable<object[]> BadUserList {
         // TODO add more
         get {
-            yield return new object[] { new PostUserDto {
-                Username = "",
-                Password = "password"
-            } };
+            yield return new object[] { 
+                new PostUserDto {
+                    Username = "",
+                    Password = "password"
+                },
+            };
+            yield return new object[] { 
+                new PostUserDto {
+                    Username = "1username",
+                    Password = "password"
+                },
+            };
+            yield return new object[] { 
+                new PostUserDto {
+                    Username = "username.",
+                    Password = "password"
+                },
+            };
+            yield return new object[] { 
+                new PostUserDto {
+                    Username = "u",
+                    Password = "password"
+                },
+            };
+            yield return new object[] { 
+                new PostUserDto {
+                    Username = "usernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusername",
+                    Password = "password"
+                },
+            };
         }
     }
     [Theory]

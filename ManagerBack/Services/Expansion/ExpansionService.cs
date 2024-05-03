@@ -1,14 +1,23 @@
 
 namespace ManagerBack.Services;
 
+/// <summary>
+/// The exception that is thrown when requesting to fetch an unknown expansion 
+/// </summary>
 [System.Serializable]
 public class ExpansionNotFoundException : System.Exception
 {
     public ExpansionNotFoundException(string expansion) : base($"expansion {expansion} not found") { }
 }
 
+/// <summary>
+/// Implementation of the IExpansionInterface, uses the ICardRepository injected object
+/// </summary>
 public class ExpansionService : IExpansionService
 {
+    /// <summary>
+    /// Card repository
+    /// </summary>
     private readonly ICardRepository _cardRepo;
 
     public ExpansionService(ICardRepository cardRepo)
@@ -16,6 +25,10 @@ public class ExpansionService : IExpansionService
         _cardRepo = cardRepo;
     }
 
+    /// <summary>
+    /// Counts the number of cards in each expansion in the card repository
+    /// </summary>
+    /// <returns>Expansion name to card count mapping</returns>
     private async Task<Dictionary<string, int>> GetCounts() {
         var cards = await _cardRepo.All();
         var result = new Dictionary<string, int>();

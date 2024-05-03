@@ -55,7 +55,7 @@ public class CardController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] ExpansionCard card) {
         try {
-            var result = await _cardService.Create(card);
+            var result = await _cardService.Add(card);
             return Ok(result);
         } catch (CIDTakenException e) {
             return BadRequest(e.Message);

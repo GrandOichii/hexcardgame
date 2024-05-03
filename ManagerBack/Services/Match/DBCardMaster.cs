@@ -1,8 +1,14 @@
 
 namespace ManagerBack.Services;
 
+/// <summary>
+/// Implementation of the ICardMaster interface, uses the ICardRepository injected object
+/// </summary>
 public class DBCardMaster : ICardMaster
 {
+    /// <summary>
+    /// Card repository
+    /// </summary>
     private readonly ICardRepository _cardRepo;
 
     public DBCardMaster(ICardRepository cardRepo)

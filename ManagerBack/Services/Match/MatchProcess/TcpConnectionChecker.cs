@@ -3,8 +3,13 @@ using Shared;
 
 namespace ManagerBack.Services;
 
-
+/// <summary>
+/// Checker for a TCP connection
+/// </summary>
 public class TcpConnectionChecker : IConnectionChecker {
+    /// <summary>
+    /// TCP socket
+    /// </summary>
     private readonly TcpClient _socket;
 
     public TcpConnectionChecker(TcpClient socket)

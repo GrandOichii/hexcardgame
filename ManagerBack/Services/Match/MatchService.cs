@@ -7,6 +7,9 @@ using Utility;
 
 namespace ManagerBack.Services;
 
+/// <summary>
+/// Exception that indicates that the match refused to connect a player
+/// </summary>
 [Serializable]
 public class MatchRefusedConnectionException : Exception
 {
@@ -14,6 +17,9 @@ public class MatchRefusedConnectionException : Exception
     public MatchRefusedConnectionException(string matchId) : base($"match with id {matchId} refused connection") { }
 }
 
+/// <summary>
+/// Exception that indicates that that specified match ID is invalid
+/// </summary>
 [Serializable]
 public class InvalidMatchIdException : Exception
 {
@@ -21,6 +27,9 @@ public class InvalidMatchIdException : Exception
     public InvalidMatchIdException(string matchId) : base($"invalid match id: {matchId}") { }
 }
 
+/// <summary>
+/// Exception that indicates that a match with the specified ID doesn't exist
+/// </summary>
 [Serializable]
 public class MatchNotFoundException : Exception
 {
@@ -28,16 +37,54 @@ public class MatchNotFoundException : Exception
     public MatchNotFoundException(string matchId) : base($"no match with id {matchId}") { }
 }
 
+/// <summary>
+/// Implementation of the IMatchService interface
+/// </summary>
 public class MatchService : IMatchService
 {
+    /// <summary>
+    /// Match ID to match process mapping
+    /// </summary>
     public Dictionary<Guid, MatchProcess> _matches = new();
+
+    /// <summary>
+    /// User repository
+    /// </summary>
     private readonly IUserRepository _userRepo;
+
+    /// <summary>
+    /// Mapper object
+    /// </summary>
     private readonly IMapper _mapper;
+
+    /// <summary>
+    /// SignalR match table view hub context
+    /// </summary>
     private readonly IHubContext<MatchLiveHub> _liveHubContext;
+
+    /// <summary>
+    /// SignalR match view hub context
+    /// </summary>
     private readonly IHubContext<MatchViewHub> _viewHubContext;
+
+    /// <summary>
+    /// SignalR match process view hub context
+    /// </summary>
     private readonly IHubContext<MatchProcessHub> _matchProcessHub;
+
+    /// <summary>
+    /// Match configuration repository
+    /// </summary>
     private readonly IMatchConfigRepository _configRepo;
+
+    /// <summary>
+    /// Card master
+    /// </summary>
     private readonly ICardMaster _cardMaster;
+
+    /// <summary>
+    /// Match scripts repository
+    /// </summary>
     private readonly IMatchScriptsRepository _scriptsRepo;
 
     public MatchService(IMapper mapper, IHubContext<MatchLiveHub> hubContext, IHubContext<MatchViewHub> viewHubContext, IMatchConfigRepository configRepo, ICardRepository cardRepo, IHubContext<MatchProcessHub> matchProcessHub, IUserRepository userRepo, IMatchScriptsRepository scriptsRepo)
@@ -52,6 +99,12 @@ public class MatchService : IMatchService
         _scriptsRepo = scriptsRepo;
     }
 
+    /// <summary>
+    /// Fetches a match using an ID
+    /// </summary>
+    /// <param name="guid">Match ID</param>
+    /// <returns>The match process</returns>
+    /// <exception cref="MatchNotFoundException"></exception>
     private Task<MatchProcess> GetMatch(Guid guid) {
         if (!_matches.ContainsKey(guid))
             throw new MatchNotFoundException(guid.ToString());
@@ -62,6 +115,12 @@ public class MatchService : IMatchService
         );
     }
 
+    /// <summary>
+    /// Fetches a match using an ID
+    /// </summary>
+    /// <param name="id">Match ID</param>
+    /// <returns>The match process</returns>
+    /// <exception cref="MatchNotFoundException"></exception>
     private async Task<MatchProcess> GetMatch(string id) {
         var parsed = Guid.TryParse(id, out Guid guid);
         if (!parsed)
@@ -172,7 +231,13 @@ public class MatchService : IMatchService
         await match.Finish(socket);
     }
 
+    /// <summary>
+    /// Converts the match ID to a SignalR hub group name
+    /// </summary>
+    /// <param name="matchId">Match ID</param>
+    /// <returns>Group name</returns>
     private static string ToGroupName(string matchId) => $"watchers-{matchId}";
+
     public async Task RegisterWatcher(string matchId, string connectionId)
     {
         try {
@@ -187,6 +252,10 @@ public class MatchService : IMatchService
         await UpdateWatchers(matchId);
     }
 
+    /// <summary>
+    /// Updates all match watcher
+    /// </summary>
+    /// <param name="matchId">Match ID</param>
     private async Task UpdateWatchers(string matchId) {
         var match = await GetMatch(matchId);
 
@@ -194,6 +263,10 @@ public class MatchService : IMatchService
         await _matchProcessHub.Clients.Group(ToGroupName(matchId)).SendAsync("Update", JsonSerializer.Serialize(matchDto, Common.JSON_SERIALIZATION_OPTIONS));
     }
 
+    /// <summary>
+    /// Event handler for match process changing
+    /// </summary>
+    /// <param name="matchId">Match ID</param>
     private async Task OnMatchProcessChanged(string matchId) {
         await UpdateWatchers(matchId);
     }

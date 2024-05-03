@@ -1,16 +1,11 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Text.RegularExpressions;
 using AutoMapper;
-using ManagerBack.Dtos;
-using ManagerBack.Validators;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 
 namespace ManagerBack.Services;
 
+/// <summary>
+/// The exception that is thrown when requesting to fetch an unknown deck 
+/// </summary>
 [Serializable]
 public class DeckNotFoundException : Exception
 {
@@ -18,12 +13,18 @@ public class DeckNotFoundException : Exception
     public DeckNotFoundException(string message) : base(message) { }
 }
 
+/// <summary>
+/// The exception that is thrown when requesting to fetch a deck that doesn't belong to the requester 
+/// </summary>
 [Serializable]
 public class UnmatchedUserIdException : Exception
 {
     public UnmatchedUserIdException() { }
 }
 
+/// <summary>
+/// A general deck deletion exception 
+/// </summary>
 [Serializable]
 public class DeckDeletionException : Exception
 {
@@ -31,6 +32,9 @@ public class DeckDeletionException : Exception
     public DeckDeletionException(string message) : base(message) { }
 }
 
+/// <summary>
+/// A general deck updating exception
+/// </summary>
 [Serializable]
 public class DeckUpdateException : Exception
 {
@@ -38,6 +42,9 @@ public class DeckUpdateException : Exception
     public DeckUpdateException(string message) : base(message) { }
 }
 
+/// <summary>
+/// The exception that is thrown when requesting to create a deck that will go over the deck limit
+/// </summary>
 [Serializable]
 public class DeckAmountLimitException : Exception
 {
@@ -45,21 +52,40 @@ public class DeckAmountLimitException : Exception
     public DeckAmountLimitException(string message) : base(message) { }
 }
 
+/// <summary>
+/// Implementation of the IDeckService interface, uses the IDeckRepository injected object
+/// </summary>
 public partial class DeckService : IDeckService
 {
+    /// <summary>
+    /// The limit for the amount of decks a user can have
+    /// </summary>
     private static readonly int MAX_DECK_COUNT = 20;
 
+    /// <summary>
+    /// Mapper object
+    /// </summary>
     private readonly IMapper _mapper;
+
+    /// <summary>
+    /// Deck repository
+    /// </summary>
     private readonly IDeckRepository _deckRepo;
-    private readonly ICardRepository _cardRepo;
+
+    /// <summary>
+    /// Deck validator
+    /// </summary>
     private readonly IValidator<DeckTemplate> _deckValidator;
+
+    /// <summary>
+    /// User repository
+    /// </summary>
     private readonly IUserRepository _userRepository;
 
-    public DeckService(IDeckRepository deckRepo, IMapper mapper, ICardRepository cardRepo, IValidator<DeckTemplate> deckValidator, IUserRepository userRepository)
+    public DeckService(IDeckRepository deckRepo, IMapper mapper, IValidator<DeckTemplate> deckValidator, IUserRepository userRepository)
     {
         _deckRepo = deckRepo;
         _mapper = mapper;
-        _cardRepo = cardRepo;
         _deckValidator = deckValidator;
         _userRepository = userRepository;
     }
@@ -70,7 +96,7 @@ public partial class DeckService : IDeckService
         return decks;
     }
 
-    public async Task<DeckModel> Create(string userId, PostDeckDto deck)
+    public async Task<DeckModel> Add(string userId, PostDeckDto deck)
     {
         var idValid = await _userRepository.CheckId(userId);
         if (!idValid)

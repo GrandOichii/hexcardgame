@@ -4,24 +4,47 @@ using ManagerBack.Controllers;
 
 namespace ManagerBack.Services;
 
-
+/// <summary>
+/// The exception that is thrown when requesting to fetch an unknown card 
+/// </summary>
 [Serializable]
 public class CardNotFoundException : Exception
 {
     public CardNotFoundException(string message) : base(message) {}
 }
 
+/// <summary>
+/// The exception that is thrown when requesting to create a card, whose ID is already taken
+/// </summary>
 [Serializable]
 public class CIDTakenException : Exception
 {
     public CIDTakenException(string cid) : base($"cid {cid} is already taken") { }
 }
 
+/// <summary>
+/// Implementation of the ICardService interface, uses the injected ICardRepository object 
+/// </summary>
 public partial class CardService : ICardService
 {
+    /// <summary>
+    /// Mapper object
+    /// </summary>
     private readonly IMapper _mapper;
+
+    /// <summary>
+    /// Card repository
+    /// </summary>
     private readonly ICardRepository _cardRepo;
+
+    /// <summary>
+    /// Card ID validator
+    /// </summary>
     private readonly IValidator<string> _cidValidator;
+
+    /// <summary>
+    /// Card validator
+    /// </summary>
     private readonly IValidator<ExpansionCard> _cardValidator;
 
     public CardService(IMapper mapper, ICardRepository cardRepo, IValidator<string> cidValidator, IValidator<ExpansionCard> cardValidator)
@@ -51,7 +74,7 @@ public partial class CardService : ICardService
         return result;
     }
 
-    public async Task<ExpansionCard> Create(ExpansionCard card)
+    public async Task<ExpansionCard> Add(ExpansionCard card)
     {
         var existing = await _cardRepo.ByCID(card.GetCID());
         if (existing is not null)

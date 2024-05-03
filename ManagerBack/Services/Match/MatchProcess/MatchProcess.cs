@@ -7,6 +7,9 @@ using Shared;
 
 namespace ManagerBack.Services;
 
+/// <summary>
+/// The exception that is thrown when failing to fetch the core file 
+/// </summary>
 [System.Serializable]
 public class CoreFileNotFoundException : System.Exception
 {
@@ -14,43 +17,147 @@ public class CoreFileNotFoundException : System.Exception
     public CoreFileNotFoundException(string message) : base(message) { }
 }
 
+/// <summary>
+/// Match process status
+/// </summary>
 public enum MatchStatus {
+    /// <summary>
+    /// Waiting for players to connect
+    /// </summary>
     WAITING_FOR_PLAYERS,
+
+    /// <summary>
+    /// Ready to start
+    /// </summary>
     READY_TO_START,
+
+    /// <summary>
+    /// Match process is in progress
+    /// </summary>
     IN_PROGRESS,
+
+    /// <summary>
+    /// Match process is finished without error
+    /// </summary>
     FINISHED,
+
+    /// <summary>
+    /// Match process crashed during running
+    /// </summary>
     CRASHED
 }
+
+
+/// <summary>
+/// Match process
+/// </summary>
 public class MatchProcess {
+    /// <summary>
+    /// Match seed generator
+    /// </summary>
     private static readonly Random _seedGenerator = new();
+
+    // TODO change to a db call
     private static readonly Dictionary<BotType, string> BOT_TYPE_PATH_MAP = new() {
         {BotType.RANDOM, "../bots/random.lua"},
         {BotType.SMART, "../bots/basic.lua"},
     };
 
+    /// <summary>
+    /// Match process changed delegate
+    /// </summary>
+    /// <param name="matchId">Match ID</param>
     public delegate Task MatchProcessChanged(string matchId);
+
+    /// <summary>
+    /// Match process changed event
+    /// </summary>
     public event MatchProcessChanged? Changed;
 
+    /// <summary>
+    /// Match status
+    /// </summary>
     public MatchStatus Status { get; private set; } = MatchStatus.WAITING_FOR_PLAYERS;
+
+    /// <summary>
+    /// User ID of the match creator
+    /// </summary>
     public string CreatorId { get; }
+
+    /// <summary>
+    /// Match ID
+    /// </summary>
     public Guid Id { get; }
+
+    /// <summary>
+    /// Array of the participants
+    /// </summary>
     public QueuedPlayer?[] QueuedPlayers { get; }
+
+    /// <summary>
+    /// Match process configuration
+    /// </summary>
     public MatchProcessConfig Config { get; }
 
+    /// <summary>
+    /// Match start time
+    /// </summary>
     public DateTime? StartTime { get; set; }
+
+    /// <summary>
+    /// Match end time
+    /// </summary>
     public DateTime? EndTime { get; set; }
 
+    /// <summary>
+    /// Match object
+    /// </summary>
     public Match? Match { get; private set; } = null;
+
+    /// <summary>
+    /// Match view
+    /// </summary>
     public ConnectedMatchView View { get; }
+
+    /// <summary>
+    /// Match record
+    /// </summary>
     public MatchRecord Record { get; }
+
+    /// <summary>
+    /// TCP port for connecting to the match
+    /// </summary>
     public int TcpPort { get; }
 
+    /// <summary>
+    /// TCP listener
+    /// </summary>
     public TcpListener TcpListener { get; } 
+
+    /// <summary>
+    /// Password hash
+    /// </summary>
     private readonly string _passHash = "";
 
+
+    /// <summary>
+    /// Match service
+    /// </summary>
     private readonly IMatchService _matchService;
+
+    /// <summary>
+    /// Match configuration
+    /// </summary>
     private readonly MatchConfig _matchConfig;
+
+    /// <summary>
+    /// Card master 
+    /// </summary>
     private readonly ICardMaster _cardMaster;
+
+    /// <summary>
+    /// Match scripts repository
+    /// </summary>
     private readonly IMatchScriptsRepository _scriptsRepo;
 
     public MatchProcess(string creatorId, MatchProcessConfig config, MatchConfig mConfig, ICardMaster cardMaster, IMatchService matchService, IMatchScriptsRepository scriptsRepo)
@@ -84,6 +191,9 @@ public class MatchProcess {
         _scriptsRepo = scriptsRepo;
     }
 
+    /// <summary>
+    /// Performs the initial match sertup
+    /// </summary>
     public Task InitialSetup() {
         for (int i = 0; i < QueuedPlayers.Length; i++) {
             // TODO change if ever will be more than 2 players
@@ -119,11 +229,19 @@ public class MatchProcess {
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Event handler for player changing event
+    /// </summary>
     public async Task OnPlayerChanged() {
         if (Changed is not null)
             await Changed.Invoke(Id.ToString());
     }
 
+    /// <summary>
+    /// Sets the queued player to the specified index
+    /// </summary>
+    /// <param name="idx">Queued player index</param>
+    /// <param name="player">Queued player</param>
     private void SetQueuedPlayer(int idx, QueuedPlayer player) {
         if (QueuedPlayers[idx] is not null) {
             Console.WriteLine($"WARNING: Setting SetQueuedPlayer with index {idx}, which is already set (matchId: {Id})");
@@ -132,10 +250,18 @@ public class MatchProcess {
         QueuedPlayers[idx] = player;
     }
 
+    /// <summary>
+    /// Checks whether another player can connect to the match
+    /// </summary>
+    /// <returns>True if can connect, else false</returns>
     public bool CanConnect() {
         return Status == MatchStatus.WAITING_FOR_PLAYERS && QueuedPlayers.Any(p => p is null);
     }
 
+    /// <summary>
+    /// Checks whether the match can start
+    /// </summary>
+    /// <returns>True if can start, else false</returns>
     private bool CanStart() {
         foreach (var player in QueuedPlayers) {
             if (player is null) return false;
@@ -144,10 +270,17 @@ public class MatchProcess {
         return true;
     }
 
+    /// <summary>
+    /// Event handler for player status changing
+    /// </summary>
     public async Task OnPlayerStatusUpdated() {
         await TryRun();
     }
 
+    /// <summary>
+    /// Checks the connection of all of the players, all failed connections are removed
+    /// </summary>
+    /// <returns>True if all connectios are valid, else false</returns>
     private async Task<bool> CheckPlayers() {
         var result = true;
         for (int i = 0; i < QueuedPlayers.Length; i++) {
@@ -168,6 +301,9 @@ public class MatchProcess {
         return result;
     }
 
+    /// <summary>
+    /// Attempts to run the match
+    /// </summary>
     public async Task TryRun() {
         if (!CanStart()) return;
         var valid = await CheckPlayers();
@@ -178,6 +314,9 @@ public class MatchProcess {
         _ = Run();
     }
 
+    /// <summary>
+    /// Wraps all of the player controllers in separate RecordingPlayerController instances, adds them to the match object
+    /// </summary>
     private async Task CreatePlayerControllers() {
         foreach (var player in QueuedPlayers) {
             var baseController = player!.Controller;
@@ -193,6 +332,10 @@ public class MatchProcess {
         }
     }
 
+    /// <summary>
+    /// Updates the status of the match process
+    /// </summary>
+    /// <param name="status">Match status</param>
     private async Task SetStatus(MatchStatus status) {
         Status = status;
         await _matchService.ServiceStatusUpdated(this);
@@ -200,7 +343,10 @@ public class MatchProcess {
         if (Changed is not null)
             await Changed.Invoke(Id.ToString());
     }
-    
+
+    /// <summary>
+    /// Runs the match
+    /// </summary>
     private async Task Run() {
         // * just in case
         if (Status >= MatchStatus.IN_PROGRESS) return;
@@ -241,13 +387,26 @@ public class MatchProcess {
         EndTime = DateTime.Now; 
     }
 
+    /// <summary>
+    /// Attempts to add a WebSocket connection
+    /// </summary>
+    /// <param name="socket">WebSocket connection</param>
     public async Task AddWebSocketConnection(WebSocket socket) {
         var controller = new WebSocketPlayerController(socket);
 
         await AddPlayer(controller, new WebSocketConnectionChecker(socket));
     }
 
+    /// <summary>
+    /// Lock object for adding players to the match
+    /// </summary>
     private readonly object _addPlayerLock = new();
+
+    /// <summary>
+    /// Add a new player to the QueuedPlayers
+    /// </summary>
+    /// <param name="controller">Player controller</param>
+    /// <param name="checker">Connection checker</param>
     private async Task AddPlayer(IOPlayerController controller, IConnectionChecker checker) {
         var player = new QueuedPlayer(controller, checker, false);
         player.Changed += OnPlayerChanged;
@@ -270,6 +429,10 @@ public class MatchProcess {
         player.Status = QueuedPlayerStatus.READY;
     }
 
+    /// <summary>
+    /// Retreives an empty index in the QueuedPlayers array
+    /// </summary>
+    /// <returns>A free index</returns>
     private int GetFreeIdx() {
         for (int i = 0; i < QueuedPlayers.Length; i++) {
             if (QueuedPlayers[i] is null) return i;
@@ -277,18 +440,28 @@ public class MatchProcess {
         return -1;
     }
 
+    /// <summary>
+    /// Runs a loop for a WebSocket connection to keep it from disconnecting until the match is finished
+    /// </summary>
+    /// <param name="socket">WebSocket connection</param>
     public async Task Finish(WebSocket socket) {
         while (Status <= MatchStatus.IN_PROGRESS && socket.State == WebSocketState.Open) {
             await Task.Delay(200);
         }
     }
 
+    /// <summary>
+    /// Runs a loop that will attempt to add TCP connections
+    /// </summary>
     private async Task ConnectTcpPlayers() {
         while (CanConnect()) {
             await AddTcpConnection();
         }
     }
 
+    /// <summary>
+    /// Add a signle TCP connection
+    /// </summary>
     private async Task AddTcpConnection() {
         var client = TcpListener.AcceptTcpClient();
         if (!CanConnect()) {
@@ -307,11 +480,20 @@ public class MatchProcess {
         await AddPlayer(controller, new TcpConnectionChecker(client));
     }
 
+    /// <summary>
+    /// Checks the match password
+    /// </summary>
+    /// <param name="password">Potential password</param>
+    /// <returns>True if the potential password matches the match password, else false</returns>
     public bool CheckPassword(string password) {
         if (!RequiresPassword()) return true;
 
         return BCrypt.Net.BCrypt.Verify(password, _passHash);
     }
 
+    /// <summary>
+    /// Check whether the match requires a password
+    /// </summary>
+    /// <returns>True is password is required, else false</returns>
     public bool RequiresPassword() => !string.IsNullOrEmpty(_passHash);
 }

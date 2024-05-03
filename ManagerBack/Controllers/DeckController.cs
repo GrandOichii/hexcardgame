@@ -45,7 +45,7 @@ public class DeckController : ControllerBase {
 
         try {
 
-            var result = await _deckService.Create(userId, deck);
+            var result = await _deckService.Add(userId, deck);
             return Ok(result);
 
         } catch (InvalidDeckException e) {

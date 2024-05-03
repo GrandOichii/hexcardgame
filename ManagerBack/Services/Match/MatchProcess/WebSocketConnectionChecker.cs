@@ -2,8 +2,14 @@ using System.Net.WebSockets;
 
 namespace ManagerBack.Services;
 
+/// <summary>
+/// Checker for a WebSocket connection
+/// </summary>
 public class WebSocketConnectionChecker : IConnectionChecker
 {
+    /// <summary>
+    /// Connection socket
+    /// </summary>
     private readonly WebSocket _socket;
 
     public WebSocketConnectionChecker(WebSocket socket)

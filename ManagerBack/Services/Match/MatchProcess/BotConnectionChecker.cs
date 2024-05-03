@@ -1,5 +1,8 @@
 namespace ManagerBack.Services;
 
+/// <summary>
+/// Bot connection checker
+/// </summary>
 public class BotConnectionChecker : IConnectionChecker
 {
     public Task<bool> Check()

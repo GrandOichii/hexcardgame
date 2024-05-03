@@ -6,12 +6,17 @@ using MongoDB.Driver;
 
 namespace ManagerBack.Repositories;
 
+/// <summary>
+/// Implementation of the IMatchScriptsRepository, uses a MongoDB collection as the data source
+/// </summary>
 public class MatchScriptsRepository : IMatchScriptsRepository
 {
+    /// <summary>
+    /// MongoDB match scripts collection
+    /// </summary>
     private readonly IMongoCollection<MatchScript> _collection;
-    private readonly ICachedCardRepository _cachedCards;
 
-    public MatchScriptsRepository(IOptions<StoreDatabaseSettings> pollStoreDatabaseSettings, ICachedCardRepository cachedCards)
+    public MatchScriptsRepository(IOptions<StoreDatabaseSettings> pollStoreDatabaseSettings)
     {
         _collection = new MongoClient(
             pollStoreDatabaseSettings.Value.ConnectionString
@@ -20,8 +25,6 @@ public class MatchScriptsRepository : IMatchScriptsRepository
         ).GetCollection<MatchScript>(
             pollStoreDatabaseSettings.Value.MatchScriptsCollectionName
         );
-
-        _cachedCards = cachedCards;
     }
 
     public async Task<MatchScript?> GetCoreScript()

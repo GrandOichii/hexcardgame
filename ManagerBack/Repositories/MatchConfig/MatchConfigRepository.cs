@@ -5,8 +5,18 @@ using MongoDB.Driver;
 
 namespace ManagerBack.Repositories;
 
+/// <summary>
+/// Implementation of the IMatchConfigRepository, uses a MongoDB collection as the data source
+/// </summary>
 public class MatchConfigRepository : IMatchConfigRepository {
+    /// <summary>
+    /// MongoDB match configuration collection
+    /// </summary>
     private readonly IMongoCollection<MatchConfigModel> _collection;
+
+    /// <summary>
+    /// Cached match configurations repository
+    /// </summary>
     private readonly ICachedMatchConfigRepository _cachedConfigs;
 
     public MatchConfigRepository(IOptions<StoreDatabaseSettings> pollStoreDatabaseSettings, ICachedMatchConfigRepository cachedConfigs)

@@ -4,8 +4,14 @@ using MongoDB.Driver;
 
 namespace ManagerBack.Repositories;
 
+/// <summary>
+/// Implementation of the IUserRepository, uses a MongoDB collection as the data source
+/// </summary>
 public class UserRepository : IUserRepository
 {
+    /// <summary>
+    /// MongoDB user collection
+    /// </summary>
     private readonly IMongoCollection<User> _collection;
 
     public UserRepository(IOptions<StoreDatabaseSettings> pollStoreDatabaseSettings) {

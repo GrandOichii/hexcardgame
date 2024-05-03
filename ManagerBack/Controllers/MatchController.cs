@@ -5,10 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ManagerBack.Controllers;
 
+/// <summary>
+/// Api controller for managing match instances
+/// </summary>
 [ApiController]
 [Route("/api/v1/match")]
 public class MatchController : ControllerBase {
-
+    /// <summary>
+    /// Match process service
+    /// </summary>
     private readonly IMatchService _matchService;
 
     public MatchController(IMatchService matchService)
@@ -16,6 +21,11 @@ public class MatchController : ControllerBase {
         _matchService = matchService;
     }
 
+    /// <summary>
+    /// Endpoint for creating a new match
+    /// </summary>
+    /// <param name="config">Match configuration</param>
+    /// <returns>Response object with the match information as data</returns>
     [Authorize]
     [HttpPost("create")]
     public async Task<IActionResult> Create([FromBody] MatchProcessConfig config) {
@@ -28,6 +38,11 @@ public class MatchController : ControllerBase {
         }
     }
 
+    /// <summary>
+    /// Websocket endpoint for connecting to an existing match
+    /// </summary>
+    /// <param name="matchId">Match ID</param>
+    /// <returns>REsponse object</returns>
     [Authorize]
     [HttpGet("connect/{matchId}")]
     public async Task WebSocketConnect(string matchId) {
@@ -49,11 +64,20 @@ public class MatchController : ControllerBase {
         }
     }
 
+    /// <summary>
+    /// Endpoint for fetching all match instances
+    /// </summary>
+    /// <returns>Response object with all matches as data</returns>
     [HttpGet]
     public async Task<IActionResult> All() {
         return Ok(await _matchService.All());
     }
 
+    /// <summary>
+    /// Endpoint for fetching a match by it's ID
+    /// </summary>
+    /// <param name="matchId">Match ID</param>
+    /// <returns>Response object with the match information as data</returns>
     [HttpGet("{matchId}")]
     public async Task<IActionResult> ById(string matchId) {
         try {
@@ -67,6 +91,10 @@ public class MatchController : ControllerBase {
         }
     }
 
+    /// <summary>
+    /// Admin-only endpoint for removing all crashed matches
+    /// </summary>
+    /// <returns>Response object</returns>
     [Authorize(Roles = "Admin")]
     [HttpDelete("crashed")]
     public async Task<IActionResult> RemoveCrashed() {

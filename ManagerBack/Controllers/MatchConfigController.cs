@@ -4,10 +4,15 @@ using MongoDB.Driver;
 
 namespace ManagerBack.Controllers;
 
-
+/// <summary>
+/// Api controller for managing match configurations
+/// </summary>
 [ApiController]
 [Route("/api/v1/config")]
 public class MatchConfigController : ControllerBase {
+    /// <summary>
+    /// Match configuration service
+    /// </summary>
     private readonly IMatchConfigService _configService;
 
     public MatchConfigController(IMatchConfigService configService)
@@ -15,12 +20,21 @@ public class MatchConfigController : ControllerBase {
         _configService = configService;
     }
 
+    /// <summary>
+    /// Admin-only endpoint for fetching all match configurations
+    /// </summary>
+    /// <returns>Response object with all configurations as data</returns>
     [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> All() {
         return Ok(await _configService.All());
     }
 
+    /// <summary>
+    /// Admin-only endpoint for creating new match configurations
+    /// </summary>
+    /// <param name="config">Match configuration data</param>
+    /// <returns>Response object with the new match configuration information as data</returns>
     [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] PostMatchConfigDto config) {
@@ -32,6 +46,11 @@ public class MatchConfigController : ControllerBase {
         }
     }
 
+    /// <summary>
+    /// Admin-only endpoint for fetching a match configurationm be it's id
+    /// </summary>
+    /// <param name="id">Match configuration ID</param>
+    /// <returns>Response object with the match configuration information as data</returns>
     [Authorize(Roles = "Admin")]
     [HttpGet("{id}")]
     public async Task<IActionResult> ById(string id) {
@@ -43,6 +62,10 @@ public class MatchConfigController : ControllerBase {
         }
     }
 
+    /// <summary>
+    /// Endpoint for fetching the basic match configuration
+    /// </summary>
+    /// <returns>Response object with the match configuration ID as data</returns>
     [HttpGet("basic")]
     public async Task<IActionResult> Basic() {
         try {
@@ -53,7 +76,7 @@ public class MatchConfigController : ControllerBase {
         }
     }
 
-
+    // TODO add update endpoint
     // [Authorize(Roles = "Admin")]
     // [HttpPut]
     // public async Task<IActionResult> Update([FromBody] ExpansionCard card) {

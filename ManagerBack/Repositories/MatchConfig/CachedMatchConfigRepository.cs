@@ -7,9 +7,16 @@ using Utility;
 
 namespace ManagerBack.Repositories;
 
+/// <summary>
+/// Implementation of the ICachedMatchConfigRepository interface, using the IDistributedCache injected object
+/// </summary>
 public class CachedMatchConfigRepository : ICachedMatchConfigRepository
 {
+    /// <summary>
+    /// Cache object
+    /// </summary>
     private readonly IDistributedCache _cache;
+
     public CachedMatchConfigRepository(IDistributedCache cache) {
         _cache = cache;
     }
@@ -33,5 +40,10 @@ public class CachedMatchConfigRepository : ICachedMatchConfigRepository
         await _cache.SetStringAsync(key, JsonSerializer.Serialize(config, Common.JSON_SERIALIZATION_OPTIONS));
     }
 
+    /// <summary>
+    /// Converts the match configuration ID to a key
+    /// </summary>
+    /// <param name="id">Match configuration ID</param>
+    /// <returns>Key</returns>
     private static string ToKey(string id) => $"matchconfig-{id}";
 }

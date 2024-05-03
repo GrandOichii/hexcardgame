@@ -6,8 +6,18 @@ using MongoDB.Driver;
 
 namespace ManagerBack.Repositories;
 
+/// <summary>
+/// Implementation of the ICardRepository, uses a MongoDB collection as the data source
+/// </summary>
 public class CardRepository : ICardRepository {
+    /// <summary>
+    /// MongoDB card collection
+    /// </summary>
     private readonly IMongoCollection<CardModel> _collection;
+
+    /// <summary>
+    /// Cached card repository
+    /// </summary>
     private readonly ICachedCardRepository _cachedCards;
 
     public CardRepository(IOptions<StoreDatabaseSettings> pollStoreDatabaseSettings, ICachedCardRepository cachedCards)
@@ -28,7 +38,6 @@ public class CardRepository : ICardRepository {
         await _collection.InsertOneAsync(card);
         await _cachedCards.Remember(card);
     }
-
 
     public async Task<IEnumerable<CardModel>> Filter(Expression<Func<CardModel, bool>> filter) {
         return (await _collection.FindAsync(filter)).ToList();

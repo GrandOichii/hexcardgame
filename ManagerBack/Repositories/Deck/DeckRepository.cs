@@ -5,8 +5,14 @@ using MongoDB.Driver;
 
 namespace ManagerBack.Repositories;
 
+/// <summary>
+/// Implementation of the IDeckRepository, uses a MongoDB collection as the data source
+/// </summary>
 public class DeckRepository : IDeckRepository
 {
+    /// <summary>
+    /// MongoDB deck collection
+    /// </summary>
     private readonly IMongoCollection<DeckModel> _collection;
 
     public DeckRepository(IOptions<StoreDatabaseSettings> pollStoreDatabaseSettings) {

@@ -14,7 +14,7 @@ public class PostDeckDto {
     public required string Description { get; set; }
 
     /// <summary>
-    /// Card name to amount mapping
+    /// Card ID to amount mapping
     /// </summary>
     public Dictionary<string, int> Index { get; set; } = new();
 

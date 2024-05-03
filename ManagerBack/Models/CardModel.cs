@@ -4,7 +4,13 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace ManagerBack.Models;
 
+/// <summary>
+/// DB model, used to represent a card object
+/// </summary>
 public class CardModel : ExpansionCard {
+    /// <summary>
+    /// Card DB ID
+    /// </summary>
     [JsonIgnore]
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]

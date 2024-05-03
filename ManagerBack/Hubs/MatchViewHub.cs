@@ -3,7 +3,13 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace ManagerBack.Hubs;
 
+/// <summary>
+/// SignalR hub for viewing a specified match in action
+/// </summary>
 public class MatchViewHub : Hub {
+    /// <summary>
+    /// Match service
+    /// </summary>
     private readonly IMatchService _matchService;
 
     public MatchViewHub(IMatchService matchService)
@@ -11,14 +17,22 @@ public class MatchViewHub : Hub {
         _matchService = matchService;
     }
 
+    /// <summary>
+    /// Converts match ID to a group name
+    /// </summary>
+    /// <param name="matchId">Match ID</param>
+    /// <returns>Group name</returns>
     public static string ToGroupName(string matchId) => $"match-{matchId}";
 
+    /// <summary>
+    /// SignalR method for registering the caller to watch a match
+    /// </summary>
+    /// <param name="matchId">Match ID</param>
     [Authorize]
     public async Task Connect(string matchId) {
         GetMatchProcessDto match;
         try {
             match = await _matchService.ById(matchId);
-            System.Console.WriteLine(matchId);
             if (!match.Config.CanWatch) {
                 await Clients.Caller.SendAsync("Forbidden");
                 return;
@@ -40,6 +54,10 @@ public class MatchViewHub : Hub {
         await _matchService.SendMatchState(matchId, Context.ConnectionId);
     }
 
+    /// <summary>
+    /// Removes the specified connection from all match viewing groups
+    /// </summary>
+    /// <param name="connectionId">Connection ID</param>
     private async Task RemoveFromAll(string connectionId) {
         foreach (var match in await _matchService.All()) {
             var group = ToGroupName(match.Id.ToString());

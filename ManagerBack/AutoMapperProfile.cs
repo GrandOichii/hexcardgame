@@ -3,6 +3,9 @@ using ManagerBack.Dtos;
 
 namespace ManagerBack;
 
+/// <summary>
+/// Profile for mapper object
+/// </summary>
 public class AutoMapperProfile : Profile {
     public AutoMapperProfile()
     {

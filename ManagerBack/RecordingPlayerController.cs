@@ -1,10 +1,18 @@
-
-
 namespace ManagerBack;
 
+/// <summary>
+/// Player controller wrapper that records the player's actions
+/// </summary>
 public class RecordingPlayerController : IPlayerController
 {
+    /// <summary>
+    /// Base player controller
+    /// </summary>
     private readonly IPlayerController _baseController;
+
+    /// <summary>
+    /// Player record
+    /// </summary>
     private readonly PlayerRecord _record;
 
     public RecordingPlayerController(IPlayerController baseController, PlayerRecord record)
@@ -40,7 +48,6 @@ public class RecordingPlayerController : IPlayerController
 
     public async Task Setup(Player player, Match match)
     {
-        System.Console.WriteLine("Sending setup to " + player.Name);
         await _baseController.Setup(player, match);
     }
 

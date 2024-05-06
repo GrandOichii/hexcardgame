@@ -4,9 +4,23 @@ using MongoDB.Bson;
 
 namespace ManagerBack;
 
+/// <summary>
+/// Base match state
+/// </summary>
 public struct BaseMatchState {
+    /// <summary>
+    /// ID of current player
+    /// </summary>
     public string CurPlayerID { get; set; }
+
+    /// <summary>
+    /// List of player states
+    /// </summary>
     public List<PlayerState> Players { get; set; } = new();
+
+    /// <summary>
+    /// Match map
+    /// </summary>
     public MapState Map { get; set; }
 
     public BaseMatchState(Match match) {
@@ -18,10 +32,24 @@ public struct BaseMatchState {
     }
 }
 
+/// <summary>
+/// Implementation of IMatchView interface, uses a IMatchService to send match info to users
+/// </summary>
 public class ConnectedMatchView : IMatchView
 {
+    /// <summary>
+    /// Match service
+    /// </summary>
     private readonly IMatchService _matchService;
+
+    /// <summary>
+    /// Observed match ID
+    /// </summary>
     private readonly Guid _matchId;
+
+    /// <summary>
+    /// Last remembered state of the match
+    /// </summary>
     public BaseMatchState LastState { get; private set; }
 
     public ConnectedMatchView(Guid matchId, IMatchService matchService)

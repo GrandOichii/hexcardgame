@@ -38,7 +38,6 @@ public class GetMatchProcessDto {
     /// Array of potential match participants
     /// </summary>
     public required QueuedPlayer[] QueuedPlayers { get; set; }
-    // !FIXME hide seed while match is in progress
 
     /// <summary>
     /// The recording of the match
@@ -55,3 +54,4 @@ public class GetMatchProcessDto {
     /// </summary>
     public required bool PasswordRequired { get; set; }
 }
+

@@ -354,14 +354,10 @@ public class MatchProcess {
             View = View,
         };
 
-        System.Console.WriteLine("fetching");
-
         var script = await _scriptsRepo.GetCoreScript() ??
             throw new CoreFileNotFoundException()
         ;
 
-        System.Console.WriteLine("fetched " + script.Script);
-        
         Match.InitialSetup(script.Script);
         
         await CreatePlayerControllers();
@@ -496,4 +492,10 @@ public class MatchProcess {
     /// </summary>
     /// <returns>True is password is required, else false</returns>
     public bool RequiresPassword() => !string.IsNullOrEmpty(_passHash);
+
+    /// <summary>
+    /// Check whether the match is finished/crashed
+    /// </summary>
+    /// <returns>True if match finished/crashed, else false</returns>
+    public bool IsFinished() => Status == MatchStatus.FINISHED || Status == MatchStatus.CRASHED;    
 }

@@ -23,7 +23,8 @@ public class AutoMapperProfile : Profile {
 
         CreateMap<PostMatchConfigDto, MatchConfigModel>();
         CreateMap<MatchProcess, GetMatchProcessDto>()
-            .ForMember(m => m.PasswordRequired, o => o.MapFrom(m => m.RequiresPassword()));
+            .ForMember(m => m.PasswordRequired, o => o.MapFrom(m => m.RequiresPassword()))
+            .ForPath(m => m.Record.Seed, o => o.MapFrom(m => m.IsFinished() ? m.Record.Seed : -1))
         ;
     }
 }

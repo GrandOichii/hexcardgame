@@ -1,17 +1,39 @@
 namespace ManagerBack.Validators;
 
+
+/// <summary>
+/// Exception that is thrown when attempting to create/use an invalid deck
+/// </summary>
 [Serializable]
 public class InvalidDeckException : Exception
 {
     public InvalidDeckException() { }
     public InvalidDeckException(string message) : base(message) { }
 }
+
+/// <summary>
+/// Deck template validator
+/// </summary>
 public class DeckTemplateValidator : IValidator<DeckTemplate>
 {
+    /// <summary>
+    /// Minimum size of deck names
+    /// </summary>
     private static readonly int MIN_DECK_NAME_SIZE = 3;
+
+    /// <summary>
+    /// Maximum size of deck names
+    /// </summary>
     private static readonly int MAX_DECK_NAME_SIZE = 20;
 
+    /// <summary>
+    /// Card repository
+    /// </summary>
     private readonly ICardRepository _cardRepo;
+
+    /// <summary>
+    /// Card ID validator
+    /// </summary>
     private readonly IValidator<string> _cidValidator;
 
     public DeckTemplateValidator(ICardRepository cardRepo, IValidator<string> cidValidator)

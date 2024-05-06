@@ -1,5 +1,8 @@
 namespace ManagerBack.Validators;
 
+/// <summary>
+/// Exception that is thrown when attempting to create an invalid card
+/// </summary>
 [Serializable]
 public class InvalidCardCreationParametersException : Exception
 {
@@ -7,6 +10,9 @@ public class InvalidCardCreationParametersException : Exception
     public InvalidCardCreationParametersException(string message) : base(message) { }
 }
 
+/// <summary>
+/// Card validator
+/// </summary>
 public class ExpansionCardValidator : IValidator<ExpansionCard>
 {
 

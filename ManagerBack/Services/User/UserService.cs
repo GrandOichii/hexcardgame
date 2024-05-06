@@ -9,12 +9,18 @@ using MongoDB.Driver;
 
 namespace ManagerBack.Services;
 
+/// <summary>
+/// Exception that is thrown when attempting to create a new user with a taken username
+/// </summary>
 [Serializable]
 public class UsernameTakenException : Exception
 {
     public UsernameTakenException(string email) : base("email " + email + " is taken") { }
 }
 
+/// <summary>
+/// Exception that is thrown when failing to login
+/// </summary>
 [Serializable]
 public class InvalidLoginCredentialsException : Exception
 {
@@ -22,18 +28,40 @@ public class InvalidLoginCredentialsException : Exception
     public InvalidLoginCredentialsException(string message) : base(message) { }
 }
 
+/// <summary>
+/// Exception that is thrown when attempting to fetch an unknown user
+/// </summary>
 [Serializable]
 public class UserNotFoundException : Exception
 {
     public UserNotFoundException(string id) : base("user with id " + id + " not found") { }
 }
 
+/// <summary>
+/// Implementation of the IUserService interface, uses an IUserRepository injected object
+/// </summary>
 public class UserService : IUserService
 {
+    /// <summary>
+    /// User respository
+    /// </summary>
     private readonly IUserRepository _userRepo;
+
+    /// <summary>
+    /// Object mapper
+    /// </summary>
     private readonly IMapper _mapper;
+
+    /// <summary>
+    /// Application configuration
+    /// </summary>
     private readonly IConfiguration _configuration;
+
+    /// <summary>
+    /// User data validation
+    /// </summary>
     private readonly IValidator<PostUserDto> _userValidator;
+
     public UserService(IMapper mapper, IConfiguration configuration, IUserRepository userRepo, IValidator<PostUserDto> userValidator)
     {
         _mapper = mapper;
@@ -69,6 +97,11 @@ public class UserService : IUserService
     }
 
 
+    /// <summary>
+    /// Creates a JWT token for the specified user
+    /// </summary>
+    /// <param name="user">User data</param>
+    /// <returns>JWT token</returns>
     private string CreateToken(User user) {
         var claims = new List<Claim>(){
             new(ClaimTypes.NameIdentifier, user.Id!),

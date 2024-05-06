@@ -1,8 +1,32 @@
 namespace ManagerBack.Services;
 
+/// <summary>
+/// Match configuration service
+/// </summary>
 public interface IMatchConfigService {
+    /// <summary>
+    /// Fetches all match configurations
+    /// </summary>
+    /// <returns>Enumerable of all match configurations</returns>
     public Task<IEnumerable<MatchConfigModel>> All();
-    public Task<MatchConfigModel> Create(PostMatchConfigDto config);
+
+    /// <summary>
+    /// Add a new match configuration
+    /// </summary>
+    /// <param name="config">New match configuration data</param>
+    /// <returns>New match configuration</returns>
+    public Task<MatchConfigModel> Add(PostMatchConfigDto config);
+
+    /// <summary>
+    /// Fetches a match configuration by it's ID
+    /// </summary>
+    /// <param name="id">Match configuration ID</param>
+    /// <returns>Fetched match configuration</returns>
     public Task<MatchConfigModel> ById(string id);
+
+    /// <summary>
+    /// Fetches the basic match configuration
+    /// </summary>
+    /// <returns>Basic match configuration</returns>
     public Task<MatchConfigModel> Basic();
 }

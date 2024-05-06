@@ -3,6 +3,9 @@ using AutoMapper;
 
 namespace ManagerBack.Services;
 
+/// <summary>
+/// The exception that is thrown when requesting to fetch an unknown match configuration 
+/// </summary>
 [System.Serializable]
 public class MatchConfigNotFoundException : System.Exception
 {
@@ -10,16 +13,33 @@ public class MatchConfigNotFoundException : System.Exception
     public MatchConfigNotFoundException(string message) : base(message) { }
 }
 
+/// <summary>
+/// The exception that is thrown when requesting to fetch a non-existant basic configuration 
+/// </summary>
 [System.Serializable]
 public class NoBasicMatchConfigException : System.Exception
 {
     public NoBasicMatchConfigException() : base("basic match config not found") { }
 }
 
+/// <summary>
+/// Implementation of the IMatchConfigService interface, uses an IMatchConfigRepository injected object 
+/// </summary>
 public class MatchConfigService : IMatchConfigService
 {
+    /// <summary>
+    /// Match configuration repository
+    /// </summary>
     private readonly IMatchConfigRepository _configRepo;
+
+    /// <summary>
+    /// Object mapper
+    /// </summary>
     private readonly IMapper _mapper;
+
+    /// <summary>
+    /// Match configuration validator
+    /// </summary>
     private readonly IValidator<MatchConfig> _configValidator;
 
     public MatchConfigService(IMatchConfigRepository configRepo, IMapper mapper, IValidator<MatchConfig> configValidator)
@@ -52,7 +72,7 @@ public class MatchConfigService : IMatchConfigService
         return result;
     }
 
-    public async Task<MatchConfigModel> Create(PostMatchConfigDto config)
+    public async Task<MatchConfigModel> Add(PostMatchConfigDto config)
     {
         await _configValidator.Validate(config);
         

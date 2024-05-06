@@ -39,7 +39,7 @@ public class MatchConfigController : ControllerBase {
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] PostMatchConfigDto config) {
         try {
-            var result = await _configService.Create(config);
+            var result = await _configService.Add(config);
             return Ok(result);
         } catch (InvalidMatchConfigCreationParametersException e) {
             return BadRequest(e.Message);

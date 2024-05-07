@@ -49,6 +49,9 @@ public class Program {
         builder.Services.Configure<StoreDatabaseSettings>(
             builder.Configuration.GetSection("Database")
         );
+        builder.Services.Configure<UserValidationSettings>(
+            builder.Configuration.GetSection("UserValidation")
+        );
 
         // Add cache
         builder.Services.AddStackExchangeRedisCache(options => {

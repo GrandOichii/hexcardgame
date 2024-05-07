@@ -1,5 +1,7 @@
 using FluentAssertions;
-using HexCore.GameMatch;
+using ManagerBack.Settings;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace ManagerBack.Tests.Validators;
 
@@ -8,7 +10,16 @@ public class PostUserDtoValidatorTests {
 
     public PostUserDtoValidatorTests()
     {
-        _validator = new();
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        var conf = configuration.GetSection("UserValidation").Get<UserValidationSettings>()!;
+        _validator = new(
+            Options.Create(
+                conf
+            )
+        );
     }
 
     public static IEnumerable<object[]> GoodUserList {
@@ -31,7 +42,7 @@ public class PostUserDtoValidatorTests {
         await act.Should().NotThrowAsync();
     }
 
-   public static IEnumerable<object[]> BadUserList {
+    public static IEnumerable<object[]> BadUserList {
         // TODO add more
         get {
             yield return new object[] { 
@@ -58,10 +69,11 @@ public class PostUserDtoValidatorTests {
                     Password = "password"
                 },
             };
+            
             yield return new object[] { 
                 new PostUserDto {
-                    Username = "usernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusernameusername",
-                    Password = "password"
+                    Username = "username",
+                    Password = "p"
                 },
             };
         }

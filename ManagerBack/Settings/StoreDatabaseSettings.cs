@@ -1,7 +1,7 @@
-namespace ManagerBack;
+namespace ManagerBack.Settings;
 
 /// <summary>
-/// Application settings
+/// Application database settings
 /// </summary>
 public class StoreDatabaseSettings {
     /// <summary>

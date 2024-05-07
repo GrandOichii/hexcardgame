@@ -5,6 +5,7 @@ global using ManagerBack.Extensions;
 global using ManagerBack.Validators;
 global using ManagerBack.Dtos;
 global using ManagerBack.Hubs;
+global using ManagerBack.Settings;
 
 global using HexCore.Cards;
 global using HexCore.Decks;

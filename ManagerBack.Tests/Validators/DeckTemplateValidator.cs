@@ -3,6 +3,9 @@ using FakeItEasy;
 using FluentAssertions;
 using HexCore.Decks;
 using HexCore.GameMatch;
+using ManagerBack.Settings;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace ManagerBack.Tests.Validators;
 
@@ -15,7 +18,16 @@ public class DeckTemplateValidatorTests {
         _cardRepo = A.Fake<ICardRepository>();
         var cidValidator = A.Fake<IValidator<string>>();
         A.CallTo(() => cidValidator.Validate(A<string>._)).DoesNothing();
-        _validator = new(_cardRepo, cidValidator);
+
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        var restrictions = Options.Create(
+            configuration.GetSection("DeckRestrictions").Get<DeckRestrictionSettings>()!
+        );
+
+        _validator = new(_cardRepo, cidValidator, restrictions);
     }
 
     public static IEnumerable<object[]> GoodDeckList {

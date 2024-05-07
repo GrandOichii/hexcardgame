@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Options;
+
 namespace ManagerBack.Validators;
 
 
@@ -17,14 +19,9 @@ public class InvalidDeckException : Exception
 public class DeckTemplateValidator : IValidator<DeckTemplate>
 {
     /// <summary>
-    /// Minimum size of deck names
+    /// Deck restrictions
     /// </summary>
-    private static readonly int MIN_DECK_NAME_SIZE = 3;
-
-    /// <summary>
-    /// Maximum size of deck names
-    /// </summary>
-    private static readonly int MAX_DECK_NAME_SIZE = 20;
+    private readonly IOptions<DeckRestrictionSettings> _restrictions;
 
     /// <summary>
     /// Card repository
@@ -36,10 +33,11 @@ public class DeckTemplateValidator : IValidator<DeckTemplate>
     /// </summary>
     private readonly IValidator<string> _cidValidator;
 
-    public DeckTemplateValidator(ICardRepository cardRepo, IValidator<string> cidValidator)
+    public DeckTemplateValidator(ICardRepository cardRepo, IValidator<string> cidValidator, IOptions<DeckRestrictionSettings> restrictions)
     {
         _cardRepo = cardRepo;
         _cidValidator = cidValidator;
+        _restrictions = restrictions;
     }
 
     public async Task Validate(DeckTemplate deck)
@@ -47,10 +45,10 @@ public class DeckTemplateValidator : IValidator<DeckTemplate>
         var name = deck.GetDescriptor("name");
         if (string.IsNullOrEmpty(name))
             throw new InvalidDeckException("deck name can't be empty");
-        if (name.Length < MIN_DECK_NAME_SIZE)
-            throw new InvalidDeckException($"deck name too short (min: {MIN_DECK_NAME_SIZE})");
-        if (name.Length > MAX_DECK_NAME_SIZE)
-            throw new InvalidDeckException($"deck name too long (min: {MAX_DECK_NAME_SIZE})");
+        if (name.Length < _restrictions.Value.Name.MinLength)
+            throw new InvalidDeckException($"deck name too short (min: {_restrictions.Value.Name.MinLength})");
+        if (name.Length > _restrictions.Value.Name.MaxLength)
+            throw new InvalidDeckException($"deck name too long (min: {_restrictions.Value.Name.MaxLength})");
             
         foreach (var pair in deck.Index) {
             var cid = pair.Key;

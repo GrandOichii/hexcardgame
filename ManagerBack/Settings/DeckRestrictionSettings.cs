@@ -8,4 +8,9 @@ public class DeckRestrictionSettings {
     /// Maximum amount of decks a player can have
     /// </summary>
     public required int MaxDeckCount { get; set; }
+
+    /// <summary>
+    /// Deck name restrictions
+    /// </summary>
+    public required StringRestriction Name { get; set; }
 }

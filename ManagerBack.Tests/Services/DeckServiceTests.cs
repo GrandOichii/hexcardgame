@@ -24,7 +24,7 @@ public class DeckServiceTests {
         _validator = A.Fake<IValidator<DeckTemplate>>();
         _userRepo = A.Fake<IUserRepository>();
 
-        _deckService = new(_deckRepo, _mapper, _cardRepo, _validator, _userRepo);
+        _deckService = new(_deckRepo, _mapper, _validator, _userRepo);
     }
 
     [Fact]
@@ -54,7 +54,7 @@ public class DeckServiceTests {
         A.CallTo(() => _deckRepo.Add(deckModel)).DoesNothing();
 
         // Act
-        var result = await _deckService.Create(userId, deck);
+        var result = await _deckService.Add(userId, deck);
 
         // Assert
         result.Should().BeEquivalentTo(deckModel, opt => opt.Excluding(d => d.OwnerId));
@@ -74,7 +74,7 @@ public class DeckServiceTests {
         // A.CallTo(() => _cardRepo.ByCID("dev::Dub")).Returns(A.Fake<CardModel>());
 
         // Act
-        var act = () => _deckService.Create(userId, deck);
+        var act = () => _deckService.Add(userId, deck);
 
         // Assert
         await act.Should().ThrowAsync<InvalidDeckException>();
@@ -94,7 +94,7 @@ public class DeckServiceTests {
         // A.CallTo(() => _cardRepo.ByCID("dev::Dub")).Returns(A.Fake<CardModel>());
 
         // Act
-        var act = () => _deckService.Create(userId, deck);
+        var act = () => _deckService.Add(userId, deck);
 
         // Assert
         await act.Should().ThrowAsync<InvalidCIDException>();
@@ -113,7 +113,7 @@ public class DeckServiceTests {
         // A.CallTo(() => _cardRepo.ByCID("dev::Dub")).Returns(A.Fake<CardModel>());
 
         // Act
-        var act = () => _deckService.Create(userId, deck);
+        var act = () => _deckService.Add(userId, deck);
 
         // Assert
         await act.Should().ThrowAsync<CardNotFoundException>();
@@ -131,7 +131,7 @@ public class DeckServiceTests {
         A.CallTo(() => _deckRepo.Add(deckModel)).DoesNothing();
 
         // Act
-        var act = () => _deckService.Create(userId, deck);
+        var act = () => _deckService.Add(userId, deck);
 
         // Assert
         await act.Should().ThrowAsync<UserNotFoundException>();

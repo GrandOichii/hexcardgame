@@ -85,7 +85,7 @@ public class CardControllerTests {
     public async Task ShouldCreate() {
         // Arrange
         var card = A.Fake<ExpansionCard>();
-        A.CallTo(() => _cardService.Create(card)).Returns(card);
+        A.CallTo(() => _cardService.Add(card)).Returns(card);
 
         // Act
         var result = await _cardController.Create(card);
@@ -106,7 +106,7 @@ public class CardControllerTests {
     public async Task ShouldNotCreate(Exception e) {
         // Arrange
         var card = A.Fake<ExpansionCard>();
-        A.CallTo(() => _cardService.Create(card))
+        A.CallTo(() => _cardService.Add(card))
             .Throws(e)
         ;
 

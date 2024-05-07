@@ -44,7 +44,7 @@ public class MatchConfigServiceTests {
         A.CallTo(() => _configRepo.Add(configModel)).DoesNothing();
 
         // Act
-        var result = await _configService.Create(config);
+        var result = await _configService.Add(config);
 
         // Assert
         result.Should().BeEquivalentTo(configModel);
@@ -58,7 +58,7 @@ public class MatchConfigServiceTests {
         A.CallTo(() => _validator.Validate(config)).Throws<InvalidMatchConfigCreationParametersException>();
 
         // Act
-        var act = () => _configService.Create(config);
+        var act = () => _configService.Add(config);
 
         // Assert
         await act.Should().ThrowAsync<InvalidMatchConfigCreationParametersException>();

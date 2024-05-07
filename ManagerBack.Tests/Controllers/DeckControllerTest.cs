@@ -49,7 +49,7 @@ public class DeckControllerTests {
         var userId = "1";
         var newDeck = A.Fake<PostDeckDto>();
         AddUser(userId, "user", false);
-        A.CallTo(() => _deckService.Create(userId, newDeck))
+        A.CallTo(() => _deckService.Add(userId, newDeck))
             .Returns(A.Fake<DeckModel>())
         ;
 
@@ -76,7 +76,7 @@ public class DeckControllerTests {
         var userId = "1";
         var newDeck = A.Fake<PostDeckDto>();
         AddUser(userId, "user", false);
-        A.CallTo(() => _deckService.Create(userId, newDeck))
+        A.CallTo(() => _deckService.Add(userId, newDeck))
             .Throws(e)
         ;
 
@@ -93,7 +93,7 @@ public class DeckControllerTests {
         var userId = "1";
         var newDeck = A.Fake<PostDeckDto>();
         AddUser(userId, "user", false);
-        A.CallTo(() => _deckService.Create(userId, newDeck))
+        A.CallTo(() => _deckService.Add(userId, newDeck))
             .Throws(new CardNotFoundException(""))
         ;
 
@@ -152,7 +152,7 @@ public class DeckControllerTests {
         var userId = "1";
         var newDeck = A.Fake<PostDeckDto>();
         AddUser(userId, "user", false);
-        A.CallTo(() => _deckService.Create(userId, newDeck))
+        A.CallTo(() => _deckService.Add(userId, newDeck))
             .Returns(A.Fake<DeckModel>())
         ;
 

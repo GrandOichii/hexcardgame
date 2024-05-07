@@ -71,7 +71,7 @@ public class CardServiceTests {
         A.CallTo(() => _cardRepo.Add(card)).DoesNothing();
 
         // Act
-        var result = await _cardService.Create(card);
+        var result = await _cardService.Add(card);
 
         // Assert
         result.Should().Be(card);
@@ -87,7 +87,7 @@ public class CardServiceTests {
         A.CallTo(() => _cardRepo.Add(card)).DoesNothing();
 
         // Act
-        var act = () => _cardService.Create(card);
+        var act = () => _cardService.Add(card);
 
         // Assert
         await act.Should().ThrowAsync<InvalidCardCreationParametersException>();
@@ -101,7 +101,7 @@ public class CardServiceTests {
         A.CallTo(() => _cardRepo.ByCID(card2.Expansion + "::" + card2.Name)).Returns(card1);
 
         // Act
-        var act = () => _cardService.Create(card2);
+        var act = () => _cardService.Add(card2);
 
         // Assert
         await act.Should().ThrowAsync<CIDTakenException>();

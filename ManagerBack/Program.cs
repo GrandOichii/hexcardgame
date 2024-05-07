@@ -52,6 +52,9 @@ public class Program {
         builder.Services.Configure<UserValidationSettings>(
             builder.Configuration.GetSection("UserValidation")
         );
+        builder.Services.Configure<DeckRestrictionSettings>(
+            builder.Configuration.GetSection("DeckRestrictions")
+        );
 
         // Add cache
         builder.Services.AddStackExchangeRedisCache(options => {

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace ManagerBack.Services;
@@ -57,10 +58,7 @@ public class DeckAmountLimitException : Exception
 /// </summary>
 public partial class DeckService : IDeckService
 {
-    /// <summary>
-    /// The limit for the amount of decks a user can have
-    /// </summary>
-    private static readonly int MAX_DECK_COUNT = 20;
+    private readonly IOptions<DeckRestrictionSettings> _restrictions;
 
     /// <summary>
     /// Mapper object
@@ -82,12 +80,13 @@ public partial class DeckService : IDeckService
     /// </summary>
     private readonly IUserRepository _userRepository;
 
-    public DeckService(IDeckRepository deckRepo, IMapper mapper, IValidator<DeckTemplate> deckValidator, IUserRepository userRepository)
+    public DeckService(IDeckRepository deckRepo, IMapper mapper, IValidator<DeckTemplate> deckValidator, IUserRepository userRepository, IOptions<DeckRestrictionSettings> restrictions)
     {
         _deckRepo = deckRepo;
         _mapper = mapper;
         _deckValidator = deckValidator;
         _userRepository = userRepository;
+        _restrictions = restrictions;
     }
 
     public async Task<IEnumerable<DeckModel>> All(string userId)
@@ -103,8 +102,8 @@ public partial class DeckService : IDeckService
             throw new UserNotFoundException($"no user with id {userId}");
         
         var deckCount = await GetDeckCount(userId);
-        if (deckCount >= MAX_DECK_COUNT) {
-            throw new DeckAmountLimitException($"can't go over the deck limit ({MAX_DECK_COUNT})");
+        if (deckCount >= _restrictions.Value.MaxDeckCount) {
+            throw new DeckAmountLimitException($"can't go over the deck limit ({_restrictions.Value.MaxDeckCount})");
         }
         var newDeck = _mapper.Map<DeckModel>(deck);
         newDeck.OwnerId = userId;

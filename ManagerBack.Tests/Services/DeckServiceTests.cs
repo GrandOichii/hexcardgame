@@ -2,7 +2,10 @@ using AutoMapper;
 using FakeItEasy;
 using FluentAssertions;
 using HexCore.Decks;
+using ManagerBack.Settings;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace ManagerBack.Tests.Services;
 
@@ -24,7 +27,15 @@ public class DeckServiceTests {
         _validator = A.Fake<IValidator<DeckTemplate>>();
         _userRepo = A.Fake<IUserRepository>();
 
-        _deckService = new(_deckRepo, _mapper, _validator, _userRepo);
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        var restrictions = Options.Create(
+            configuration.GetSection("DeckRestrictions").Get<DeckRestrictionSettings>()!
+        );
+
+        _deckService = new(_deckRepo, _mapper, _validator, _userRepo, restrictions);
     }
 
     [Fact]

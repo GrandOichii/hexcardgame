@@ -84,7 +84,9 @@ The client is built using the **Godot 4** game engine. To run, open the HexClien
 ### Match example
 ![alt text](https://github.com/GrandOichii/hexcardgame/blob/master/screenshots/match.png)
 <!-- ![alt text](screenshots/match.png) -->
+## Card editing (as administrator)
 ![alt text](https://github.com/GrandOichii/hexcardgame/blob/master/screenshots/card-edit.png)
 <!-- ![alt text](screenshots/card-edit.png) -->
+## Deck editing
 ![alt text](https://github.com/GrandOichii/hexcardgame/blob/master/screenshots/deck-edit.png)
 <!-- ![alt text](screenshots/deck-edit.png) -->

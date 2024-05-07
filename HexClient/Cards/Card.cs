@@ -6,15 +6,25 @@ using System.Text.RegularExpressions;
 
 namespace HexClient.Cards;
 
+/// <summary>
+/// Control node, displays a card
+/// </summary>
 public partial class Card : Control
 {
+	/// <summary>
+	/// Keyword to bbcode color mapping
+	/// </summary>
 	private readonly Dictionary<string, string> KEYWORD_COLOR_MAPPING = new() {
 		{ "Fast", "plum" },
 		{ "Vile", "darkred" },
 		{ "Virtuous", "lightskyblue" },
 	};
+
 	#region Exports
 	
+	/// <summary>
+	/// Export value, represents the color of the border when card is focused
+	/// </summary>
 	[Export]
 	public Color FocusColor { get; set; }
 	
@@ -22,25 +32,86 @@ public partial class Card : Control
 
 	#region Nodes
 	
+	/// <summary>
+	/// Background node
+	/// </summary>
 	public PanelContainer BgNode { get; private set; }
+
+	/// <summary>
+	/// Foreground node
+	/// </summary>
 	public PanelContainer FgNode { get; private set; }
+
+	/// <summary>
+	/// Name label node
+	/// </summary>
 	public Label NameLabelNode { get; private set; }
+
+	/// <summary>
+	/// Cost label node
+	/// </summary>
 	public Label CostLabelNode { get; private set; }
+
+	/// <summary>
+	/// Card image node
+	/// </summary>
 	public TextureRect ImageNode { get; private set; }
+
+	/// <summary>
+	/// Card type node
+	/// </summary>
 	public Label TypeLabelNode { get; private set; }
+
+	/// <summary>
+	/// Bottom information node of the card
+	/// </summary>
 	public Control BottomNode { get; private set; }
+
+	/// <summary>
+	/// Card power label node
+	/// </summary>
 	public Label PowerLabelNode { get; private set; }
+
+	/// <summary>
+	/// Card life label node
+	/// </summary>
 	public Label LifeLabelNode { get; private set; }
+
+	/// <summary>
+	/// Card defence label node
+	/// </summary>
 	public Label DefenceLabelNode { get; private set; }
+
+	/// <summary>
+	/// Card text label node
+	/// </summary>
 	public RichTextLabel TextLabelNode { get; private set; }
+
+	/// <summary>
+	/// Power-life separator node
+	/// </summary>
 	public Control PLSeparatorNode { get; private set; }
 	
 	#endregion
 
+	/// <summary>
+	/// Default background color
+	/// </summary>
 	private Color _defaultBgColor;
+
+	/// <summary>
+	/// Match card state (for match cards)
+	/// </summary>
 	public HexStates.MatchCardState? State { get; private set; }
+
+	/// <summary>
+	/// Card state (for general cards)
+	/// </summary>
 	public HexCore.Cards.Card CardState { get; private set; }
 
+	/// <summary>
+	/// Flag for showing card match ID
+	/// </summary>
 	public bool ShowMID { get; private set; } = false;
 
 	public override void _Ready()
@@ -68,12 +139,19 @@ public partial class Card : Control
 		_defaultBgColor = BgColor;
 	}
 
+	/// <summary>
+	/// Function to be executed before loading a new state
+	/// </summary>
 	private void PreLoad() {
 		BottomNode.Show();
 		PLSeparatorNode.Show();
 		PowerLabelNode.Show();
 	}
 
+	/// <summary>
+	/// Sets the type of the card
+	/// </summary>
+	/// <param name="type">Card type</param>
 	private void SetType(string type) {
 		TypeLabelNode.Text = type;
 
@@ -85,6 +163,10 @@ public partial class Card : Control
 		}
 	}
 
+	/// <summary>
+	/// Loads the match card state
+	/// </summary>
+	/// <param name="cardState">Match card state</param>
 	public void Load(HexStates.MatchCardState cardState) {
 		State = cardState;
 		CardState = null;
@@ -102,6 +184,10 @@ public partial class Card : Control
 		SetType(cardState.Type);
 	}
 
+	/// <summary>
+	/// Loads the general card info
+	/// </summary>
+	/// <param name="card">Card info</param>
 	public void Load(HexCore.Cards.Card card) {
 		CardState = card;
 		State = null;
@@ -117,6 +203,11 @@ public partial class Card : Control
 		SetType(card.Type);
 	}
 
+	/// <summary>
+	/// Sets the card text
+	/// </summary>
+	/// <param name="name">Card name</param>
+	/// <param name="text">Card text</param>
 	private void SetText(string name, string text) {
 		foreach (var pair in KEYWORD_COLOR_MAPPING) {
 			var keyword = pair.Key;
@@ -128,6 +219,9 @@ public partial class Card : Control
 
 	}
 
+	/// <summary>
+	/// Background color
+	/// </summary>
 	public Color BgColor {
 		get => BgStyle.BgColor;
 		set {
@@ -135,16 +229,29 @@ public partial class Card : Control
 		}
 	}
 
+	/// <summary>
+	/// Background style
+	/// </summary>
 	private StyleBoxFlat BgStyle => BgNode.Get("theme_override_styles/panel").As<StyleBoxFlat>();
 
+	/// <summary>
+	/// Unfocuses the card
+	/// </summary>
 	public void Unfocus() {
 		CreateTween().TweenProperty(this, "BgColor", _defaultBgColor, .1f);
 	}
 
+	/// <summary>
+	/// Focuses on the card
+	/// </summary>
 	public void Focus() {
 		CreateTween().TweenProperty(this, "BgColor", FocusColor, .1f);
 	}
 	
+	/// <summary>
+	/// Setter for the ShowMID flag
+	/// </summary>
+	/// <param name="value">new value</param>
 	public void SetShowMID(bool value) {
 		ShowMID = value;
 

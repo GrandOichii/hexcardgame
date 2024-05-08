@@ -175,6 +175,8 @@ public class MatchService : IMatchService
 
     public async Task Remove(Func<MatchProcess, bool> filter)
     {
+        // !FIXME is this thread safe?
+        
         var newMatches = new Dictionary<Guid, MatchProcess>();
         foreach (var pair in _matches) {
             var m = pair.Value;

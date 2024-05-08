@@ -1,5 +1,6 @@
 using System.Text;
 using ManagerBack.Hubs;
+using ManagerBack.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -12,6 +13,8 @@ public class Program {
 
         // Add services to the container.
         // builder.Services.AddSignalR();
+        // Add backgrond tasks
+        builder.Services.AddHostedService<ClearMatchesTask>();
         
         // Add service layer
         builder.Services.AddScoped<ICardService, CardService>();
@@ -54,6 +57,9 @@ public class Program {
         );
         builder.Services.Configure<DeckRestrictionSettings>(
             builder.Configuration.GetSection("DeckRestrictions")
+        );
+        builder.Services.Configure<ClearMatchesSettings>(
+            builder.Configuration.GetSection("MatchClearing")
         );
 
         // Add cache

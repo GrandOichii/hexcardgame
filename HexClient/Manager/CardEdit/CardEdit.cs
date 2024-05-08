@@ -119,11 +119,11 @@ public partial class CardEdit : Control
 
 		foreach (var pair in TYPE_MAP) {
 			var type = pair.Key;
-            var check = new CheckBox
-            {
+			var check = new CheckBox
+			{
 				Text = type,
-                SizeFlagsHorizontal = SizeFlags.Expand,
-            };
+				SizeFlagsHorizontal = SizeFlags.Expand,
+			};
 			check.SetMeta("Value", type);
 
 			TypeChecksContainerNode.AddChild(check);
@@ -162,7 +162,7 @@ public partial class CardEdit : Control
 				};
 				subcheck.Visible = false;
 			}
-        }
+		}
 	}
 
 	#nullable enable

@@ -143,6 +143,7 @@ public class MatchService : IMatchService
         ;
     }
 
+    private readonly object _matchCreateLock = new();
     public async Task<GetMatchProcessDto> Create(string userId, MatchProcessConfig config)
     {
         var mConfig = await _configRepo.ById(config.MatchConfigId)
@@ -155,7 +156,10 @@ public class MatchService : IMatchService
 
         var match = new MatchProcess(userId, config, mConfig, _cardMaster, this, _scriptsRepo);
         match.Changed += OnMatchProcessChanged;
-        _matches.Add(match.Id, match);
+
+        lock (_matchCreateLock) {
+            _matches.Add(match.Id, match);
+        }
 
         _ = match.InitialSetup();
         await ServiceStatusUpdated(match);
@@ -175,16 +179,16 @@ public class MatchService : IMatchService
 
     public async Task Remove(Func<MatchProcess, bool> filter)
     {
-        // !FIXME is this thread safe?
-        
-        var newMatches = new Dictionary<Guid, MatchProcess>();
-        foreach (var pair in _matches) {
-            var m = pair.Value;
-            if (filter.Invoke(m)) continue;
+        lock (_matchCreateLock) {
+            var newMatches = new Dictionary<Guid, MatchProcess>();
+            foreach (var pair in _matches) {
+                var m = pair.Value;
+                if (filter.Invoke(m)) continue;
 
-            newMatches.Add(pair.Key, m);
+                newMatches.Add(pair.Key, m);
+            }
+            _matches = newMatches;
         }
-        _matches = newMatches;
 
         var data = JsonSerializer.Serialize(_matches.Values.Select(_mapper.Map<GetMatchProcessDto>), Common.JSON_SERIALIZATION_OPTIONS);
         await _liveHubContext.Clients.All.SendAsync("UpdateAll", data); 

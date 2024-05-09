@@ -4,6 +4,7 @@ using IdentityModel.Client;
 using ManagerBack.Tests.Mocks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace ManagerBack.Tests.Endpoints;
 
@@ -19,6 +20,8 @@ public class ExpansionEndpointTests
                 services.AddSingleton<IDeckRepository, FakeDeckRepository>();
                 services.AddSingleton<ICardRepository, FakeCardRepository>();
                 services.AddSingleton<IMatchConfigRepository, FakeMatchConfigRepository>();
+                services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
+
             });
         });
     }

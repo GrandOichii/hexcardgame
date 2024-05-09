@@ -1,8 +1,11 @@
 using System.Net.Http.Json;
 using FluentAssertions;
 using ManagerBack.Tests.Mocks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace ManagerBack.Tests.Endpoints;
 
@@ -18,6 +21,8 @@ public class AuthEndpointTests
                 services.AddSingleton<IUserRepository, FakeUserRepository>();
                 services.AddSingleton<IDeckRepository, FakeDeckRepository>();
                 services.AddSingleton<IMatchConfigRepository, FakeMatchConfigRepository>();
+                services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
+
             });
         });
     }

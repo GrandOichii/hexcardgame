@@ -26,7 +26,7 @@ public class UserServiceTests {
             .AddJsonFile("appsettings.json")
             .Build();
         // configuration.
-        _userService = new(_mapper, configuration, _userRepo, _validator);
+        _userService = new(_mapper, configuration, _userRepo, _validator, A.Fake<ILogger<UserService>>());
     }
 
     [Fact]

@@ -19,7 +19,7 @@ public class MatchConfigServiceTests {
         _mapper = new Mapper(mC);
         _configRepo = A.Fake<IMatchConfigRepository>();
         _validator = A.Fake<IValidator<MatchConfig>>();
-        _configService = new(_configRepo, _mapper, _validator);
+        _configService = new(_configRepo, _mapper, _validator, A.Fake<ILogger<MatchConfigService>>());
     }
 
     [Fact]

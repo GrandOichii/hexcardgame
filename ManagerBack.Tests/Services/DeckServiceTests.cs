@@ -35,7 +35,7 @@ public class DeckServiceTests {
             configuration.GetSection("DeckRestrictions").Get<DeckRestrictionSettings>()!
         );
 
-        _deckService = new(_deckRepo, _mapper, _validator, _userRepo, restrictions);
+        _deckService = new(_deckRepo, _mapper, _validator, _userRepo, restrictions, A.Fake<ILogger<DeckService>>());
     }
 
     [Fact]

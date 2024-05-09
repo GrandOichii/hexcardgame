@@ -18,7 +18,7 @@ public class CardServiceTests {
         _cardRepo = A.Fake<ICardRepository>();
         _validator = A.Fake<IValidator<ExpansionCard>>();
 
-        _cardService = new(mapper, _cardRepo, new CIDValidator(), _validator);
+        _cardService = new(mapper, _cardRepo, new CIDValidator(), _validator, A.Fake<ILogger<CardService>>());
     }
 
     [Fact]

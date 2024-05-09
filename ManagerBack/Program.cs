@@ -117,14 +117,17 @@ public class Program {
 
         app.UseSerilogRequestLogging();
 
-        app.UseHttpsRedirection();
+        // TODO back
+        // app.UseHttpsRedirection();
 
         app.UseAuthorization();
         
+        // SignalR hubs
         app.MapHub<MatchLiveHub>("/api/v1/match/live");
         app.MapHub<MatchViewHub>("/api/v1/match/watch");
         app.MapHub<MatchProcessHub>("/api/v1/match/view");
 
+        // Add WebSockets
         app.UseWebSockets(new() {
             KeepAliveInterval = TimeSpan.FromMinutes(10)
         });

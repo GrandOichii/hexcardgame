@@ -13,3 +13,5 @@ global using HexCore.GameMatch;
 global using HexCore.GameMatch.Players;
 global using HexCore.GameMatch.Players.Controllers;
 global using HexCore.Cards.Masters;
+
+global using Serilog;

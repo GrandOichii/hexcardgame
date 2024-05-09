@@ -3,6 +3,7 @@ using ManagerBack.Hubs;
 using ManagerBack.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace ManagerBack;
@@ -92,6 +93,19 @@ public class Program {
         // Add mapping profiles
         builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
+        // Add logger
+        // Initial bootstrap logger, will be replaced by the AddSerilog logger upon setup
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateBootstrapLogger();
+
+        var logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration)
+            .CreateLogger()
+        ;
+        builder.Logging.AddSerilog(logger);
+        builder.Host.UseSerilog();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -100,6 +114,8 @@ public class Program {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        app.UseSerilogRequestLogging();
 
         app.UseHttpsRedirection();
 

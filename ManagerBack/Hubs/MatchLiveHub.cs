@@ -31,4 +31,18 @@ public sealed class MatchLiveHub : Hub {
         }
     }
 
+    public override async Task OnConnectedAsync()
+    {
+        await base.OnConnectedAsync();
+
+        Log.Information("Add new match table watcher");
+    }
+
+    public override async Task OnDisconnectedAsync(Exception? exception)
+    {
+        await base.OnDisconnectedAsync(exception);
+
+        Log.Information("Table watcher disconnected");
+    }
+
 }

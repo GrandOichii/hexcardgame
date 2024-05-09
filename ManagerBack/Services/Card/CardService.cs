@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using AutoMapper;
 using ManagerBack.Controllers;
+using Serilog;
 
 namespace ManagerBack.Services;
 
@@ -47,12 +48,18 @@ public partial class CardService : ICardService
     /// </summary>
     private readonly IValidator<ExpansionCard> _cardValidator;
 
-    public CardService(IMapper mapper, ICardRepository cardRepo, IValidator<string> cidValidator, IValidator<ExpansionCard> cardValidator)
+    /// <summary>
+    /// Logger
+    /// </summary>
+    private readonly ILogger<CardService> _logger;
+
+    public CardService(IMapper mapper, ICardRepository cardRepo, IValidator<string> cidValidator, IValidator<ExpansionCard> cardValidator, ILogger<CardService> logger)
     {
         _cardRepo = cardRepo;
         _mapper = mapper;
         _cidValidator = cidValidator;
         _cardValidator = cardValidator;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<ExpansionCard>> All()
@@ -83,6 +90,9 @@ public partial class CardService : ICardService
         await _cardValidator.Validate(card);
 
         await _cardRepo.Add(_mapper.Map<CardModel>(card));
+
+        _logger.LogInformation("Created new card {{@cid}}", card.GetCID());
+
         return card;
     }
 

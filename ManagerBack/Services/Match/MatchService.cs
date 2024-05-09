@@ -87,7 +87,9 @@ public class MatchService : IMatchService
     /// </summary>
     private readonly IMatchScriptsRepository _scriptsRepo;
 
-    public MatchService(IMapper mapper, IHubContext<MatchLiveHub> hubContext, IHubContext<MatchViewHub> viewHubContext, IMatchConfigRepository configRepo, ICardRepository cardRepo, IHubContext<MatchProcessHub> matchProcessHub, IUserRepository userRepo, IMatchScriptsRepository scriptsRepo)
+    private readonly ILogger<MatchService> _logger;
+
+    public MatchService(IMapper mapper, IHubContext<MatchLiveHub> hubContext, IHubContext<MatchViewHub> viewHubContext, IMatchConfigRepository configRepo, ICardRepository cardRepo, IHubContext<MatchProcessHub> matchProcessHub, IUserRepository userRepo, IMatchScriptsRepository scriptsRepo, ILogger<MatchService> logger)
     {
         _mapper = mapper;
         _liveHubContext = hubContext;
@@ -97,6 +99,7 @@ public class MatchService : IMatchService
         _matchProcessHub = matchProcessHub;
         _userRepo = userRepo;
         _scriptsRepo = scriptsRepo;
+        _logger = logger;
     }
 
     /// <summary>
@@ -164,6 +167,8 @@ public class MatchService : IMatchService
         _ = match.InitialSetup();
         await ServiceStatusUpdated(match);
 
+        _logger.LogInformation("Create new match by user {@userId}", userId);
+
         return _mapper.Map<GetMatchProcessDto>(
             match
         );
@@ -227,6 +232,7 @@ public class MatchService : IMatchService
 
     public async Task WSConnect(WebSocketManager manager, string userId, string matchId)
     {
+        _logger.LogInformation("Request to connect to match {@matchId} by user {@userId} using WebSocket connection", matchId, userId);
         var match = await GetMatch(matchId);
 
         if (!match.CanConnect())

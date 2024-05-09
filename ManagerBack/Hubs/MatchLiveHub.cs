@@ -15,9 +15,15 @@ public sealed class MatchLiveHub : Hub {
     /// </summary>
     private readonly IMatchService _matchService;
 
-    public MatchLiveHub(IMatchService matchService)
+    /// <summary>
+    /// Logger
+    /// </summary>
+    private readonly ILogger<MatchLiveHub> _logger;
+
+    public MatchLiveHub(IMatchService matchService, ILogger<MatchLiveHub> logger)
     {
         _matchService = matchService;
+        _logger = logger;
     }
 
     /// <summary>
@@ -35,14 +41,14 @@ public sealed class MatchLiveHub : Hub {
     {
         await base.OnConnectedAsync();
 
-        Log.Information("Add new match table watcher");
+        _logger.LogInformation("Add new match table watcher");
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         await base.OnDisconnectedAsync(exception);
 
-        Log.Information("Table watcher disconnected");
+        _logger.LogInformation("Table watcher disconnected");
     }
 
 }

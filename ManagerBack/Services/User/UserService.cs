@@ -62,12 +62,18 @@ public class UserService : IUserService
     /// </summary>
     private readonly IValidator<PostUserDto> _userValidator;
 
-    public UserService(IMapper mapper, IConfiguration configuration, IUserRepository userRepo, IValidator<PostUserDto> userValidator)
+    /// <summary>
+    /// Logger
+    /// </summary>
+    private readonly ILogger<UserService> _logger;
+
+    public UserService(IMapper mapper, IConfiguration configuration, IUserRepository userRepo, IValidator<PostUserDto> userValidator, ILogger<UserService> logger)
     {
         _mapper = mapper;
         _configuration = configuration;
         _userRepo = userRepo;
         _userValidator = userValidator;
+        _logger = logger;
     }
 
     public async Task<GetUserDto> Register(PostUserDto user)
@@ -79,6 +85,8 @@ public class UserService : IUserService
 
         var result = _mapper.Map<User>(user);
         await _userRepo.Add(result);
+
+        _logger.LogInformation("Register new user {@username}", user.Username);
 
         return _mapper.Map<GetUserDto>(result);
     }

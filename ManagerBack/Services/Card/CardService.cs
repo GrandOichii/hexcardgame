@@ -91,7 +91,7 @@ public partial class CardService : ICardService
 
         await _cardRepo.Add(_mapper.Map<CardModel>(card));
 
-        _logger.LogInformation("Created new card {{@cid}}", card.GetCID());
+        _logger.LogInformation("Created new card {@cid}", card.GetCID());
 
         return card;
     }
@@ -101,6 +101,8 @@ public partial class CardService : ICardService
         var deletedCount = await _cardRepo.Delete(cid);
         if (deletedCount != 1) 
             throw new CardNotFoundException("no card with cid " + cid);
+
+        _logger.LogInformation("Deleted card {@cid}", cid);
     }
 
     public async Task<IEnumerable<ExpansionCard>> Query(CardQuery query)
@@ -115,6 +117,7 @@ public partial class CardService : ICardService
         var count = await _cardRepo.Update(_mapper.Map<CardModel>(card));
         if (count == 0) 
             throw new CardNotFoundException("no card with cid " + card.GetCID());
-        
+
+        _logger.LogInformation("Updated card {@cid}", card.GetCID());
     }
 }

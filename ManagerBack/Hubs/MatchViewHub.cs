@@ -12,9 +12,12 @@ public class MatchViewHub : Hub {
     /// </summary>
     private readonly IMatchService _matchService;
 
-    public MatchViewHub(IMatchService matchService)
+    private readonly ILogger<MatchViewHub> _logger;
+
+    public MatchViewHub(IMatchService matchService, ILogger<MatchViewHub> logger)
     {
         _matchService = matchService;
+        _logger = logger;
     }
 
     /// <summary>
@@ -47,6 +50,9 @@ public class MatchViewHub : Hub {
 
         await RemoveFromAll(Context.ConnectionId);
         await Groups.AddToGroupAsync(Context.ConnectionId, ToGroupName(matchId));
+
+        _logger.LogInformation("Add {@connection} to watcher list of match {@matchId}", Context.ConnectionId, matchId);
+
         if (match.Status != MatchStatus.IN_PROGRESS) {
             return;
         }

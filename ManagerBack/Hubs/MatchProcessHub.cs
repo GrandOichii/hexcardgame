@@ -15,9 +15,15 @@ public sealed class MatchProcessHub : Hub {
     /// </summary>
     private readonly IMatchService _matchService;
 
-    public MatchProcessHub(IMatchService matchService)
+    /// <summary>
+    /// Logger
+    /// </summary>
+    private readonly ILogger<MatchProcessHub> _logger;
+
+    public MatchProcessHub(IMatchService matchService, ILogger<MatchProcessHub> logger)
     {
         _matchService = matchService;
+        _logger = logger;
     }
 
     /// <summary>
@@ -25,6 +31,7 @@ public sealed class MatchProcessHub : Hub {
     /// </summary>
     /// <param name="matchId">Match process ID</param>
     public async Task Connect(string matchId) {
+        _logger.LogInformation("Connection {@connection} requested to view match process {@matchId}", Context.ConnectionId, matchId);
         await _matchService.RegisterWatcher(matchId, Context.ConnectionId);
     }
 }

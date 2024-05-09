@@ -42,11 +42,17 @@ public class MatchConfigService : IMatchConfigService
     /// </summary>
     private readonly IValidator<MatchConfig> _configValidator;
 
-    public MatchConfigService(IMatchConfigRepository configRepo, IMapper mapper, IValidator<MatchConfig> configValidator)
+    /// <summary>
+    /// Logger
+    /// </summary>
+    private readonly ILogger<MatchConfigService> _logger;
+
+    public MatchConfigService(IMatchConfigRepository configRepo, IMapper mapper, IValidator<MatchConfig> configValidator, ILogger<MatchConfigService> logger)
     {
         _configRepo = configRepo;
         _mapper = mapper;
         _configValidator = configValidator;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<MatchConfigModel>> All()
@@ -78,6 +84,9 @@ public class MatchConfigService : IMatchConfigService
         
         var newConfig = _mapper.Map<MatchConfigModel>(config);
         await _configRepo.Add(newConfig);
+
+        _logger.LogInformation("Create new match configuration {id}", newConfig.Id);
+
         return newConfig;   
     }
 }

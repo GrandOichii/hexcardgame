@@ -23,10 +23,16 @@ public class ClearMatchesTask : IHostedService
     /// </summary>
     private readonly IMatchService _matchService;
 
-    public ClearMatchesTask(IOptions<ClearMatchesSettings> settings, IMatchService matchService)
+    /// <summary>
+    /// Logger
+    /// </summary>
+    private readonly ILogger<ClearMatchesTask> _logger;
+
+    public ClearMatchesTask(IOptions<ClearMatchesSettings> settings, IMatchService matchService, ILogger<ClearMatchesTask> logger)
     {
         _settings = settings;
         _matchService = matchService;
+        _logger = logger;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -47,6 +53,8 @@ public class ClearMatchesTask : IHostedService
             (_settings.Value.ClearFinished && match.Status == MatchStatus.FINISHED) ||
             (_settings.Value.ClearCrashed && match.Status == MatchStatus.CRASHED)
         );
+
+        _logger.LogInformation("Clear matches (Finished: {@finished}; Crashed: {@crashed})", _settings.Value.ClearFinished, _settings.Value.ClearCrashed);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

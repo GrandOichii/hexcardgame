@@ -80,13 +80,16 @@ public partial class DeckService : IDeckService
     /// </summary>
     private readonly IUserRepository _userRepository;
 
-    public DeckService(IDeckRepository deckRepo, IMapper mapper, IValidator<DeckTemplate> deckValidator, IUserRepository userRepository, IOptions<DeckRestrictionSettings> restrictions)
+    private readonly ILogger<DeckService> _logger;
+
+    public DeckService(IDeckRepository deckRepo, IMapper mapper, IValidator<DeckTemplate> deckValidator, IUserRepository userRepository, IOptions<DeckRestrictionSettings> restrictions, ILogger<DeckService> logger)
     {
         _deckRepo = deckRepo;
         _mapper = mapper;
         _deckValidator = deckValidator;
         _userRepository = userRepository;
         _restrictions = restrictions;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<DeckModel>> All(string userId)
@@ -111,6 +114,9 @@ public partial class DeckService : IDeckService
         await _deckValidator.Validate(deck.ToDeckTemplate());
 
         await _deckRepo.Add(newDeck);
+
+        _logger.LogInformation("Add new deck {@deckId} to user {@userId}", newDeck.Id, userId);
+
         return newDeck;
     }
 
@@ -130,6 +136,8 @@ public partial class DeckService : IDeckService
         if (count == 0)
             // * shouldn't happen
             throw new DeckDeletionException($"failed to delete deck with id {deckId}");
+
+        _logger.LogInformation("Delete deck {@deckId} from user {@userId}", deckId, userId);
     }
 
     public async Task<DeckModel> Update(string userId, string deckId, PostDeckDto deck)
@@ -152,9 +160,16 @@ public partial class DeckService : IDeckService
             // * shouldn't happen
             throw new DeckUpdateException($"failed to update deck with id {deckId}");
 
+        _logger.LogInformation("Update deck {@deckId} of user {@userId}", newDeck.Id, userId);
+
         return newDeck;
     }
 
+    /// <summary>
+    /// Counts the amount of decks a user has
+    /// </summary>
+    /// <param name="userId">User ID</param>
+    /// <returns>Number of decks the user has</returns>
     private async Task<int> GetDeckCount(string userId) {
         var decks = await _deckRepo.Filter(d => d.OwnerId == userId);
         return decks.Count();

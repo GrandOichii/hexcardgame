@@ -76,18 +76,16 @@ public class MatchConfigController : ControllerBase {
         }
     }
 
-    // TODO add update endpoint
-    // [Authorize(Roles = "Admin")]
-    // [HttpPut]
-    // public async Task<IActionResult> Update([FromBody] ExpansionCard card) {
-    //     try {
-    //         await _configService.Update(card);
-    //         return Ok();
-    //     } catch (CardNotFoundException e) {
-    //         return BadRequest(e.Message);
-    //     } catch (InvalidCardCreationParametersException e) {
-    //         return BadRequest(e.Message);
-    //     }
-    // }
-
+    [Authorize(Roles = "Admin")]
+    [HttpPut]
+    public async Task<IActionResult> Update([FromBody] PostMatchConfigDto config) {
+        try {
+            var result = await _configService.Update(config);
+            return Ok(result);
+        } catch (InvalidMatchConfigCreationParametersException e) {
+            return BadRequest(e.Message);
+        } catch (MatchConfigNotFoundException e) {
+            return BadRequest(e.Message);
+        }
+    }
 }

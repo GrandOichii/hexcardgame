@@ -113,12 +113,12 @@ public class Program {
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+        } else {
+            app.UseHttpsRedirection();
         }
 
         app.UseSerilogRequestLogging();
 
-        // TODO back
-        // app.UseHttpsRedirection();
 
         app.UseAuthorization();
         

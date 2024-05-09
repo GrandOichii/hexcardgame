@@ -102,4 +102,29 @@ public class MatchConfigServiceTests {
         // Assert
         result.Should().Be(config);
     }
+
+    [Fact]
+    public async Task ShouldUpdate() {
+        // Arrange
+        A.CallTo(() => _configRepo.Update(A<string>._, A<MatchConfigModel>._)).Returns(1);
+
+        // Act
+        var act = () => _configService.Update(A.Fake<PostMatchConfigDto>());
+
+        // Assert
+        await act.Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task ShouldNotUpdate() {
+        // Arrange
+        A.CallTo(() => _configRepo.Update(A<string>._, A<MatchConfigModel>._)).Returns(0);
+
+        // Act
+        var act = () => _configService.Update(A.Fake<PostMatchConfigDto>());
+
+        // Assert
+        await act.Should().ThrowAsync<MatchConfigNotFoundException>();
+
+    }
 }

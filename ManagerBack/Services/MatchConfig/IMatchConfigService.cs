@@ -29,4 +29,11 @@ public interface IMatchConfigService {
     /// </summary>
     /// <returns>Basic match configuration</returns>
     public Task<MatchConfigModel> Basic();
+
+    /// <summary>
+    /// Updates an existing match configuration by it's name
+    /// </summary>
+    /// <param name="newConfig"></param>
+    /// <returns></returns>
+    public Task<MatchConfigModel> Update(PostMatchConfigDto newConfig);
 }

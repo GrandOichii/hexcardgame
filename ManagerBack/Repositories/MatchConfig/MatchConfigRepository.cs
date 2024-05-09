@@ -63,4 +63,17 @@ public class MatchConfigRepository : IMatchConfigRepository {
     {
         return (await _collection.FindAsync(filter)).ToList();
     }
+
+    public async Task<long> Update(string name, MatchConfigModel config)
+    {
+        var found = await _collection.FindAsync(c => c.Name == name);
+        var existing = await found.FirstOrDefaultAsync();
+        if (existing is null)
+            return 0;
+        config.Id = existing.Id;
+        var result = await _collection.ReplaceOneAsync(c => c.Name == name, config);
+        await _cachedConfigs.Remember(config);
+        return result.MatchedCount;
+
+    }
 }

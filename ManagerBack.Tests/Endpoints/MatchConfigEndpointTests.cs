@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using FakeItEasy;
 using FluentAssertions;
 using HexCore.GameMatch;
 using IdentityModel.Client;
@@ -137,4 +138,41 @@ public class MatchConfigEndpointTests
         // Assert
         result.Should().BeSuccessful();
     }
+
+    [Fact]
+    public async Task ShouldUpdate() {
+        // Arrange
+        var client = _factory.CreateClient();
+        await Login(client, "admin", "password");
+
+        // Act
+        await client.PostAsync("/api/v1/config", JsonContent.Create(new PostMatchConfigDto {
+            Name = "config1",
+            SetupScript = "print('script1')"
+        }));
+        var result = await client.PutAsync($"/api/v1/config", JsonContent.Create(new PostMatchConfigDto {
+            Name = "config1",
+            SetupScript = "print('script2')"
+        }));
+
+        // Assert
+        result.Should().BeSuccessful();
+    }
+
+    [Fact]
+    public async Task ShouldNotUpdate() {
+        // Arrange
+        var client = _factory.CreateClient();
+        await Login(client, "admin", "password");
+
+        // Act
+        var result = await client.PutAsync($"/api/v1/config", JsonContent.Create(new PostMatchConfigDto {
+            Name = "config1",
+            SetupScript = "print('script1')"
+        }));
+
+        // Assert
+        result.Should().HaveClientError();
+    }
+
 }

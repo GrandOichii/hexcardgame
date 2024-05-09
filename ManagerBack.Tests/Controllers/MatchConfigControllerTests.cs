@@ -91,4 +91,42 @@ public class MatchConfigControllerTests {
 
         result.Should().BeOfType<OkObjectResult>();
     }
+
+    [Fact]
+    public async Task ShouldUpdate() {
+        // Arrange
+        var config = A.Fake<PostMatchConfigDto>();
+        A.CallTo(() => _configService.Update(config)).Returns(A.Fake<MatchConfigModel>());
+
+        // Act
+        var result = await _configController.Update(config);
+
+        // Assert
+        result.Should().BeOfType<OkObjectResult>();
+    }
+
+
+    public static IEnumerable<object[]> ConfigUpdateExceptions {
+        get {
+            yield return new object[] { new MatchConfigNotFoundException() };
+            yield return new object[] { new InvalidMatchConfigCreationParametersException() };
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(ConfigUpdateExceptions))]
+    public async Task ShouldNotUpdate(Exception e) {
+        // Arrange
+        var config = A.Fake<PostMatchConfigDto>();
+        A.CallTo(() => _configService.Update(config))
+            .Throws(e)
+        ;
+
+        // Act
+        var result = await _configController.Update(config);
+
+        // Assert
+        result.Should().BeOfType<BadRequestObjectResult>();
+    }
+
 }

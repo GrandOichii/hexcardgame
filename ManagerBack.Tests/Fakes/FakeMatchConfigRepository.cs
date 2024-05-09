@@ -26,4 +26,16 @@ public class FakeMatchConfigRepository : IMatchConfigRepository
         var f = filter.Compile();
         return Task.FromResult(Configs.FindAll(f.Invoke).AsEnumerable());
     }
+
+    public Task<long> Update(string name, MatchConfigModel config)
+    {
+        var found = Configs.FirstOrDefault(c => c.Name == name);
+        if (found is null)
+            return Task.FromResult((long)0);
+
+        Configs.Remove(found);
+        Configs.Add(config);
+        
+        return Task.FromResult((long)1);
+    }
 }

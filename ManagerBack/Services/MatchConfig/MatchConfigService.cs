@@ -89,4 +89,16 @@ public class MatchConfigService : IMatchConfigService
 
         return newConfig;   
     }
+
+    public async Task<MatchConfigModel> Update(PostMatchConfigDto newConfig)
+    {
+        await _configValidator.Validate(newConfig);
+        var config = _mapper.Map<MatchConfigModel>(newConfig);
+
+        var count = await _configRepo.Update(config.Name, config);
+        if (count == 0) 
+            throw new MatchConfigNotFoundException("no match config with name " + newConfig.Name);
+
+        return config;
+    }
 }

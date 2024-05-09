@@ -31,6 +31,13 @@ public interface IMatchConfigRepository {
     /// </summary>
     /// <param name="filter">Filter function</param>
     /// <returns>Enumerable of filtered match configurations</returns>
-   public Task<IEnumerable<MatchConfigModel>> Filter(Expression<Func<MatchConfigModel, bool>> filter);
+    public Task<IEnumerable<MatchConfigModel>> Filter(Expression<Func<MatchConfigModel, bool>> filter);
 
+    /// <summary>
+    /// Updates an existing match configuration
+    /// </summary>
+    /// <param name="name">Match configuration name</param>
+    /// <param name="config">New configuration data</param>
+    /// <returns>Number of objects updated</returns>
+    public Task<long> Update(string name, MatchConfigModel config);
 }

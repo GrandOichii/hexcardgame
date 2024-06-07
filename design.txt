@@ -73,7 +73,7 @@ n. - neighboring
 
 [TODO]:4
     Unit - Mage
-    Spell's cast by [CARDNAME] cost 1 less energy to cast.
+    Spells cast by [CARDNAME] cost 1 less energy to cast.
     P: 4
     L: 3
 
